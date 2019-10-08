@@ -1,2 +1,4 @@
-cdit_automation/RunCucumberTest.class
 cdit_automation/step_definition/TestSteps.class
+cdit_automation/configuration/DriverSetup.class
+cdit_automation/configuration/TestManager.class
+cdit_automation/RunCucumberTest.class
