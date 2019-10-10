@@ -18,11 +18,14 @@ public class Hooks {
     @Before(order=1)
     public void beforeScenario(Scenario scenario) {
         displayScenarioStartMessage(scenario);
+
+        TestManager.instance().openBrowser();
     }
 
     @After(order=1)
     public void afterScenario(Scenario scenario) {
         displayScenarioEndMessage(scenario);
+        TestManager.instance().closeBrowser();
     }
 
     @After(order=0)

@@ -4,6 +4,7 @@ import cdit_automation.driver_management.DriverManager;
 import cdit_automation.enums.BrowserTypeEnums;
 import cdit_automation.enums.TestEnvEnums;
 import cdit_automation.exceptions.UnsupportedBrowserException;
+import cdit_automation.exceptions.UnsupportedTestEnvException;
 import io.cucumber.core.api.Scenario;
 
 import java.util.ArrayList;
@@ -35,10 +36,10 @@ public class TestManager {
         driverManager = DriverManager.instance();
         listOfFailingScenarios = new ArrayList<Scenario>();
         listOfScenariosRan = new ArrayList<Scenario>();
-        currentBrowserType = selectBrowserType();
-        testEnv = selectTestEnvironment();
+        currentBrowserType = getEnvVarBrowserType();
+        testEnv = getEnvVarTestEnv();
 
-        setCurrentDriver(getEnvVarBrowserType());
+        setCurrentDriver(currentBrowserType);
     }
 
     public void addToFailingListOfScenarios(Scenario scenario) {
@@ -96,25 +97,27 @@ public class TestManager {
         }
     }
 
-    private TestEnvEnums getEnvVarTestEnv() {
-        return TestEnvEnums.valueOf(System.getProperty("env"));
+    public void openBrowser() {
+        System.out.println("Starting browser...");
+        driverManager.open();
     }
 
-    private TestEnvEnums selectTestEnvironment() {
+    public void closeBrowser() {
+        System.out.println("Closing browser...");
+        driverManager.close();
+    }
+
+    private TestEnvEnums getEnvVarTestEnv() {
         if ( System.getProperty("env") == null ) {
             return TestEnvEnums.LOCAL;
         }
         else {
-            return getEnvVarTestEnv();
-        }
-    }
-
-    private BrowserTypeEnums selectBrowserType() {
-        if ( System.getProperty("browser") == null ) {
-            return BrowserTypeEnums.CHROME;
-        }
-        else {
-            return getEnvVarBrowserType();
+            try {
+                return TestEnvEnums.valueOf(System.getProperty("env"));
+            }
+            catch ( IllegalArgumentException e ) {
+                throw new UnsupportedTestEnvException("Unsupported Test Environment Exception! "+System.getProperty("env"));
+            }
         }
     }
 }

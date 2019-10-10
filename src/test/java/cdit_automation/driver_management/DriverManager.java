@@ -42,8 +42,18 @@ public class DriverManager {
         this.currentWebDriver = browser;
     }
 
-    private WebDriver createDriverFor(BrowserTypeEnums browserName) {
-        switch(browserName) {
+    public WebDriver open() {
+        driver = createDriverFor();
+        return driver;
+    }
+
+    public void close() {
+        driver.quit();
+        driver = null;
+    }
+
+    private WebDriver createDriverFor() {
+        switch(currentWebDriver) {
             case CHROME:
                 return new ChromeDriver();
 //            case FIREFOX:
@@ -57,7 +67,7 @@ public class DriverManager {
 //            case OPERA:
 //                return new OperaDriver();
             default:
-                throw new UnsupportedWebDriverException("Unsupported webdriver: "+browserName.toString());
+                return new ChromeDriver();
         }
     }
 }
