@@ -62,6 +62,19 @@ public class TestManager {
         return testEnv;
     }
 
+    public void updateTestStatistics(Scenario scenario) {
+        switch( scenario.getStatus() ) {
+            case PASSED:
+                addToListOfScenariosRan(scenario);
+                break;
+            case FAILED:
+                addToFailingListOfScenarios(scenario);
+                addToListOfScenariosRan(scenario);
+            default:
+                //DO NOTHING
+        }
+    }
+
     private TestEnvEnums selectTestEnvironment() {
         if ( System.getProperty("env") == null ) {
             return TestEnvEnums.LOCAL;

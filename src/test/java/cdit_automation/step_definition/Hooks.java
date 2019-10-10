@@ -1,22 +1,45 @@
 package cdit_automation.step_definition;
 
 import cdit_automation.configuration.TestManager;
+import cdit_automation.utilities.Timer;
+import gherkin.ast.Step;
 import io.cucumber.core.api.Scenario;
 import io.cucumber.java.After;
+import io.cucumber.java.AfterStep;
 import io.cucumber.java.Before;
+import io.cucumber.java.BeforeStep;
 
 public class Hooks {
-    @Before
-    public void before(Scenario scenario) {
+    @Before(order=0)
+    public void before() {
         TestManager.instance();
-
-        int i = 0;
     }
 
-    @After
+    @Before(order=1)
+    public void beforeScenario(Scenario scenario) {
+        displayScenarioStartMessage(scenario);
+    }
+
+    @After(order=1)
+    public void afterScenario(Scenario scenario) {
+        displayScenarioEndMessage(scenario);
+    }
+
+    @After(order=0)
     public void after(Scenario scenario) {
-
+        TestManager.instance().updateTestStatistics(scenario);
     }
+
+    @BeforeStep(order=0)
+    public void startStepTimer() {
+        Timer.startTimer();
+    }
+
+    @AfterStep(order=0)
+    public void stopStepTimer() {
+        System.out.println("Step duration: "+ Timer.stopTimer().toString());
+    }
+
 
     private void displayScenarioStartMessage(Scenario scenario) {
         System.out.println("======================================================");
