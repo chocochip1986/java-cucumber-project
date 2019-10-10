@@ -1,4 +1,7 @@
+cdit_automation/enums/BrowserTypeEnums.class
+cdit_automation/step_definition/Hooks.class
+cdit_automation/driver_management/DriverManager.class
 cdit_automation/step_definition/TestSteps.class
-cdit_automation/configuration/DriverSetup.class
+cdit_automation/enums/TestEnvEnums.class
 cdit_automation/configuration/TestManager.class
 cdit_automation/RunCucumberTest.class

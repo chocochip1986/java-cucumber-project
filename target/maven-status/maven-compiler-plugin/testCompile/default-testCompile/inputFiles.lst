@@ -1,4 +1,7 @@
 /Users/guozheng/workspace/cdit-automation/src/test/java/cdit_automation/step_definition/TestSteps.java
+/Users/guozheng/workspace/cdit-automation/src/test/java/cdit_automation/enums/BrowserTypeEnums.java
+/Users/guozheng/workspace/cdit-automation/src/test/java/cdit_automation/step_definition/Hooks.java
 /Users/guozheng/workspace/cdit-automation/src/test/java/cdit_automation/configuration/TestManager.java
+/Users/guozheng/workspace/cdit-automation/src/test/java/cdit_automation/enums/TestEnvEnums.java
 /Users/guozheng/workspace/cdit-automation/src/test/java/cdit_automation/RunCucumberTest.java
-/Users/guozheng/workspace/cdit-automation/src/test/java/cdit_automation/configuration/DriverSetup.java
+/Users/guozheng/workspace/cdit-automation/src/test/java/cdit_automation/driver_management/DriverManager.java
