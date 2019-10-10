@@ -36,6 +36,8 @@ public class TestManager {
         listOfScenariosRan = new ArrayList<Scenario>();
         currentBrowserType = selectBrowserType();
         testEnv = selectTestEnvironment();
+
+        setCurrentDriver(getEnvVarBrowserType());
     }
 
     public void addToFailingListOfScenarios(Scenario scenario) {
@@ -75,12 +77,30 @@ public class TestManager {
         }
     }
 
+    public void setCurrentDriver(BrowserTypeEnums browser) {
+//        driverManager.setCurrentDriver(browser);
+    }
+
+    private BrowserTypeEnums getEnvVarBrowserType() {
+        if ( System.getProperty("browser") == null ) {
+            return BrowserTypeEnums.CHROME;
+        }
+        else {
+            return BrowserTypeEnums.valueOf(System.getProperty("browser"));
+        }
+
+    }
+
+    private TestEnvEnums getEnvVarTestEnv() {
+        return TestEnvEnums.valueOf(System.getProperty("env"));
+    }
+
     private TestEnvEnums selectTestEnvironment() {
         if ( System.getProperty("env") == null ) {
             return TestEnvEnums.LOCAL;
         }
         else {
-            return TestEnvEnums.valueOf(System.getProperty("env"));
+            return getEnvVarTestEnv();
         }
     }
 
@@ -89,7 +109,7 @@ public class TestManager {
             return BrowserTypeEnums.CHROME;
         }
         else {
-            return BrowserTypeEnums.valueOf(System.getProperty("browser"));
+            return getEnvVarBrowserType();
         }
     }
 }
