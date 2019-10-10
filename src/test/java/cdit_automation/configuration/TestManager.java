@@ -3,6 +3,7 @@ package cdit_automation.configuration;
 import cdit_automation.driver_management.DriverManager;
 import cdit_automation.enums.BrowserTypeEnums;
 import cdit_automation.enums.TestEnvEnums;
+import cdit_automation.exceptions.UnsupportedBrowserException;
 import io.cucumber.core.api.Scenario;
 
 import java.util.ArrayList;
@@ -78,7 +79,7 @@ public class TestManager {
     }
 
     public void setCurrentDriver(BrowserTypeEnums browser) {
-//        driverManager.setCurrentDriver(browser);
+        driverManager.setCurrentWebDriver(browser);
     }
 
     private BrowserTypeEnums getEnvVarBrowserType() {
@@ -86,9 +87,13 @@ public class TestManager {
             return BrowserTypeEnums.CHROME;
         }
         else {
-            return BrowserTypeEnums.valueOf(System.getProperty("browser"));
+            try {
+                return BrowserTypeEnums.valueOf(System.getProperty("browser").toUpperCase());
+            }
+            catch (IllegalArgumentException e) {
+                throw new UnsupportedBrowserException("Unsupported Browser Exception! "+System.getProperty("browser"));
+            }
         }
-
     }
 
     private TestEnvEnums getEnvVarTestEnv() {

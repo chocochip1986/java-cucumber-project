@@ -19,7 +19,7 @@ import java.util.Map;
 public class DriverManager {
     private static DriverManager SINGLE_INSTANCE = null;
 
-    private Map<BrowserTypeEnums, WebDriver> drivers;
+    private BrowserTypeEnums currentWebDriver;
     private WebDriver driver;
 
     private DriverManager() {
@@ -34,38 +34,28 @@ public class DriverManager {
     }
 
     private void initialize() {
-        drivers = new HashMap<>();
-        registerDrivers();
+        driver = null;
+        currentWebDriver = null;
     }
 
-    public void setCurrentDriver(BrowserTypeEnums browser) {
-        driver = getDriverFromRegisteredDrivers(browser);
-    }
-
-    public WebDriver getDriverFromRegisteredDrivers(BrowserTypeEnums browser) {
-        return drivers.get(browser);
-    }
-
-    private void registerDrivers() {
-        for ( BrowserTypeEnums browser : BrowserTypeEnums.values() ) {
-            drivers.put(browser, createDriverFor(browser));
-        }
+    public void setCurrentWebDriver(BrowserTypeEnums browser) {
+        this.currentWebDriver = browser;
     }
 
     private WebDriver createDriverFor(BrowserTypeEnums browserName) {
         switch(browserName) {
             case CHROME:
                 return new ChromeDriver();
-            case FIREFOX:
-                return new FirefoxDriver();
-            case SAFARI:
-                return new SafariDriver();
-            case IE:
-                return new InternetExplorerDriver();
-            case EDGE:
-                return new EdgeDriver();
-            case OPERA:
-                return new OperaDriver();
+//            case FIREFOX:
+//                return new FirefoxDriver();
+//            case SAFARI:
+//                return new SafariDriver();
+//            case IE:
+//                return new InternetExplorerDriver();
+//            case EDGE:
+//                return new EdgeDriver();
+//            case OPERA:
+//                return new OperaDriver();
             default:
                 throw new UnsupportedWebDriverException("Unsupported webdriver: "+browserName.toString());
         }
