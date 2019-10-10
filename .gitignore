@@ -1,4 +1,4 @@
 ### Intellig IDEA ###
 .idea
-target
+target/
 *.iml
