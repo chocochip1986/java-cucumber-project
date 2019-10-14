@@ -8,7 +8,7 @@ import org.junit.Ignore;
 import java.util.List;
 
 @Ignore
-public class TestSteps {
+public class TestSteps extends AbstractSteps {
     @Given("I love {string} ice cream")
     public void iLoveIceCream(String iceCream) {
     }
@@ -32,5 +32,15 @@ public class TestSteps {
         for( int i = 0 ; i < animals.size() ; i++ ) {
             System.out.println("Animal: "+animals.get(i));
         }
+    }
+
+    @Given("I access the google search engine")
+    public void iAccessTheGoogleSearchEngine() {
+        testManager.getDriverManager().visit("https://www.google.com.sg/");
+    }
+
+    @And("I type {string} into the search bar")
+    public void iTypeIntoTheSearchBar(String search_string) {
+        System.out.println("Searching for: "+search_string);
     }
 }

@@ -14,8 +14,8 @@ import java.util.List;
 
 @Component
 public class TestManager {
-    private static TestManager SINGLE_INSTANCE = null;
 
+    @Autowired
     private DriverManager driverManager;
     private List<Scenario> listOfFailingScenarios;
     private List<Scenario> listOfScenariosRan;
@@ -27,23 +27,13 @@ public class TestManager {
         initialize();
     }
 
-    public static TestManager instance() {
-        if ( SINGLE_INSTANCE == null ) {
-            SINGLE_INSTANCE = new TestManager();
-        }
-        return SINGLE_INSTANCE;
-    }
-
     private void initialize() {
         System.out.println("Initializing test suite...");
 
-        driverManager = DriverManager.instance();
         listOfFailingScenarios = new ArrayList<Scenario>();
         listOfScenariosRan = new ArrayList<Scenario>();
         currentBrowserType = getEnvVarBrowserType();
         testEnv = getEnvVarTestEnv();
-
-        setCurrentDriver(currentBrowserType);
     }
 
     public void addToFailingListOfScenarios(Scenario scenario) {
@@ -83,8 +73,9 @@ public class TestManager {
         }
     }
 
-    public void setCurrentDriver(BrowserTypeEnums browser) {
-        driverManager.setCurrentWebDriver(browser);
+    @Autowired
+    public void setCurrentDriver() {
+        driverManager.setCurrentWebDriver(currentBrowserType);
     }
 
     private BrowserTypeEnums getEnvVarBrowserType() {
@@ -109,6 +100,10 @@ public class TestManager {
     public void closeBrowser() {
         System.out.println("Closing browser...");
         driverManager.close();
+    }
+
+    public DriverManager getDriverManager () {
+        return driverManager;
     }
 
     private TestEnvEnums getEnvVarTestEnv() {

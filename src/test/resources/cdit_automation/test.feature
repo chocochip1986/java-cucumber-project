@@ -14,3 +14,8 @@ Feature: This is a test feature
     | horse |
     | tiger |
     | rat   |
+
+  @Set_3
+  Scenario: Googling stuff
+    Given I access the google search engine
+    And I type "vanilla ice cream" into the search bar
