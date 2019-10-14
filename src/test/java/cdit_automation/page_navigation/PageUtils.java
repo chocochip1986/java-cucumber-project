@@ -75,6 +75,25 @@ public class PageUtils {
         }
     }
 
+    public void check(String cssOrXpath) {
+        WebElement webElement = findElement(cssOrXpath);
+
+        if ( webElement != null ) {
+            webElement.click();
+        }
+    }
+
+    public boolean isChecked(String cssOrXpath) {
+        WebElement webElement = findElement(cssOrXpath);
+
+        if ( webElement != null ) {
+            return webElement.isSelected();
+        }
+        else {
+            return false;
+        }
+    }
+
     public void refresh() {
         driverManager.getDriver().navigate().refresh();
     }
