@@ -7,7 +7,7 @@ import io.cucumber.java.en.Then;
 
 import java.util.List;
 
-public class TestSteps {
+public class TestSteps extends AbstractSteps{
     @Given("I love {string} ice cream")
     public void iLoveIceCream(String iceCream) {
     }

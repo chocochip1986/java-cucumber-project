@@ -9,7 +9,7 @@ import io.cucumber.java.AfterStep;
 import io.cucumber.java.Before;
 import io.cucumber.java.BeforeStep;
 
-public class Hooks {
+public class Hooks extends AbstractSteps {
     @Before(order=0)
     public void before() {
         TestManager.instance();
