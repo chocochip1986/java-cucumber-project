@@ -60,4 +60,19 @@ public class PageUtils {
         return webElement;
     }
 
+    public void click_on(String cssOrXpath) {
+        WebElement webElement = findElement(cssOrXpath);
+
+        if ( webElement != null ) {
+            webElement.click();
+        }
+    }
+
+    public void setText(String cssOrXpath, String keywords) {
+        WebElement webElement = findElement(cssOrXpath);
+
+        if ( webElement != null ) {
+            webElement.sendKeys(keywords);
+        }
+    }
 }

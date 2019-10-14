@@ -50,4 +50,15 @@ public class TestSteps extends AbstractSteps {
         System.out.println("Searching for: "+search_string);
         googlePage.enterSearchKeyWords(search_string);
     }
+
+    @And("I begin searching")
+    public void iBeginSearching() {
+        googlePage.search();
+    }
+
+    @And("I verify that the search is done")
+    public void iVerifyThatTheSearchIsDone() {
+        System.out.println("Verifying search is done");
+        googlePage.verifySearchSucceeded();
+    }
 }

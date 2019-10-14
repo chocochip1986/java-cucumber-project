@@ -19,3 +19,5 @@ Feature: This is a test feature
   Scenario: Googling stuff
     Given I access the google search engine
     And I type "vanilla ice cream" into the search bar
+    And I begin searching
+    And I verify that the search is done
