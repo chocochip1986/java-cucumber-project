@@ -6,7 +6,6 @@ import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -74,5 +73,17 @@ public class PageUtils {
         if ( webElement != null ) {
             webElement.sendKeys(keywords);
         }
+    }
+
+    public void refresh() {
+        driverManager.getDriver().navigate().refresh();
+    }
+
+    public void browserBack() {
+        driverManager.getDriver().navigate().back();
+    }
+
+    public void browserForward() {
+        driverManager.getDriver().navigate().forward();
     }
 }

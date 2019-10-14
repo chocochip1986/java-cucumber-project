@@ -78,12 +78,12 @@ public class TestManager {
     @Autowired
     public void setWebDriverConfiguration() {
         driverManager.setCurrentWebDriver(currentBrowserType);
-        driverManager.setImplicitWait(this.testEnv.getImplicitWait());
     }
 
     public void openBrowser() {
         System.out.println("Starting browser...");
         driverManager.open();
+        driverManager.setImplicitWait(this.testEnv.getImplicitWait());
     }
 
     public void closeBrowser() {

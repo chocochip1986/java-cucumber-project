@@ -43,7 +43,7 @@ public class DriverManager {
     }
 
     public void setImplicitWait(Long seconds) {
-//        this.driver.manage().timeouts().implicitlyWait(seconds, TimeUnit.SECONDS);
+        this.driver.manage().timeouts().implicitlyWait(seconds, TimeUnit.SECONDS);
     }
 
     public WebDriver getDriver() {
