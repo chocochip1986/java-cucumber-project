@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class DriverManager {
@@ -39,6 +40,14 @@ public class DriverManager {
 
     public void visit(String url) {
         this.driver.get(url);
+    }
+
+    public void setImplicitWait(Long seconds) {
+//        this.driver.manage().timeouts().implicitlyWait(seconds, TimeUnit.SECONDS);
+    }
+
+    public WebDriver getDriver() {
+        return driver;
     }
 
     public WebDriver open() {

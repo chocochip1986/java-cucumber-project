@@ -10,5 +10,5 @@ public class AbstractSteps {
     protected TestManager testManager;
 
     @Autowired
-    protected PageUtils page;
+    protected PageUtils pageUtils;
 }

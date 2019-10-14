@@ -1,14 +1,20 @@
 package cdit_automation.step_definition;
 
+import cdit_automation.pages.GooglePage;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import org.junit.Ignore;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 @Ignore
 public class TestSteps extends AbstractSteps {
+
+    @Autowired
+    GooglePage googlePage;
+
     @Given("I love {string} ice cream")
     public void iLoveIceCream(String iceCream) {
     }
@@ -36,11 +42,12 @@ public class TestSteps extends AbstractSteps {
 
     @Given("I access the google search engine")
     public void iAccessTheGoogleSearchEngine() {
-        testManager.getDriverManager().visit("https://www.google.com.sg/");
+        googlePage.visitSearchPage();
     }
 
     @And("I type {string} into the search bar")
     public void iTypeIntoTheSearchBar(String search_string) {
         System.out.println("Searching for: "+search_string);
+        googlePage.enterSearchKeyWords(search_string);
     }
 }

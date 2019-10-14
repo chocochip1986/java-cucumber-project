@@ -15,6 +15,8 @@ import java.util.List;
 @Component
 public class TestManager {
 
+    private static final Long DEFAULT_WAIT=10L;
+
     @Autowired
     private DriverManager driverManager;
     private List<Scenario> listOfFailingScenarios;
@@ -74,22 +76,9 @@ public class TestManager {
     }
 
     @Autowired
-    public void setCurrentDriver() {
+    public void setWebDriverConfiguration() {
         driverManager.setCurrentWebDriver(currentBrowserType);
-    }
-
-    private BrowserTypeEnums getEnvVarBrowserType() {
-        if ( System.getProperty("browser") == null ) {
-            return BrowserTypeEnums.CHROME;
-        }
-        else {
-            try {
-                return BrowserTypeEnums.valueOf(System.getProperty("browser").toUpperCase());
-            }
-            catch (IllegalArgumentException e) {
-                throw new UnsupportedBrowserException("Unsupported Browser Exception! "+System.getProperty("browser"));
-            }
-        }
+        driverManager.setImplicitWait(this.testEnv.getImplicitWait());
     }
 
     public void openBrowser() {
@@ -116,6 +105,20 @@ public class TestManager {
             }
             catch ( IllegalArgumentException e ) {
                 throw new UnsupportedTestEnvException("Unsupported Test Environment Exception! "+System.getProperty("env"));
+            }
+        }
+    }
+
+    private BrowserTypeEnums getEnvVarBrowserType() {
+        if ( System.getProperty("browser") == null ) {
+            return BrowserTypeEnums.CHROME;
+        }
+        else {
+            try {
+                return BrowserTypeEnums.valueOf(System.getProperty("browser").toUpperCase());
+            }
+            catch (IllegalArgumentException e) {
+                throw new UnsupportedBrowserException("Unsupported Browser Exception! "+System.getProperty("browser"));
             }
         }
     }
