@@ -1,13 +1,14 @@
 package cdit_automation.step_definition;
 
-import cdit_automation.configuration.TestManager;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
+import org.junit.Ignore;
 
 import java.util.List;
 
-public class TestSteps extends AbstractSteps{
+@Ignore
+public class TestSteps {
     @Given("I love {string} ice cream")
     public void iLoveIceCream(String iceCream) {
     }

@@ -40,12 +40,12 @@
             <scope>test</scope>
         </dependency>
 
-<!--        &lt;!&ndash; https://mvnrepository.com/artifact/io.cucumber/cucumber-spring &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>io.cucumber</groupId>-->
-<!--            <artifactId>cucumber-spring</artifactId>-->
-<!--            <version>4.7.2</version>-->
-<!--        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-spring -->
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-spring</artifactId>
+            <version>4.7.2</version>
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
         <dependency>
@@ -85,6 +85,12 @@
             <version>2.1.7.RELEASE</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.oracle/ojdbc8 -->
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc8</artifactId>
+            <version>12.2.0.1</version>
+        </dependency>
 
     </dependencies>
 </project>

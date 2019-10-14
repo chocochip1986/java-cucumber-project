@@ -6,10 +6,13 @@ import cdit_automation.enums.TestEnvEnums;
 import cdit_automation.exceptions.UnsupportedBrowserException;
 import cdit_automation.exceptions.UnsupportedTestEnvException;
 import io.cucumber.core.api.Scenario;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class TestManager {
     private static TestManager SINGLE_INSTANCE = null;
 
@@ -19,7 +22,8 @@ public class TestManager {
     private BrowserTypeEnums currentBrowserType;
     private TestEnvEnums testEnv;
 
-    private TestManager() {
+    @Autowired
+    public TestManager() {
         initialize();
     }
 
