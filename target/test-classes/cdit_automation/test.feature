@@ -21,3 +21,9 @@ Feature: This is a test feature
     And I type "vanilla ice cream" into the search bar
     And I begin searching
     And I verify that the search is done
+
+  @Set_4
+  Scenario: Tab navigation
+    Given I access the google search engine
+    And I open a new tab
+    And I close current tab

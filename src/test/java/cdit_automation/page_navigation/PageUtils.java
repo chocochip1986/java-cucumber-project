@@ -94,6 +94,14 @@ public class PageUtils {
         }
     }
 
+    public void openNewTab() {
+        driverManager.newTab();
+    }
+
+    public void closeTab() {
+        driverManager.closeTab();
+    }
+
     public void refresh() {
         driverManager.getDriver().navigate().refresh();
     }

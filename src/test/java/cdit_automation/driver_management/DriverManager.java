@@ -3,6 +3,9 @@ package cdit_automation.driver_management;
 
 import cdit_automation.enums.BrowserTypeEnums;
 import cdit_automation.exceptions.UnsupportedWebDriverException;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -24,6 +27,8 @@ public class DriverManager {
 
     private BrowserTypeEnums currentWebDriver;
     private WebDriver driver;
+    private List<String> listOfCurrentWindowHandles;
+    private String currentWindowHandle;
 
     public DriverManager() {
         initialize();
@@ -32,6 +37,8 @@ public class DriverManager {
     private void initialize() {
         driver = null;
         currentWebDriver = null;
+        currentWindowHandle = null;
+        listOfCurrentWindowHandles = new ArrayList<>();
     }
 
     public void setCurrentWebDriver(BrowserTypeEnums browser) {
@@ -50,14 +57,31 @@ public class DriverManager {
         return driver;
     }
 
+    public void newTab() {
+    }
+
+    public void closeTab() {
+        this.driver.close();
+        removeWindowHandleFromList(currentWindowHandle);
+        currentWindowHandle = this.driver.getWindowHandle();
+
+    }
+
     public WebDriver open() {
         driver = createDriverFor();
+        currentWindowHandle = this.driver.getWindowHandle();
+        listOfCurrentWindowHandles.add(currentWindowHandle);
         return driver;
     }
 
     public void close() {
         driver.quit();
+        currentWindowHandle = null;
         driver = null;
+    }
+
+    private void removeWindowHandleFromList(String windowHandle) {
+        listOfCurrentWindowHandles.remove(windowHandle);
     }
 
     private WebDriver createDriverFor() {
