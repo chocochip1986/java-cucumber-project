@@ -75,6 +75,14 @@ public class PageUtils {
         }
     }
 
+    public void uncheck(String cssOrXpath) {
+        WebElement webElement = findElement(cssOrXpath);
+
+        if ( webElement != null ) {
+            webElement.click();
+        }
+    }
+
     public void check(String cssOrXpath) {
         WebElement webElement = findElement(cssOrXpath);
 
