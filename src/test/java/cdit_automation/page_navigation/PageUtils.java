@@ -2,10 +2,14 @@ package cdit_automation.page_navigation;
 
 import cdit_automation.driver_management.DriverManager;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.util.List;
 
 @Component
@@ -44,8 +48,14 @@ public class PageUtils {
     }
 
     public WebElement findWebElementByXpath(String xpath) {
-        WebElement webElement = driverManager.getDriver().findElement(By.xpath(xpath));
-        return webElement;
+        try {
+            WebElement webElement = driverManager.getDriver().findElement(By.xpath(xpath));
+            return webElement;
+        }
+        catch (NoSuchElementException e) {
+            errorMessage(null);
+            throw e;
+        }
     }
 
     public List<WebElement> findWebElementsByCss(String css) {
@@ -120,5 +130,16 @@ public class PageUtils {
 
     public void browserForward() {
         driverManager.getDriver().navigate().forward();
+    }
+
+    private void errorMessage(String error_message) {
+        //TODO log error message
+        takeScreenshot();
+    }
+
+    private void takeScreenshot() {
+        File srcFile = ((TakesScreenshot)driverManager.getDriver()).getScreenshotAs(OutputType.FILE);
+
+
     }
 }
