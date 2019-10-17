@@ -25,24 +25,33 @@ public class Phaker {
 
     private static final String[] NUMBERS = new String[]{"1", "2", "3", "4", "5", "6", "7", "9", "0"};
     private static final String[] ALPHABETS = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+    private static final String[] GENDERS = new String[]{"MALE", "FEMALE"};
 
-    public static String postalCode() {
+    public static String validName() {
+        return faker.name().lastName() + " " + faker.name().firstName();
+    }
+
+    public static String validGender() {
+        return GENDERS[new Random().nextInt(GENDERS.length)];
+    }
+
+    public static String validPostalCode() {
         return genRandomNumbers(6);
     }
 
-    public static String streetName() {
+    public static String validStreetName() {
         return faker.address().streetName();
     }
 
-    public static String blockNo() {
+    public static String validBlockNo() {
         return genRandomNumbers(2) + genRandomALPHABETS(1);
     }
 
-    public static String floorNo() {
+    public static String validFloorNo() {
         return genRandomNumbers(3);
     }
 
-    public static String unitNo() {
+    public static String validUnitNo() {
         return genRandomNumbers(2);
     }
 
