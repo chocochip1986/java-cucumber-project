@@ -27,6 +27,10 @@ public class Phaker {
     private static final String[] GENDERS = new String[]{"MALE", "FEMALE"};
     private static final String[] MOBILENUMBER = new String[]{"9", "8"};
 
+    public static String validEmail() {
+        return faker.name().toString() + "@.com";
+    }
+
     public static String validPSTNPhoneNumber() {
         return "6" + genRandomNumbers(7);
     }
