@@ -1,7 +1,6 @@
 package cdit_automation.data_setup;
 
 import com.github.javafaker.Faker;
-import com.sun.org.apache.bcel.internal.generic.ARRAYLENGTH;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
@@ -26,6 +25,15 @@ public class Phaker {
     private static final String[] NUMBERS = new String[]{"1", "2", "3", "4", "5", "6", "7", "9", "0"};
     private static final String[] ALPHABETS = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
     private static final String[] GENDERS = new String[]{"MALE", "FEMALE"};
+    private static final String[] MOBILENUMBER = new String[]{"9", "8"};
+
+    public static String validPSTNPhoneNumber() {
+        return "6" + genRandomNumbers(7);
+    }
+
+    public static String validMobilePhoneNumber() {
+        return genMobileNumber() + genRandomNumbers(8);
+    }
 
     public static String validName() {
         return faker.name().lastName() + " " + faker.name().firstName();
@@ -186,6 +194,10 @@ public class Phaker {
         }
 
         return finalAlphabet;
+    }
+
+    private static String genMobileNumber() {
+        return MOBILENUMBER[new Random().nextInt(MOBILENUMBER.length)];
     }
 
     private static String genRandomAlphbet() {
