@@ -4,61 +4,63 @@ import cdit_automation.pages.GooglePage;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+@Slf4j
 @Ignore
 public class TestSteps extends AbstractSteps {
 
     @Autowired
     GooglePage googlePage;
 
-    @Given("I love {string} ice cream")
+    @Given("^I love {string} ice cream$")
     public void iLoveIceCream(String iceCream) {
     }
 
-    @And("I have {int} of them")
+    @And("^I have {int} of them$")
     public void iHaveOfThem(int arg0) {
         
     }
 
-    @And("Each cost ${double}")
+    @And("^Each cost ${double}$")
     public void eachCost$(double sellingPrice) {
         
     }
 
-    @Then("My identifier is {}")
+    @Then("^My identifier is {}$")
     public void myIdentifierIsHFUUUIHIUH(String trash) {
     }
 
-    @Given("the following animals:")
+    @Given("^the following animals:$")
     public void theFollowingAnimals(List<String> animals) {
         for( int i = 0 ; i < animals.size() ; i++ ) {
-            System.out.println("Animal: "+animals.get(i));
+            log.info("Animal:" +animals.get(i));
         }
     }
 
-    @Given("I access the google search engine")
+    @Given("^I access the google search engine$")
     public void iAccessTheGoogleSearchEngine() {
         googlePage.visitSearchPage();
     }
 
-    @And("I type {string} into the search bar")
+    @And("^I type {string} into the search bar$")
     public void iTypeIntoTheSearchBar(String search_string) {
-        System.out.println("Searching for: "+search_string);
+        log.info("Searching for: "+search_string);
         googlePage.enterSearchKeyWords(search_string);
     }
 
-    @And("I begin searching")
+    @And("^I begin searching$")
     public void iBeginSearching() {
         googlePage.search();
     }
 
-    @And("I verify that the search is done")
+    @And("^I verify that the search is done$")
     public void iVerifyThatTheSearchIsDone() {
-        System.out.println("Verifying search is done");
+        log.info("Verifying search is done");
         googlePage.verifySearchSucceeded();
     }
 }

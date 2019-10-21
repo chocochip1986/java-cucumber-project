@@ -27,3 +27,9 @@ Feature: This is a test feature
     Given I access the google search engine
     And I open a new tab
     And I close current tab
+
+  @Set_5
+  Scenario: An SC person
+    Given There is an SC person
+    Given There is a FR person
+    Given There is a PR person
