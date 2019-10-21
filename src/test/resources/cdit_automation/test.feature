@@ -2,10 +2,10 @@ Feature: This is a test feature
 
   @Set_1
   Scenario: This is a test scenario
-    Given I love "vanilla" ice cream
+    Given I love vanilla ice cream
     And I have 2 of them
     And Each cost $25.50
-    Then My identifier is H&^&^*&
+    Then My identifier is S1234567A
 
   @Set_2
   Scenario: This is a test scenario using a table
@@ -18,7 +18,7 @@ Feature: This is a test feature
   @Set_3
   Scenario: Googling stuff
     Given I access the google search engine
-    And I type "vanilla ice cream" into the search bar
+    And I type vanilla ice cream into the search bar
     And I begin searching
     And I verify that the search is done
 

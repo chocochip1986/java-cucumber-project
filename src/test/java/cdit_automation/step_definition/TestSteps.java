@@ -17,22 +17,22 @@ public class TestSteps extends AbstractSteps {
     @Autowired
     GooglePage googlePage;
 
-    @Given("^I love {string} ice cream$")
+    @Given("^I love (vanilla) ice cream$")
     public void iLoveIceCream(String iceCream) {
     }
 
-    @And("^I have {int} of them$")
+    @And("I have {int} of them")
     public void iHaveOfThem(int arg0) {
         
     }
 
-    @And("^Each cost ${double}$")
+    @And("Each cost ${double}")
     public void eachCost$(double sellingPrice) {
         
     }
 
-    @Then("^My identifier is {}$")
-    public void myIdentifierIsHFUUUIHIUH(String trash) {
+    @Then("^My identifier is ([S|T|F|G][0-9]{7}[A-Z])$")
+    public void myIdentifierIsHFUUUIHIUH(String identifier) {
     }
 
     @Given("^the following animals:$")
@@ -47,7 +47,7 @@ public class TestSteps extends AbstractSteps {
         googlePage.visitSearchPage();
     }
 
-    @And("^I type {string} into the search bar$")
+    @And("^I type (.*) into the search bar$")
     public void iTypeIntoTheSearchBar(String search_string) {
         log.info("Searching for: "+search_string);
         googlePage.enterSearchKeyWords(search_string);
