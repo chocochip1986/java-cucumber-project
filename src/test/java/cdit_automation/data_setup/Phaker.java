@@ -107,20 +107,20 @@ public class Phaker {
         return generatedFin;
     }
 
-    public static String nric() {
+    public static <E> E randomItemFromArray(E[] input) {
+        return input[rand.nextInt(input.length)];
+    }
+
+    private static String nric() {
         String firstChar = randomItemFromArray(NRIC_FIRST_CHAR);
         String midNum = faker.number().digits(7);
         return firstChar + midNum + validChecksum(firstChar, midNum, NRIC_MAP);
     }
 
-    public static String fin() {
+    private static String fin() {
         String firstChar = randomItemFromArray(FIN_FIRST_CHAR);
         String midNum = faker.number().digits(7);
         return firstChar + midNum + validChecksum(firstChar, midNum, FIN_MAP);
-    }
-
-    public static <E> E randomItemFromArray(E[] input) {
-        return input[rand.nextInt(input.length)];
     }
 
     private static Map<String, String> createNricMap() {
