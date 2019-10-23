@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 public class GooglePage extends AbstractPage{
     public static final String GOOGLE_URL = "https://www.google.com.sg/";
     public static final String GOOGLE_SEARCH_BAR = "//input[@type='text']";
-    public static final String GOOGLE_SEARCH_BUTTON = "//div[@class='FPdoLc VlcLAe']//child::input[@value='Google Search']";
+    public static final String GOOGLE_SEARCH_BUTTON = "//div[@class='FPdoLc VlcLAe']//child::input[@value='Google Search111']";
     public static final String GOOGLE_SEARCH_RESULTS_PAGE = "//div[@id='resultStats']";
 
     public void visitSearchPage() {

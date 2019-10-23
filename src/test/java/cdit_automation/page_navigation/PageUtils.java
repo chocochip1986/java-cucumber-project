@@ -19,6 +19,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 @Slf4j
@@ -78,8 +79,12 @@ public class PageUtils {
     }
 
     public List<WebElement> findWebElementsByXpath(String xpath) {
-        List<WebElement> webElements = driverManager.getDriver().findElements(By.xpath(xpath));
-        return webElements;
+        return yieldToBlock(new YieldInterface<String, String, WebElement>(){
+            public List<WebElement> apply(String css, String errMsg) {
+                List<WebElement> webElements = driverManager.getDriver().findElements(By.xpath(xpath));
+                return webElements;
+            }
+        }, xpath, "[WebNavigation] - Cannot find such element: "+xpath);
     }
 
     public WebElement findWebElementByXpath(String xpath) {
@@ -92,8 +97,12 @@ public class PageUtils {
     }
 
     public List<WebElement> findWebElementsByCss(String css) {
-        List<WebElement> webElements = driverManager.getDriver().findElements(By.cssSelector(css));
-        return webElements;
+        return yieldToBlock(new YieldInterface<String, String, WebElement>(){
+            public List<WebElement> apply(String css, String errMsg) {
+                List<WebElement> webElements = driverManager.getDriver().findElements(By.cssSelector(css));
+                return webElements;
+            }
+        }, css, "[WebNavigation] - Cannot find such element: "+css);
     }
 
     public WebElement findWebElementByCss(String css) {
@@ -105,56 +114,44 @@ public class PageUtils {
         }, css, "[WebNavigation] - Cannot find such element: "+css);
     }
 
-    public WebElement yieldToBlock(BiFunction<String, String, WebElement> function, String cssOrXpath, String errMsg) {
-        try {
-            return function.apply(cssOrXpath, errMsg);
-        }
-        catch (WebDriverException errorMessage) {
-            errorMessage(errMsg);
-            throw errorMessage;
-        }
-    }
-//
-//    public List<WebElement> yieldToBlock(BiFunction<String, String, List<WebElement>> function, String cssOrXpath, String errMsg) {
-//        try {
-//            return function.apply(cssOrXpath, errMsg);
-//        }
-//        catch (WebDriverException errorMessage) {
-//            errorMessage(errMsg);
-//            throw errorMessage;
-//        }
-//    }
-
     public void click_on(String cssOrXpath) {
         WebElement webElement = findElement(cssOrXpath);
 
-        if ( webElement != null ) {
-            webElement.click();
-        }
+        yieldToBlock(new ConsumerInterface<WebElement, String>() {
+            public void apply(WebElement webElement, String s) {
+                webElement.click();
+            }
+        }, webElement, "[WebNavigation] - Unable to click on element: "+cssOrXpath);
     }
 
     public void setText(String cssOrXpath, String keywords) {
         WebElement webElement = findElement(cssOrXpath);
 
-        if ( webElement != null ) {
-            webElement.sendKeys(keywords);
-        }
+        yieldToBlock(new ConsumerInterface<WebElement, String>() {
+            public void apply(WebElement webElement, String s) {
+                webElement.sendKeys(keywords);
+            }
+        }, webElement, "[WebNavigation] - Unable to set text in element: "+cssOrXpath);
     }
 
     public void uncheck(String cssOrXpath) {
         WebElement webElement = findElement(cssOrXpath);
 
-        if ( webElement != null ) {
-            webElement.click();
-        }
+        yieldToBlock(new ConsumerInterface<WebElement, String>() {
+            public void apply(WebElement webElement, String s) {
+                webElement.click();
+            }
+        }, webElement, "[WebNavigation] - Unable to uncheck element: "+cssOrXpath);
     }
 
     public void check(String cssOrXpath) {
         WebElement webElement = findElement(cssOrXpath);
 
-        if ( webElement != null ) {
-            webElement.click();
-        }
+        yieldToBlock(new ConsumerInterface<WebElement, String>() {
+            public void apply(WebElement webElement, String s) {
+                webElement.click();
+            }
+        }, webElement, "[WebNavigation] - Unable to check element: "+cssOrXpath);
     }
 
     public boolean isChecked(String cssOrXpath) {
@@ -195,5 +192,35 @@ public class PageUtils {
 
     private void takeScreenshot() {
         File srcFile = ((TakesScreenshot)driverManager.getDriver()).getScreenshotAs(OutputType.FILE);
+    }
+
+    private WebElement yieldToBlock(BiFunction<String, String, WebElement> function, String cssOrXpath, String errMsg) {
+        try {
+            return function.apply(cssOrXpath, errMsg);
+        }
+        catch (WebDriverException errorMessage) {
+            errorMessage(errMsg);
+            throw errorMessage;
+        }
+    }
+
+    private List<WebElement> yieldToBlock(YieldInterface<String, String, WebElement> function, String cssOrXpath, String errMsg) {
+        try {
+            return function.apply(cssOrXpath, errMsg);
+        }
+        catch (WebDriverException errorMessage) {
+            errorMessage(errMsg);
+            throw errorMessage;
+        }
+    }
+
+    private void yieldToBlock(ConsumerInterface<WebElement, String> function, WebElement webElement, String errMsg) {
+        try {
+            function.apply(webElement, errMsg);
+        }
+        catch (WebDriverException errorMessage) {
+            errorMessage(errMsg);
+            throw errorMessage;
+        }
     }
 }
