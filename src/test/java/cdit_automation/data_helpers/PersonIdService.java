@@ -5,22 +5,13 @@ import cdit_automation.enums.PersonIdTypeEnum;
 import cdit_automation.enums.RestrictedEnum;
 import cdit_automation.models.Person;
 import cdit_automation.models.PersonId;
-import cdit_automation.repositories.PersonIdRepo;
-import cdit_automation.repositories.PersonRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PersonIdService {
+public class PersonIdService extends AbstractService {
 
     private final String NRIC_PATTERN = "^[S|T][0-9]{7}[A-Z]$";
     private final String FIN_PATTERN = "^[F|G][0-9]{7}[A-Z]$";
-
-    @Autowired
-    PersonIdRepo personIdrepo;
-
-    @Autowired
-    PersonRepo personRepo;
 
     public PersonId createNewPersonId(String residentialStatus) {
         switch ( residentialStatus ) {
