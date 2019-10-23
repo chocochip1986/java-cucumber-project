@@ -6,6 +6,7 @@ import cdit_automation.enums.TestEnvEnums;
 import cdit_automation.exceptions.UnsupportedBrowserException;
 import cdit_automation.exceptions.UnsupportedTestEnvException;
 import io.cucumber.core.api.Scenario;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +25,8 @@ public class TestManager {
     private BrowserTypeEnums currentBrowserType;
     private TestEnvEnums testEnv;
 
+    private static int DEFAULT_EXPLICIT_WAIT;
+
     @Autowired
     public TestManager() {
         initialize();
@@ -36,6 +39,7 @@ public class TestManager {
         listOfScenariosRan = new ArrayList<Scenario>();
         currentBrowserType = getEnvVarBrowserType();
         testEnv = getEnvVarTestEnv();
+        DEFAULT_EXPLICIT_WAIT = testEnv.equals(TestEnvEnums.LOCAL) ? 10 : 60;
     }
 
     public void addToFailingListOfScenarios(Scenario scenario) {
@@ -78,6 +82,11 @@ public class TestManager {
     @Autowired
     public void setWebDriverConfiguration() {
         driverManager.setCurrentWebDriver(currentBrowserType);
+    }
+
+    @Autowired
+    public void setExplicitWait() {
+        driverManager.setExplicitWait(DEFAULT_EXPLICIT_WAIT);
     }
 
     public void openBrowser() {
