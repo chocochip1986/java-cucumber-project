@@ -31,6 +31,7 @@ public class PageUtils {
 
     private Wait wait;
     private long EXPLICIT_WAIT;
+    private final String LOG_WEB_NAVIGATION_PREFIX = "[WebNavigation]";
 
     public PageUtils() {
         //DO NOTHING
@@ -84,7 +85,7 @@ public class PageUtils {
                 List<WebElement> webElements = driverManager.getDriver().findElements(By.xpath(xpath));
                 return webElements;
             }
-        }, xpath, "[WebNavigation] - Cannot find such element: "+xpath);
+        }, xpath, LOG_WEB_NAVIGATION_PREFIX+" - Cannot find such element: "+xpath);
     }
 
     public WebElement findWebElementByXpath(String xpath) {
@@ -93,7 +94,7 @@ public class PageUtils {
                 WebElement webElement = driverManager.getDriver().findElement(By.xpath(xpath));
                 return webElement;
             }
-        }, xpath, "[WebNavigation] - Cannot find such element: "+xpath);
+        }, xpath, LOG_WEB_NAVIGATION_PREFIX+" - Cannot find such element: "+xpath);
     }
 
     public List<WebElement> findWebElementsByCss(String css) {
@@ -102,7 +103,7 @@ public class PageUtils {
                 List<WebElement> webElements = driverManager.getDriver().findElements(By.cssSelector(css));
                 return webElements;
             }
-        }, css, "[WebNavigation] - Cannot find such element: "+css);
+        }, css, LOG_WEB_NAVIGATION_PREFIX+" - Cannot find such element: "+css);
     }
 
     public WebElement findWebElementByCss(String css) {
@@ -111,7 +112,7 @@ public class PageUtils {
                 WebElement webElement = driverManager.getDriver().findElement(By.cssSelector(css));
                 return webElement;
             }
-        }, css, "[WebNavigation] - Cannot find such element: "+css);
+        }, css, LOG_WEB_NAVIGATION_PREFIX+" - Cannot find such element: "+css);
     }
 
     public void click_on(String cssOrXpath) {
@@ -121,7 +122,7 @@ public class PageUtils {
             public void apply(WebElement webElement, String s) {
                 webElement.click();
             }
-        }, webElement, "[WebNavigation] - Unable to click on element: "+cssOrXpath);
+        }, webElement, LOG_WEB_NAVIGATION_PREFIX+" - Unable to click on element: "+cssOrXpath);
     }
 
     public void setText(String cssOrXpath, String keywords) {
@@ -131,7 +132,7 @@ public class PageUtils {
             public void apply(WebElement webElement, String s) {
                 webElement.sendKeys(keywords);
             }
-        }, webElement, "[WebNavigation] - Unable to set text in element: "+cssOrXpath);
+        }, webElement, LOG_WEB_NAVIGATION_PREFIX+" - Unable to set text in element: "+cssOrXpath);
     }
 
     public void uncheck(String cssOrXpath) {
@@ -141,7 +142,7 @@ public class PageUtils {
             public void apply(WebElement webElement, String s) {
                 webElement.click();
             }
-        }, webElement, "[WebNavigation] - Unable to uncheck element: "+cssOrXpath);
+        }, webElement, LOG_WEB_NAVIGATION_PREFIX+" - Unable to uncheck element: "+cssOrXpath);
     }
 
     public void check(String cssOrXpath) {
@@ -151,7 +152,7 @@ public class PageUtils {
             public void apply(WebElement webElement, String s) {
                 webElement.click();
             }
-        }, webElement, "[WebNavigation] - Unable to check element: "+cssOrXpath);
+        }, webElement, LOG_WEB_NAVIGATION_PREFIX+" - Unable to check element: "+cssOrXpath);
     }
 
     public boolean isChecked(String cssOrXpath) {
