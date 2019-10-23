@@ -1,11 +1,13 @@
 package cdit_automation.page_navigation;
 
 import cdit_automation.driver_management.DriverManager;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
@@ -14,9 +16,12 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
+@Slf4j
 @Component
 public class PageUtils {
 
@@ -78,14 +83,12 @@ public class PageUtils {
     }
 
     public WebElement findWebElementByXpath(String xpath) {
-        try {
-            WebElement webElement = driverManager.getDriver().findElement(By.xpath(xpath));
-            return webElement;
-        }
-        catch (NoSuchElementException e) {
-            errorMessage(null);
-            throw e;
-        }
+        return yieldToBlock(new BiFunction<String, String, WebElement>() {
+            public WebElement apply(String css, String errMsg) {
+                WebElement webElement = driverManager.getDriver().findElement(By.xpath(xpath));
+                return webElement;
+            }
+        }, xpath, "[WebNavigation] - Cannot find such element: "+xpath);
     }
 
     public List<WebElement> findWebElementsByCss(String css) {
@@ -94,10 +97,33 @@ public class PageUtils {
     }
 
     public WebElement findWebElementByCss(String css) {
-        WebElement webElement = driverManager.getDriver().findElement(By.cssSelector(css));
-
-        return webElement;
+        return yieldToBlock(new BiFunction<String, String, WebElement>() {
+            public WebElement apply(String css, String errMsg) {
+                WebElement webElement = driverManager.getDriver().findElement(By.cssSelector(css));
+                return webElement;
+            }
+        }, css, "[WebNavigation] - Cannot find such element: "+css);
     }
+
+    public WebElement yieldToBlock(BiFunction<String, String, WebElement> function, String cssOrXpath, String errMsg) {
+        try {
+            return function.apply(cssOrXpath, errMsg);
+        }
+        catch (WebDriverException errorMessage) {
+            errorMessage(errMsg);
+            throw errorMessage;
+        }
+    }
+//
+//    public List<WebElement> yieldToBlock(BiFunction<String, String, List<WebElement>> function, String cssOrXpath, String errMsg) {
+//        try {
+//            return function.apply(cssOrXpath, errMsg);
+//        }
+//        catch (WebDriverException errorMessage) {
+//            errorMessage(errMsg);
+//            throw errorMessage;
+//        }
+//    }
 
     public void click_on(String cssOrXpath) {
         WebElement webElement = findElement(cssOrXpath);
@@ -163,13 +189,11 @@ public class PageUtils {
     }
 
     private void errorMessage(String error_message) {
-        //TODO log error message
+        log.error(error_message);
         takeScreenshot();
     }
 
     private void takeScreenshot() {
         File srcFile = ((TakesScreenshot)driverManager.getDriver()).getScreenshotAs(OutputType.FILE);
-
-
     }
 }
