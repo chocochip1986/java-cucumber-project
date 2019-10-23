@@ -5,13 +5,16 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.time.Duration;
 import java.util.List;
-import java.util.function.Function;
 
 @Component
 public class PageUtils {
@@ -19,8 +22,14 @@ public class PageUtils {
     @Autowired
     DriverManager driverManager;
 
+    private Wait wait;
+
     public PageUtils() {
         //DO NOTHING
+        wait = new FluentWait(driverManager.getDriver())
+                .withTimeout(Duration.ofSeconds(driverManager.getExplicitWait()))
+                .pollingEvery(Duration.ofSeconds(1L))
+                .ignoring(Exception.class);
     }
 
     public WebElement findElement(String cssOrXpath) {

@@ -25,7 +25,7 @@ public class TestManager {
     private BrowserTypeEnums currentBrowserType;
     private TestEnvEnums testEnv;
 
-    private static int DEFAULT_EXPLICIT_WAIT;
+    private static long DEFAULT_EXPLICIT_WAIT;
 
     @Autowired
     public TestManager() {
@@ -39,7 +39,7 @@ public class TestManager {
         listOfScenariosRan = new ArrayList<Scenario>();
         currentBrowserType = getEnvVarBrowserType();
         testEnv = getEnvVarTestEnv();
-        DEFAULT_EXPLICIT_WAIT = testEnv.equals(TestEnvEnums.LOCAL) ? 10 : 60;
+        DEFAULT_EXPLICIT_WAIT = testEnv.equals(TestEnvEnums.LOCAL) ? 10L : 60L;
     }
 
     public void addToFailingListOfScenarios(Scenario scenario) {
