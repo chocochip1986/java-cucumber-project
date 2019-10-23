@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.time.Duration;
 import java.util.List;
+import java.util.function.Function;
 
 @Component
 public class PageUtils {
@@ -23,13 +24,37 @@ public class PageUtils {
     DriverManager driverManager;
 
     private Wait wait;
+    private long EXPLICIT_WAIT;
 
     public PageUtils() {
         //DO NOTHING
+        EXPLICIT_WAIT = 0L;
+    }
+
+    public void setExplicitWait(long wait) {
+        EXPLICIT_WAIT = wait;
+    }
+
+    public void setupExplicitWait() {
         wait = new FluentWait(driverManager.getDriver())
-                .withTimeout(Duration.ofSeconds(driverManager.getExplicitWait()))
+                .withTimeout(Duration.ofSeconds(EXPLICIT_WAIT))
                 .pollingEvery(Duration.ofSeconds(1L))
                 .ignoring(Exception.class);
+    }
+
+    public WebElement findElementWithWait(String cssOrXpath) {
+        WebElement resultWebElement = (WebElement)wait.until(new Function<WebDriver, WebElement>(){
+            public WebElement apply(WebDriver webDriver) {
+                if ( cssOrXpath.startsWith("//") ) {
+                    return findWebElementByXpath(cssOrXpath);
+                }
+                else {
+                    return findWebElementByCss(cssOrXpath);
+                }
+            }
+        });
+
+        return resultWebElement;
     }
 
     public WebElement findElement(String cssOrXpath) {

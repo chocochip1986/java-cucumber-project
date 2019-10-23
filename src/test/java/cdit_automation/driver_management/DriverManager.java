@@ -29,7 +29,6 @@ public class DriverManager {
     private WebDriver driver;
     private List<String> listOfCurrentWindowHandles;
     private String currentWindowHandle;
-    private long explicitWait;
 
     public DriverManager() {
         initialize();
@@ -44,14 +43,6 @@ public class DriverManager {
 
     public void setCurrentWebDriver(BrowserTypeEnums browser) {
         this.currentWebDriver = browser;
-    }
-
-    public void setExplicitWait(long explicitWait) {
-        this.explicitWait = explicitWait;
-    }
-
-    public long getExplicitWait() {
-        return explicitWait;
     }
 
     public void visit(String url) {

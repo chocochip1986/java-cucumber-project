@@ -1,7 +1,7 @@
 package cdit_automation.enums;
 
 public enum TestEnvEnums {
-    LOCAL("local", "hostname", "testusername", "testpassword", "1521", "XE", 10L);
+    LOCAL("local", "hostname", "testusername", "testpassword", "1521", "XE", 1L, 10L);
 
     private String name;
     private String databaseHostName;
@@ -10,8 +10,9 @@ public enum TestEnvEnums {
     private String databasePort;
     private String databaseName;
     private long implicitWait;
+    private long explicitWait;
 
-    TestEnvEnums(String name, String databaseHostName, String databaseUsername, String databasePassword, String databasePort, String databaseName, long implicitWait) {
+    TestEnvEnums(String name, String databaseHostName, String databaseUsername, String databasePassword, String databasePort, String databaseName, long implicitWait, long explicitWait) {
         this.name = name;
         this.databaseHostName = databaseHostName;
         this.databaseUsername = databaseUsername;
@@ -19,9 +20,14 @@ public enum TestEnvEnums {
         this.databasePort = databasePort;
         this.databaseName = databaseName;
         this.implicitWait = implicitWait;
+        this.explicitWait = explicitWait;
     }
 
     public long getImplicitWait() {
         return implicitWait;
+    }
+
+    public long getExplicitWait() {
+        return explicitWait;
     }
 }
