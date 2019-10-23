@@ -45,12 +45,7 @@ public class PageUtils {
     public WebElement findElementWithWait(String cssOrXpath) {
         WebElement resultWebElement = (WebElement)wait.until(new Function<WebDriver, WebElement>(){
             public WebElement apply(WebDriver webDriver) {
-                if ( cssOrXpath.startsWith("//") ) {
-                    return findWebElementByXpath(cssOrXpath);
-                }
-                else {
-                    return findWebElementByCss(cssOrXpath);
-                }
+                return findElement(cssOrXpath);
             }
         });
 
