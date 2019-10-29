@@ -1,4 +1,5 @@
 Feature: Mha batch job processing end to end feature
 
   Scenario: Dual Citizen batch job processing runs successfully
-    Given there is 1 existing dual citizen
+    Given there are 2 existing dual citizens
+    And I verify that the dual citizens exists

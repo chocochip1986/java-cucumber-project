@@ -52,6 +52,14 @@ public class StepDefLevelTestContext {
         return (T)testVariables.get(name);
     }
 
+    public boolean contains(String key) {
+        return testVariables.containsKey(key);
+    }
+
+    public boolean doNotContain(String key) {
+        return !testVariables.containsKey(key);
+    }
+
     public void reset() {
         testVariables = new HashMap<>();
     }

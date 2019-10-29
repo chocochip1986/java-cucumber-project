@@ -1,8 +1,11 @@
 package cdit_automation.data_helpers;
 
 import cdit_automation.data_setup.Phaker;
+import cdit_automation.enums.NationalityEnum;
 import cdit_automation.enums.PersonIdTypeEnum;
 import cdit_automation.enums.RestrictedEnum;
+import cdit_automation.models.Batch;
+import cdit_automation.models.Nationality;
 import cdit_automation.models.Person;
 import cdit_automation.models.PersonId;
 import org.springframework.stereotype.Service;
@@ -69,6 +72,31 @@ public class PersonIdService extends AbstractService {
                 .personIdType(PersonIdTypeEnum.NRIC)
                 .person(person)
                 .build();
+        personIdrepo.save(personId);
+
+        return personId;
+    }
+
+    public PersonId createDualCitizen() {
+        Batch batch = Batch.builder().build();
+        Person person = Person.builder()
+                .restricted(RestrictedEnum.NORMAL)
+                .build();
+        Nationality nationality = Nationality.builder()
+                .nationality(NationalityEnum.DUAL_CITIZENSHIP)
+                .batch(batch)
+                .person(person)
+                .build();
+
+        PersonId personId = PersonId.builder()
+                .naturalId(Phaker.validNric())
+                .person(person)
+                .personIdType(PersonIdTypeEnum.NRIC)
+                .build();
+
+        batchRepo.save(batch);
+        personRepo.save(person);
+        nationalityRepo.save(nationality);
         personIdrepo.save(personId);
 
         return personId;

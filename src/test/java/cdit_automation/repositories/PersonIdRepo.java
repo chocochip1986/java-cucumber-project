@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PersonIdRepo extends JpaRepository<PersonId, Long> {
+    public PersonId findByNaturalId ( String identifier );
 }
