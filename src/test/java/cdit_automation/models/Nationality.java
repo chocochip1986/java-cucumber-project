@@ -29,7 +29,7 @@ import java.sql.Timestamp;
 @Builder
 @EqualsAndHashCode
 @Table(name = "nationality")
-public class Nationality {
+public class Nationality extends AbstractEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

@@ -30,7 +30,7 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Check(constraints = "person_id_type IN ('NRIC', 'FIN', 'PP')")
 @Table(name = "person_id")
-public class PersonId {
+public class PersonId extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
