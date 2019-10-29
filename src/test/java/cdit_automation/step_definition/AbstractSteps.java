@@ -2,6 +2,7 @@ package cdit_automation.step_definition;
 
 import cdit_automation.configuration.StepDefLevelTestContext;
 import cdit_automation.configuration.TestManager;
+import cdit_automation.data_helpers.BatchFileCreator;
 import cdit_automation.data_helpers.PersonIdService;
 import cdit_automation.page_navigation.PageUtils;
 import cdit_automation.repositories.BatchRepo;
@@ -16,14 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class AbstractSteps {
 
-    @Autowired
-    protected TestManager testManager;
+    @Autowired protected TestManager testManager;
 
-    @Autowired
-    protected PageUtils pageUtils;
+    @Autowired protected PageUtils pageUtils;
 
-    @Autowired
-    protected StepDefLevelTestContext testContext;
+    @Autowired protected StepDefLevelTestContext testContext;
+
+    @Autowired protected BatchFileCreator batchFileCreator;
 
     @Autowired
     protected PersonIdService personIdService;

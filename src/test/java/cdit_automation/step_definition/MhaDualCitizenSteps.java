@@ -1,16 +1,25 @@
 package cdit_automation.step_definition;
 
 import cdit_automation.asserts.Assert;
+import cdit_automation.data_setup.Phaker;
 import cdit_automation.exceptions.TestDataSetupErrorException;
 import cdit_automation.models.PersonId;
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Ignore
@@ -43,5 +52,39 @@ public class MhaDualCitizenSteps extends AbstractSteps {
             Assert.assertNotNull(actualPersonId, "No such person id db:" +expectedPersonId.getNaturalId());
             Assert.assertTrue(expectedPersonId.getNaturalId(), actualPersonId.getNaturalId(), "No such person in db!");
         }
+    }
+
+    @Given("the mha dual citizen file has the following details:")
+    public void thatTheMhaDualCitizenFileHasTheFollowingDetails(DataTable table) throws IOException {
+        List<Map<String, String>> list = table.asMaps(String.class, String.class);
+        List<String> listOfNewDCs = new ArrayList<>();
+        List<String> listOfExistingDCs = new ArrayList<>();
+        List<String> listOfExpiredDCs = new ArrayList<>();
+        for ( int i = 0 ; i < Integer.valueOf(list.get(0).get("NewDualCitizensInFile")) ; i++ ) {
+            listOfNewDCs.add(Phaker.validNric());
+        }
+
+        testContext.set("listOfNewDCs", listOfNewDCs);
+
+        for ( int i = 0 ; i < Integer.valueOf(list.get(0).get("ExistingDualCitizensInFile")) ; i++ ) {
+            PersonId existingDC = personIdService.createDualCitizen();
+            listOfExistingDCs.add(existingDC.getNaturalId());
+        }
+
+        testContext.set("listOfExistingDCs", listOfNewDCs);
+
+        for ( int i = 0 ; i < Integer.valueOf(list.get(0).get("ExpiredDualCitizens")) ; i++ ) {
+            PersonId expiredDC = personIdService.createDualCitizen();
+            listOfExpiredDCs.add(expiredDC.getNaturalId());
+        }
+
+        testContext.set("listOfExpiredDCs", listOfExpiredDCs);
+
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+
+        List<String> listOfIdentifiersToWriteToFile = Stream.of(listOfNewDCs, listOfExistingDCs).flatMap(Collection::stream).collect(Collectors.toList());
+        listOfIdentifiersToWriteToFile.add(0, LocalDate.now().minusDays(5).format(dateTimeFormatter)+LocalDate.now().format(dateTimeFormatter));
+        listOfIdentifiersToWriteToFile.add(String.valueOf(listOfNewDCs.size()+listOfExistingDCs.size()));
+        batchFileCreator.writeToFile("mha_dual_citizen.txt", listOfIdentifiersToWriteToFile);
     }
 }
