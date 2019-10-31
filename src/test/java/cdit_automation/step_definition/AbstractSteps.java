@@ -1,5 +1,6 @@
 package cdit_automation.step_definition;
 
+import cdit_automation.api_helpers.ApiHelper;
 import cdit_automation.configuration.StepDefLevelTestContext;
 import cdit_automation.configuration.TestManager;
 import cdit_automation.data_helpers.BatchFileCreator;
@@ -24,6 +25,8 @@ public class AbstractSteps {
     @Autowired protected StepDefLevelTestContext testContext;
 
     @Autowired protected BatchFileCreator batchFileCreator;
+
+    @Autowired protected ApiHelper apiHelper;
 
     @Autowired
     protected PersonIdService personIdService;

@@ -2,7 +2,11 @@ package cdit_automation.step_definition;
 
 import cdit_automation.asserts.Assert;
 import cdit_automation.data_setup.Phaker;
+import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.exceptions.TestDataSetupErrorException;
+import cdit_automation.models.Batch;
+import cdit_automation.models.FileDetail;
+import cdit_automation.models.FileReceived;
 import cdit_automation.models.PersonId;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
@@ -80,11 +84,18 @@ public class MhaDualCitizenSteps extends AbstractSteps {
 
         testContext.set("listOfExpiredDCs", listOfExpiredDCs);
 
+        FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_DUAL_CITIZEN);
+        FileReceived fileReceived = FileReceived.builder().fileDetail(fileDetail).build();
+        fileReceived = fileReceivedRepo.save(fileReceived);
+
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 
         List<String> listOfIdentifiersToWriteToFile = Stream.of(listOfNewDCs, listOfExistingDCs).flatMap(Collection::stream).collect(Collectors.toList());
         listOfIdentifiersToWriteToFile.add(0, LocalDate.now().minusDays(5).format(dateTimeFormatter)+LocalDate.now().format(dateTimeFormatter));
         listOfIdentifiersToWriteToFile.add(String.valueOf(listOfNewDCs.size()+listOfExistingDCs.size()));
         batchFileCreator.writeToFile("mha_dual_citizen.txt", listOfIdentifiersToWriteToFile);
+
+        testContext.set("listOfIdentifiersToWriteToFile", listOfIdentifiersToWriteToFile);
+        testContext.set("fileReceived", fileReceived);
     }
 }
