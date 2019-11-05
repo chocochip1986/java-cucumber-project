@@ -107,6 +107,14 @@ public class Phaker {
         return generatedFin;
     }
 
+    public static String obtainValidNricChecksum(String firstChar, String digits) {
+        return validChecksum(firstChar, digits, NRIC_MAP);
+    }
+
+    public static String obtainValidFinChecksum(String firstChar, String digits) {
+        return validChecksum(firstChar, digits, FIN_MAP);
+    }
+
     public static <E> E randomItemFromArray(E[] input) {
         return input[rand.nextInt(input.length)];
     }
