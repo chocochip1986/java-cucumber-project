@@ -3,17 +3,22 @@ package cdit_automation.step_definition;
 import cdit_automation.asserts.Assert;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.FileTypeEnum;
+import cdit_automation.enums.NationalityEnum;
+import cdit_automation.enums.PersonIdTypeEnum;
 import cdit_automation.enums.RestrictedEnum;
 import cdit_automation.exceptions.TestDataSetupErrorException;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.Batch;
 import cdit_automation.models.FileDetail;
 import cdit_automation.models.FileReceived;
+import cdit_automation.models.Nationality;
 import cdit_automation.models.Person;
 import cdit_automation.models.PersonId;
+import cdit_automation.utilities.DateUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
 
@@ -25,6 +30,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,5 +122,58 @@ public class MhaDualCitizenSteps extends AbstractSteps {
 
         testContext.set("listOfIdentifiersToWriteToFile", listOfIdentifiersToWriteToFile);
         testContext.set("fileReceived", fileReceived);
+    }
+
+    @Then("I verify that there are new dual citizen in datasource db")
+    public void iVerifyThatThereAreNewDualCitizensInDatasourceDb() {
+        List<String> listOfNewDCs = testContext.get("listOfNewDCs");
+
+        log.info("Verifying that all new dual citizens are in datasource"+listOfNewDCs.toArray().toString());
+
+        List<PersonId> personIds = Collections.emptyList();
+        Date now = dateUtils.localDateToDate(dateUtils.now());
+        for(String identifier : listOfNewDCs) {
+            personIds = personIdRepo.findDualCitizen(identifier, now, now);
+
+            Assert.assertEquals(1, personIds.size(), "Person with nric: "+identifier+" is not a dual citizen!");
+
+        }
+
+    }
+
+    @Then("I verify that no changes were made to existing dual citizens")
+    public void iVerifyThatNoChangesWereMadeToExistingDualCitizens() {
+        List<String> listOfExistingDCs = testContext.get("listOfExistingDCs");
+
+        log.info("Verifying that no changes were made to all existing dual citizens who appear in the MHA dual citizen file.");
+
+        List<PersonId> personIds;
+        Date now = dateUtils.localDateToDate(dateUtils.now());
+        for(String identifier : listOfExistingDCs) {
+            personIds = personIdRepo.findDualCitizen(identifier, now, now);
+
+            Assert.assertEquals(1, personIds.size(), "Person with nric: "+identifier+" has been modified!");
+        }
+    }
+
+
+    @Then("I verify that the dual citizens who are not in the file will be Singaporeans")
+    public void iVerifyThatTheDualCitizensWhoAreNotInTheFileWillBeSingaporeans() {
+        List<String> listOfExpiredDCs = testContext.get("listOfExpiredDCs");
+
+        log.info("Verifying that existing dual citizens who did not appear in the file will become Singaporeans");
+
+        List<PersonId> personIds;
+        Date now = dateUtils.localDateToDate(dateUtils.now());
+        for(String identifier : listOfExpiredDCs) {
+            personIds = personIdRepo.findDualCitizen(identifier, now, now);
+
+            Assert.assertEquals(0, personIds.size(), "Person with nric: "+identifier+" has an error!");
+
+            PersonId personId = personIdRepo.findCurrentPersonIdByIdentifier(identifier, PersonIdTypeEnum.NRIC, now);
+            Nationality currentNationality = nationalityRepo.findCurrentNationalityByPerson(personId.getPerson(), now);
+
+            Assert.assertEquals(NationalityEnum.SINGAPORE_CITIZEN, currentNationality.getNationality(), "Person with nric "+identifier+" is not converted to Singaporean!");
+        }
     }
 }

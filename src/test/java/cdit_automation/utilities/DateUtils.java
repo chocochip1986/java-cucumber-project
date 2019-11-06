@@ -7,7 +7,9 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 @Component
 public class DateUtils {
@@ -104,5 +106,9 @@ public class DateUtils {
 
     public LocalDate yearsAfterDate(LocalDate date, long years) {
         return date.plusYears(years);
+    }
+
+    public Date localDateToDate(LocalDate localDate) {
+        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 }

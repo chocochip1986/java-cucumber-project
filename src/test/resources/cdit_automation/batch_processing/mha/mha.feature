@@ -10,3 +10,6 @@ Feature: Mha batch job processing end to end feature
     | 1                     | 1                          | 1                   |
     When the mha dual citizen job is ran
     And the batch job completes running
+    Then I verify that there are new dual citizen in datasource db
+    Then I verify that no changes were made to existing dual citizens
+    Then I verify that the dual citizens who are not in the file will be Singaporeans
