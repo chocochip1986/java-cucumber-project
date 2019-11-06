@@ -103,7 +103,10 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 
         List<String> listOfIdentifiersToWriteToFile = Stream.of(listOfNewDCs, listOfExistingDCs).flatMap(Collection::stream).collect(Collectors.toList());
-        listOfIdentifiersToWriteToFile.add(0, LocalDate.now().minusDays(5).format(dateTimeFormatter)+LocalDate.now().format(dateTimeFormatter));
+
+        String extractionDate = dateUtils.daysBeforeToday(5).format(dateTimeFormatter);
+        String cutOffDate = extractionDate;
+        listOfIdentifiersToWriteToFile.add(0, extractionDate+cutOffDate);
         listOfIdentifiersToWriteToFile.add(String.valueOf(listOfNewDCs.size()+listOfExistingDCs.size()));
         batchFileCreator.writeToFile("mha_dual_citizen.txt", listOfIdentifiersToWriteToFile);
 
