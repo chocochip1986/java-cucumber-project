@@ -1,6 +1,5 @@
 package cdit_automation.step_definition;
 
-import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.FileReceived;
 import io.cucumber.java.en.When;
@@ -12,10 +11,10 @@ public class CommandSteps extends AbstractSteps {
         if ( fileReceived == null ) {
             throw new TestFailException("No file received record created!!!");
         }
-        triggerBatchJob(FileTypeEnum.MHA_DUAL_CITIZEN, fileReceived);
+        triggerBatchJob(fileReceived);
     }
 
-    private void triggerBatchJob(FileTypeEnum fileTypeEnum, FileReceived fileReceived) {
-        apiHelper.sendCallToTriggerBatchJob(fileTypeEnum, fileReceived);
+    private void triggerBatchJob(FileReceived fileReceived) {
+        apiHelper.sendCallToTriggerBatchJob(fileReceived);
     }
 }

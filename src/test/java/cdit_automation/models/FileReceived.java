@@ -39,8 +39,8 @@ public class FileReceived {
     @JoinColumn(name = "file_detail_id")
     private FileDetail fileDetail;
 
-    @Column(name = "file_name")
-    private String fileName;
+    @Column(name = "file_path")
+    private String filePath;
 
     @Column(name = "file_size")
     private Double fileSize;

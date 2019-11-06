@@ -4,6 +4,7 @@ import cdit_automation.asserts.Assert;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.exceptions.TestDataSetupErrorException;
+import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.Batch;
 import cdit_automation.models.FileDetail;
 import cdit_automation.models.FileReceived;
@@ -14,8 +15,11 @@ import io.cucumber.java.en.Given;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
 
+import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -85,7 +89,15 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         testContext.set("listOfExpiredDCs", listOfExpiredDCs);
 
         FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_DUAL_CITIZEN);
-        FileReceived fileReceived = FileReceived.builder().fileDetail(fileDetail).build();
+        File file = new File("src/test/resources/artifacts/mha_dual_citizen.txt");
+        if ( !file.exists() ) {
+            throw new TestFailException("No such file in path src/test/resources/artifacts/mha_dual_citizen.txt");
+        }
+        FileReceived fileReceived = FileReceived.builder()
+                .receivedTimestamp(Timestamp.valueOf(LocalDateTime.now()))
+                .filePath(file.getAbsolutePath())
+                .fileDetail(fileDetail)
+                .build();
         fileReceived = fileReceivedRepo.save(fileReceived);
 
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");

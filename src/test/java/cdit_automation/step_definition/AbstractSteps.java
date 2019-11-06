@@ -14,6 +14,7 @@ import cdit_automation.repositories.IncomingRecordRepo;
 import cdit_automation.repositories.NationalityRepo;
 import cdit_automation.repositories.PersonIdRepo;
 import cdit_automation.repositories.PersonRepo;
+import cdit_automation.utilities.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class AbstractSteps {
@@ -21,6 +22,7 @@ public class AbstractSteps {
     @Autowired protected TestManager testManager;
 
     @Autowired protected PageUtils pageUtils;
+    @Autowired protected DateUtils dateUtils;
 
     @Autowired protected StepDefLevelTestContext testContext;
 
