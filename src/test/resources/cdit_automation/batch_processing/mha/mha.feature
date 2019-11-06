@@ -1,9 +1,11 @@
 Feature: Mha batch job processing end to end feature
 
+  @Set_1
   Scenario: Dual Citizen batch job processing runs successfully
     Given there are 2 existing dual citizens
     And I verify that the dual citizens exists
 
+  @Set_2
   Scenario: Dual Citizen batch job processing runs successfully
     Given the mha dual citizen file has the following details:
     | NewDualCitizensInFile | ExistingDualCitizensInFile | ExpiredDualCitizens |
