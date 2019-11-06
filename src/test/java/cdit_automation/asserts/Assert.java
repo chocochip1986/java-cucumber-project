@@ -33,14 +33,26 @@ public class Assert {
         }
     }
 
+    public static void assertEquals(Object expected, Object actual, String errorMsg) {
+        if ( !actual.equals(expected) ) {
+            String finalMsg = errorMsg+"\nExpected: "+expected.toString()+"\nActual: "+actual.toString();
+            raiseError(finalMsg);
+        }
+    }
+
     private static void raiseError(String errorMessage) {
         errorMessage(errorMessage);
         throw new TestFailException(errorMessage);
     }
 
+    private static void raiseErrorAndTakeScreenshot(String errorMessage) {
+        errorMessage(errorMessage);
+        takeScreenshot();
+        throw new TestFailException(errorMessage);
+    }
+
     private static void errorMessage(String errorMessage) {
         log.error(errorMessage);
-        takeScreenshot();
     }
 
     private static void takeScreenshot() {

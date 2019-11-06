@@ -9,3 +9,4 @@ Feature: Mha batch job processing end to end feature
     | NewDualCitizensInFile | ExistingDualCitizensInFile | ExpiredDualCitizens |
     | 1                     | 1                          | 1                   |
     When the mha dual citizen job is ran
+    And the batch job completes running
