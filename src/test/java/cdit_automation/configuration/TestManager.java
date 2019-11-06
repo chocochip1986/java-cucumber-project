@@ -91,14 +91,12 @@ public class TestManager {
     }
 
     public void openBrowser() {
-        System.out.println("Starting browser...");
         driverManager.open();
         driverManager.setImplicitWait(this.testEnv.getImplicitWait());
         pageUtils.setupExplicitWait();
     }
 
     public void closeBrowser() {
-        System.out.println("Closing browser...");
         driverManager.close();
     }
 

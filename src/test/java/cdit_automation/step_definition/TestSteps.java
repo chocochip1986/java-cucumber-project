@@ -44,6 +44,7 @@ public class TestSteps extends AbstractSteps {
 
     @Given("^I access the google search engine$")
     public void iAccessTheGoogleSearchEngine() {
+        testManager.openBrowser();
         googlePage.visitSearchPage();
     }
 

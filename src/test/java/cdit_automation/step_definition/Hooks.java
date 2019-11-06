@@ -18,8 +18,6 @@ public class Hooks extends AbstractSteps {
     @Before(order=2)
     public void beforeScenario(Scenario scenario) {
         displayScenarioStartMessage(scenario);
-
-        testManager.openBrowser();
     }
 
     @After(order=2)

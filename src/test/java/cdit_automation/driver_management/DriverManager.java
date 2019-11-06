@@ -3,6 +3,7 @@ package cdit_automation.driver_management;
 
 import cdit_automation.enums.BrowserTypeEnums;
 import cdit_automation.exceptions.UnsupportedWebDriverException;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Component
 public class DriverManager {
 
@@ -68,6 +70,7 @@ public class DriverManager {
     }
 
     public WebDriver open() {
+        log.info("Opening browser...");
         driver = createDriverFor();
         currentWindowHandle = this.driver.getWindowHandle();
         listOfCurrentWindowHandles.add(currentWindowHandle);
@@ -75,9 +78,12 @@ public class DriverManager {
     }
 
     public void close() {
-        driver.quit();
-        currentWindowHandle = null;
-        driver = null;
+        if ( driver != null ) {
+            log.info("Closing browser...");
+            driver.quit();
+            currentWindowHandle = null;
+            driver = null;
+        }
     }
 
     private void removeWindowHandleFromList(String windowHandle) {
