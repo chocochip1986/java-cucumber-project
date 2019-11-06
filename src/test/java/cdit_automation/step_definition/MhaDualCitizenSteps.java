@@ -3,11 +3,13 @@ package cdit_automation.step_definition;
 import cdit_automation.asserts.Assert;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.FileTypeEnum;
+import cdit_automation.enums.RestrictedEnum;
 import cdit_automation.exceptions.TestDataSetupErrorException;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.Batch;
 import cdit_automation.models.FileDetail;
 import cdit_automation.models.FileReceived;
+import cdit_automation.models.Person;
 import cdit_automation.models.PersonId;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
@@ -69,7 +71,8 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         List<String> listOfExistingDCs = new ArrayList<>();
         List<String> listOfExpiredDCs = new ArrayList<>();
         for ( int i = 0 ; i < Integer.valueOf(list.get(0).get("NewDualCitizensInFile")) ; i++ ) {
-            listOfNewDCs.add(Phaker.validNric());
+            PersonId personId = personIdService.createNewSCPersonId();
+            listOfNewDCs.add(personId.getNaturalId());
         }
 
         testContext.set("listOfNewDCs", listOfNewDCs);

@@ -8,9 +8,13 @@ import cdit_automation.repositories.IncomingRecordRepo;
 import cdit_automation.repositories.NationalityRepo;
 import cdit_automation.repositories.PersonIdRepo;
 import cdit_automation.repositories.PersonRepo;
+import cdit_automation.utilities.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class AbstractService {
+    @Autowired
+    protected DateUtils dateUtils;
+
     @Autowired
     protected PersonIdRepo personIdrepo;
 

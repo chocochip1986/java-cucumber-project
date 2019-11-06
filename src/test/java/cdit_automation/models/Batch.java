@@ -31,7 +31,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Table(name = "batch")
-public class Batch {
+public class Batch extends AbstractEntity  {
     @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

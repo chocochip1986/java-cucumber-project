@@ -29,7 +29,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Table(name = "file_received")
-public class FileReceived {
+public class FileReceived extends AbstractEntity  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

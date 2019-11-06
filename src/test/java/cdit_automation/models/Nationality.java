@@ -1,6 +1,8 @@
 package cdit_automation.models;
 
 import cdit_automation.enums.NationalityEnum;
+import cdit_automation.models.embeddables.BiTemporalData;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -9,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -29,7 +32,7 @@ import java.sql.Timestamp;
 @Builder
 @EqualsAndHashCode
 @Table(name = "nationality")
-public class Nationality extends AbstractEntity{
+public class Nationality extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -55,4 +58,8 @@ public class Nationality extends AbstractEntity{
 
     @Column(name = "citizenship_renunciation_date")
     private Timestamp citizenshipRenunciationDate;
+
+    @JsonIgnore
+    @Embedded
+    private BiTemporalData biTemporalData;
 }

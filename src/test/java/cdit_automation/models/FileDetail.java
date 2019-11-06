@@ -32,7 +32,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Table(name = "file_detail")
-public class FileDetail {
+public class FileDetail extends AbstractEntity  {
     @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

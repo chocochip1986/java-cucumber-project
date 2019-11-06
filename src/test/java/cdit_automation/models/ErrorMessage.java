@@ -28,7 +28,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Builder
 @Table(name = "error_message")
-public class ErrorMessage {
+public class ErrorMessage extends AbstractEntity  {
     public static class ValidatedTypes {
         public static final String PROPERTY = "property";
         public static final String NO_INTERACTION = "noInteraction";

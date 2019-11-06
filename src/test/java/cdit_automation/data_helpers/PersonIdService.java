@@ -8,7 +8,11 @@ import cdit_automation.models.Batch;
 import cdit_automation.models.Nationality;
 import cdit_automation.models.Person;
 import cdit_automation.models.PersonId;
+import cdit_automation.models.embeddables.BiTemporalData;
+import cdit_automation.utilities.DateUtils;
 import org.springframework.stereotype.Service;
+
+import java.sql.Timestamp;
 
 @Service
 public class PersonIdService extends AbstractService {
@@ -30,48 +34,88 @@ public class PersonIdService extends AbstractService {
     }
 
     public PersonId createNewPPPersonId() {
+        Batch batch = Batch.builder().build();
         Person person = Person.builder()
                 .restricted(RestrictedEnum.NORMAL)
                 .build();
-        personRepo.save(person);
 
         PersonId personId = PersonId.builder()
                 .naturalId(Phaker.validNric())
                 .personIdType(PersonIdTypeEnum.PP)
                 .person(person)
+                .biTemporalData(new BiTemporalData()
+                        .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1))))
                 .build();
+
+        Nationality nationality = Nationality.builder()
+                .nationality(NationalityEnum.PERMANENT_RESIDENT)
+                .batch(batch)
+                .person(person)
+                .biTemporalData(new BiTemporalData()
+                        .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1))))
+                .build();
+
+        batchRepo.save(batch);
+        personRepo.save(person);
         personIdrepo.save(personId);
+        nationalityRepo.save(nationality);
 
         return personId;
     }
 
     public PersonId createNewFRPersonId() {
+        Batch batch = Batch.builder().build();
         Person person = Person.builder()
                 .restricted(RestrictedEnum.NORMAL)
                 .build();
-        personRepo.save(person);
 
         PersonId personId = PersonId.builder()
                 .naturalId(Phaker.validFin())
                 .personIdType(PersonIdTypeEnum.FIN)
                 .person(person)
                 .build();
+
+        Nationality nationality = Nationality.builder()
+                .nationality(NationalityEnum.NON_SINGAPORE_CITIZEN)
+                .batch(batch)
+                .person(person)
+                .biTemporalData(new BiTemporalData()
+                        .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1))))
+                .build();
+
+        batchRepo.save(batch);
+        personRepo.save(person);
+        nationalityRepo.save(nationality);
         personIdrepo.save(personId);
 
         return personId;
     }
 
     public PersonId createNewSCPersonId() {
+        Batch batch = Batch.builder().build();
         Person person = Person.builder()
                 .restricted(RestrictedEnum.NORMAL)
                 .build();
-        personRepo.save(person);
 
         PersonId personId = PersonId.builder()
                 .naturalId(Phaker.validNric())
                 .personIdType(PersonIdTypeEnum.NRIC)
                 .person(person)
+                .biTemporalData(new BiTemporalData()
+                        .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1))))
                 .build();
+
+        Nationality nationality = Nationality.builder()
+                .nationality(NationalityEnum.SINGAPORE_CITIZEN)
+                .batch(batch)
+                .person(person)
+                .biTemporalData(new BiTemporalData()
+                        .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1))))
+                .build();
+
+        batchRepo.save(batch);
+        personRepo.save(person);
+        nationalityRepo.save(nationality);
         personIdrepo.save(personId);
 
         return personId;
@@ -86,12 +130,16 @@ public class PersonIdService extends AbstractService {
                 .nationality(NationalityEnum.DUAL_CITIZENSHIP)
                 .batch(batch)
                 .person(person)
+                .biTemporalData(new BiTemporalData()
+                        .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1))))
                 .build();
 
         PersonId personId = PersonId.builder()
                 .naturalId(Phaker.validNric())
                 .person(person)
                 .personIdType(PersonIdTypeEnum.NRIC)
+                .biTemporalData(new BiTemporalData()
+                        .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1))))
                 .build();
 
         batchRepo.save(batch);

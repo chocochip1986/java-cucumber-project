@@ -1,6 +1,8 @@
 package cdit_automation.models;
 
 import cdit_automation.enums.PersonIdTypeEnum;
+import cdit_automation.models.embeddables.BiTemporalData;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -10,6 +12,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Check;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -49,4 +52,8 @@ public class PersonId extends AbstractEntity {
     @NotNull
     @Column(name = "natural_id")
     private String naturalId;
+
+    @JsonIgnore
+    @Embedded
+    private BiTemporalData biTemporalData;
 }

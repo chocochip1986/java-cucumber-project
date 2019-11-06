@@ -29,7 +29,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Table(name = "incoming_record")
-public class IncomingRecord {
+public class IncomingRecord extends AbstractEntity {
     private static final long serialVersionUID = 1L;
 
     @Id
