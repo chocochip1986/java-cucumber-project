@@ -24,6 +24,7 @@ public class Hooks extends AbstractSteps {
     public void afterScenario(Scenario scenario) {
         displayScenarioEndMessage(scenario);
         testManager.closeBrowser();
+        testContext.flush();
     }
 
     @After(order=1)
@@ -44,7 +45,7 @@ public class Hooks extends AbstractSteps {
     private void displayScenarioStartMessage(Scenario scenario) {
         System.out.println("======================================================");
         System.out.println("Feature: " +scenario.getId());
-        System.out.println("Starting - " +scenario.getName()+ "at line: "+scenario.getLine());
+        System.out.println("Scenario - " +scenario.getName()+ " at line: "+scenario.getLine());
         System.out.println("Scenario tags: " +scenario.getSourceTagNames());
         System.out.println("Scenario url: " +scenario.getUri());
         System.out.println("======================================================");

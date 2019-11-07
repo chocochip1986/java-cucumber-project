@@ -23,14 +23,15 @@ public class CommonSteps extends AbstractSteps {
         pageUtils.closeTab();
     }
 
-    @And("the batch job completes running")
-    public void theMhaDualCitizenJobCompletesRunning() {
+    @And("^the batch job completes running with status (.*)$")
+    public void theMhaDualCitizenJobCompletesRunning(BatchStatusEnum expectedBatchStatus) {
+        log.info("Veryfing that batch job ended with status: "+expectedBatchStatus);
         if (testContext.contains("fileReceived")) {
             FileReceived fileReceived = testContext.get("fileReceived");
             Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived).get(0);
 
             Assert.assertNotNull(batch, "No batch record created for fileReceived record: "+fileReceived.getId().toString());
-            Assert.assertEquals(BatchStatusEnum.FILE_CHECK_AGAINST_PREP_DATA, batch.getStatus(), "MHA Dual Citizen job did not complete!!!");
+            Assert.assertEquals(expectedBatchStatus, batch.getStatus(), "MHA Dual Citizen job did not complete!!!");
         } else {
             throw new TestFailException("No batch job previously created!");
         }

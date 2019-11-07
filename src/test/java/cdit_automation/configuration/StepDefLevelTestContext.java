@@ -60,7 +60,7 @@ public class StepDefLevelTestContext {
         return !testVariables.containsKey(key);
     }
 
-    public void reset() {
+    public void flush() {
         testVariables = new HashMap<>();
     }
 }

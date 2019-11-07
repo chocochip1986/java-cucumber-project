@@ -1,6 +1,9 @@
 package cdit_automation.step_definition;
 
 import cdit_automation.asserts.Assert;
+import cdit_automation.constants.Constants;
+import cdit_automation.constants.ErrorMessageConstants;
+import cdit_automation.data_helpers.BatchFileCreator;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.enums.NationalityEnum;
@@ -9,6 +12,7 @@ import cdit_automation.enums.RestrictedEnum;
 import cdit_automation.exceptions.TestDataSetupErrorException;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.Batch;
+import cdit_automation.models.ErrorMessage;
 import cdit_automation.models.FileDetail;
 import cdit_automation.models.FileReceived;
 import cdit_automation.models.Nationality;
@@ -29,6 +33,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -99,29 +104,15 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         testContext.set("listOfExpiredDCs", listOfExpiredDCs);
 
         FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_DUAL_CITIZEN);
-        File file = new File("src/test/resources/artifacts/mha_dual_citizen.txt");
-        if ( !file.exists() ) {
-            throw new TestFailException("No such file in path src/test/resources/artifacts/mha_dual_citizen.txt");
-        }
-        FileReceived fileReceived = FileReceived.builder()
-                .receivedTimestamp(Timestamp.valueOf(LocalDateTime.now()))
-                .filePath(file.getAbsolutePath())
-                .fileDetail(fileDetail)
-                .build();
-        fileReceived = fileReceivedRepo.save(fileReceived);
-
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, "mha_dual_citizen"));
 
         List<String> listOfIdentifiersToWriteToFile = Stream.of(listOfNewDCs, listOfExistingDCs).flatMap(Collection::stream).collect(Collectors.toList());
 
-        String extractionDate = dateUtils.daysBeforeToday(5).format(dateTimeFormatter);
-        String cutOffDate = extractionDate;
-        listOfIdentifiersToWriteToFile.add(0, extractionDate+cutOffDate);
+        listOfIdentifiersToWriteToFile.add(0, batchFileCreator.generateDoubleHeader());
         listOfIdentifiersToWriteToFile.add(String.valueOf(listOfNewDCs.size()+listOfExistingDCs.size()));
         batchFileCreator.writeToFile("mha_dual_citizen.txt", listOfIdentifiersToWriteToFile);
 
         testContext.set("listOfIdentifiersToWriteToFile", listOfIdentifiersToWriteToFile);
-        testContext.set("fileReceived", fileReceived);
     }
 
     @Then("I verify that there are new dual citizen in datasource db")
@@ -175,5 +166,40 @@ public class MhaDualCitizenSteps extends AbstractSteps {
 
             Assert.assertEquals(NationalityEnum.SINGAPORE_CITIZEN, currentNationality.getNationality(), "Person with nric "+identifier+" is not converted to Singaporean!");
         }
+    }
+
+    @Given("the mha dual citizen file has an invalid nric")
+    public void theMhaDualCitizenFileHasAnInvalidNric() throws IOException{
+        log.info("Creating an invalid nric entry in MHA dual citizen file");
+        String invalidNric = "A1234567C";
+
+        List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();
+        List<String> body = new ArrayList<>();
+        body.add(invalidNric);
+
+        FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_DUAL_CITIZEN);
+        testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, "mha_dual_citizen"));
+
+        listOfIdentifiersToWriteToFile.add(0, batchFileCreator.generateDoubleHeader());
+        listOfIdentifiersToWriteToFile.addAll(body);
+        listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
+
+        batchFileCreator.writeToFile("mha_dual_citizen.txt", listOfIdentifiersToWriteToFile);
+
+        testContext.set("invalidNric", invalidNric);
+    }
+
+    @Then("I verify that there is an error message for invalid nric")
+    public void iVerifyThatThereIsAnErrorMessageForInvalidNric() {
+        log.info("Verifying that there is an error message for invalid nric");
+
+        FileReceived fileReceived = testContext.get("fileReceived");
+
+        List<Batch> batches = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
+        Batch batch = batches.get(0);
+
+        List<ErrorMessage> errorMessages = errorMessageRepo.findByBatch(batch);
+
+        Assert.assertEquals(true, errorMessages.stream().anyMatch(errorMessage -> errorMessage.getMessage().equals(ErrorMessageConstants.INVALID_NRIC_FORMAT)), "No invalid nric error message found!");
     }
 }
