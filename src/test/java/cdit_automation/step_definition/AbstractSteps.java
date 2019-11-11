@@ -1,6 +1,7 @@
 package cdit_automation.step_definition;
 
 import cdit_automation.api_helpers.ApiHelper;
+import cdit_automation.configuration.AddressJacksonObjectMapper;
 import cdit_automation.configuration.StepDefLevelTestContext;
 import cdit_automation.configuration.TestManager;
 import cdit_automation.data_helpers.BatchFileCreator;
@@ -41,4 +42,6 @@ public class AbstractSteps {
     @Autowired protected PersonRepo personRepo;
     @Autowired protected ErrorMessageRepo errorMessageRepo;
     @Autowired protected PersonIdRepo personIdRepo;
+    @Autowired
+    AddressJacksonObjectMapper addressJacksonObjectMapper;
 }

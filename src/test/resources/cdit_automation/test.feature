@@ -33,3 +33,9 @@ Feature: This is a test feature
     Given There is an SC person
     Given There is a FR person
     Given There is a PR person
+
+  @Set_6
+  Scenario: Get a random address
+    Address should contain street name, road name, block number and postal code
+    Given An random address
+    Then address should not be empty

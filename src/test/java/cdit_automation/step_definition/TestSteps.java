@@ -1,10 +1,12 @@
 package cdit_automation.step_definition;
 
+import cdit_automation.models.Address;
 import cdit_automation.pages.GooglePage;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -63,5 +65,27 @@ public class TestSteps extends AbstractSteps {
     public void iVerifyThatTheSearchIsDone() {
         log.info("Verifying search is done");
         googlePage.verifySearchSucceeded();
+    }
+
+    @Given("An random address")
+    public void anRandomAddress() {
+        Address result = addressJacksonObjectMapper.getRandomCondominiumAddress();
+        testContext.set("address", result);
+        log.info("Result: " + result.toString());
+    }
+
+    @Then("address should not be empty")
+    public void addressShouldNotBeEmpty() {
+        Address address = testContext.get("address");
+        Assert.assertNotNull(address.getAddress());
+        Assert.assertNotEquals("", address.getAddress());
+        Assert.assertNotNull(address.getBlockNo());
+        Assert.assertNotEquals("", address.getBlockNo());
+        Assert.assertNotNull(address.getBuildingName());
+        Assert.assertNotEquals("", address.getBuildingName());
+        Assert.assertNotNull(address.getPostal());
+        Assert.assertNotEquals("", address.getPostal());
+        Assert.assertNotNull(address.getRoadName());
+        Assert.assertNotEquals("", address.getRoadName());
     }
 }
