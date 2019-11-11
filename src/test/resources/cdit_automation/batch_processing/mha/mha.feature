@@ -19,3 +19,9 @@ Feature: Mha batch job processing end to end feature
     When the mha dual citizen job is ran
     And the batch job completes running with status RAW_DATA_ERROR
     Then I verify that there is an error message for invalid nric
+
+  @Set_3 @defect
+  Scenario: Duplicate nric in dual citizen file
+    Given the mha dual citizen file have duplicate nric record
+    When the mha dual citizen job is ran
+    And the batch job completes running with status RAW_DATA_ERROR
