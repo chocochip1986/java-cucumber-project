@@ -5,6 +5,7 @@ import cdit_automation.configuration.AddressJacksonObjectMapper;
 import cdit_automation.configuration.StepDefLevelTestContext;
 import cdit_automation.configuration.TestManager;
 import cdit_automation.data_helpers.BatchFileCreator;
+import cdit_automation.data_helpers.MhaDualCitizenFileDataPrep;
 import cdit_automation.data_helpers.PersonIdService;
 import cdit_automation.page_navigation.PageUtils;
 import cdit_automation.repositories.BatchRepo;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class AbstractSteps {
 
+    //Test suite related helpers
     @Autowired protected TestManager testManager;
 
     @Autowired protected PageUtils pageUtils;
@@ -31,9 +33,14 @@ public class AbstractSteps {
 
     @Autowired protected ApiHelper apiHelper;
 
+    //Data creators
     @Autowired
     protected PersonIdService personIdService;
 
+    //Batch File Data Helpers
+    @Autowired protected MhaDualCitizenFileDataPrep mhaDualCitizenFileDataPrep;
+
+    //Model Repositories
     @Autowired protected BatchRepo batchRepo;
     @Autowired protected FileReceivedRepo fileReceivedRepo;
     @Autowired protected FileDetailRepo fileDetailRepo;

@@ -171,7 +171,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
     @Given("the mha dual citizen file has an invalid nric")
     public void theMhaDualCitizenFileHasAnInvalidNric() throws IOException{
         log.info("Creating an invalid nric entry in MHA dual citizen file");
-        String invalidNric = "A1234567C";
+        String invalidNric = mhaDualCitizenFileDataPrep.createInvalidNric();
 
         List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();
         List<String> body = new ArrayList<>();
@@ -207,12 +207,9 @@ public class MhaDualCitizenSteps extends AbstractSteps {
     public void theMhaDualCitizenFileHaveDuplicateNricRecord() throws IOException {
         log.info("Creating an duplicate nric entry in MHA dual citizen file");
 
-        PersonId personId = personIdService.createNewSCPersonId();
 
         List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();
-        List<String> body = new ArrayList<>();
-        body.add(personId.getNaturalId());
-        body.add(personId.getNaturalId());
+        List<String> body = mhaDualCitizenFileDataPrep.createDuplicatedValidNricEntries();
 
         FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_DUAL_CITIZEN);
         testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, "mha_dual_citizen"));
@@ -223,6 +220,6 @@ public class MhaDualCitizenSteps extends AbstractSteps {
 
         batchFileCreator.writeToFile("mha_dual_citizen.txt", listOfIdentifiersToWriteToFile);
 
-        testContext.set("duplicateNric", personId.getNaturalId());
+        testContext.set("duplicateNric", body.get(0));
     }
 }
