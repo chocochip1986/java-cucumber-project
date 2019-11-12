@@ -79,37 +79,25 @@ public class MhaDualCitizenSteps extends AbstractSteps {
     @Given("the mha dual citizen file has the following details:")
     public void thatTheMhaDualCitizenFileHasTheFollowingDetails(DataTable table) throws IOException {
         List<Map<String, String>> list = table.asMaps(String.class, String.class);
-        List<String> listOfNewDCs = new ArrayList<>();
-        List<String> listOfExistingDCs = new ArrayList<>();
-        List<String> listOfExpiredDCs = new ArrayList<>();
-        for ( int i = 0 ; i < Integer.valueOf(list.get(0).get("NewDualCitizensInFile")) ; i++ ) {
-            PersonId personId = personIdService.createNewSCPersonId();
-            listOfNewDCs.add(personId.getNaturalId());
-        }
+        List<String> listOfNewDCs = mhaDualCitizenFileDataPrep.createListOfNewDualCitizens(parseStringSize(list.get(0).get("NewDualCitizensInFile")));
+        List<String> listOfExistingDCs = mhaDualCitizenFileDataPrep.createListOfExistingDualCitizens(parseStringSize(list.get(0).get("ExistingDualCitizensInFile")));
+        List<String> listOfExpiredDCs = mhaDualCitizenFileDataPrep.createListOfExistingDualCitizens(parseStringSize(list.get(0).get("ExpiredDualCitizens")));
+        List<String> listOfDuplicatedNrics = mhaDualCitizenFileDataPrep.createDuplicatedValidNricEntries(parseStringSize(list.get(0).get("DuplicatedNrics")));
+        List<String> listOfInvalidNrics = mhaDualCitizenFileDataPrep.createListOfInvalidNrics(parseStringSize(list.get(0).get("InvalidNrics")));
 
         testContext.set("listOfNewDCs", listOfNewDCs);
-
-        for ( int i = 0 ; i < Integer.valueOf(list.get(0).get("ExistingDualCitizensInFile")) ; i++ ) {
-            PersonId existingDC = personIdService.createDualCitizen();
-            listOfExistingDCs.add(existingDC.getNaturalId());
-        }
-
         testContext.set("listOfExistingDCs", listOfNewDCs);
-
-        for ( int i = 0 ; i < Integer.valueOf(list.get(0).get("ExpiredDualCitizens")) ; i++ ) {
-            PersonId expiredDC = personIdService.createDualCitizen();
-            listOfExpiredDCs.add(expiredDC.getNaturalId());
-        }
-
         testContext.set("listOfExpiredDCs", listOfExpiredDCs);
+        testContext.set("listOfDuplicatedNrics", listOfDuplicatedNrics);
+        testContext.set("listOfInvalidNrics", listOfInvalidNrics);
 
         FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_DUAL_CITIZEN);
         testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, "mha_dual_citizen"));
 
-        List<String> listOfIdentifiersToWriteToFile = Stream.of(listOfNewDCs, listOfExistingDCs).flatMap(Collection::stream).collect(Collectors.toList());
+        List<String> listOfIdentifiersToWriteToFile = Stream.of(listOfNewDCs, listOfExistingDCs, listOfDuplicatedNrics, listOfInvalidNrics).flatMap(Collection::stream).collect(Collectors.toList());
 
         listOfIdentifiersToWriteToFile.add(0, batchFileCreator.generateDoubleHeader());
-        listOfIdentifiersToWriteToFile.add(String.valueOf(listOfNewDCs.size()+listOfExistingDCs.size()));
+        listOfIdentifiersToWriteToFile.add(String.valueOf(listOfNewDCs.size()+listOfExistingDCs.size()+listOfInvalidNrics.size()+listOfDuplicatedNrics.size()));
         batchFileCreator.writeToFile("mha_dual_citizen.txt", listOfIdentifiersToWriteToFile);
 
         testContext.set("listOfIdentifiersToWriteToFile", listOfIdentifiersToWriteToFile);
@@ -221,5 +209,14 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         batchFileCreator.writeToFile("mha_dual_citizen.txt", listOfIdentifiersToWriteToFile);
 
         testContext.set("duplicateNric", body.get(0));
+    }
+
+    private int parseStringSize(String size) {
+        try {
+            return Integer.valueOf(size);
+        } catch (NumberFormatException e) {
+            //Do nothing
+        }
+        return 0;
     }
 }

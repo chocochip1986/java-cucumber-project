@@ -26,10 +26,11 @@ Feature: Mha batch job processing end to end feature
     When the mha dual citizen job is ran
     And the batch job completes running with status RAW_DATA_ERROR
 
-#  @Set_4
-#  Scenario: Test scenario
-#    Given the mha dual citizen file has the following details:
-#    | NewDualCitizensInFile | InvalidNrics | ExistingDualCitizensInFile |
-#    | 1                     | 1            | 1                          |
-#    When the mha dual citizen job is ran
-#    And the batch job completes running with status RAW_DATA_ERROR
+  @Set_4
+  Scenario: Test scenario
+    Given the mha dual citizen file has the following details:
+    | NewDualCitizensInFile | InvalidNrics | ExistingDualCitizensInFile |
+    | 1                     | 1            | 1                          |
+    When the mha dual citizen job is ran
+    And the batch job completes running with status RAW_DATA_ERROR
+    Then I verify that there is an error message for invalid nric
