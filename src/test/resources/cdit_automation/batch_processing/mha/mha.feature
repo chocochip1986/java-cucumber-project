@@ -40,3 +40,9 @@ Feature: Mha batch job processing end to end feature
     Given the mha dual citizen file is empty
     When the mha dual citizen job is ran
     And the batch job completes running with status FILE_CHECK_AGAINST_PREP_DATA
+
+  @Set_5
+  Scenario: MHA sends a file with a cut-off date in the future
+    Given the mha dual citizen file has a cut-off date in the future
+    When the mha dual citizen job is ran
+    And the batch job completes running with status RAW_DATA_ERROR

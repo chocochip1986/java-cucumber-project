@@ -22,7 +22,6 @@ public class BatchFileCreator extends AbstractFileCreator {
     private final String absoluteFilePath = "src/test/resources/artifacts/";
 
     public FileReceived fileCreator(FileDetail fileDetail, String fileName) {
-//        FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_DUAL_CITIZEN);
         File file = new File(absoluteFilePath+fileName+".txt");
         if ( !file.exists() ) {
             throw new TestFailException("No such file in path "+absoluteFilePath+fileName+".txt");
@@ -36,21 +35,6 @@ public class BatchFileCreator extends AbstractFileCreator {
         fileReceivedRepo.save(fileReceived);
 
         return fileReceived;
-    }
-
-    public String generateDoubleHeader(@Nullable LocalDate extractionDate, @Nullable LocalDate cutOffDate) {
-        if ( extractionDate == null ) {
-            extractionDate = dateUtils.daysBeforeToday(5);
-        }
-        if ( cutOffDate == null ) {
-            cutOffDate = dateUtils.daysBeforeToday(5);
-        }
-
-        return extractionDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD)+cutOffDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD);
-    }
-
-    public String generateDoubleHeader() {
-        return generateDoubleHeader(null, null);
     }
 
     public void writeToFile(String fileName, List<String> lines) throws IOException {

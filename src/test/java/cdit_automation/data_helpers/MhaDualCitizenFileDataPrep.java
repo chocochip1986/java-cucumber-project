@@ -1,6 +1,5 @@
 package cdit_automation.data_helpers;
 
-import cdit_automation.data_setup.Phaker;
 import cdit_automation.models.PersonId;
 import com.github.javafaker.Faker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class MhaDualCitizenFileDataPrep {
+public class MhaDualCitizenFileDataPrep extends BatchFileDataPrep {
     @Autowired
     protected PersonIdService personIdService;
 
@@ -85,14 +84,5 @@ public class MhaDualCitizenFileDataPrep {
             listOfExistingDCs.add(existingDC.getNaturalId());
         }
         return listOfExistingDCs;
-    }
-
-    private int parseStringSize(String size) {
-        try {
-            return Integer.valueOf(size);
-        } catch ( NumberFormatException e ) {
-            //Fail silently
-        }
-        return 0;
     }
 }
