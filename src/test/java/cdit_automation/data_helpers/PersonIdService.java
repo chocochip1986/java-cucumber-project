@@ -54,6 +54,7 @@ public class PersonIdService extends AbstractService {
                 .isNricCancelled(false)
                 .dateOfBirth(dateUtils.yearsBeforeToday(40))
                 .dateOfDeath(null)
+                .person(person)
                 .biTemporalData(new BiTemporalData()
                         .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1))))
                 .build();
@@ -93,6 +94,7 @@ public class PersonIdService extends AbstractService {
                 .isNricCancelled(false)
                 .dateOfBirth(dateUtils.yearsBeforeToday(40))
                 .dateOfDeath(null)
+                .person(person)
                 .biTemporalData(new BiTemporalData()
                         .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1))))
                 .build();
@@ -134,6 +136,7 @@ public class PersonIdService extends AbstractService {
                 .isNricCancelled(false)
                 .dateOfBirth(dateUtils.yearsBeforeToday(40))
                 .dateOfDeath(null)
+                .person(person)
                 .biTemporalData(new BiTemporalData()
                         .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1))))
                 .build();
@@ -175,6 +178,7 @@ public class PersonIdService extends AbstractService {
                 .isNricCancelled(false)
                 .dateOfBirth(dateUtils.yearsBeforeToday(40))
                 .dateOfDeath(null)
+                .person(person)
                 .biTemporalData(new BiTemporalData()
                         .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1))))
                 .build();
