@@ -19,6 +19,16 @@ public class CommandSteps extends AbstractSteps {
         triggerBatchJob(fileReceived);
     }
 
+    @When("^the mha death job is ran$")
+    public void triggerMhaDeathBatchJob() {
+        log.info("Triggering MHA death batch job to run");
+        FileReceived fileReceived = testContext.get("fileReceived");
+        if ( fileReceived == null ) {
+            throw new TestFailException("No file received record created!!!");
+        }
+        triggerBatchJob(fileReceived);
+    }
+
     private void triggerBatchJob(FileReceived fileReceived) {
         apiHelper.sendCallToTriggerBatchJob(fileReceived);
     }
