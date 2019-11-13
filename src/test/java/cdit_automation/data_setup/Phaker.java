@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Slf4j
 public class Phaker {
@@ -73,7 +75,7 @@ public class Phaker {
         String generatedNric = null;
         while (count < retryCount) {
             String nric = nric();
-            if (!usedValidNrics.contains(nric)) {
+            if (!usedValidNrics.contains(nric) && !isABlackListedNric(nric)) {
                 usedValidNrics.add(nric);
                 generatedNric = nric;
                 break;
@@ -117,6 +119,13 @@ public class Phaker {
 
     public static <E> E randomItemFromArray(E[] input) {
         return input[rand.nextInt(input.length)];
+    }
+
+    private static boolean isABlackListedNric(String nric) {
+        Pattern blacklistedNricPattern = Pattern.compile("^S555[0-9]{4}[A-Z]");
+        Matcher match = blacklistedNricPattern.matcher(nric);
+
+        return match.find();
     }
 
     private static String nric() {
