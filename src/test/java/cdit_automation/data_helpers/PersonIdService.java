@@ -7,6 +7,7 @@ import cdit_automation.enums.RestrictedEnum;
 import cdit_automation.models.Batch;
 import cdit_automation.models.Nationality;
 import cdit_automation.models.Person;
+import cdit_automation.models.PersonDetail;
 import cdit_automation.models.PersonId;
 import cdit_automation.models.embeddables.BiTemporalData;
 import cdit_automation.utilities.DateUtils;
@@ -47,6 +48,16 @@ public class PersonIdService extends AbstractService {
                         .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1))))
                 .build();
 
+        PersonDetail personDetail = PersonDetail.builder()
+                .batch(batch)
+                .gender(Phaker.validGender())
+                .isNricCancelled(false)
+                .dateOfBirth(dateUtils.yearsBeforeToday(40))
+                .dateOfDeath(null)
+                .biTemporalData(new BiTemporalData()
+                        .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1))))
+                .build();
+
         Nationality nationality = Nationality.builder()
                 .nationality(NationalityEnum.PERMANENT_RESIDENT)
                 .batch(batch)
@@ -58,6 +69,7 @@ public class PersonIdService extends AbstractService {
         batchRepo.save(batch);
         personRepo.save(person);
         personIdrepo.save(personId);
+        personDetailRepo.save(personDetail);
         nationalityRepo.save(nationality);
 
         return personId;
@@ -75,6 +87,16 @@ public class PersonIdService extends AbstractService {
                 .person(person)
                 .build();
 
+        PersonDetail personDetail = PersonDetail.builder()
+                .batch(batch)
+                .gender(Phaker.validGender())
+                .isNricCancelled(false)
+                .dateOfBirth(dateUtils.yearsBeforeToday(40))
+                .dateOfDeath(null)
+                .biTemporalData(new BiTemporalData()
+                        .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1))))
+                .build();
+
         Nationality nationality = Nationality.builder()
                 .nationality(NationalityEnum.NON_SINGAPORE_CITIZEN)
                 .batch(batch)
@@ -85,6 +107,7 @@ public class PersonIdService extends AbstractService {
 
         batchRepo.save(batch);
         personRepo.save(person);
+        personDetailRepo.save(personDetail);
         nationalityRepo.save(nationality);
         personIdrepo.save(personId);
 
@@ -105,6 +128,16 @@ public class PersonIdService extends AbstractService {
                         .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1))))
                 .build();
 
+        PersonDetail personDetail = PersonDetail.builder()
+                .batch(batch)
+                .gender(Phaker.validGender())
+                .isNricCancelled(false)
+                .dateOfBirth(dateUtils.yearsBeforeToday(40))
+                .dateOfDeath(null)
+                .biTemporalData(new BiTemporalData()
+                        .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1))))
+                .build();
+
         Nationality nationality = Nationality.builder()
                 .nationality(NationalityEnum.SINGAPORE_CITIZEN)
                 .batch(batch)
@@ -115,6 +148,7 @@ public class PersonIdService extends AbstractService {
 
         batchRepo.save(batch);
         personRepo.save(person);
+        personDetailRepo.save(personDetail);
         nationalityRepo.save(nationality);
         personIdrepo.save(personId);
 
@@ -126,10 +160,21 @@ public class PersonIdService extends AbstractService {
         Person person = Person.builder()
                 .restricted(RestrictedEnum.NORMAL)
                 .build();
+
         Nationality nationality = Nationality.builder()
                 .nationality(NationalityEnum.DUAL_CITIZENSHIP)
                 .batch(batch)
                 .person(person)
+                .biTemporalData(new BiTemporalData()
+                        .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1))))
+                .build();
+
+        PersonDetail personDetail = PersonDetail.builder()
+                .batch(batch)
+                .gender(Phaker.validGender())
+                .isNricCancelled(false)
+                .dateOfBirth(dateUtils.yearsBeforeToday(40))
+                .dateOfDeath(null)
                 .biTemporalData(new BiTemporalData()
                         .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1))))
                 .build();
@@ -144,6 +189,7 @@ public class PersonIdService extends AbstractService {
 
         batchRepo.save(batch);
         personRepo.save(person);
+        personDetailRepo.save(personDetail);
         nationalityRepo.save(nationality);
         personIdrepo.save(personId);
 
