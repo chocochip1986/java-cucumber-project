@@ -55,19 +55,6 @@ public class MhaDualCitizenFileDataPrep extends BatchFileDataPrep {
         return duplicateedList;
     }
 
-    public List<String> createListOfInvalidNrics(int size) {
-        List<String> listOfInvalidNrics = new ArrayList<>();
-        for ( int i = 0 ; i < size ; i++ ) {
-            listOfInvalidNrics.add(Faker.instance().bothify("?#######?"));
-        }
-
-        return listOfInvalidNrics;
-    }
-
-    public String createInvalidNric() {
-        return "A1234567F";
-    }
-
     public List<String> createListOfNewDualCitizens(@Positive int numOfNewDCs) {
         List<String> listOfNewDCs = new ArrayList<>();
         for ( int i = 0 ; i < numOfNewDCs ; i++ ) {

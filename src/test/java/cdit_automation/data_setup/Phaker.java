@@ -71,6 +71,10 @@ public class Phaker {
         return genRandomNumbers(2);
     }
 
+    public static String invalidNric() {
+        return Faker.instance().bothify("?#######?");
+    }
+
     public static String validNric() {
         int count = 0;
         int retryCount = 10000;

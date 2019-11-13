@@ -1,10 +1,14 @@
 package cdit_automation.data_helpers;
 
+import cdit_automation.data_setup.Phaker;
 import cdit_automation.utilities.DateUtils;
+import com.github.javafaker.Faker;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nullable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BatchFileDataPrep {
 
@@ -17,6 +21,19 @@ public class BatchFileDataPrep {
             //Fail silently
         }
         return 0;
+    }
+
+    public List<String> createListOfInvalidNrics(int size) {
+        List<String> listOfInvalidNrics = new ArrayList<>();
+        for ( int i = 0 ; i < size ; i++ ) {
+            listOfInvalidNrics.add(Phaker.invalidNric());
+        }
+
+        return listOfInvalidNrics;
+    }
+
+    public String createInvalidNric() {
+        return Phaker.invalidNric();
     }
 
     public String generateDoubleHeader(@Nullable LocalDate extractionDate, @Nullable LocalDate cutOffDate) {
