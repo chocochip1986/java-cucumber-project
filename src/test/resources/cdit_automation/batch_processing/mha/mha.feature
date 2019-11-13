@@ -34,3 +34,9 @@ Feature: Mha batch job processing end to end feature
     When the mha dual citizen job is ran
     And the batch job completes running with status RAW_DATA_ERROR
     Then I verify that there is an error message for invalid nric
+    
+  @Set_4
+  Scenario: MHA sends an empty Dual Citizen file
+    Given the mha dual citizen file is empty
+    When the mha dual citizen job is ran
+    And the batch job completes running with status FILE_CHECK_AGAINST_PREP_DATA

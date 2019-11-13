@@ -1,39 +1,27 @@
 package cdit_automation.step_definition;
 
 import cdit_automation.asserts.Assert;
-import cdit_automation.constants.Constants;
 import cdit_automation.constants.ErrorMessageConstants;
-import cdit_automation.data_helpers.BatchFileCreator;
-import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.enums.NationalityEnum;
 import cdit_automation.enums.PersonIdTypeEnum;
-import cdit_automation.enums.RestrictedEnum;
 import cdit_automation.exceptions.TestDataSetupErrorException;
-import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.Batch;
 import cdit_automation.models.ErrorMessage;
 import cdit_automation.models.FileDetail;
 import cdit_automation.models.FileReceived;
 import cdit_automation.models.Nationality;
-import cdit_automation.models.Person;
 import cdit_automation.models.PersonId;
-import cdit_automation.utilities.DateUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.util.Lists;
 import org.junit.Ignore;
 
-import java.io.File;
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -218,5 +206,20 @@ public class MhaDualCitizenSteps extends AbstractSteps {
             //Do nothing
         }
         return 0;
+    }
+
+    @Given("the mha dual citizen file is empty")
+    public void theMhaDualCitizenFileIsEmpty() throws IOException {
+        FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_DUAL_CITIZEN);
+        testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, "mha_dual_citizen"));
+
+        List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();;
+        List<String> body = Lists.emptyList();
+
+        listOfIdentifiersToWriteToFile.add(batchFileCreator.generateDoubleHeader());
+        listOfIdentifiersToWriteToFile.addAll(body);
+        listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
+
+        batchFileCreator.writeToFile("mha_dual_citizen.txt", listOfIdentifiersToWriteToFile);
     }
 }
