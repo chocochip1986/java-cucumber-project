@@ -10,10 +10,7 @@ import cdit_automation.models.Person;
 import cdit_automation.models.PersonDetail;
 import cdit_automation.models.PersonId;
 import cdit_automation.models.embeddables.BiTemporalData;
-import cdit_automation.utilities.DateUtils;
 import org.springframework.stereotype.Service;
-
-import java.sql.Timestamp;
 
 @Service
 public class PersonIdService extends AbstractService {

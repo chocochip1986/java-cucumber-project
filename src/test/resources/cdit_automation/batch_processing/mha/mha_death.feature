@@ -11,3 +11,7 @@ Feature: Data processing for MHA death broadcast
   @set_2
   Scenario: MHA sends a Death file for processing
     Given the mha death file has the following details:
+    | InvalidNrics |
+    | 1            |
+    When the mha death job is ran
+    And the Mha Death batch job completes running with status VALIDATION_ERROR

@@ -8,8 +8,11 @@ import org.assertj.core.util.Lists;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MhaDeathSteps extends AbstractSteps {
     @Given("^the mha death file is empty$")
@@ -28,18 +31,24 @@ public class MhaDeathSteps extends AbstractSteps {
     }
 
     @Given("^the mha death file has the following details:$")
-    public void theMhaDeathFileHasTheFollowingDetails(DataTable table) {
+    public void theMhaDeathFileHasTheFollowingDetails(DataTable table) throws IOException {
         List<Map<String, String>> list = table.asMaps(String.class, String.class);
         List<String> listOfInvalidNrics = mhaDeathDateFileDataPrep.createListWithInvalidNrics(parseStringSize(list.get(0).get("InvalidNrics")));
 
         testContext.set("listOfInvalidNrics", listOfInvalidNrics);
 
         List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();;
-        List<String> body = Lists.emptyList();
+        List<String> body = Stream.of(listOfInvalidNrics).flatMap(Collection::stream).collect(Collectors.toList());
 
         FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_DUAL_CITIZEN);
         testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, "mha_death_date"));
 
         listOfIdentifiersToWriteToFile.add(mhaDeathDateFileDataPrep.generateDoubleHeader());
+        listOfIdentifiersToWriteToFile.addAll(body);
+        listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
+
+        batchFileCreator.writeToFile("mha_death_date.txt", listOfIdentifiersToWriteToFile);
+
+        testContext.set("listOfIdentifiersToWriteToFile", listOfIdentifiersToWriteToFile);
     }
 }
