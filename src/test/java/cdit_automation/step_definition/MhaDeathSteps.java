@@ -32,7 +32,6 @@ public class MhaDeathSteps extends AbstractSteps {
         List<Map<String, String>> list = table.asMaps(String.class, String.class);
         List<String> listOfInvalidNrics = mhaDeathDateFileDataPrep.createListWithInvalidNrics(parseStringSize(list.get(0).get("InvalidNrics")));
 
-
         testContext.set("listOfInvalidNrics", listOfInvalidNrics);
 
         List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();;

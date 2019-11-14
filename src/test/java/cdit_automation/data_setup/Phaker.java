@@ -34,67 +34,39 @@ public class Phaker {
     private static final String[] MOBILENUMBER = new String[]{"9", "8"};
 
     private static final int[] DAYS_IN_MONTHS = new int[]{30, 27, 30, 29, 30, 29, 30, 30, 29, 30, 29, 30};
-    private static final DateTimeFormatter DATETIME_FORMATTER_YYYYMMDD =
+    public static final DateTimeFormatter DATETIME_FORMATTER_YYYYMMDD =
             DateTimeFormatter.ofPattern("yyyyMMdd");
     private static final LocalDate defaultLowerBoundaryDate = LocalDate.of(LocalDate.now().getYear() - 200, 1, 1);
     private static final LocalDate defaultUpperBoundaryDate = LocalDate.of(LocalDate.now().getYear() + 200, 12, 31);
 
     public static final int[] rangeOfLeapYears = calculateRangeOfLeapYears();
 
-    public static String validLeapDay() {
+    public static LocalDate validLeapDay() {
         int indexOfYearElement = 0 + (int)Math.round(Math.random() * rangeOfLeapYears.length-1);
 
-        return String.valueOf(rangeOfLeapYears[indexOfYearElement])+"0229";
+        return LocalDate.of(rangeOfLeapYears[indexOfYearElement], 2, 29);
     }
 
-    public static String validPastDate() {
+    public static LocalDate validPastDate() {
         return validDate(defaultLowerBoundaryDate, LocalDate.now());
     }
 
-    public static String validFutureDate() {
+    public static LocalDate validFutureDate() {
 
         return validDate(LocalDate.now(), defaultUpperBoundaryDate );
     }
 
-    public static String validDate() {
+    public static LocalDate validDate() {
         return validDate(null,null) ;
     }
 
-    public static String validDate(LocalDate lowerBoundaryDate, LocalDate upperBoundaryDate) {
+    public static LocalDate validDate(LocalDate lowerBoundaryDate, LocalDate upperBoundaryDate) {
         int year = randomYear(lowerBoundaryDate == null ? defaultLowerBoundaryDate.getYear() : lowerBoundaryDate.getYear(), upperBoundaryDate == null ? defaultUpperBoundaryDate.getYear() : upperBoundaryDate.getYear());
         int month = randomMonth();
         int day = randomDayOfMonth(year, month);
 
         LocalDate date = LocalDate.of(year, month+1, day);
-        return date.format(DATETIME_FORMATTER_YYYYMMDD);
-    }
-
-    private static int randomYear(int lowerBoundaryYear, int upperBoundaryYear) {
-        if ( lowerBoundaryYear < defaultLowerBoundaryDate.getYear() || lowerBoundaryYear > defaultUpperBoundaryDate.getYear() ) {
-            lowerBoundaryYear = defaultLowerBoundaryDate.getYear();
-        }
-        if ( upperBoundaryYear > defaultUpperBoundaryDate.getYear() || upperBoundaryYear < defaultLowerBoundaryDate.getYear() ) {
-            upperBoundaryYear = defaultUpperBoundaryDate.getYear();
-        }
-        int year = lowerBoundaryYear + (int)Math.round(Math.random() * (upperBoundaryYear-lowerBoundaryYear));
-
-        return year;
-    }
-
-    private static int randomMonth() {
-        return 0 + (int)Math.round(Math.random() * 11);
-    }
-
-    private static int randomDayOfMonth(int year, int month) {
-        int day = 1;
-        if ( isLeapYear(year) && month == 1 ) {
-            //If month is Feb
-            day = day + (int)Math.round(Math.random() * 28);
-        }
-        else {
-            day = day + (int)Math.round(Math.random() * DAYS_IN_MONTHS[month]);
-        }
-        return day;
+        return date;
     }
 
     public static String validEmail() {
@@ -328,5 +300,33 @@ public class Phaker {
             }
         }
         return range.stream().mapToInt(i->i).toArray();
+    }
+
+    private static int randomYear(int lowerBoundaryYear, int upperBoundaryYear) {
+        if ( lowerBoundaryYear < defaultLowerBoundaryDate.getYear() || lowerBoundaryYear > defaultUpperBoundaryDate.getYear() ) {
+            lowerBoundaryYear = defaultLowerBoundaryDate.getYear();
+        }
+        if ( upperBoundaryYear > defaultUpperBoundaryDate.getYear() || upperBoundaryYear < defaultLowerBoundaryDate.getYear() ) {
+            upperBoundaryYear = defaultUpperBoundaryDate.getYear();
+        }
+        int year = lowerBoundaryYear + (int)Math.round(Math.random() * (upperBoundaryYear-lowerBoundaryYear));
+
+        return year;
+    }
+
+    private static int randomMonth() {
+        return 0 + (int)Math.round(Math.random() * 11);
+    }
+
+    private static int randomDayOfMonth(int year, int month) {
+        int day = 1;
+        if ( isLeapYear(year) && month == 1 ) {
+            //If month is Feb
+            day = day + (int)Math.round(Math.random() * 28);
+        }
+        else {
+            day = day + (int)Math.round(Math.random() * DAYS_IN_MONTHS[month]);
+        }
+        return day;
     }
 }
