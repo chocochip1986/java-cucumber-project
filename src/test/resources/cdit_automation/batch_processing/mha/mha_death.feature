@@ -10,4 +10,4 @@ Feature: Data processing for MHA death broadcast
 
   @set_2
   Scenario: MHA sends a Death file for processing
-    Given the mha death file has the following details:
+#    Given the mha death file has the following details:

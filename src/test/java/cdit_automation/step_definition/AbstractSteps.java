@@ -5,6 +5,7 @@ import cdit_automation.configuration.AddressJacksonObjectMapper;
 import cdit_automation.configuration.StepDefLevelTestContext;
 import cdit_automation.configuration.TestManager;
 import cdit_automation.data_helpers.BatchFileCreator;
+import cdit_automation.data_helpers.MhaDeathDateFileDataPrep;
 import cdit_automation.data_helpers.MhaDualCitizenFileDataPrep;
 import cdit_automation.data_helpers.PersonIdService;
 import cdit_automation.page_navigation.PageUtils;
@@ -39,6 +40,7 @@ public class AbstractSteps {
 
     //Batch File Data Helpers
     @Autowired protected MhaDualCitizenFileDataPrep mhaDualCitizenFileDataPrep;
+    @Autowired protected MhaDeathDateFileDataPrep mhaDeathDateFileDataPrep;
 
     //Model Repositories
     @Autowired protected BatchRepo batchRepo;
@@ -49,6 +51,15 @@ public class AbstractSteps {
     @Autowired protected PersonRepo personRepo;
     @Autowired protected ErrorMessageRepo errorMessageRepo;
     @Autowired protected PersonIdRepo personIdRepo;
-    @Autowired
-    AddressJacksonObjectMapper addressJacksonObjectMapper;
+    @Autowired AddressJacksonObjectMapper addressJacksonObjectMapper;
+
+
+    protected int parseStringSize(String size) {
+        try {
+            return Integer.valueOf(size);
+        } catch (NumberFormatException e) {
+            //Do nothing
+        }
+        return 0;
+    }
 }

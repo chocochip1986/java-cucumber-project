@@ -199,15 +199,6 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         testContext.set("duplicateNric", body.get(0));
     }
 
-    private int parseStringSize(String size) {
-        try {
-            return Integer.valueOf(size);
-        } catch (NumberFormatException e) {
-            //Do nothing
-        }
-        return 0;
-    }
-
     @Given("the mha dual citizen file is empty")
     public void theMhaDualCitizenFileIsEmpty() throws IOException {
         FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_DUAL_CITIZEN);

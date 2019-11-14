@@ -3,10 +3,12 @@ package cdit_automation.data_setup;
 import cdit_automation.enums.Gender;
 import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Arrays;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -30,6 +32,70 @@ public class Phaker {
     private static final String[] ALPHABETS = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
     private static final Gender[] GENDERS = Gender.values();
     private static final String[] MOBILENUMBER = new String[]{"9", "8"};
+
+    private static final int[] DAYS_IN_MONTHS = new int[]{30, 27, 30, 29, 30, 29, 30, 30, 29, 30, 29, 30};
+    private static final DateTimeFormatter DATETIME_FORMATTER_YYYYMMDD =
+            DateTimeFormatter.ofPattern("yyyyMMdd");
+    private static final LocalDate defaultLowerBoundaryDate = LocalDate.of(LocalDate.now().getYear() - 200, 1, 1);
+    private static final LocalDate defaultUpperBoundaryDate = LocalDate.of(LocalDate.now().getYear() + 200, 12, 31);
+
+    public static final int[] rangeOfLeapYears = calculateRangeOfLeapYears();
+
+    public static String validLeapDay() {
+        int indexOfYearElement = 0 + (int)Math.round(Math.random() * rangeOfLeapYears.length-1);
+
+        return String.valueOf(rangeOfLeapYears[indexOfYearElement])+"0229";
+    }
+
+    public static String validPastDate() {
+        return validDate(defaultLowerBoundaryDate, LocalDate.now());
+    }
+
+    public static String validFutureDate() {
+
+        return validDate(LocalDate.now(), defaultUpperBoundaryDate );
+    }
+
+    public static String validDate() {
+        return validDate(null,null) ;
+    }
+
+    public static String validDate(LocalDate lowerBoundaryDate, LocalDate upperBoundaryDate) {
+        int year = randomYear(lowerBoundaryDate == null ? defaultLowerBoundaryDate.getYear() : lowerBoundaryDate.getYear(), upperBoundaryDate == null ? defaultUpperBoundaryDate.getYear() : upperBoundaryDate.getYear());
+        int month = randomMonth();
+        int day = randomDayOfMonth(year, month);
+
+        LocalDate date = LocalDate.of(year, month+1, day);
+        return date.format(DATETIME_FORMATTER_YYYYMMDD);
+    }
+
+    private static int randomYear(int lowerBoundaryYear, int upperBoundaryYear) {
+        if ( lowerBoundaryYear < defaultLowerBoundaryDate.getYear() || lowerBoundaryYear > defaultUpperBoundaryDate.getYear() ) {
+            lowerBoundaryYear = defaultLowerBoundaryDate.getYear();
+        }
+        if ( upperBoundaryYear > defaultUpperBoundaryDate.getYear() || upperBoundaryYear < defaultLowerBoundaryDate.getYear() ) {
+            upperBoundaryYear = defaultUpperBoundaryDate.getYear();
+        }
+        int year = lowerBoundaryYear + (int)Math.round(Math.random() * (upperBoundaryYear-lowerBoundaryYear));
+
+        return year;
+    }
+
+    private static int randomMonth() {
+        return 0 + (int)Math.round(Math.random() * 11);
+    }
+
+    private static int randomDayOfMonth(int year, int month) {
+        int day = 1;
+        if ( isLeapYear(year) && month == 1 ) {
+            //If month is Feb
+            day = day + (int)Math.round(Math.random() * 28);
+        }
+        else {
+            day = day + (int)Math.round(Math.random() * DAYS_IN_MONTHS[month]);
+        }
+        return day;
+    }
 
     public static String validEmail() {
         return faker.name().toString() + "@.com";
@@ -233,5 +299,34 @@ public class Phaker {
 
     private static String genRandomNumber() {
         return NUMBERS[new Random().nextInt(NUMBERS.length)];
+    }
+
+    private static boolean isLeapYear(int year) {
+        if ( year % 4 == 0 ) {
+            if ( year % 100 == 0 ) {
+                if ( year % 400 == 0 ) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                return true;
+            }
+        } else
+        {
+            return false;
+        }
+    }
+
+    private static int[] calculateRangeOfLeapYears() {
+        List<Integer> range = new ArrayList<>();
+        for ( int i = defaultLowerBoundaryDate.getYear() ; i <= defaultUpperBoundaryDate.getYear() ; i++ ) {
+            if ( isLeapYear(i) ) {
+                range.add(i);
+            }
+        }
+        return range.stream().mapToInt(i->i).toArray();
     }
 }
