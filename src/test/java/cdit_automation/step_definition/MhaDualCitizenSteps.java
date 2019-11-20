@@ -100,7 +100,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         List<PersonId> personIds = Collections.emptyList();
         Date now = dateUtils.localDateToDate(dateUtils.now());
         for(String identifier : listOfNewDCs) {
-            personIds = personIdRepo.findDualCitizen(identifier, now, now);
+            personIds = personIdRepo.findDualCitizen(identifier);
 
             Assert.assertEquals(1, personIds.size(), "Person with nric: "+identifier+" is not a dual citizen!");
 
@@ -117,7 +117,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         List<PersonId> personIds;
         Date now = dateUtils.localDateToDate(dateUtils.now());
         for(String identifier : listOfExistingDCs) {
-            personIds = personIdRepo.findDualCitizen(identifier, now, now);
+            personIds = personIdRepo.findDualCitizen(identifier);
 
             Assert.assertEquals(1, personIds.size(), "Person with nric: "+identifier+" has been modified!");
         }
@@ -133,7 +133,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         List<PersonId> personIds;
         Date now = dateUtils.localDateToDate(dateUtils.now());
         for(String identifier : listOfExpiredDCs) {
-            personIds = personIdRepo.findDualCitizen(identifier, now, now);
+            personIds = personIdRepo.findDualCitizen(identifier);
 
             Assert.assertEquals(0, personIds.size(), "Person with nric: "+identifier+" has an error!");
 
