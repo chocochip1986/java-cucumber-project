@@ -26,6 +26,11 @@ public interface PersonIdRepo extends JpaRepository<PersonId, Long> {
             "AND n.type = 'DUAL_CITIZENSHIP'", nativeQuery = true)
     List<PersonId> findDualCitizen (String identifier, Date date);
 
-    @Query("SELECT p FROM PersonId p WHERE p.naturalId = ?1 AND p.personIdType = ?2 AND p.biTemporalData.businessTemporalData.validFrom <= ?3 AND ( p.biTemporalData.businessTemporalData.validTill = null OR p.biTemporalData.businessTemporalData.validTill >= ?3 )")
-    PersonId findCurrentPersonIdByIdentifier(String identifier, PersonIdTypeEnum type, Date now);
+    @Query(value = "SELECT p.* FROM PERSON_ID AS OF PERIOD FOR validity_period_person_id TRUNC(SYSDATE) p " +
+            "WHERE p.natural_id = ?1", nativeQuery = true)
+    PersonId findPersonByNaturalId(String identifier);
+
+    @Query(value = "SELECT p.* FROM PERSON_ID AS OF PERIOD FOR validity_period_person_id ?2 p " +
+            "WHERE p.natural_id = ?1", nativeQuery = true)
+    PersonId findPersonByNaturalId(String identifier, Date date);
 }
