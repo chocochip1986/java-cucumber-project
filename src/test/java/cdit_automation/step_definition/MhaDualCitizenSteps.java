@@ -138,7 +138,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
             Assert.assertEquals(0, personIds.size(), "Person with nric: "+identifier+" has an error!");
 
             PersonId personId = personIdRepo.findPersonByNaturalId(identifier);
-            Nationality currentNationality = nationalityRepo.findCurrentNationalityByPerson(personId.getPerson(), now);
+            Nationality currentNationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
 
             Assert.assertEquals(NationalityEnum.SINGAPORE_CITIZEN, currentNationality.getNationality(), "Person with nric "+identifier+" is not converted to Singaporean!");
         }
