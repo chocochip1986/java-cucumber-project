@@ -15,6 +15,7 @@ import cdit_automation.repositories.FileDetailRepo;
 import cdit_automation.repositories.FileReceivedRepo;
 import cdit_automation.repositories.IncomingRecordRepo;
 import cdit_automation.repositories.NationalityRepo;
+import cdit_automation.repositories.PersonDetailRepo;
 import cdit_automation.repositories.PersonIdRepo;
 import cdit_automation.repositories.PersonRepo;
 import cdit_automation.utilities.DateUtils;
@@ -51,6 +52,7 @@ public class AbstractSteps {
     @Autowired protected PersonRepo personRepo;
     @Autowired protected ErrorMessageRepo errorMessageRepo;
     @Autowired protected PersonIdRepo personIdRepo;
+    @Autowired protected PersonDetailRepo personDetailRepo;
     @Autowired AddressJacksonObjectMapper addressJacksonObjectMapper;
 
 

@@ -12,8 +12,6 @@ import java.util.Map;
 
 @Component
 public class MhaDualCitizenFileDataPrep extends BatchFileDataPrep {
-    @Autowired
-    protected PersonIdService personIdService;
 
     public MhaDualCitizenFileDataPrep() {
 
