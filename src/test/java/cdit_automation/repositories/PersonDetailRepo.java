@@ -11,9 +11,11 @@ import java.util.Date;
 @Repository
 public interface PersonDetailRepo extends JpaRepository<PersonDetail, Long> {
 
-    @Query("SELECT p FROM PersonDetail p " +
-            "WHERE p.person = ?1 " +
-            "AND p.biTemporalData.businessTemporalData.validFrom <= ?2 " +
-            "AND ( p.biTemporalData.businessTemporalData.validTill = null OR p.biTemporalData.businessTemporalData.validTill >= ?2 )")
-    PersonDetail findByPerson(Person person, Date now);
+    @Query(value = "SELECT p.* FROM PERSON_DETAIL AS OF PERIOD FOR validity_period_person_detail TRUNC(sysdate) p " +
+            "WHERE p.entity_key = ?1", nativeQuery = true)
+    PersonDetail findByPerson(Person person);
+
+    @Query(value = "SELECT p.* FROM PERSON_DETAIL AS OF PERIOD FOR validity_period_person_detail ?2 p " +
+            "WHERE p.entity_key = ?1", nativeQuery = true)
+    PersonDetail findByPerson(Person person, Date date);
 }

@@ -55,7 +55,7 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
 
         for ( int i = 0 ; i < numOfValidDeathCases ; i++ ) {
             PersonId personId = personIdService.createNewSCPersonId();
-            PersonDetail personDetail = personDetailRepo.findByPerson(personId.getPerson(), dateUtils.localDateToDate(dateUtils.now()));
+            PersonDetail personDetail = personDetailRepo.findByPerson(personId.getPerson());
             listOfValidDeathCases.add(personId.getNaturalId()+randomDeathDate(fileReceivedDate, personDetail.getDateOfBirth()));
         }
 
@@ -67,7 +67,7 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
 
         for ( int i = 0 ; i < numOfValidDeathCases ; i++ ) {
             PersonId personId = personIdService.createNewPPPersonId();
-            PersonDetail personDetail = personDetailRepo.findByPerson(personId.getPerson(), dateUtils.localDateToDate(dateUtils.now()));
+            PersonDetail personDetail = personDetailRepo.findByPerson(personId.getPerson());
             listOfValidDeathCases.add(personId.getNaturalId()+randomDeathDate(fileReceivedDate, personDetail.getDateOfBirth()));
         }
 
@@ -79,11 +79,23 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
 
         for ( int i = 0 ; i < numOfValidDeathCases ; i++ ) {
             PersonId personId = personIdService.createNewFRPersonId();
-            PersonDetail personDetail = personDetailRepo.findByPerson(personId.getPerson(), dateUtils.localDateToDate(dateUtils.now()));
+            PersonDetail personDetail = personDetailRepo.findByPerson(personId.getPerson());
             listOfValidDeathCases.add(personId.getNaturalId()+randomDeathDate(fileReceivedDate, personDetail.getDateOfBirth()));
         }
 
         return listOfValidDeathCases;
+    }
+
+    public List<String> createListOfPplDeathDateEarlierThanBirthDate(int numOfPpl) {
+        List<String> listOfPpl = new ArrayList<>();
+
+        for ( int i = 0 ; i < numOfPpl ; i++ ) {
+            PersonId personId = personIdService.createNewSCPersonId();
+            PersonDetail personDetail = personDetailRepo.findByPerson(personId.getPerson());
+
+        }
+
+        return listOfPpl;
     }
 
     private String randomDeathDate(@NotNull LocalDate fileReceviedDate, @NotNull LocalDate birthDate) {

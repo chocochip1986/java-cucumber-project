@@ -49,6 +49,7 @@ public class MhaDeathSteps extends AbstractSteps {
         List<String> listOfDuplicatedNricOnlyEntries = mhaDeathDateFileDataPrep.createListOfDuplicatedNricOnlyEntries(parseStringSize(list.get(0).get("DuplicatedNricOnlyEntries")));
         List<String> listOfValidSCDeathCases = mhaDeathDateFileDataPrep.createListOfValidSCDeathCases(parseStringSize(list.get(0).get("ValidSCDeathCases")), fileReceived.getReceivedTimestamp().toLocalDateTime().toLocalDate());
         List<String> listOfValidPPDeathCases = mhaDeathDateFileDataPrep.createListOfValidPPDeathCases(parseStringSize(list.get(0).get("ValidPPDeathCases")), fileReceived.getReceivedTimestamp().toLocalDateTime().toLocalDate());
+//        List<String> listOfPplDeathDateEarlierThanBirthDate = mhaDeathDateFileDataPrep
 
         testContext.set("listOfInvalidNrics", listOfInvalidNrics);
         testContext.set("listOfDuplicatedEntries", listOfDuplicatedEntries);
@@ -82,7 +83,7 @@ public class MhaDeathSteps extends AbstractSteps {
             String nric = listOfPeopleForValidation.get(i).substring(0,9);
 
             PersonId personId = personIdRepo.findByNaturalId(nric);
-            PersonDetail personDetail = personDetailRepo.findByPerson(personId.getPerson(), dateUtils.localDateToDate(dateUtils.now()));
+            PersonDetail personDetail = personDetailRepo.findByPerson(personId.getPerson());
 
             Assert.assertNotNull(personDetail, "No valid person detail record for: "+personId.getNaturalId());
 
