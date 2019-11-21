@@ -1,6 +1,7 @@
 @development
-@mha_dual_citizen
-Feature: Mha batch job processing end to end feature
+@dual_citizen
+@mha
+Feature: Data processing for MHA dual citizenship
 
   @Set_1
   Scenario: Dual Citizen batch job processing runs successfully
