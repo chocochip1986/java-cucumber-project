@@ -1,7 +1,5 @@
 package cdit_automation.models;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.MappedSuperclass;

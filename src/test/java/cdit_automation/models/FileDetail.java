@@ -5,7 +5,6 @@ import cdit_automation.enums.FileFrequencyEnum;
 import cdit_automation.enums.FileTypeEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
