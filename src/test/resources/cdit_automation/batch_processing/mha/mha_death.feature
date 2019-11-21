@@ -34,3 +34,12 @@ Feature: Data processing for MHA death broadcast
     When the mha death job is ran
     And the Mha Death batch job completes running with status RAW_DATA_ERROR
     Then I verify that there is an error message for invalid nric
+
+  @set_5
+  Scenario: MHA sends a death date for a person who already is dead
+    Given the mha death file has the following details:
+      | PplWhoAreAlreadyDead |
+      | 1                    |
+    When the mha death job is ran
+    And the Mha Death batch job completes running with status VALIDATED_TO_PREPARED_ERROR
+    Then I verify that there is an error message for existing death case

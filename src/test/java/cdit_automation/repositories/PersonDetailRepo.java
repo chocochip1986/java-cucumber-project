@@ -26,4 +26,9 @@ public interface PersonDetailRepo extends JpaRepository<PersonDetail, Long> {
     @Modifying(clearAutomatically = true)
     @Query("UPDATE PersonDetail p SET p.dateOfBirth = ?1 WHERE p.person = ?2")
     int updateBirthDateForPerson(LocalDate newBirthDate, Person person);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE PersonDetail p SET p.dateOfDeath = ?1 WHERE p.person = ?2")
+    int updateDeathDateForPerson(LocalDate newDeathDate, Person person);
 }

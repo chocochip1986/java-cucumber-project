@@ -59,6 +59,7 @@ public class MhaDeathSteps extends AbstractSteps {
         List<String> listOfValidPPDeathCases = mhaDeathDateFileDataPrep.createListOfValidPPDeathCases(parseStringSize(list.get(0).get("ValidPPDeathCases")), fileReceived.getReceivedTimestamp().toLocalDateTime().toLocalDate());
         List<String> listOfValidFRDeathCases = mhaDeathDateFileDataPrep.createListOfValidFRDeathCases(parseStringSize(list.get(0).get("ValidFRDeathCases")), fileReceived.getReceivedTimestamp().toLocalDateTime().toLocalDate());
         List<String> listOfPplDeathDateEarlierThanBirthDate = mhaDeathDateFileDataPrep.createListOfPplDeathDateEarlierThanBirthDate(parseStringSize(list.get(0).get("DeathDateEarlierThanBirthDate")));
+        List<String> listOfPplWhoAreAlreadyDead = mhaDeathDateFileDataPrep.createListOfPplWhoAreAlreadyDead(parseStringSize(list.get(0).get("PplWhoAreAlreadyDead")), fileReceived.getReceivedTimestamp().toLocalDateTime().toLocalDate());
 
         testContext.set("listOfInvalidNrics", listOfInvalidNrics);
         testContext.set("listOfDuplicatedEntries", listOfDuplicatedEntries);
@@ -67,6 +68,7 @@ public class MhaDeathSteps extends AbstractSteps {
         testContext.set("listOfValidPPDeathCases", listOfValidPPDeathCases);
         testContext.set("listOfValidFRDeathCases", listOfValidFRDeathCases);
         testContext.set("listOfPplDeathDateEarlierThanBirthDate", listOfPplDeathDateEarlierThanBirthDate);
+        testContext.set("listOfPplWhoAreAlreadyDead", listOfPplWhoAreAlreadyDead);
 
         List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();;
         List<String> body = Stream.of(listOfInvalidNrics,
@@ -75,6 +77,7 @@ public class MhaDeathSteps extends AbstractSteps {
                 listOfValidSCDeathCases,
                 listOfValidPPDeathCases,
                 listOfValidFRDeathCases,
+                listOfPplWhoAreAlreadyDead,
                 listOfPplDeathDateEarlierThanBirthDate).flatMap(Collection::stream).collect(Collectors.toList());
 
         listOfIdentifiersToWriteToFile.add(mhaDeathDateFileDataPrep.generateDoubleHeader());
@@ -124,6 +127,24 @@ public class MhaDeathSteps extends AbstractSteps {
 
             Assert.assertNotNull(errorMessage, "No error messages at all!");
             Assert.assertEquals(ErrorMessageConstants.DEATH_BEFORE_BIRTH, errorMessage.getMessage(), "Error message contains incorrect message!");
+        }
+    }
+
+    @Then("I verify that there is an error message for existing death case")
+    public void iVerifyThatThereIsAnErrorMessageForExistingDeathCase() {
+        log.info("Verify that there is an error message for existing death case");
+
+        FileReceived fileReceived = testContext.get("fileReceived");
+        Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
+
+        List<String> listOfPpl = testContext.get("listOfPplWhoAreAlreadyDead");
+        for ( int i = 0 ; i < listOfPpl.size() ; i++ ) {
+            String nric = listOfPpl.get(i).substring(0,9);
+            DeathDateValidated deathDateValidated = deathDateValidatedRepo.findByNricAndBatch(nric, batch);
+            ErrorMessage errorMessage = errorMessageRepo.findByValidatedIdAndValidatedType(deathDateValidated.getId(), ErrorMessage.ValidatedTypes.DEATH_DATE);
+
+            Assert.assertNotNull(errorMessage, "No error messages at all!");
+            Assert.assertEquals(ErrorMessageConstants.MAP_TO_PREPARED_DATA_ERROR, errorMessage.getMessage(), "Error message contains incorrect message!");
         }
     }
 }

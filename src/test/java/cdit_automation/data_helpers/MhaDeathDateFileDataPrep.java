@@ -1,6 +1,7 @@
 package cdit_automation.data_helpers;
 
 import cdit_automation.data_setup.Phaker;
+import cdit_automation.models.FileReceived;
 import cdit_automation.models.PersonDetail;
 import cdit_automation.models.PersonId;
 import org.apache.tomcat.jni.Local;
@@ -95,6 +96,20 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
             personDetailRepo.updateBirthDateForPerson(dateUtils.now().minusDays(20), personDetail.getPerson());
 
             listOfPpl.add(personId.getNaturalId()+dateUtils.now().minusDays(21).format(Phaker.DATETIME_FORMATTER_YYYYMMDD));
+        }
+
+        return listOfPpl;
+    }
+
+    public List<String> createListOfPplWhoAreAlreadyDead(int numOfPpl, LocalDate fileReceivedDate) {
+        List<String> listOfPpl = new ArrayList<>();
+
+        for ( int i = 0 ; i < numOfPpl ; i++ ) {
+            PersonId personId = personIdService.createNewSCPersonId();
+            PersonDetail personDetail = personDetailRepo.findByPerson(personId.getPerson());
+            personDetailRepo.updateDeathDateForPerson(Phaker.validDate(personDetail.getDateOfBirth(), dateUtils.now()), personId.getPerson());
+
+            listOfPpl.add(personId.getNaturalId()+randomDeathDate(fileReceivedDate, personDetail.getDateOfBirth()));
         }
 
         return listOfPpl;
