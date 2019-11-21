@@ -52,36 +52,9 @@ public class MhaDeathSteps extends AbstractSteps {
         testContext.set("fileReceived", fileReceived);
 
         List<Map<String, String>> list = table.asMaps(String.class, String.class);
-        List<String> listOfInvalidNrics = mhaDeathDateFileDataPrep.createListWithInvalidNrics(parseStringSize(list.get(0).get("InvalidNrics")));
-        List<String> listOfDuplicatedEntries = mhaDeathDateFileDataPrep.createListOfDuplicatedEntries(parseStringSize(list.get(0).get("DuplicatedEntries")));
-        List<String> listOfDuplicatedNricOnlyEntries = mhaDeathDateFileDataPrep.createListOfDuplicatedNricOnlyEntries(parseStringSize(list.get(0).get("DuplicatedNricOnlyEntries")));
-        List<String> listOfValidSCDeathCases = mhaDeathDateFileDataPrep.createListOfValidSCDeathCases(parseStringSize(list.get(0).get("ValidSCDeathCases")), fileReceived.getReceivedTimestamp().toLocalDateTime().toLocalDate());
-        List<String> listOfValidPPDeathCases = mhaDeathDateFileDataPrep.createListOfValidPPDeathCases(parseStringSize(list.get(0).get("ValidPPDeathCases")), fileReceived.getReceivedTimestamp().toLocalDateTime().toLocalDate());
-        List<String> listOfValidFRDeathCases = mhaDeathDateFileDataPrep.createListOfValidFRDeathCases(parseStringSize(list.get(0).get("ValidFRDeathCases")), fileReceived.getReceivedTimestamp().toLocalDateTime().toLocalDate());
-        List<String> listOfPplDeathDateEarlierThanBirthDate = mhaDeathDateFileDataPrep.createListOfPplDeathDateEarlierThanBirthDate(parseStringSize(list.get(0).get("DeathDateEarlierThanBirthDate")));
-        List<String> listOfPplWhoAreAlreadyDead = mhaDeathDateFileDataPrep.createListOfPplWhoAreAlreadyDead(parseStringSize(list.get(0).get("PplWhoAreAlreadyDead")), fileReceived.getReceivedTimestamp().toLocalDateTime().toLocalDate());
-        List<String> listOfPplWithFutureDeathDates = mhaDeathDateFileDataPrep.createListOfPplWithFutureDeathDates(parseStringSize(list.get(0).get("PplWithFutureDeathDates")));
+        List<String> body = mhaDeathDateFileDataPrep.createBodyOfTestScenarios(list, testContext, fileReceived);
 
-        testContext.set("listOfInvalidNrics", listOfInvalidNrics);
-        testContext.set("listOfDuplicatedEntries", listOfDuplicatedEntries);
-        testContext.set("listOfDuplicatedNricOnlyEntries", listOfDuplicatedNricOnlyEntries);
-        testContext.set("listOfValidSCDeathCases", listOfValidSCDeathCases);
-        testContext.set("listOfValidPPDeathCases", listOfValidPPDeathCases);
-        testContext.set("listOfValidFRDeathCases", listOfValidFRDeathCases);
-        testContext.set("listOfPplDeathDateEarlierThanBirthDate", listOfPplDeathDateEarlierThanBirthDate);
-        testContext.set("listOfPplWhoAreAlreadyDead", listOfPplWhoAreAlreadyDead);
-        testContext.set("listOfPplWithFutureDeathDates", listOfPplWithFutureDeathDates);
-
-        List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();;
-        List<String> body = Stream.of(listOfInvalidNrics,
-                listOfDuplicatedEntries,
-                listOfDuplicatedNricOnlyEntries,
-                listOfValidSCDeathCases,
-                listOfValidPPDeathCases,
-                listOfValidFRDeathCases,
-                listOfPplWhoAreAlreadyDead,
-                listOfPplWithFutureDeathDates,
-                listOfPplDeathDateEarlierThanBirthDate).flatMap(Collection::stream).collect(Collectors.toList());
+        List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();
 
         listOfIdentifiersToWriteToFile.add(mhaDeathDateFileDataPrep.generateDoubleHeader());
         listOfIdentifiersToWriteToFile.addAll(body);

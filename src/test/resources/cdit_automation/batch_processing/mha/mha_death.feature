@@ -44,7 +44,7 @@ Feature: Data processing for MHA death broadcast
     And the Mha Death batch job completes running with status VALIDATED_TO_PREPARED_ERROR
     Then I verify that there is an error message for existing death case
 
-  @set_6
+  @set_6 @defect @GRYFFINDOR-897
   Scenario: MHA sends a future death date
     Given the mha death file has the following details:
       | PplWithFutureDeathDates |

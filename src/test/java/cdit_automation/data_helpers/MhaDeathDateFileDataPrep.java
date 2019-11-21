@@ -1,20 +1,58 @@
 package cdit_automation.data_helpers;
 
+import cdit_automation.configuration.StepDefLevelTestContext;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.models.FileReceived;
 import cdit_automation.models.PersonDetail;
 import cdit_automation.models.PersonId;
-import org.apache.tomcat.jni.Local;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
+
+    public List<String> createBodyOfTestScenarios(List<Map<String, String>> list, StepDefLevelTestContext testContext, FileReceived fileReceived) {
+        List<String> listOfInvalidNrics = createListWithInvalidNrics(parseStringSize(list.get(0).get("InvalidNrics")));
+        List<String> listOfDuplicatedEntries = createListOfDuplicatedEntries(parseStringSize(list.get(0).get("DuplicatedEntries")));
+        List<String> listOfDuplicatedNricOnlyEntries = createListOfDuplicatedNricOnlyEntries(parseStringSize(list.get(0).get("DuplicatedNricOnlyEntries")));
+        List<String> listOfValidSCDeathCases = createListOfValidSCDeathCases(parseStringSize(list.get(0).get("ValidSCDeathCases")), fileReceived.getReceivedTimestamp().toLocalDateTime().toLocalDate());
+        List<String> listOfValidPPDeathCases = createListOfValidPPDeathCases(parseStringSize(list.get(0).get("ValidPPDeathCases")), fileReceived.getReceivedTimestamp().toLocalDateTime().toLocalDate());
+        List<String> listOfValidFRDeathCases = createListOfValidFRDeathCases(parseStringSize(list.get(0).get("ValidFRDeathCases")), fileReceived.getReceivedTimestamp().toLocalDateTime().toLocalDate());
+        List<String> listOfPplDeathDateEarlierThanBirthDate = createListOfPplDeathDateEarlierThanBirthDate(parseStringSize(list.get(0).get("DeathDateEarlierThanBirthDate")));
+        List<String> listOfPplWhoAreAlreadyDead = createListOfPplWhoAreAlreadyDead(parseStringSize(list.get(0).get("PplWhoAreAlreadyDead")), fileReceived.getReceivedTimestamp().toLocalDateTime().toLocalDate());
+        List<String> listOfPplWithFutureDeathDates = createListOfPplWithFutureDeathDates(parseStringSize(list.get(0).get("PplWithFutureDeathDates")));
+
+        testContext.set("listOfInvalidNrics", listOfInvalidNrics);
+        testContext.set("listOfDuplicatedEntries", listOfDuplicatedEntries);
+        testContext.set("listOfDuplicatedNricOnlyEntries", listOfDuplicatedNricOnlyEntries);
+        testContext.set("listOfValidSCDeathCases", listOfValidSCDeathCases);
+        testContext.set("listOfValidPPDeathCases", listOfValidPPDeathCases);
+        testContext.set("listOfValidFRDeathCases", listOfValidFRDeathCases);
+        testContext.set("listOfPplDeathDateEarlierThanBirthDate", listOfPplDeathDateEarlierThanBirthDate);
+        testContext.set("listOfPplWhoAreAlreadyDead", listOfPplWhoAreAlreadyDead);
+        testContext.set("listOfPplWithFutureDeathDates", listOfPplWithFutureDeathDates);
+
+        List<String> body = Stream.of(listOfInvalidNrics,
+                listOfDuplicatedEntries,
+                listOfDuplicatedNricOnlyEntries,
+                listOfValidSCDeathCases,
+                listOfValidPPDeathCases,
+                listOfValidFRDeathCases,
+                listOfPplWhoAreAlreadyDead,
+                listOfPplWithFutureDeathDates,
+                listOfPplDeathDateEarlierThanBirthDate).flatMap(Collection::stream).collect(Collectors.toList());
+
+        return body;
+    }
 
     public List<String> createListWithInvalidNrics(int numOfInvalidNrics) {
         List<String> listOfInvalidNrics = new ArrayList<>();
