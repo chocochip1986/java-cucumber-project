@@ -66,26 +66,17 @@ public class MhaDualCitizenSteps extends AbstractSteps {
 
     @Given("the mha dual citizen file has the following details:")
     public void thatTheMhaDualCitizenFileHasTheFollowingDetails(DataTable table) throws IOException {
-        List<Map<String, String>> list = table.asMaps(String.class, String.class);
-        List<String> listOfNewDCs = mhaDualCitizenFileDataPrep.createListOfNewDualCitizens(parseStringSize(list.get(0).get("NewDualCitizensInFile")));
-        List<String> listOfExistingDCs = mhaDualCitizenFileDataPrep.createListOfExistingDualCitizens(parseStringSize(list.get(0).get("ExistingDualCitizensInFile")));
-        List<String> listOfExpiredDCs = mhaDualCitizenFileDataPrep.createListOfExistingDualCitizens(parseStringSize(list.get(0).get("ExpiredDualCitizens")));
-        List<String> listOfDuplicatedNrics = mhaDualCitizenFileDataPrep.createDuplicatedValidNricEntries(parseStringSize(list.get(0).get("DuplicatedNrics")));
-        List<String> listOfInvalidNrics = mhaDualCitizenFileDataPrep.createListOfInvalidNrics(parseStringSize(list.get(0).get("InvalidNrics")));
-
-        testContext.set("listOfNewDCs", listOfNewDCs);
-        testContext.set("listOfExistingDCs", listOfNewDCs);
-        testContext.set("listOfExpiredDCs", listOfExpiredDCs);
-        testContext.set("listOfDuplicatedNrics", listOfDuplicatedNrics);
-        testContext.set("listOfInvalidNrics", listOfInvalidNrics);
-
         FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_DUAL_CITIZEN);
         testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, "mha_dual_citizen"));
 
-        List<String> listOfIdentifiersToWriteToFile = Stream.of(listOfNewDCs, listOfExistingDCs, listOfDuplicatedNrics, listOfInvalidNrics).flatMap(Collection::stream).collect(Collectors.toList());
+        List<Map<String, String>> list = table.asMaps(String.class, String.class);
+        List<String> body = mhaDualCitizenFileDataPrep.bodyCreator(list, testContext);
 
-        listOfIdentifiersToWriteToFile.add(0, mhaDualCitizenFileDataPrep.generateDoubleHeader());
-        listOfIdentifiersToWriteToFile.add(String.valueOf(listOfNewDCs.size()+listOfExistingDCs.size()+listOfInvalidNrics.size()+listOfDuplicatedNrics.size()));
+        List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();
+
+        listOfIdentifiersToWriteToFile.add(mhaDualCitizenFileDataPrep.generateDoubleHeader());
+        listOfIdentifiersToWriteToFile.addAll(body);
+        listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
         batchFileCreator.writeToFile("mha_dual_citizen.txt", listOfIdentifiersToWriteToFile);
 
         testContext.set("listOfIdentifiersToWriteToFile", listOfIdentifiersToWriteToFile);
