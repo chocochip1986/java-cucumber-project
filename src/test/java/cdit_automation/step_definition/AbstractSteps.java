@@ -10,6 +10,7 @@ import cdit_automation.data_helpers.MhaDualCitizenFileDataPrep;
 import cdit_automation.data_helpers.PersonIdService;
 import cdit_automation.page_navigation.PageUtils;
 import cdit_automation.repositories.BatchRepo;
+import cdit_automation.repositories.DeathDateValidatedRepo;
 import cdit_automation.repositories.ErrorMessageRepo;
 import cdit_automation.repositories.FileDetailRepo;
 import cdit_automation.repositories.FileReceivedRepo;
@@ -53,6 +54,7 @@ public class AbstractSteps {
     @Autowired protected ErrorMessageRepo errorMessageRepo;
     @Autowired protected PersonIdRepo personIdRepo;
     @Autowired protected PersonDetailRepo personDetailRepo;
+    @Autowired protected DeathDateValidatedRepo deathDateValidatedRepo;
     @Autowired AddressJacksonObjectMapper addressJacksonObjectMapper;
 
 

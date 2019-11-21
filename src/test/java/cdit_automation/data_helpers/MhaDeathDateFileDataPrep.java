@@ -92,7 +92,9 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
         for ( int i = 0 ; i < numOfPpl ; i++ ) {
             PersonId personId = personIdService.createNewSCPersonId();
             PersonDetail personDetail = personDetailRepo.findByPerson(personId.getPerson());
+            personDetailRepo.updateBirthDateForPerson(dateUtils.now().minusDays(20), personDetail.getPerson());
 
+            listOfPpl.add(personId.getNaturalId()+dateUtils.now().minusDays(21).format(Phaker.DATETIME_FORMATTER_YYYYMMDD));
         }
 
         return listOfPpl;

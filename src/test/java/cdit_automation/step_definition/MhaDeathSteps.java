@@ -1,8 +1,12 @@
 package cdit_automation.step_definition;
 
 import cdit_automation.asserts.Assert;
+import cdit_automation.constants.ErrorMessageConstants;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.FileTypeEnum;
+import cdit_automation.models.Batch;
+import cdit_automation.models.DeathDateValidated;
+import cdit_automation.models.ErrorMessage;
 import cdit_automation.models.FileDetail;
 import cdit_automation.models.FileReceived;
 import cdit_automation.models.PersonDetail;
@@ -10,7 +14,9 @@ import cdit_automation.models.PersonId;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Lists;
+import org.junit.Ignore;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -21,6 +27,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Slf4j
+@Ignore
 public class MhaDeathSteps extends AbstractSteps {
     @Given("^the mha death file is empty$")
     public void theMhaDeathFileIsEmpty() throws IOException {
@@ -49,20 +57,22 @@ public class MhaDeathSteps extends AbstractSteps {
         List<String> listOfDuplicatedNricOnlyEntries = mhaDeathDateFileDataPrep.createListOfDuplicatedNricOnlyEntries(parseStringSize(list.get(0).get("DuplicatedNricOnlyEntries")));
         List<String> listOfValidSCDeathCases = mhaDeathDateFileDataPrep.createListOfValidSCDeathCases(parseStringSize(list.get(0).get("ValidSCDeathCases")), fileReceived.getReceivedTimestamp().toLocalDateTime().toLocalDate());
         List<String> listOfValidPPDeathCases = mhaDeathDateFileDataPrep.createListOfValidPPDeathCases(parseStringSize(list.get(0).get("ValidPPDeathCases")), fileReceived.getReceivedTimestamp().toLocalDateTime().toLocalDate());
-//        List<String> listOfPplDeathDateEarlierThanBirthDate = mhaDeathDateFileDataPrep
+        List<String> listOfPplDeathDateEarlierThanBirthDate = mhaDeathDateFileDataPrep.createListOfPplDeathDateEarlierThanBirthDate(parseStringSize(list.get(0).get("DeathDateEarlierThanBirthDate")));
 
         testContext.set("listOfInvalidNrics", listOfInvalidNrics);
         testContext.set("listOfDuplicatedEntries", listOfDuplicatedEntries);
         testContext.set("listOfDuplicatedNricOnlyEntries", listOfDuplicatedNricOnlyEntries);
         testContext.set("listOfValidSCDeathCases", listOfValidSCDeathCases);
         testContext.set("listOfValidPPDeathCases", listOfValidPPDeathCases);
+        testContext.set("listOfPplDeathDateEarlierThanBirthDate", listOfPplDeathDateEarlierThanBirthDate);
 
         List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();;
         List<String> body = Stream.of(listOfInvalidNrics,
                 listOfDuplicatedEntries,
                 listOfDuplicatedNricOnlyEntries,
                 listOfValidSCDeathCases,
-                listOfValidPPDeathCases).flatMap(Collection::stream).collect(Collectors.toList());
+                listOfValidPPDeathCases,
+                listOfPplDeathDateEarlierThanBirthDate).flatMap(Collection::stream).collect(Collectors.toList());
 
         listOfIdentifiersToWriteToFile.add(mhaDeathDateFileDataPrep.generateDoubleHeader());
         listOfIdentifiersToWriteToFile.addAll(body);
@@ -90,6 +100,24 @@ public class MhaDeathSteps extends AbstractSteps {
             LocalDate expectedDeathDate = LocalDate.parse(listOfPeopleForValidation.get(i).substring(9), Phaker.DATETIME_FORMATTER_YYYYMMDD);
 
             Assert.assertEquals(expectedDeathDate, personDetail.getDateOfDeath(), "Person with identifier, "+personId.getNaturalId()+", does not have the correct death date!");
+        }
+    }
+
+    @Then("^I verify that there is an error message for invalid death dates$")
+    public void iVerifyThatTheseErroneousRecordsHaveTheErrorMessage() {
+        log.info("Verifying that there is an error message for invalid death dates");
+
+        FileReceived fileReceived = testContext.get("fileReceived");
+        Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
+
+        List<String> listOfPpl = testContext.get("listOfPplDeathDateEarlierThanBirthDate");
+        for ( int i = 0 ; i < listOfPpl.size() ; i++ ) {
+            String nric = listOfPpl.get(i).substring(0,9);
+            DeathDateValidated deathDateValidated = deathDateValidatedRepo.findByNricAndBatch(nric, batch);
+            ErrorMessage errorMessage = errorMessageRepo.findByValidatedIdAndValidatedType(deathDateValidated.getId(), ErrorMessage.ValidatedTypes.DEATH_DATE);
+
+            Assert.assertNotNull(errorMessage, "No error messages at all!");
+            Assert.assertEquals(ErrorMessageConstants.DEATH_BEFORE_BIRTH, errorMessage.getMessage(), "Error message contains incorrect message!");
         }
     }
 }

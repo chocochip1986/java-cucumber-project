@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Check;
 
 import javax.persistence.Column;
@@ -30,7 +31,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @EqualsAndHashCode
 @Table(name = "person_detail")
 @Check(constraints = "gender IN ('MALE', 'FEMALE', 'UNKNOWN')")

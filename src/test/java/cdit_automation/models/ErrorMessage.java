@@ -1,10 +1,10 @@
 package cdit_automation.models;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Any;
 import org.hibernate.annotations.AnyMetaDef;
 import org.hibernate.annotations.Cascade;
@@ -26,7 +26,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @Table(name = "error_message")
 public class ErrorMessage extends AbstractEntity  {
     public static class ValidatedTypes {
@@ -57,27 +57,34 @@ public class ErrorMessage extends AbstractEntity  {
     @JoinColumn(name = "incoming_record_id")
     private IncomingRecord incomingRecord;
 
-//    @Any(metaColumn = @Column(name = "validated_type"))
-//    @AnyMetaDef(
-//            idType = "long",
-//            metaType = "string",
-//            metaValues = {
-//                    @MetaValue(targetEntity = PropertyValidated.class, value = ValidatedTypes.PROPERTY),
+
+    @Any(metaColumn = @Column(name = "validated_type"))
+    @AnyMetaDef(
+            idType = "long",
+            metaType = "string",
+            metaValues = {
+//                    @MetaValue(
+//                            targetEntity = PropertyValidated.class,
+//                            value = ValidatedTypes.PROPERTY),
 //                    @MetaValue(
 //                            targetEntity = NoInteractionValidated.class,
 //                            value = ValidatedTypes.NO_INTERACTION),
 //                    @MetaValue(
 //                            targetEntity = ChangeAddressValidated.class,
 //                            value = ValidatedTypes.CHANGE_ADDRESS),
-//                    @MetaValue(targetEntity = NewCitizenValidated.class, value = ValidatedTypes.NEW_CITIZEN),
-//                    @MetaValue(targetEntity = DeathDateValidated.class, value = ValidatedTypes.DEATH_DATE),
+//                    @MetaValue(
+//                            targetEntity = NewCitizenValidated.class,
+//                            value = ValidatedTypes.NEW_CITIZEN),
+                    @MetaValue(
+                            targetEntity = DeathDateValidated.class,
+                            value = ValidatedTypes.DEATH_DATE)
 //                    @MetaValue(
 //                            targetEntity = PersonDetailChangeValidated.class,
 //                            value = ValidatedTypes.PERSON_DETAIL_CHANGE),
-//            })
-//    @Cascade({org.hibernate.annotations.CascadeType.ALL})
-//    @JoinColumn(name = "validated_id")
-//    private EntityInterface validatedData;
+            })
+    @Cascade({org.hibernate.annotations.CascadeType.ALL})
+    @JoinColumn(name = "validated_id")
+    private AbstractValidated validatedData;
 
     @NotNull
     @Column(name = "message")

@@ -28,7 +28,7 @@ public class CommonSteps extends AbstractSteps {
         log.info("Veryfing that batch job ended with status: "+expectedBatchStatus);
         if (testContext.contains("fileReceived")) {
             FileReceived fileReceived = testContext.get("fileReceived");
-            Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived).get(0);
+            Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
 
             Assert.assertNotNull(batch, "No batch record created for fileReceived record: "+fileReceived.getId().toString());
             Assert.assertEquals(expectedBatchStatus, batch.getStatus(), "The "+batchJobName+" job from "+agencyName+" did not complete!!!");
