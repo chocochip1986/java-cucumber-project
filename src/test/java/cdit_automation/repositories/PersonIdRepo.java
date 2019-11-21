@@ -1,7 +1,5 @@
 package cdit_automation.repositories;
 
-import cdit_automation.enums.NationalityEnum;
-import cdit_automation.enums.PersonIdTypeEnum;
 import cdit_automation.models.PersonId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
