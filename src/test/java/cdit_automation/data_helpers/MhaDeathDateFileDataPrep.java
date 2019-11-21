@@ -115,6 +115,18 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
         return listOfPpl;
     }
 
+    public List<String> createListOfPplWithFutureDeathDates(int numOfPpl) {
+        List<String> listOfPpl = new ArrayList<>();
+
+        for ( int i = 0 ; i < numOfPpl ; i++ ) {
+            PersonId personId = personIdService.createNewSCPersonId();
+
+            listOfPpl.add(personId.getNaturalId()+dateUtils.tomorrow().format(Phaker.DATETIME_FORMATTER_YYYYMMDD));
+        }
+
+        return listOfPpl;
+    }
+
     private String randomDeathDate(@NotNull LocalDate fileReceviedDate, @NotNull LocalDate birthDate) {
         LocalDate within30DaysAgo = dateUtils.daysBeforeDate(fileReceviedDate, 30L);
         LocalDate[] dates = new LocalDate[]{within30DaysAgo, birthDate};

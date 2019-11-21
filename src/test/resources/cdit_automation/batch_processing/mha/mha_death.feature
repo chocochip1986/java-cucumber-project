@@ -43,3 +43,12 @@ Feature: Data processing for MHA death broadcast
     When the mha death job is ran
     And the Mha Death batch job completes running with status VALIDATED_TO_PREPARED_ERROR
     Then I verify that there is an error message for existing death case
+
+  @set_6
+  Scenario: MHA sends a future death date
+    Given the mha death file has the following details:
+      | PplWithFutureDeathDates |
+      | 1                       |
+    When the mha death job is ran
+    And the Mha Death batch job completes running with status VALIDATED_TO_PREPARED_ERROR
+    Then I verify that there is an error message for future death date case
