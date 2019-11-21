@@ -57,6 +57,7 @@ public class MhaDeathSteps extends AbstractSteps {
         List<String> listOfDuplicatedNricOnlyEntries = mhaDeathDateFileDataPrep.createListOfDuplicatedNricOnlyEntries(parseStringSize(list.get(0).get("DuplicatedNricOnlyEntries")));
         List<String> listOfValidSCDeathCases = mhaDeathDateFileDataPrep.createListOfValidSCDeathCases(parseStringSize(list.get(0).get("ValidSCDeathCases")), fileReceived.getReceivedTimestamp().toLocalDateTime().toLocalDate());
         List<String> listOfValidPPDeathCases = mhaDeathDateFileDataPrep.createListOfValidPPDeathCases(parseStringSize(list.get(0).get("ValidPPDeathCases")), fileReceived.getReceivedTimestamp().toLocalDateTime().toLocalDate());
+        List<String> listOfValidFRDeathCases = mhaDeathDateFileDataPrep.createListOfValidFRDeathCases(parseStringSize(list.get(0).get("ValidFRDeathCases")), fileReceived.getReceivedTimestamp().toLocalDateTime().toLocalDate());
         List<String> listOfPplDeathDateEarlierThanBirthDate = mhaDeathDateFileDataPrep.createListOfPplDeathDateEarlierThanBirthDate(parseStringSize(list.get(0).get("DeathDateEarlierThanBirthDate")));
 
         testContext.set("listOfInvalidNrics", listOfInvalidNrics);
@@ -64,6 +65,7 @@ public class MhaDeathSteps extends AbstractSteps {
         testContext.set("listOfDuplicatedNricOnlyEntries", listOfDuplicatedNricOnlyEntries);
         testContext.set("listOfValidSCDeathCases", listOfValidSCDeathCases);
         testContext.set("listOfValidPPDeathCases", listOfValidPPDeathCases);
+        testContext.set("listOfValidFRDeathCases", listOfValidFRDeathCases);
         testContext.set("listOfPplDeathDateEarlierThanBirthDate", listOfPplDeathDateEarlierThanBirthDate);
 
         List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();;
@@ -72,6 +74,7 @@ public class MhaDeathSteps extends AbstractSteps {
                 listOfDuplicatedNricOnlyEntries,
                 listOfValidSCDeathCases,
                 listOfValidPPDeathCases,
+                listOfValidFRDeathCases,
                 listOfPplDeathDateEarlierThanBirthDate).flatMap(Collection::stream).collect(Collectors.toList());
 
         listOfIdentifiersToWriteToFile.add(mhaDeathDateFileDataPrep.generateDoubleHeader());
@@ -87,7 +90,10 @@ public class MhaDeathSteps extends AbstractSteps {
     public void iVerifyThatThePeopleListedInTheDeathFileHaveTheCorrectDeathDates() {
         List<String> listOfValidSCs = testContext.get("listOfValidSCDeathCases");
         List<String> listOfValidPPs = testContext.get("listOfValidPPDeathCases");
-        List<String> listOfPeopleForValidation = Stream.of(listOfValidSCs, listOfValidPPs).flatMap(Collection::stream).collect(Collectors.toList());
+        List<String> listOfValidFRs = testContext.get("listOfValidFRDeathCases");
+        List<String> listOfPeopleForValidation = Stream.of(listOfValidSCs,
+                listOfValidPPs,
+                listOfValidFRs).flatMap(Collection::stream).collect(Collectors.toList());
 
         for ( int i = 0 ; i < listOfPeopleForValidation.size() ; i++ ) {
             String nric = listOfPeopleForValidation.get(i).substring(0,9);
