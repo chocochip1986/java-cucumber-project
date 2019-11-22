@@ -1,10 +1,8 @@
 package cdit_automation.data_helpers;
 
 import cdit_automation.data_setup.Phaker;
-import cdit_automation.models.PersonId;
 import cdit_automation.repositories.PersonDetailRepo;
 import cdit_automation.utilities.DateUtils;
-import com.github.javafaker.Faker;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nullable;

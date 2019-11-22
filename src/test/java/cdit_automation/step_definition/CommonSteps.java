@@ -6,6 +6,7 @@ import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.Batch;
 import cdit_automation.models.FileReceived;
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.When;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
 

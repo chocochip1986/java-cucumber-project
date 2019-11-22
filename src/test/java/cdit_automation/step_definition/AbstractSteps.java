@@ -5,6 +5,7 @@ import cdit_automation.configuration.AddressJacksonObjectMapper;
 import cdit_automation.configuration.StepDefLevelTestContext;
 import cdit_automation.configuration.TestManager;
 import cdit_automation.data_helpers.BatchFileCreator;
+import cdit_automation.data_helpers.MhaBulkFileDataPrep;
 import cdit_automation.data_helpers.MhaDeathDateFileDataPrep;
 import cdit_automation.data_helpers.MhaDualCitizenFileDataPrep;
 import cdit_automation.data_helpers.PersonIdService;
@@ -43,6 +44,7 @@ public class AbstractSteps {
     //Batch File Data Helpers
     @Autowired protected MhaDualCitizenFileDataPrep mhaDualCitizenFileDataPrep;
     @Autowired protected MhaDeathDateFileDataPrep mhaDeathDateFileDataPrep;
+    @Autowired protected MhaBulkFileDataPrep mhaBulkFileDataPrep;
 
     //Model Repositories
     @Autowired protected BatchRepo batchRepo;
