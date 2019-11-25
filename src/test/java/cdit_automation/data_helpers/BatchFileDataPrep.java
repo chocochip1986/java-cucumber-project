@@ -1,8 +1,8 @@
 package cdit_automation.data_helpers;
 
 import cdit_automation.data_setup.Phaker;
+import cdit_automation.repositories.PersonDetailRepo;
 import cdit_automation.utilities.DateUtils;
-import com.github.javafaker.Faker;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nullable;
@@ -13,6 +13,9 @@ import java.util.List;
 public class BatchFileDataPrep {
 
     @Autowired protected DateUtils dateUtils;
+    @Autowired protected PersonIdService personIdService;
+
+    @Autowired protected PersonDetailRepo personDetailRepo;
 
     protected int parseStringSize(String size) {
         try {

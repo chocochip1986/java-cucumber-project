@@ -1,13 +1,15 @@
 package cdit_automation.models;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import lombok.experimental.SuperBuilder;
+
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
-import java.sql.Timestamp;
 
 @MappedSuperclass
+@SuperBuilder
 public abstract class AbstractEntity implements Serializable {
+
+    public AbstractEntity () {
+
+    }
 }

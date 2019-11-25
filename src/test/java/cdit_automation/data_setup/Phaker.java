@@ -1,10 +1,15 @@
 package cdit_automation.data_setup;
 
 import cdit_automation.enums.Gender;
+import cdit_automation.utilities.DateUtils;
 import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
+
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -45,6 +50,12 @@ public class Phaker {
         int indexOfYearElement = 0 + (int)Math.round(Math.random() * rangeOfLeapYears.length-1);
 
         return LocalDate.of(rangeOfLeapYears[indexOfYearElement], 2, 29);
+    }
+
+    public static LocalDate validDateFromRange(LocalDate lowerBoundaryDate, LocalDate upperBoundaryDate) {
+        //Inclusive of boundaries
+        long days = lowerBoundaryDate.until(upperBoundaryDate.plusDays(1L), ChronoUnit.DAYS);
+        return lowerBoundaryDate.plusDays(Math.round(Math.random() * days));
     }
 
     public static LocalDate validPastDate() {
@@ -328,5 +339,10 @@ public class Phaker {
             day = day + (int)Math.round(Math.random() * DAYS_IN_MONTHS[month]);
         }
         return day;
+    }
+
+    private static List<Month> generateListOfMonthsBetweenDates(LocalDate fromDate, LocalDate toDate) {
+
+        return null;
     }
 }

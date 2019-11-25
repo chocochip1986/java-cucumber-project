@@ -10,10 +10,12 @@ import java.util.Date;
 
 @Repository
 public interface NationalityRepo extends JpaRepository<Nationality, Long> {
-    Nationality findByPerson(Person person);
 
-    @Query("SELECT n FROM Nationality n " +
-            "WHERE n.person = ?1 " +
-            "AND ( n.biTemporalData.businessTemporalData.validFrom <= ?2 AND ( n.biTemporalData.businessTemporalData.validTill = null OR n.biTemporalData.businessTemporalData.validTill >= ?2 ) )")
-    Nationality findCurrentNationalityByPerson(Person person, Date now);
+    @Query(value = "SELECT n.* FROM NATIONALITY AS OF PERIOD FOR validity_period_nationality TRUNC(SYSDATE) n " +
+            "WHERE n.entity_key = ?1", nativeQuery = true)
+    Nationality findNationalityByPerson(Person person);
+
+    @Query(value = "SELECT n.* FROM NATIONALITY AS OF PERIOD FOR validity_period_nationality ?2 n " +
+            "WHERE n.entity_key = ?1", nativeQuery = true)
+    Nationality findNationalityByPerson(Person person, Date date);
 }

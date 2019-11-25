@@ -4,11 +4,11 @@ import cdit_automation.enums.NationalityEnum;
 import cdit_automation.models.embeddables.BiTemporalData;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -29,7 +29,7 @@ import java.sql.Timestamp;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @EqualsAndHashCode
 @Table(name = "nationality")
 public class Nationality extends AbstractEntity {

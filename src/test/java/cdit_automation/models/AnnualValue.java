@@ -1,16 +1,15 @@
 package cdit_automation.models;
 
-import cdit_automation.enums.Gender;
+import cdit_automation.enums.AnnualValueStatus;
 import cdit_automation.models.embeddables.BiTemporalData;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.Check;
 
+import javax.annotation.Nullable;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -23,18 +22,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
+import java.math.BigDecimal;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
+@NoArgsConstructor
 @EqualsAndHashCode
-@Table(name = "person_detail")
-@Check(constraints = "gender IN ('MALE', 'FEMALE', 'UNKNOWN')")
-public class PersonDetail {
+@Table(name = "annual_value")
+@Builder
+public class AnnualValue extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -46,25 +44,20 @@ public class PersonDetail {
     private Batch batch;
 
     @ManyToOne
-    @JoinColumn(name = "entity_key")
+    @JoinColumn(name = "entity_key", nullable = false)
     @NotNull
-    private Person person;
+    private Property property;
 
-    @Column(name = "date_of_birth")
-    private LocalDate dateOfBirth;
+    @SuppressWarnings("squid:S1700")
+    @Nullable
+    @Column(name = "annual_value", columnDefinition = "NUMBER(11,4)")
+    private BigDecimal annualValue;
 
-    @Column(name = "date_of_death")
-    private LocalDate dateOfDeath;
-
-    @Column(name = "gender")
+    @NotNull
+    @Column(name = "annual_value_status")
     @Enumerated(EnumType.STRING)
-    private Gender gender;
+    private AnnualValueStatus annualValueStatus;
 
-    @NotNull
-    @Column(name = "nric_cancelled_status")
-    private Boolean isNricCancelled;
-
-    @JsonIgnore
     @Embedded
     private BiTemporalData biTemporalData;
 }

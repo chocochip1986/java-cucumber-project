@@ -3,10 +3,10 @@ package cdit_automation.models;
 import cdit_automation.enums.BatchStatusEnum;
 import cdit_automation.enums.FileContentCodeEnum;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import javax.annotation.Nullable;
 import javax.persistence.Column;
@@ -27,7 +27,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @Table(name = "incoming_record")
 public class IncomingRecord extends AbstractEntity {
     private static final long serialVersionUID = 1L;

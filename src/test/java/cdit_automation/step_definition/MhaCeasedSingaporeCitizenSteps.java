@@ -23,18 +23,13 @@ import java.util.stream.Stream;
 
 public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
 
-  @Before
-  public void setup() {
-    FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_CEASED_CITIZEN);
-    testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, "mha_ceased_citizen"));
-  }
-
   @Given("the ceased sc file contain a person detail record not found in system")
   public void theCeasedScFileContainAPersonDetailRecordNotFoundInSystem() throws IOException {
+    FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_CEASED_CITIZEN);
+    testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, "mha_ceased_citizen"));
     List<String> content = new ArrayList<>();
     content.add(mhaCeasedCitizenFileDataPrep.generateDoubleHeader());
-    CeasedCitizen citizen =
-        mhaCeasedCitizenFileDataPrep.ceasedSingaporeCitizenBuilder().build();
+    CeasedCitizen citizen = mhaCeasedCitizenFileDataPrep.ceasedSingaporeCitizenBuilder().build();
     content.add(citizen.toString());
     content.add("1");
     batchFileCreator.writeToFile("mha_ceased_citizen.txt", content);
@@ -42,6 +37,8 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
 
   @Given("the ceased sc file contain a record that is already exist in the system")
   public void theCeasedScFileContainARecordThatIsAlreadyExistInTheSystem() throws IOException {
+    FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_CEASED_CITIZEN);
+    testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, "mha_ceased_citizen"));
     PersonId personId = mhaCeasedCitizenFileDataPrep.populateSingaporeCitizenInDB(1).get(0);
     Batch batch = new Batch();
     batch.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
@@ -69,6 +66,8 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
 
   @Given("the ceased sc file contain an invalid name length of zero")
   public void theCeasedScFileContainAnInvalidNameLengthOfZero() throws IOException {
+    FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_CEASED_CITIZEN);
+    testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, "mha_ceased_citizen"));
     PersonId personId = mhaCeasedCitizenFileDataPrep.populateSingaporeCitizenInDB(1).get(0);
     CeasedCitizen ceasedCitizen =
         mhaCeasedCitizenFileDataPrep
@@ -83,26 +82,14 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
     batchFileCreator.writeToFile("mha_ceased_citizen.txt", content);
   }
 
-  @Given("the ceased sc file contain an invalid renunciation date format")
-  public void theCeasedScFileContainAnInvalidRenunciationDateFormat() throws IOException {
-    PersonId personId = mhaCeasedCitizenFileDataPrep.populateSingaporeCitizenInDB(1).get(0);
-    CeasedCitizen ceasedCitizen =
-        mhaCeasedCitizenFileDataPrep
-            .ceasedSingaporeCitizenBuilder()
-            .citizenRenunciationDate(LocalDate.now().minusDays(6))
-            .build();
-    List<String> content = new ArrayList<>();
-    content.add(mhaCeasedCitizenFileDataPrep.generateDoubleHeader());
-    content.add(ceasedCitizen.toString());
-    content.add("1");
-    batchFileCreator.writeToFile("mha_ceased_citizen.txt", content);
-  }
-
   @Given(
       "the ceased sc file contain an invalid renunciation date that is after cut off date with no attainment date")
   public void
       theCeasedScFileContainAnInvalidRenunciationDateThatIsAfterCutOffDateWithNoAttainmentDate()
           throws IOException {
+    FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_CEASED_CITIZEN);
+    testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, "mha_ceased_citizen"));
+
     PersonId personId = mhaCeasedCitizenFileDataPrep.populateSingaporeCitizenInDB(1).get(0);
     CeasedCitizen ceasedCitizen =
         mhaCeasedCitizenFileDataPrep
@@ -118,6 +105,9 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
 
   @Given("the ceased sc file has the following details:")
   public void theCeasedScFileHasTheFollowingDetails(DataTable dataTable) throws IOException {
+    FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_CEASED_CITIZEN);
+    testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, "mha_ceased_citizen"));
+
     List<Map<String, Integer>> list = dataTable.asMaps(String.class, Integer.class);
     int numOfSingaporeCitizen = list.get(0).get("SINGAPORE CITIZEN");
     int numOfDualCitizen = list.get(0).get("DUAL CITIZEN");
@@ -159,8 +149,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
 
   @And("the batch error message is (.*)")
   public void theBatchErrorMessage(String errorMsg) {
-    Batch batch =
-        batchRepo.findByFileReceivedOrderByCreatedAtDesc(testContext.get("fileReceived")).get(0);
+    Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(testContext.get("fileReceived"));
     Assert.assertEquals(
         true,
         errorMessageRepo.findByBatch(batch).stream()
@@ -174,9 +163,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
     List<PersonId> personIds = testContext.get("personIds");
     personIds.forEach(
         personId -> {
-          Nationality n =
-              nationalityRepo.findCurrentNationalityByPerson(
-                  personId.getPerson(), dateUtils.localDateToDate(dateUtils.now()));
+          Nationality n = nationalityRepo.findNationalityByPerson(personId.getPerson());
           Assert.assertEquals(
               nationalityEnum,
               n.getNationality(),

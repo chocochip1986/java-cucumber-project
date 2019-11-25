@@ -66,26 +66,17 @@ public class MhaDualCitizenSteps extends AbstractSteps {
 
     @Given("the mha dual citizen file has the following details:")
     public void thatTheMhaDualCitizenFileHasTheFollowingDetails(DataTable table) throws IOException {
-        List<Map<String, String>> list = table.asMaps(String.class, String.class);
-        List<String> listOfNewDCs = mhaDualCitizenFileDataPrep.createListOfNewDualCitizens(parseStringSize(list.get(0).get("NewDualCitizensInFile")));
-        List<String> listOfExistingDCs = mhaDualCitizenFileDataPrep.createListOfExistingDualCitizens(parseStringSize(list.get(0).get("ExistingDualCitizensInFile")));
-        List<String> listOfExpiredDCs = mhaDualCitizenFileDataPrep.createListOfExistingDualCitizens(parseStringSize(list.get(0).get("ExpiredDualCitizens")));
-        List<String> listOfDuplicatedNrics = mhaDualCitizenFileDataPrep.createDuplicatedValidNricEntries(parseStringSize(list.get(0).get("DuplicatedNrics")));
-        List<String> listOfInvalidNrics = mhaDualCitizenFileDataPrep.createListOfInvalidNrics(parseStringSize(list.get(0).get("InvalidNrics")));
-
-        testContext.set("listOfNewDCs", listOfNewDCs);
-        testContext.set("listOfExistingDCs", listOfNewDCs);
-        testContext.set("listOfExpiredDCs", listOfExpiredDCs);
-        testContext.set("listOfDuplicatedNrics", listOfDuplicatedNrics);
-        testContext.set("listOfInvalidNrics", listOfInvalidNrics);
-
         FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_DUAL_CITIZEN);
         testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, "mha_dual_citizen"));
 
-        List<String> listOfIdentifiersToWriteToFile = Stream.of(listOfNewDCs, listOfExistingDCs, listOfDuplicatedNrics, listOfInvalidNrics).flatMap(Collection::stream).collect(Collectors.toList());
+        List<Map<String, String>> list = table.asMaps(String.class, String.class);
+        List<String> body = mhaDualCitizenFileDataPrep.bodyCreator(list, testContext);
 
-        listOfIdentifiersToWriteToFile.add(0, mhaDualCitizenFileDataPrep.generateDoubleHeader());
-        listOfIdentifiersToWriteToFile.add(String.valueOf(listOfNewDCs.size()+listOfExistingDCs.size()+listOfInvalidNrics.size()+listOfDuplicatedNrics.size()));
+        List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();
+
+        listOfIdentifiersToWriteToFile.add(mhaDualCitizenFileDataPrep.generateDoubleHeader());
+        listOfIdentifiersToWriteToFile.addAll(body);
+        listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
         batchFileCreator.writeToFile("mha_dual_citizen.txt", listOfIdentifiersToWriteToFile);
 
         testContext.set("listOfIdentifiersToWriteToFile", listOfIdentifiersToWriteToFile);
@@ -100,7 +91,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         List<PersonId> personIds = Collections.emptyList();
         Date now = dateUtils.localDateToDate(dateUtils.now());
         for(String identifier : listOfNewDCs) {
-            personIds = personIdRepo.findDualCitizen(identifier, now, now);
+            personIds = personIdRepo.findDualCitizen(identifier);
 
             Assert.assertEquals(1, personIds.size(), "Person with nric: "+identifier+" is not a dual citizen!");
 
@@ -117,7 +108,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         List<PersonId> personIds;
         Date now = dateUtils.localDateToDate(dateUtils.now());
         for(String identifier : listOfExistingDCs) {
-            personIds = personIdRepo.findDualCitizen(identifier, now, now);
+            personIds = personIdRepo.findDualCitizen(identifier);
 
             Assert.assertEquals(1, personIds.size(), "Person with nric: "+identifier+" has been modified!");
         }
@@ -133,12 +124,12 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         List<PersonId> personIds;
         Date now = dateUtils.localDateToDate(dateUtils.now());
         for(String identifier : listOfExpiredDCs) {
-            personIds = personIdRepo.findDualCitizen(identifier, now, now);
+            personIds = personIdRepo.findDualCitizen(identifier);
 
             Assert.assertEquals(0, personIds.size(), "Person with nric: "+identifier+" has an error!");
 
-            PersonId personId = personIdRepo.findCurrentPersonIdByIdentifier(identifier, PersonIdTypeEnum.NRIC, now);
-            Nationality currentNationality = nationalityRepo.findCurrentNationalityByPerson(personId.getPerson(), now);
+            PersonId personId = personIdRepo.findPersonByNaturalId(identifier);
+            Nationality currentNationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
 
             Assert.assertEquals(NationalityEnum.SINGAPORE_CITIZEN, currentNationality.getNationality(), "Person with nric "+identifier+" is not converted to Singaporean!");
         }
@@ -171,8 +162,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
 
         FileReceived fileReceived = testContext.get("fileReceived");
 
-        List<Batch> batches = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
-        Batch batch = batches.get(0);
+        Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
 
         List<ErrorMessage> errorMessages = errorMessageRepo.findByBatch(batch);
 
