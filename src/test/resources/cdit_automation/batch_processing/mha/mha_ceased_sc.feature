@@ -2,42 +2,42 @@
 Feature: Data processing for MHA ceased sc
 
   @set_1
-  Scenario: Mha send a ceased sc file that happened to contain a person detail record not found in system
+  Scenario: Mha send a ceased sc file that contain a person detail record not found in system
     Given the ceased sc file contain a person detail record not found in system
     When the mha ceased sc job is ran
     Then the Mha Ceased Citizen batch job completes running with status VALIDATED_TO_PREPARED_ERROR
-    And the batch error message is NRIC not found in System
+    And the batch error message is NRIC not found in System.
 
   @set_2 @defect
-  Scenario: Mha send a ceased sc file that happened to contain a record that is already exist in system
+  Scenario: Mha send a ceased sc file that contain a record that is already exist in system
   GRYFFINDOR-908
     Given the ceased sc file contain a record that is already exist in the system
     When the mha ceased sc job is ran
     Then the Mha Ceased Citizen batch job completes running with status BULK_CHECK_VALIDATION_ERROR
 
   @set_3 @defect
-  Scenario: Mha send a ceased sc file that happened to contain duplicate record
+  Scenario: Mha send a ceased sc file that contain duplicate record
   GRYFFINDOR-908
     Given the ceased sc file contain duplicate record
     When the mha ceased sc job is ran
     Then the Mha Ceased Citizen batch job completes running with status RAW_DATA_ERROR
 
   @set_4
-  Scenario: Mha send a ceased sc file that happened to contain a name length of zero
+  Scenario: Mha send a ceased sc file that contain a name length of zero
     Given the ceased sc file contain an invalid name length of zero
     When the mha ceased sc job is ran
     Then the Mha Ceased Citizen batch job completes running with status RAW_DATA_ERROR
     And the batch error message is Invalid Name.
 
   @set_5
-  Scenario: Mha send a ceased sc file that happened to contain an invalid renunciation date format
+  Scenario: Mha send a ceased sc file that contain an invalid renunciation date format
     Given the ceased sc file contain an invalid renunciation date format
     When the mha ceased sc job is ran
     Then the Mha Ceased Citizen batch job completes running with status RAW_DATA_ERROR
     And the batch error message is Invalid Citizen Renunciation Date.
 
   @set_6
-  Scenario: Mha send a ceased sc file that happened to contain an renunciation date that is after cut off date with no attainment date
+  Scenario: Mha send a ceased sc file that contain an renunciation date that is after cut off date with no attainment date
     Given the ceased sc file contain an invalid renunciation date that is after cut off date with no attainment date
     When the mha ceased sc job is ran
     Then the Mha Ceased Citizen batch job completes running with status VALIDATED_TO_PREPARED_ERROR

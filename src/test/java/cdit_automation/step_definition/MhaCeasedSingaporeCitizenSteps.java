@@ -1,7 +1,6 @@
 package cdit_automation.step_definition;
 
 import cdit_automation.asserts.Assert;
-import cdit_automation.constants.ErrorMessageConstants;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.CeasedCitizenNationalityEnum;
 import cdit_automation.enums.CeasedCitizenNricCancelledStatusEnum;
@@ -17,9 +16,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -36,7 +33,8 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
   public void theCeasedScFileContainAPersonDetailRecordNotFoundInSystem() throws IOException {
     List<String> content = new ArrayList<>();
     content.add(mhaCeasedCitizenFileDataPrep.generateDoubleHeader());
-    CeasedCitizen citizen = mhaCeasedCitizenFileDataPrep.ceasedSingaporeCitizenBuilder().build();
+    CeasedCitizen citizen =
+        mhaCeasedCitizenFileDataPrep.ceasedSingaporeCitizenBuilder().build();
     content.add(citizen.toString());
     content.add("1");
     batchFileCreator.writeToFile("mha_ceased_citizen.txt", content);
@@ -44,37 +42,23 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
 
   @Given("the ceased sc file contain a record that is already exist in the system")
   public void theCeasedScFileContainARecordThatIsAlreadyExistInTheSystem() throws IOException {
-    //    PersonId personId = mhaCeasedCitizenFileDataPrep.populateSingaporeCitizenInDB(1).get(0);
-    //    Batch batch = new Batch();
-    //    batch.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
-    //    batchRepo.save(batch);
-    //    CeasedCitizenValidated ceasedCitizenValidated =
-    //        CeasedCitizenValidated.builder()
-    //            .batch(batch)
-    //            .name(Phaker.validName())
-    //            .nationality(CeasedCitizenNationalityEnum.SG)
-    //            .citizenRenunciationDate(dateUtils.daysBeforeToday(30))
-    //            .nric(personId.getNaturalId())
-    //            .nricCancelledStatus(CeasedCitizenNricCancelledStatusEnum.YES)
-    //            .build();
-    //    ceasedCitizenRepo.save(ceasedCitizenValidated);
+    PersonId personId = mhaCeasedCitizenFileDataPrep.populateSingaporeCitizenInDB(1).get(0);
+    Batch batch = new Batch();
+    batch.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
+    batchRepo.save(batch);
+    CeasedCitizen ceasedCitizen =
+        CeasedCitizen.builder()
+            .batch(batch)
+            .name(Phaker.validName())
+            .nationality(CeasedCitizenNationalityEnum.SG)
+            .citizenRenunciationDate(dateUtils.daysBeforeToday(30))
+            .nric(personId.getNaturalId())
+            .nricCancelledStatus(CeasedCitizenNricCancelledStatusEnum.YES)
+            .build();
+    ceasedCitizenRepo.save(ceasedCitizen);
 
     List<String> content = new ArrayList<>();
     content.add(mhaCeasedCitizenFileDataPrep.generateDoubleHeader());
-    CeasedCitizen ceasedCitizen =
-        CeasedCitizen.builder()
-            //            .name(ceasedCitizenValidated.getName())
-            .name("Mills Aron")
-            //            .nric(ceasedCitizenValidated.getNric())
-            .nric("S3844522G")
-            //            .nationality(ceasedCitizenValidated.getNationality())
-            .nationality(CeasedCitizenNationalityEnum.SG)
-            .citizenRenunciationDate(
-                dateUtils.daysBeforeToday(15).format(dateUtils.DATETIME_FORMATTER_YYYYMMDD))
-            //            .nricCancelledStatus(ceasedCitizenValidated.getNricCancelledStatus())
-            .nricCancelledStatus(CeasedCitizenNricCancelledStatusEnum.YES)
-            .build();
-    //            mhaCeasedCitizenFileDataPrep.ceasedSingaporeCitizenBuilder().build();
     content.add(ceasedCitizen.toString());
     content.add("1");
     batchFileCreator.writeToFile("mha_ceased_citizen.txt", content);
@@ -105,8 +89,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
     CeasedCitizen ceasedCitizen =
         mhaCeasedCitizenFileDataPrep
             .ceasedSingaporeCitizenBuilder()
-            .citizenRenunciationDate(
-                LocalDate.now().minusDays(6).format(DateTimeFormatter.ofPattern("ddMMyyyy")))
+            .citizenRenunciationDate(LocalDate.now().minusDays(6))
             .build();
     List<String> content = new ArrayList<>();
     content.add(mhaCeasedCitizenFileDataPrep.generateDoubleHeader());
@@ -124,8 +107,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
     CeasedCitizen ceasedCitizen =
         mhaCeasedCitizenFileDataPrep
             .ceasedSingaporeCitizenBuilder()
-            .citizenRenunciationDate(
-                LocalDate.now().plusDays(6).format(Phaker.DATETIME_FORMATTER_YYYYMMDD))
+            .citizenRenunciationDate(LocalDate.now().plusDays(6))
             .build();
     List<String> content = new ArrayList<>();
     content.add(mhaCeasedCitizenFileDataPrep.generateDoubleHeader());

@@ -48,7 +48,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
         .nric(Phaker.validNric())
         .name(Phaker.validName())
         .citizenRenunciationDate(
-            LocalDate.now().minusDays(6).format(Phaker.DATETIME_FORMATTER_YYYYMMDD))
+            LocalDate.now().minusDays(6))
         .nricCancelledStatus(CeasedCitizenNricCancelledStatusEnum.YES);
   }
 }
