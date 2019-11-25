@@ -29,6 +29,16 @@ public class CommandSteps extends AbstractSteps {
         triggerBatchJob(fileReceived);
     }
 
+    @When("^the mha ceased sc job is ran$")
+    public void theMhaCeasedScJobIsRan() {
+        log.info("Triggering MHA ceased citizen batch job to run");
+        FileReceived fileReceived = testContext.get("fileReceived");
+        if ( fileReceived == null ) {
+            throw new TestFailException("No file received record created!!!");
+        }
+        triggerBatchJob(fileReceived);
+    }
+
     private void triggerBatchJob(FileReceived fileReceived) {
         apiHelper.sendCallToTriggerBatchJob(fileReceived);
     }

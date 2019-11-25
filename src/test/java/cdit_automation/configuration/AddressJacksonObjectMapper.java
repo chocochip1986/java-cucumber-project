@@ -36,8 +36,8 @@ public class AddressJacksonObjectMapper {
      * Avoid loading unnecessary addresses which will affect testing performance
      */
     condominiumAddresses = loadAddressesOf("condo");
-    hdbAddresses = loadAddressesOf("hdb");
-    kampongAddresses = loadAddressesOf("kampong");
+    //    hdbAddresses = loadAddressesOf("hdb");
+    //    kampongAddresses = loadAddressesOf("kampong");
     //    businessAddresses = loadAddressesOf("business");
     //    educationAddresses = loadAddressesOf("education");
     //    hospitalAddresses = loadAddressesOf("hospital");

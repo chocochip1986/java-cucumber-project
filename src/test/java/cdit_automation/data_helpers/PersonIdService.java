@@ -144,6 +144,7 @@ public class PersonIdService extends AbstractService {
                 .person(person)
                 .biTemporalData(new BiTemporalData()
                         .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1))))
+                .citizenshipAttainmentDate(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(40)))
                 .build();
 
         batchRepo.save(batch);
@@ -167,6 +168,7 @@ public class PersonIdService extends AbstractService {
                 .person(person)
                 .biTemporalData(new BiTemporalData()
                         .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1))))
+                .citizenshipAttainmentDate(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(10)))
                 .build();
 
         PersonDetail personDetail = PersonDetail.builder()
