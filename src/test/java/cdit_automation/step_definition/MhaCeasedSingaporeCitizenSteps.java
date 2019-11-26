@@ -16,6 +16,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -57,7 +58,11 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
     testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, "mha_ceased_citizen"));
 
     List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();
-    listOfIdentifiersToWriteToFile.add(mhaCeasedCitizenFileDataPrep.generateDoubleHeader());
+    LocalDate cutOffDate = dateUtils.daysBeforeToday(5);
+    testContext.set("cutOffDate", cutOffDate);
+    LocalDate extractionDate = dateUtils.daysBeforeToday(3);
+    listOfIdentifiersToWriteToFile.add(
+        mhaCeasedCitizenFileDataPrep.generateDoubleHeader(extractionDate, cutOffDate));
     List<String> body =
         mhaCeasedCitizenFileDataPrep.createBodyOfTestScenarios(
             dataTable.asMaps(String.class, String.class), testContext);
@@ -80,6 +85,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
   public void nationalityOfAllPersonShouldChangeToNON_SINGAPORE_CITIZEN(
       NationalityEnum nationalityEnum) {
     List<String> ceasedCitizenNrics = testContext.get("ceasedCitizenNrics");
+    LocalDate cutOffDate = testContext.get("cutOffDate");
     ceasedCitizenNrics.forEach(
         nric -> {
           PersonId p = personIdRepo.findByNaturalId(nric);
@@ -91,6 +97,33 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
                   + p.getNaturalId()
                   + "] to have nationality of : "
                   + nationalityEnum);
+
+          //          Timestamp timestamp =
+          // n.getBiTemporalData().getBusinessTemporalData().getValidFrom();
+          //          Timestamp timestamp1 = dateUtils.beginningOfDayToTimestamp(cutOffDate);
+          //
+          //          Assert.assertEquals(
+          //              timestamp1,
+          //              timestamp,
+          //              "Expecting supersede nationality's valid from date to be : [ "
+          //                  + timestamp1
+          //                  + " ] but retrieved : [ "
+          //                  + timestamp
+          //                  + " ]");
+
+          //          Nationality oldNationality =
+          //              nationalityRepo.findNationalityByPerson(
+          //                  p.getPerson(), dateUtils.localDateToDate(cutOffDate.minusDays(1)));
+          //          Assert.assertEquals(
+          //              dateUtils.endOfDayToTimestamp(cutOffDate.minusDays(1)),
+          //
+          // oldNationality.getBiTemporalData().getBusinessTemporalData().getValidTill(),
+          //              "Expecting old nationality valid till date to be : [ "
+          //                  + dateUtils.endOfDayToTimestamp(cutOffDate.minusDays(1))
+          //                  + " ] but retrieved : [ "
+          //                  +
+          // oldNationality.getBiTemporalData().getBusinessTemporalData().getValidTill()
+          //                  + " ]");
         });
   }
 
@@ -110,6 +143,55 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
                   + pi.getNaturalId()
                   + "] to have NRIC_CANCELLED_STATUS of "
                   + status);
+        });
+  }
+
+  @And("I verify the old nationality [VALID_TILL] timestamp is a day before cut off date at 2359HR")
+  public void iVerifyTheOldNationalityVALID_TILLTimestampIsADayBeforeCutOffDateAtHR() {
+    LocalDate cutOffDate = testContext.get("cutOffDate");
+    Date recordValidityDate = dateUtils.localDateToDate(cutOffDate.minusDays(1));
+    Timestamp expectedValidTill = dateUtils.endOfDayToTimestamp(cutOffDate.minusDays(1));
+
+    List<String> nrics = testContext.get("ceasedCitizenNrics");
+    nrics.forEach(
+        nric -> {
+          PersonId p = personIdRepo.findByNaturalId(nric);
+          Nationality n =
+              nationalityRepo.findNationalityByPerson(p.getPerson(), recordValidityDate);
+          Timestamp actualValidTill =
+              n.getBiTemporalData().getBusinessTemporalData().getValidTill();
+          Assert.assertEquals(
+              expectedValidTill,
+              actualValidTill,
+              "Expecting old nationality valid till date to be : [ "
+                  + expectedValidTill
+                  + " ] but retrieved : [ "
+                  + actualValidTill
+                  + " ]");
+        });
+  }
+
+  @And("I verify the supersede nationality [VALID_FROM] date is cut off date at 0000HR")
+  public void iVerifyTheSupersedeNationalityVALID_FROMDateIsCutOffDateAtHR() {
+    LocalDate cutOffDate = testContext.get("cutOffDate");
+    Timestamp expectedValidFrom = dateUtils.beginningOfDayToTimestamp(cutOffDate);
+
+    List<String> nrics = testContext.get("ceasedCitizenNrics");
+    nrics.forEach(
+        nric -> {
+          PersonId p = personIdRepo.findByNaturalId(nric);
+          Nationality n =
+              nationalityRepo.findNationalityByPerson(p.getPerson());
+          Timestamp actualValidFrom =
+              n.getBiTemporalData().getBusinessTemporalData().getValidFrom();
+          Assert.assertEquals(
+              expectedValidFrom,
+              actualValidFrom,
+              "Expecting old nationality valid till date to be : [ "
+                  + expectedValidFrom
+                  + " ] but retrieved : [ "
+                  + actualValidFrom
+                  + " ]");
         });
   }
 }

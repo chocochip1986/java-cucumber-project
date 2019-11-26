@@ -46,11 +46,13 @@ Feature: Data processing for Mha ceased citizenship
   Scenario: Mha send a ceased citizenship file for processing
     Given the file has the following details:
       | PresentSingaporeCitizen | PresentDualCitizen | CeasedSingaporeCitizen | CeasedDualCitizen |
-      | 3                       | 2                  | 2                      | 2                 |
+      | 3                       | 3                  | 2                      | 2                 |
     When the mha ceased sc job is ran
     Then the Mha Ceased Citizen batch job completes running with status FILE_CHECK_AGAINST_PREP_DATA
     And I verify the the people listed in the file have nationality of NON_SINGAPORE_CITIZEN
     And I verify the the people listed in the file have NRIC_CANCELLED_STATUS of 1
+    And I verify the old nationality [VALID_TILL] timestamp is a day before cut off date at 2359HR
+    And I verify the supersede nationality [VALID_FROM] date is cut off date at 0000HR
 
   @set_7
   Scenario: Mha send a ceased citizenship file with nric cancelled status of [Y] and nationality of [SG]
