@@ -8,7 +8,6 @@ import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.enums.NationalityEnum;
 import cdit_automation.models.*;
 import io.cucumber.datatable.DataTable;
-import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 
@@ -23,23 +22,11 @@ import java.util.stream.Stream;
 
 public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
 
-  @Given("the ceased sc file contain a person detail record not found in system")
-  public void theCeasedScFileContainAPersonDetailRecordNotFoundInSystem() throws IOException {
+  @Given("the file contain a record that is already exist in the system")
+  public void theFileContainARecordThatIsAlreadyExistInTheSystem() throws IOException {
     FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_CEASED_CITIZEN);
     testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, "mha_ceased_citizen"));
-    List<String> content = new ArrayList<>();
-    content.add(mhaCeasedCitizenFileDataPrep.generateDoubleHeader());
-    CeasedCitizen citizen = mhaCeasedCitizenFileDataPrep.ceasedSingaporeCitizenBuilder().build();
-    content.add(citizen.toString());
-    content.add("1");
-    batchFileCreator.writeToFile("mha_ceased_citizen.txt", content);
-  }
-
-  @Given("the ceased sc file contain a record that is already exist in the system")
-  public void theCeasedScFileContainARecordThatIsAlreadyExistInTheSystem() throws IOException {
-    FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_CEASED_CITIZEN);
-    testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, "mha_ceased_citizen"));
-    PersonId personId = mhaCeasedCitizenFileDataPrep.populateSingaporeCitizenInDB(1).get(0);
+    PersonId personId = mhaCeasedCitizenFileDataPrep.populateSCs(1).get(0);
     Batch batch = new Batch();
     batch.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
     batchRepo.save(batch);
@@ -61,93 +48,25 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
     batchFileCreator.writeToFile("mha_ceased_citizen.txt", content);
   }
 
-  @Given("the ceased sc file contain duplicate record")
-  public void theCeasedScFileContainDuplicateRecord() {}
+  @Given("the file contain duplicate record")
+  public void theFileContainDuplicateRecord() {}
 
-  @Given("the ceased sc file contain an invalid name length of zero")
-  public void theCeasedScFileContainAnInvalidNameLengthOfZero() throws IOException {
-    FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_CEASED_CITIZEN);
-    testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, "mha_ceased_citizen"));
-    PersonId personId = mhaCeasedCitizenFileDataPrep.populateSingaporeCitizenInDB(1).get(0);
-    CeasedCitizen ceasedCitizen =
-        mhaCeasedCitizenFileDataPrep
-            .ceasedSingaporeCitizenBuilder()
-            .name("")
-            .nric(personId.getNaturalId())
-            .build();
-    List<String> content = new ArrayList<>();
-    content.add(mhaCeasedCitizenFileDataPrep.generateDoubleHeader());
-    content.add(ceasedCitizen.toString());
-    content.add("1");
-    batchFileCreator.writeToFile("mha_ceased_citizen.txt", content);
-  }
-
-  @Given(
-      "the ceased sc file contain an invalid renunciation date that is after cut off date with no attainment date")
-  public void
-      theCeasedScFileContainAnInvalidRenunciationDateThatIsAfterCutOffDateWithNoAttainmentDate()
-          throws IOException {
+  @Given("the file has the following details:")
+  public void theFileHasTheFollowingDetails(DataTable dataTable) throws IOException {
     FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_CEASED_CITIZEN);
     testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, "mha_ceased_citizen"));
 
-    PersonId personId = mhaCeasedCitizenFileDataPrep.populateSingaporeCitizenInDB(1).get(0);
-    CeasedCitizen ceasedCitizen =
-        mhaCeasedCitizenFileDataPrep
-            .ceasedSingaporeCitizenBuilder()
-            .citizenRenunciationDate(LocalDate.now().plusDays(6))
-            .build();
-    List<String> content = new ArrayList<>();
-    content.add(mhaCeasedCitizenFileDataPrep.generateDoubleHeader());
-    content.add(ceasedCitizen.toString());
-    content.add("1");
-    batchFileCreator.writeToFile("mha_ceased_citizen.txt", content);
+    List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();
+    listOfIdentifiersToWriteToFile.add(mhaCeasedCitizenFileDataPrep.generateDoubleHeader());
+    List<String> body =
+        mhaCeasedCitizenFileDataPrep.createBodyOfTestScenarios(
+            dataTable.asMaps(String.class, String.class), testContext);
+    listOfIdentifiersToWriteToFile.addAll(body);
+    listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
+    batchFileCreator.writeToFile("mha_ceased_citizen.txt", listOfIdentifiersToWriteToFile);
   }
 
-  @Given("the ceased sc file has the following details:")
-  public void theCeasedScFileHasTheFollowingDetails(DataTable dataTable) throws IOException {
-    FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_CEASED_CITIZEN);
-    testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, "mha_ceased_citizen"));
-
-    List<Map<String, Integer>> list = dataTable.asMaps(String.class, Integer.class);
-    int numOfSingaporeCitizen = list.get(0).get("SINGAPORE CITIZEN");
-    int numOfDualCitizen = list.get(0).get("DUAL CITIZEN");
-
-    List<PersonId> singaporeCitizenPersonIds =
-        mhaCeasedCitizenFileDataPrep.populateSingaporeCitizenInDB(numOfSingaporeCitizen);
-    Stream<CeasedCitizen> scCeasedCitizen =
-        singaporeCitizenPersonIds.stream()
-            .map(
-                personId ->
-                    mhaCeasedCitizenFileDataPrep
-                        .ceasedSingaporeCitizenBuilder()
-                        .nric(personId.getNaturalId())
-                        .build());
-
-    List<PersonId> dualCitizenPersonIds =
-        mhaCeasedCitizenFileDataPrep.populateDualCitizenInDB(numOfDualCitizen);
-    Stream<CeasedCitizen> dcCeasedCitizen =
-        dualCitizenPersonIds.stream()
-            .map(
-                personId ->
-                    mhaCeasedCitizenFileDataPrep
-                        .ceasedDualCitizenBuilder()
-                        .nric(personId.getNaturalId())
-                        .build());
-
-    List<PersonId> personIds = new ArrayList<>();
-    personIds.addAll(singaporeCitizenPersonIds);
-    personIds.addAll(dualCitizenPersonIds);
-    testContext.set("personIds", personIds);
-
-    List<String> content = new ArrayList<>();
-    content.add(mhaCeasedCitizenFileDataPrep.generateDoubleHeader());
-    Stream.concat(scCeasedCitizen, dcCeasedCitizen)
-        .forEach(ceasedCitizen -> content.add(ceasedCitizen.toString()));
-    content.add(String.valueOf(singaporeCitizenPersonIds.size() + dualCitizenPersonIds.size()));
-    batchFileCreator.writeToFile("mha_ceased_citizen.txt", content);
-  }
-
-  @And("the batch error message is (.*)")
+  @And("^I verify the batch error message is (.*)")
   public void theBatchErrorMessage(String errorMsg) {
     Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(testContext.get("fileReceived"));
     Assert.assertEquals(
@@ -157,36 +76,38 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
         "Expecting [" + errorMsg + "] to be thrown");
   }
 
-  @And("^nationality of all person should change to (.*)$")
+  @And("^I verify the the people listed in the file have nationality of (.*)$")
   public void nationalityOfAllPersonShouldChangeToNON_SINGAPORE_CITIZEN(
       NationalityEnum nationalityEnum) {
-    List<PersonId> personIds = testContext.get("personIds");
-    personIds.forEach(
-        personId -> {
-          Nationality n = nationalityRepo.findNationalityByPerson(personId.getPerson());
+    List<String> ceasedCitizenNrics = testContext.get("ceasedCitizenNrics");
+    ceasedCitizenNrics.forEach(
+        nric -> {
+          PersonId p = personIdRepo.findByNaturalId(nric);
+          Nationality n = nationalityRepo.findNationalityByPerson(p.getPerson());
           Assert.assertEquals(
               nationalityEnum,
               n.getNationality(),
               "Expecting person with nric : ["
-                  + personId.getNaturalId()
+                  + p.getNaturalId()
                   + "] to have nationality of : "
                   + nationalityEnum);
         });
   }
 
-  @And("nric cancelled status change to {int}")
-  public void nricCancelledStatusChangeTo(int status) {
-    List<PersonId> personIds = testContext.get("personIds");
-    personIds.forEach(
-        personId -> {
-          PersonDetail personDetail =
+  @And("I verify the the people listed in the file have NRIC_CANCELLED_STATUS of {int}")
+  public void iVerifyTheThePeopleListedInTheFileHaveNRIC_CANCELLED_STATUSOf(int status) {
+    List<String> ceasedCitizenNrics = testContext.get("ceasedCitizenNrics");
+    ceasedCitizenNrics.forEach(
+        nric -> {
+          PersonId pi = personIdRepo.findByNaturalId(nric);
+          PersonDetail pd =
               personDetailRepo.findCurrentPersonDetailByPerson(
-                  personId.getPerson(), dateUtils.localDateToDate(dateUtils.now()));
+                  pi.getPerson(), dateUtils.localDateToDate(dateUtils.now()));
           Assert.assertEquals(
               status == 1,
-              personDetail.getIsNricCancelled(),
+              pd.getIsNricCancelled(),
               "Expecting person with nric : ["
-                  + personId.getNaturalId()
+                  + pi.getNaturalId()
                   + "] to have NRIC_CANCELLED_STATUS of "
                   + status);
         });
