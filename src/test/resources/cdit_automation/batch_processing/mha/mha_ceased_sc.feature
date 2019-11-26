@@ -56,13 +56,21 @@ Feature: Data processing for Mha ceased citizenship
   Scenario: Mha send a ceased citizenship file with nric cancelled status of [Y] and nationality of [SG]
 
   This is a special case that will never happen because this file is for renunciation of
-  singapore citizenship, not award singapore citizenship. Therefore, if datasource come
-  across it, datasource will ignore/skip.
+  singapore citizenship, not award singapore citizenship. Therefore, datasource will
+  ignore/skip if come across it.
 
     Given the file has the following details:
-      | PresentSingaporeCitizen  | AwardedSingaporeCitizen |
-      | 1                        | 1                       |
+      | PresentSingaporeCitizen | AwardedSingaporeCitizen |
+      | 1                       | 1                       |
     When the mha ceased sc job is ran
     Then the Mha Ceased Citizen batch job completes running with status FILE_CHECK_AGAINST_PREP_DATA
     And I verify the the people listed in the file have nationality of SINGAPORE_CITIZEN
     And I verify the the people listed in the file have NRIC_CANCELLED_STATUS of 0
+
+  @set_8
+  Scenario: Mha send a empty ceased citizenship file
+    Given the file has the following details:
+      | PresentSingaporeCitizen | PresentDualCitizen | CeasedSingaporeCitizen | CeasedDualCitizen |
+      | 0                       | 0                  | 0                      | 0                 |
+    When the mha ceased sc job is ran
+    Then the Mha Ceased Citizen batch job completes running with status FILE_CHECK_AGAINST_PREP_DATA
