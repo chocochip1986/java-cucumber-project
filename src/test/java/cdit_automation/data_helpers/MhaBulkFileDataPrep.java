@@ -317,7 +317,7 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
                         return Phaker.invalidNric();
                     } else {
                         optionsList.remove(option);
-                        return option;
+                        return option.substring(4);
                     }
                 })
                 .orElse("         ");
@@ -333,7 +333,7 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
                         return Phaker.invalidNric();
                     } else {
                         optionsList.remove(option);
-                        return option;
+                        return option.substring(5);
                     }
                 })
                 .orElse(Phaker.validNric());
@@ -409,14 +409,8 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
     private String createName(List<String> optionsList) {
         return optionsList
                 .stream()
-                .filter(option -> option.matches("^Name:.*$"))
-                .findFirst().map(option -> {
-                    if( option.length() <= 5 ) {
-                        return StringUtils.leftPad(option.substring(5), 66);
-                    } else {
-                        return null;
-                    }
-                }).orElse(StringUtils.leftPad(Phaker.validName(), 66));
+                .filter(option -> option.matches("^Name:(.{1,66})$"))
+                .findFirst().map(option -> StringUtils.leftPad(option.substring(5), 66) ).orElse(StringUtils.leftPad(Phaker.validName(), 66));
     }
 
     private String findAddressOptions(List<String> optionsList) {
