@@ -507,7 +507,16 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
        }
 
        public String invalidAddressTag() {
-           return invalidAddressTag == null ? InvalidAddressTagEnum.pick().getValue() : invalidAddressTag;
+           if ( invalidAddressTag == null ) {
+               InvalidAddressTagEnum tag = InvalidAddressTagEnum.pick();
+               if ( tag.equals(InvalidAddressTagEnum.SPACE) ) {
+                   return " ";
+               } else {
+                   return tag.getValue();
+               }
+           } else {
+               return invalidAddressTag;
+           }
        }
 
         private String whiteSpaces(int size){
