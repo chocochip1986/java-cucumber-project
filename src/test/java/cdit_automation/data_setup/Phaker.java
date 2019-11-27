@@ -5,6 +5,7 @@ import cdit_automation.utilities.DateUtils;
 import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.validation.constraints.Positive;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Month;
@@ -100,6 +101,10 @@ public class Phaker {
         return GENDERS[new Random().nextInt(GENDERS.length)];
     }
 
+    public static String validOldPostalCode() {
+        return genRandomNumbers(4);
+    }
+
     public static String validPostalCode() {
         return genRandomNumbers(6);
     }
@@ -112,8 +117,12 @@ public class Phaker {
         return genRandomNumbers(2) + genRandomALPHABETS(1);
     }
 
+    public static String validBuildingName() {
+        return Faker.instance().company().name();
+    }
+
     public static String validFloorNo() {
-        return genRandomNumbers(3);
+        return genRandomNumbers(2);
     }
 
     public static String validUnitNo() {
@@ -122,6 +131,10 @@ public class Phaker {
 
     public static String invalidNric() {
         return Faker.instance().bothify("?#######?");
+    }
+
+    public static String validNumber(@Positive int size) {
+        return size < 1 ? genRandomNumbers(1) : genRandomNumbers(size);
     }
 
     public static String validNric() {
