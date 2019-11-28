@@ -38,7 +38,11 @@ public enum InvalidAddressTagEnum {
     public static List<String> asList() {
         List<String> stringList = new ArrayList<>();
         for(InvalidAddressTagEnum invalidAddressTagEnum : InvalidAddressTagEnum.values()) {
-            stringList.add(invalidAddressTagEnum.getValue());
+            if ( invalidAddressTagEnum.equals(InvalidAddressTagEnum.SPACE) ) {
+                stringList.add("\\s");
+            } else {
+                stringList.add(invalidAddressTagEnum.getValue());
+            }
         }
         return stringList;
     }

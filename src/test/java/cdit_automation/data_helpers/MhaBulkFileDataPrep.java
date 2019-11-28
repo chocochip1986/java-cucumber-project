@@ -208,7 +208,7 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
     }
 
     private String createMhaAddress(List<String> optionsList) {
-        String invalidAddressTagRegex = "^InvalidAddressTag:("+String.join("|", InvalidAddressTagEnum.asList())+"|Invalid)?$";
+        String invalidAddressTagRegex = "^InvalidAddressTag:("+String.join("|", InvalidAddressTagEnum.asList())+"|Invalid)$";
         final MhaAddress mhaAddress = new MhaAddress();
         final List<String> usedOptions = new ArrayList<>();
         optionsList.stream().map(option -> {
@@ -270,9 +270,7 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
             }
             if (option.matches(invalidAddressTagRegex)) {
                 usedOptions.add(option);
-                if ( option.length() <= 19 ) {
-                    mhaAddress.invalidAddressTag = InvalidAddressTagEnum.pick().getValue();
-                } else if ( option.substring(19).matches("Invalid$") ) {
+                if ( option.substring(19).matches("Invalid$") ) {
                     mhaAddress.invalidAddressTag = InvalidAddressTagEnum.unsupportedValue();
                 } else {
                     mhaAddress.invalidAddressTag = option.substring(19);
@@ -508,15 +506,14 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
 
        public String invalidAddressTag() {
            if ( invalidAddressTag == null ) {
-               InvalidAddressTagEnum tag = InvalidAddressTagEnum.pick();
-               if ( tag.equals(InvalidAddressTagEnum.SPACE) ) {
-                   return " ";
-               } else {
-                   return tag.getValue();
-               }
+               invalidAddressTag = InvalidAddressTagEnum.pick().getValue();
+           }
+           if ( invalidAddressTag.isEmpty() ) {
+               return whiteSpaces(1);
            } else {
                return invalidAddressTag;
            }
+
        }
 
         private String whiteSpaces(int size){
@@ -541,7 +538,14 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
         }
 
         public String invalidAddressTag() {
-            return invalidAddressTag == null ? InvalidAddressTagEnum.pick().getValue() : invalidAddressTag;
+            if ( invalidAddressTag == null ) {
+                invalidAddressTag = InvalidAddressTagEnum.pick().getValue();
+            }
+            if ( invalidAddressTag.isEmpty() ) {
+                return whiteSpaces(1);
+            } else {
+                return invalidAddressTag;
+            }
         }
 
         public String postalCode() {

@@ -130,7 +130,7 @@ public class Phaker {
     }
 
     public static String invalidNric() {
-        return Faker.instance().bothify("?#######?");
+        return Faker.instance().bothify("?#######?").toUpperCase();
     }
 
     public static String validNumber(@Positive int size) {
