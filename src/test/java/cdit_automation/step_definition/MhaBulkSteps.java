@@ -12,14 +12,13 @@ import org.junit.Ignore;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Ignore
 public class MhaBulkSteps extends AbstractSteps {
     @Given("^the mha bulk file has the following details:$")
     public void theMhaBulkFileHasTheFollowingDetails(DataTable table) {
-        FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_DEATH_DATE);
+        FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_BULK_CITIZEN);
         FileReceived fileReceived = batchFileCreator.fileCreator(fileDetail, "mha_bulk_citizen");
         testContext.set("fileReceived", fileReceived);
 
@@ -41,7 +40,7 @@ public class MhaBulkSteps extends AbstractSteps {
         List<String> body = testContext.get("body");
         List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();
 
-        listOfIdentifiersToWriteToFile.add(mhaDeathDateFileDataPrep.generateDoubleHeader());
+        listOfIdentifiersToWriteToFile.add(mhaBulkFileDataPrep.generateDoubleHeader());
         listOfIdentifiersToWriteToFile.addAll(body);
         listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
 

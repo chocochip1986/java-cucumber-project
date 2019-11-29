@@ -34,4 +34,8 @@ public class Person extends AbstractEntity  {
     @Enumerated(EnumType.STRING)
     @Column(name = "restricted")
     private RestrictedEnum restricted;
+
+    public static Person create() {
+        return Person.builder().restricted(RestrictedEnum.NORMAL).build();
+    }
 }
