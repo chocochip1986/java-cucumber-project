@@ -22,8 +22,13 @@
     <name>cdit-automation</name>
     <packaging>jar</packaging>
 
-
     <dependencies>
+        <dependency>
+            <groupId>com.govtech</groupId>
+            <artifactId>datasource-repo</artifactId>
+            <version>1.0.28-SNAPSHOT</version>
+        </dependency>
+        
         <!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-java -->
         <dependency>
             <groupId>io.cucumber</groupId>
@@ -121,4 +126,29 @@
         </dependency>
 
     </dependencies>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <url>https://nexus-repo.cpfb.gds-gov.tech/repository/maven-snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>nexus-releases</id>
+            <url>https://nexus-repo.cpfb.gds-gov.tech/repository/maven-releases/</url>
+        </repository>
+    </distributionManagement>
+    <repositories>
+        <repository>
+            <id>nexus-snapshots</id>
+            <url>https://nexus-repo.cpfb.gds-gov.tech/repository/maven-public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
 </project>
