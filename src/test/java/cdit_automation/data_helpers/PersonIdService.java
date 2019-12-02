@@ -137,6 +137,7 @@ public class PersonIdService extends AbstractService {
                 break;
             case PP:
                 personId.setNaturalId(Phaker.validNric());
+                break;
             default:
                 throw new TestFailException("No support for PersonIdType: "+identifierType);
         }
