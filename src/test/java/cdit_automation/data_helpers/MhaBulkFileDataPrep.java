@@ -194,7 +194,7 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
             if (option.matches(invalidAddressTagRegex)) {
                 usedOptions.add(option);
                 if ( option.length() <= 19 ) {
-                    ncaAddress.invalidAddressTag = InvalidAddressTagEnum.pick().getValue();
+                    ncaAddress.invalidAddressTag = InvalidAddressTagEnum.pick().toString();
                 } else if ( option.substring(19).matches("Invalid$") ) {
                     ncaAddress.invalidAddressTag = InvalidAddressTagEnum.unsupportedValue();
                 } else {
@@ -297,7 +297,7 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
                         return mhaAddrTypeOption.substring(12);
                     }
                 })
-                .orElse(mhaAddressIndicator.equals("C") ? MhaAddressTypeEnum.OVERSEAS_ADDRESS.getValue() : MhaAddressTypeEnum.pick().getValue());
+                .orElse(mhaAddressIndicator.equals("C") ? MhaAddressTypeEnum.OVERSEAS_ADDRESS.getValue() : MhaAddressTypeEnum.pick().toString());
     }
 
     private String createPerson(List<String> optionsList, String dob) {
@@ -506,7 +506,7 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
 
        public String invalidAddressTag() {
            if ( invalidAddressTag == null ) {
-               invalidAddressTag = InvalidAddressTagEnum.pick().getValue();
+               invalidAddressTag = InvalidAddressTagEnum.pick().toString();
            }
            if ( invalidAddressTag.isEmpty() ) {
                return whiteSpaces(1);
@@ -539,7 +539,7 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
 
         public String invalidAddressTag() {
             if ( invalidAddressTag == null ) {
-                invalidAddressTag = InvalidAddressTagEnum.pick().getValue();
+                invalidAddressTag = InvalidAddressTagEnum.pick().toString();
             }
             if ( invalidAddressTag.isEmpty() ) {
                 return whiteSpaces(1);
