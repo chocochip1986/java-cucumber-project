@@ -57,6 +57,6 @@ public enum InvalidAddressTagEnum {
 
     @Override
     public String toString() {
-        return this.value;
+        return this.value.isEmpty() ? " " : this.value;
     }
 }
