@@ -26,6 +26,33 @@ git clone https://gitlab.cpfb.gds-gov.tech/cdit/cdit-automation.git
 2. Right click on any scenario and click 'Run scenario'
 3. If test passes, you are good to go.
 
+##How to run via Command line
+1. Take note of the feature file which your test scenario resides in and the line number.  
+   I.e. mha_dual_citizen.feature:7
+2. In your terminal, go to the cdit-automation project root directory.
+3. Type the following
+```
+mvn test -Dcucumber.options="src/test/resources/cdit_automation/batch_processing/mha/mha_dual_citizen.feature:7"
+```
+
+##How to run via Command line with tags
+Run with just 1 tag
+```
+mvn test -Dcucumber.options="src/test/resources/cdit_automation/batch_processing/mha/mha_dual_citizen.feature:7 --tags @tagname"
+```
+Run with multiple tags with AND condition
+```
+mvn test -Dcucumber.options="src/test/resources/cdit_automation/batch_processing/mha/mha_dual_citizen.feature:7 --tags @tagname1 --tags @tagname2"
+```
+Run with multiple tags with OR condition (Take note: No spacing between tag names)
+```
+mvn test -Dcucumber.options="src/test/resources/cdit_automation/batch_processing/mha/mha_dual_citizen.feature:7 --tags @tagname1,@tagname2"
+```
+Run with exclude tags
+```
+mvn test -Dcucumber.options="src/test/resources/cdit_automation/batch_processing/mha/mha_dual_citizen.feature:7 --tags @tagname1 --tags ~@tagname2"
+```
+
 ##File structure
 * All BDD code are stored under src/test/java/resources/cdit_automation/*.feature  
   Cucumber can only run test which are in the *.feature file
