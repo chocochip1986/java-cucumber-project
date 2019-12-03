@@ -14,11 +14,11 @@ Feature: Data processing for Mha ceased citizenship
       | Message                   | Count |
       | NRIC not found in System. | 1     |
 
-  @set_2 @defect @GRYFFINDOR-908
+  @set_2 @GRYFFINDOR-908
   Scenario: Mha send a ceased citizenship file with a record that is already exist in system
     Given the database populated with the following data:
       | SingaporeCitizen | DualCitizen | CeasedCitizen |
-      | 1                | 1           | 1             |
+      | 1                | 0           | 1             |
     And the file has the following details:
       | RepeatedCeasedCitizen |
       | 1                     |
@@ -28,7 +28,7 @@ Feature: Data processing for Mha ceased citizenship
       | Message                           | Count |
       | Not SC or Dual Citizen currently. | 1     |
 
-  @set_3 @defect @GRYFFINDOR-908
+  @set_3 @GRYFFINDOR-908
   Scenario: Mha send a ceased citizenship file with duplicate record
     Given the database populated with the following data:
       | SingaporeCitizen | DualCitizen |
@@ -42,7 +42,22 @@ Feature: Data processing for Mha ceased citizenship
       | Message                       | Count |
       | Duplicate NRIC found in file. | 3     |
 
-  @set_4
+  @set_4 @GRYFFINDOR-908
+  Scenario: Mha send a ceased citizenship file with a record existing in the system and also duplicated in the file
+    Given the database populated with the following data:
+      | SingaporeCitizen | CeasedCitizen |
+      | 1                | 1             |
+    And the file has the following details:
+      | RepeatedCeasedCitizen | NumberOfDuplication |
+      | 1                     | 2                   |
+    When the mha ceased sc job is ran
+    Then the Mha Ceased Citizen batch job completes running with status VALIDATED_TO_PREPARED_ERROR
+    And I verify that the following error message appeared:
+      | Message                           | Count |
+      | Not SC or Dual Citizen currently. | 2     |
+      | Duplicate NRIC found in file.     | 2     |
+
+  @set_5
   Scenario: Mha send a ceased citizenship file with a name length of zero
     Given the file has the following details:
       | EmptyName |
@@ -53,7 +68,7 @@ Feature: Data processing for Mha ceased citizenship
       | Message       | Count |
       | Invalid Name. | 1     |
 
-  @set_5
+  @set_6
   Scenario: Mha send a ceased citizenship file with an renunciation date that is after cut off date
     Given the file has the following details:
       | RenunciationDateAfterCutOff |
@@ -64,7 +79,7 @@ Feature: Data processing for Mha ceased citizenship
       | Message                                       | Count |
       | Renunciation Date is after File Cut-off Date. | 2     |
 
-  @set_6
+  @set_7
   Scenario: Mha send a ceased citizenship file for processing
     Given the database populated with the following data:
       | SingaporeCitizen | DualCitizen |
@@ -80,7 +95,7 @@ Feature: Data processing for Mha ceased citizenship
     And I verify the previous person detail valid till timestamp is the renunciation date at 2359HR
     And I verify the supersede person detail valid from timestamp is the day after renunciation date
 
-  @set_7
+  @set_8
   Scenario: Mha send a ceased citizenship file with nric cancelled status of [Y] and nationality of [SG]
 
   This is a special case that will never happen because this file is for renunciation of
@@ -98,7 +113,7 @@ Feature: Data processing for Mha ceased citizenship
     And I verify the the people listed in the file have nationality of SINGAPORE_CITIZEN
     And I verify the the people listed in the file have nric cancelled status of 0
 
-  @set_8
+  @set_9
   Scenario: Mha send a empty ceased citizenship file
     Given the file has the following details:
       | CeasedCitizen |

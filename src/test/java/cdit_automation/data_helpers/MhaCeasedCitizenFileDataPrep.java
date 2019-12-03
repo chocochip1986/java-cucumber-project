@@ -77,7 +77,10 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
     List<CeasedCitizen> awardedCitizens =
         getAwardedSCCitizens(parseStringSize(map.get("AwardedSingaporeCitizen")), availableNrics);
     List<CeasedCitizen> duplicateCitizens =
-        getDuplicateCitizens(parseStringSize(map.get("NumberOfDuplication")), citizens);
+        getDuplicateCitizens(
+            parseStringSize(map.get("NumberOfDuplication")),
+            Stream.concat(citizens.stream(), repeatedCitizens.stream())
+                .collect(Collectors.toList()));
 
     List<CeasedCitizen> ceasedCitizens =
         Stream.of(
