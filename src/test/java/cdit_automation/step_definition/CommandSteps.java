@@ -21,14 +21,21 @@ public class CommandSteps extends AbstractSteps {
         trigger();
     }
 
-    private void triggerBatchJob(FileReceived fileReceived) {
-        apiHelper.sendCallToTriggerBatchJob(fileReceived);
-    }
-
     @When("the mha bulk file is ran")
     public void theMhaBulkFileIsRan() {
         log.info("Triggering MHA bulk batch job is run");
         trigger();
+    }
+
+    @When("^the mha ceased sc job is ran$")
+    public void theMhaCeasedScJobIsRan() {
+        log.info("Triggering MHA ceased citizen batch job to run");
+        trigger();
+    }
+
+    @When("^Datasource is triggered to generate the IRAS AI Bulk file$")
+    public void datasourceIsTriggeredToGenerateTheIRASAIBulkFile() {
+        apiHelper.sendCallToTriggerOutgoingIrasAiJob(null, dateUtils.now());
     }
 
     private void trigger() {
@@ -39,13 +46,7 @@ public class CommandSteps extends AbstractSteps {
         triggerBatchJob(fileReceived);
     }
 
-    @When("^the mha ceased sc job is ran$")
-    public void theMhaCeasedScJobIsRan() {
-        log.info("Triggering MHA ceased citizen batch job to run");
-        FileReceived fileReceived = testContext.get("fileReceived");
-        if ( fileReceived == null ) {
-            throw new TestFailException("No file received record created!!!");
-        }
-        triggerBatchJob(fileReceived);
+    private void triggerBatchJob(FileReceived fileReceived) {
+        apiHelper.sendCallToTriggerBatchJob(fileReceived);
     }
 }

@@ -19,6 +19,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -32,6 +33,7 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
     private static final String RANDOM_PEOPLE_OPTION = "RandomPeople";
     private static final String[] RESIDENTIAL_STATUS_OPTIONS = {"Singaporean", "PermanentResident", "Foreigner", "DualCitizen"};
     private static final String[] ADDRESS_OPTIONS = {"MHAAddress", "NCAAddress", "Overseas", "InvalidAddressInd"};
+    private static final String[] VALID_ADDRESS_OPTIONS = {"MHAAddress", "NCAAddress", "Overseas"};
     private static final String[] PERSON_OPTIONS = {"Alive", "Dead",
             "Male", "Female", "Unknown", "FutureBD", "FutureDD", "DeathDateBeforeBirthDate", "InvalidNric", "InvalidFin", ""};
     private static final String[] MHA_ADDRESS_OPTIONS = {"MhaAddrType", "InvalidMhaAddrType", "BlkNo", "StrtName", "FlrNo", "BuildName", "PostalCode", "NewPostalCode", "InvalidAddressTag", "InvalidInvalidAddressTag"};
@@ -41,12 +43,12 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
         List<String> body = new ArrayList<>();
 
         for ( int i = 0 ; i < listOfEntries.size() ; i++ ) {
-            body.add(mhaBulkFileEntryCreator(listOfEntries.get(i)));
+            body.addAll(mhaBulkFileEntryCreator(listOfEntries.get(i)));
         }
         return body;
     }
 
-    private String mhaBulkFileEntryCreator(String scenerioEntry) {
+    private List<String> mhaBulkFileEntryCreator(String scenerioEntry) {
         if (scenerioEntry == null) {
             throw new TestFailException("There are no valid options to create an entry in the MHA Bulk File!");
         }
@@ -58,19 +60,30 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
         return process(optionsList);
     }
 
-    private String process(List<String> optionsList) {
+    private List<String> process(List<String> optionsList) {
         int quantity = getQuantity(optionsList);
+        List<String> listOfPpl = new ArrayList<>();
+        for ( int i = 0 ; i < quantity ; i++ ) {
+            if ( hasRandomPeopleOption(optionsList) ) {
+                listOfPpl.add(createRandomPerson(optionsList));
+            }
+            else {
+                String residentialStatusOption = findResidentialStatusOption(optionsList);
+                String addressOption = findAddressOptions(optionsList);
+                String dob = createBirthDate(optionsList);
+                listOfPpl.add(createPerson(optionsList, dob)+createAddress(addressOption, optionsList)+createResidentialStatus(optionsList, residentialStatusOption, LocalDate.parse(dob, Phaker.DATETIME_FORMATTER_YYYYMMDD)));
+            }
+        }
 
-        if ( hasRandomPeopleOption(optionsList) ) {
-            //TODO create random people
-            return "";
-        }
-        else {
-            String residentialStatusOption = findResidentialStatusOption(optionsList);
-            String addressOption = findAddressOptions(optionsList);
-            String dob = createBirthDate(optionsList);
-            return createPerson(optionsList, dob)+createAddress(addressOption, optionsList)+createResidentialStatus(optionsList, residentialStatusOption, LocalDate.parse(dob, Phaker.DATETIME_FORMATTER_YYYYMMDD));
-        }
+        return listOfPpl;
+    }
+
+    private String createRandomPerson(List<String> optionsList) {
+        String residentialStatusOption = RESIDENTIAL_STATUS_OPTIONS[new Random().nextInt(RESIDENTIAL_STATUS_OPTIONS.length)];
+        String addressOption = VALID_ADDRESS_OPTIONS[new Random().nextInt(VALID_ADDRESS_OPTIONS.length)];
+        String dob = createBirthDate(optionsList);
+
+        return createPerson(optionsList, dob)+createAddress(addressOption, optionsList)+createResidentialStatus(optionsList, residentialStatusOption, LocalDate.parse(dob, Phaker.DATETIME_FORMATTER_YYYYMMDD));
     }
 
     private String createResidentialStatus(List<String> optionsList, String status, LocalDate birthDate) {

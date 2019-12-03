@@ -1,13 +1,12 @@
 package cdit_automation.api_helpers;
 
 import cdit_automation.configuration.TestManager;
-import cdit_automation.enums.FileTypeEnum;
+import cdit_automation.data_setup.Phaker;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.FileReceived;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openqa.selenium.remote.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -20,8 +19,9 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
+import java.io.File;
+import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,6 +36,17 @@ public class ApiHelper {
     @Autowired
     public ApiHelper () {
         restService = new RestTemplate();
+    }
+
+    public void sendCallToTriggerOutgoingIrasAiJob(@Nullable File file, @NotNull LocalDate date) {
+        String requestParams = "date="+date.format(Phaker.DATETIME_FORMATTER_YYYYMMDD);
+        if ( file != null ) {
+            requestParams = "filePath="+file.getAbsolutePath()+"&"+requestParams;
+        }
+
+        String url = "http://"+testManager.getTestEnv().getDatasourceUrl()+":"+testManager.getTestEnv().getDatasourcePort()+"/egress/iras/ai/bulk?"+requestParams;
+
+        getCall(url);
     }
 
     public void sendCallToTriggerBatchJob(@NotNull FileReceived fileReceived) {
@@ -53,9 +64,20 @@ public class ApiHelper {
         postCall(url, httpHeader, httpBody.toString());
     }
 
+    private void getCall(@NotNull String url) {
+        ResponseEntity<String> httpResponse = restService.getForEntity(url, String.class);
+
+        processHttpResponse(httpResponse, url);
+    }
+
     private void postCall(@NotNull String url, @Nullable MultiValueMap<String, String> httpHeader, @Nullable String httpBody) {
         HttpEntity<String> entity = new HttpEntity(httpBody, httpHeader);
         ResponseEntity<String> httpResponse = restService.postForEntity(url, entity, String.class);
+
+        processHttpResponse(httpResponse, url);
+    }
+
+    private void processHttpResponse(ResponseEntity<String> httpResponse, String url) {
         if ( isResonseOk(httpResponse) ) {
             //Do nothing
         } else {
