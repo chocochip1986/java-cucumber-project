@@ -9,6 +9,7 @@ import cdit_automation.data_helpers.MhaBulkFileDataPrep;
 import cdit_automation.data_helpers.MhaDeathDateFileDataPrep;
 import cdit_automation.data_helpers.MhaDualCitizenFileDataPrep;
 import cdit_automation.data_helpers.MhaCeasedCitizenFileDataPrep;
+import cdit_automation.data_helpers.IrasTriMonthlyEgressDataPrep;
 import cdit_automation.data_helpers.factories.PersonFactory;
 import cdit_automation.page_navigation.PageUtils;
 import cdit_automation.repositories.BatchRepo;
@@ -47,6 +48,7 @@ public class AbstractSteps {
     @Autowired protected MhaDeathDateFileDataPrep mhaDeathDateFileDataPrep;
     @Autowired protected MhaCeasedCitizenFileDataPrep mhaCeasedCitizenFileDataPrep;
     @Autowired protected MhaBulkFileDataPrep mhaBulkFileDataPrep;
+    @Autowired protected IrasTriMonthlyEgressDataPrep irasTriMonthlyEgressDataPrep;
 
     //Model Repositories
     @Autowired protected BatchRepo batchRepo;
