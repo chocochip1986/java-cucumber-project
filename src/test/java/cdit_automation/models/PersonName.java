@@ -1,5 +1,6 @@
 package cdit_automation.models;
 
+import cdit_automation.data_setup.Phaker;
 import cdit_automation.models.embeddables.BiTemporalData;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -49,4 +50,17 @@ public class PersonName extends AbstractEntity {
 
     @Embedded
     private BiTemporalData biTemporalData;
+
+    public static PersonName create(Batch batch, Person person, BiTemporalData biTemporalData) {
+        return create(batch, person, Phaker.validName(), biTemporalData);
+    }
+
+    public static PersonName create(Batch batch, Person person, String name, BiTemporalData biTemporalData) {
+        return PersonName.builder()
+                .batch(batch)
+                .person(person)
+                .name(name)
+                .biTemporalData(biTemporalData)
+                .build();
+    }
 }

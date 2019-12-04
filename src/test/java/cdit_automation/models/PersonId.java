@@ -59,6 +59,20 @@ public class PersonId extends AbstractEntity {
     @Embedded
     private BiTemporalData biTemporalData;
 
+    public static PersonId create(@NotNull PersonIdTypeEnum personIdTypeEnum, @NotNull Person person, @NotNull BiTemporalData biTemporalData) {
+        String naturalId = "";
+        switch(personIdTypeEnum) {
+            case FIN:
+                naturalId = Phaker.validFin();
+                break;
+            case PP:
+            case NRIC:
+            default:
+                naturalId = Phaker.validNric();
+        }
+        return build(personIdTypeEnum, person, naturalId, biTemporalData);
+    }
+
     public static PersonId create(@NotNull PersonIdTypeEnum personIdTypeEnum, @NotNull Person person, @Nullable String naturalId, @NotNull BiTemporalData biTemporalData) {
         if ( naturalId == null || naturalId.isEmpty() ) {
             switch(personIdTypeEnum) {

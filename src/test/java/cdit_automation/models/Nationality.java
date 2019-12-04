@@ -62,4 +62,19 @@ public class Nationality extends AbstractEntity {
     @JsonIgnore
     @Embedded
     private BiTemporalData biTemporalData;
+
+    public static Nationality create(Batch batch, Person person, NationalityEnum nationalityEnum, BiTemporalData biTemporalData, Timestamp birthDate) {
+        return create(batch, person, nationalityEnum, biTemporalData, birthDate, null);
+    }
+
+    public static Nationality create(Batch batch, Person person, NationalityEnum nationalityEnum, BiTemporalData biTemporalData, Timestamp citizenshipAttainmentDate, Timestamp citizenshipRenunciationDate) {
+        return Nationality.builder()
+                .batch(batch)
+                .person(person)
+                .nationality(nationalityEnum)
+                .citizenshipAttainmentDate(citizenshipAttainmentDate)
+                .citizenshipRenunciationDate(citizenshipRenunciationDate)
+                .biTemporalData(biTemporalData)
+                .build();
+    }
 }
