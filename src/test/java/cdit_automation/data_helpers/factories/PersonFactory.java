@@ -1,9 +1,7 @@
 package cdit_automation.data_helpers.factories;
 
-import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.NationalityEnum;
 import cdit_automation.enums.PersonIdTypeEnum;
-import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.Batch;
 import cdit_automation.models.Nationality;
 import cdit_automation.models.Person;
@@ -12,9 +10,6 @@ import cdit_automation.models.PersonId;
 import cdit_automation.models.PersonName;
 import cdit_automation.models.embeddables.BiTemporalData;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 @Component
 public class PersonFactory extends AbstractFactory {
