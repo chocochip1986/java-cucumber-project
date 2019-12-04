@@ -100,7 +100,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
   public List<PersonId> populateSCs(int numOfRecords) {
     List<PersonId> result = new ArrayList<>();
     for (int i = 0; i < numOfRecords; i++) {
-      PersonId personId = personIdService.createNewSCPersonId();
+      PersonId personId = personFactory.createNewSCPersonId();
       result.add(personId);
     }
     return result;
@@ -109,7 +109,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
   private List<PersonId> populateDCs(int numOfRecords) {
     List<PersonId> result = new ArrayList<>();
     for (int i = 0; i < numOfRecords; i++) {
-      PersonId personId = personIdService.createDualCitizen();
+      PersonId personId = personFactory.createDualCitizen();
       result.add(personId);
     }
     return result;

@@ -40,7 +40,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         log.info("Creating "+numOfDualCitizens+" existing dual citizens");
         Map<String, PersonId> hashOfDCs = new HashMap<>();
         for ( int i = 0 ; i < numOfDualCitizens ; i++ ) {
-            PersonId personId = personIdService.createDualCitizen();
+            PersonId personId = personFactory.createDualCitizen();
             hashOfDCs.put("personId"+String.valueOf(i), personId);
         }
 

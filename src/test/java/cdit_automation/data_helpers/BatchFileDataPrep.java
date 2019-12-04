@@ -1,5 +1,6 @@
 package cdit_automation.data_helpers;
 
+import cdit_automation.data_helpers.factories.PersonFactory;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.repositories.PersonDetailRepo;
 import cdit_automation.utilities.DateUtils;
@@ -13,7 +14,7 @@ import java.util.List;
 public class BatchFileDataPrep {
 
     @Autowired protected DateUtils dateUtils;
-    @Autowired protected PersonIdService personIdService;
+    @Autowired protected PersonFactory personFactory;
 
     @Autowired protected PersonDetailRepo personDetailRepo;
 

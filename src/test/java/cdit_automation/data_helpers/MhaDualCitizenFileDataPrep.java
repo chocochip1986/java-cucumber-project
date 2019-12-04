@@ -42,7 +42,7 @@ public class MhaDualCitizenFileDataPrep extends BatchFileDataPrep {
     public List<String> createDuplicatedValidNricEntries(int numOfDuplicatedEntries) {
         List<String> duplicatedList = new ArrayList<>();
         for ( int i = 0 ; i < numOfDuplicatedEntries ; i++ ) {
-            PersonId personId = personIdService.createNewSCPersonId();
+            PersonId personId = personFactory.createNewSCPersonId();
             duplicatedList.addAll(new ArrayList<>(Arrays.asList(personId.getNaturalId(), personId.getNaturalId())));
         }
 
@@ -50,7 +50,7 @@ public class MhaDualCitizenFileDataPrep extends BatchFileDataPrep {
     }
 
     public List<String> createDuplicatedValidNricEntries() {
-        PersonId personId = personIdService.createNewSCPersonId();
+        PersonId personId = personFactory.createNewSCPersonId();
         List<String> duplicateedList = new ArrayList<>(Arrays.asList(personId.getNaturalId(), personId.getNaturalId()));
 
         return duplicateedList;
@@ -59,7 +59,7 @@ public class MhaDualCitizenFileDataPrep extends BatchFileDataPrep {
     public List<String> createListOfNewDualCitizens(@Positive int numOfNewDCs) {
         List<String> listOfNewDCs = new ArrayList<>();
         for ( int i = 0 ; i < numOfNewDCs ; i++ ) {
-            PersonId personId = personIdService.createNewSCPersonId();
+            PersonId personId = personFactory.createNewSCPersonId();
             listOfNewDCs.add(personId.getNaturalId());
         }
         return listOfNewDCs;
@@ -68,7 +68,7 @@ public class MhaDualCitizenFileDataPrep extends BatchFileDataPrep {
     public List<String> createListOfExistingDualCitizens(@Positive int numOfExistingDCs) {
         List<String> listOfExistingDCs = new ArrayList<>();
         for ( int i = 0 ; i < numOfExistingDCs ; i++ ) {
-            PersonId existingDC = personIdService.createDualCitizen();
+            PersonId existingDC = personFactory.createDualCitizen();
             listOfExistingDCs.add(existingDC.getNaturalId());
         }
         return listOfExistingDCs;

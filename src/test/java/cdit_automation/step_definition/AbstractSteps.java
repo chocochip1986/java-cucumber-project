@@ -9,7 +9,7 @@ import cdit_automation.data_helpers.MhaBulkFileDataPrep;
 import cdit_automation.data_helpers.MhaDeathDateFileDataPrep;
 import cdit_automation.data_helpers.MhaDualCitizenFileDataPrep;
 import cdit_automation.data_helpers.MhaCeasedCitizenFileDataPrep;
-import cdit_automation.data_helpers.PersonIdService;
+import cdit_automation.data_helpers.factories.PersonFactory;
 import cdit_automation.page_navigation.PageUtils;
 import cdit_automation.repositories.BatchRepo;
 import cdit_automation.repositories.DeathDateValidatedRepo;
@@ -40,8 +40,7 @@ public class AbstractSteps {
     @Autowired protected ApiHelper apiHelper;
 
     //Data creators
-    @Autowired
-    protected PersonIdService personIdService;
+    @Autowired protected PersonFactory personFactory;
 
     //Batch File Data Helpers
     @Autowired protected MhaDualCitizenFileDataPrep mhaDualCitizenFileDataPrep;

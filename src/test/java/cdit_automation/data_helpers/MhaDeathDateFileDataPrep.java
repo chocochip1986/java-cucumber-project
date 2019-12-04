@@ -93,7 +93,7 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
         List<String> listOfValidDeathCases = new ArrayList<>();
 
         for ( int i = 0 ; i < numOfValidDeathCases ; i++ ) {
-            PersonId personId = personIdService.createNewSCPersonId();
+            PersonId personId = personFactory.createNewSCPersonId();
             PersonDetail personDetail = personDetailRepo.findByPerson(personId.getPerson());
             listOfValidDeathCases.add(personId.getNaturalId()+randomDeathDate(fileReceivedDate, personDetail.getDateOfBirth()));
         }
@@ -105,7 +105,7 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
         List<String> listOfValidDeathCases = new ArrayList<>();
 
         for ( int i = 0 ; i < numOfValidDeathCases ; i++ ) {
-            PersonId personId = personIdService.createNewPPPersonId();
+            PersonId personId = personFactory.createNewPPPersonId();
             PersonDetail personDetail = personDetailRepo.findByPerson(personId.getPerson());
             listOfValidDeathCases.add(personId.getNaturalId()+randomDeathDate(fileReceivedDate, personDetail.getDateOfBirth()));
         }
@@ -117,7 +117,7 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
         List<String> listOfValidDeathCases = new ArrayList<>();
 
         for ( int i = 0 ; i < numOfValidDeathCases ; i++ ) {
-            PersonId personId = personIdService.createNewFRPersonId();
+            PersonId personId = personFactory.createNewFRPersonId();
             PersonDetail personDetail = personDetailRepo.findByPerson(personId.getPerson());
             listOfValidDeathCases.add(personId.getNaturalId()+randomDeathDate(fileReceivedDate, personDetail.getDateOfBirth()));
         }
@@ -129,7 +129,7 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
         List<String> listOfPpl = new ArrayList<>();
 
         for ( int i = 0 ; i < numOfPpl ; i++ ) {
-            PersonId personId = personIdService.createNewSCPersonId();
+            PersonId personId = personFactory.createNewSCPersonId();
             PersonDetail personDetail = personDetailRepo.findByPerson(personId.getPerson());
             personDetailRepo.updateBirthDateForPerson(dateUtils.now().minusDays(20), personDetail.getPerson());
 
@@ -143,7 +143,7 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
         List<String> listOfPpl = new ArrayList<>();
 
         for ( int i = 0 ; i < numOfPpl ; i++ ) {
-            PersonId personId = personIdService.createNewSCPersonId();
+            PersonId personId = personFactory.createNewSCPersonId();
             PersonDetail personDetail = personDetailRepo.findByPerson(personId.getPerson());
             personDetailRepo.updateDeathDateForPerson(Phaker.validDate(personDetail.getDateOfBirth(), dateUtils.now()), personId.getPerson());
 
@@ -157,7 +157,7 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
         List<String> listOfPpl = new ArrayList<>();
 
         for ( int i = 0 ; i < numOfPpl ; i++ ) {
-            PersonId personId = personIdService.createNewSCPersonId();
+            PersonId personId = personFactory.createNewSCPersonId();
 
             listOfPpl.add(personId.getNaturalId()+dateUtils.tomorrow().format(Phaker.DATETIME_FORMATTER_YYYYMMDD));
         }
