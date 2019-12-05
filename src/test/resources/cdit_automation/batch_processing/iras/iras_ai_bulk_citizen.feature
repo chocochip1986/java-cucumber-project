@@ -3,8 +3,13 @@
 @iras
 Feature: Data processing for IRAS bulk citizen file
 
-  @set_1
+  @set_1 @wip
   Scenario: Datasource service processes a MHA bulk citizen file
-    Given there are 10 Singaporeans who passed away in the year 2019
-    And the iras ai bulk file is created
+    Given there are 10 Singaporeans
+    Given there are 10 Singaporeans who passed away within the year 2019
+    Given there are 10 Singaporeans who passed away within the year 2018
+    Given there are 10 Singaporeans who passed away within the year 2017
+    Given there are 10 Singaporeans who passed away within the year 2016
+    Given there are 10 Singaporeans who passed away within the year 2015
+    Given there are 10 Singaporeans who passed away within the year 2014
     When Datasource is triggered to generate the IRAS AI Bulk file

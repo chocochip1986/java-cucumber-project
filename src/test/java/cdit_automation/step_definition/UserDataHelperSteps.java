@@ -1,11 +1,14 @@
 package cdit_automation.step_definition;
 
+import cdit_automation.data_setup.Phaker;
+import cdit_automation.exceptions.TestFailException;
+import cdit_automation.models.PersonDetail;
 import cdit_automation.models.PersonId;
 import io.cucumber.java.en.Given;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
 
-import javax.validation.constraints.Positive;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,13 +23,32 @@ public class UserDataHelperSteps extends  AbstractSteps {
         log.info("Created personId: "+personId.getNaturalId());
     }
 
-    @Given("^there are (\\d+) Singaporeans(?: who passed away in the year (\\d+))?$")
-    public void thereAreSingaporeans(int numOfSCs, int deathYear) {
+    @Given("^there are (\\d+) Singaporeans(?: who passed away within the year (\\d{4}))?$")
+    public void thereAreSingaporeans(int numOfSCs, Integer deathYear) {
         log.info("Creating "+numOfSCs+" Singaporeans in Datasource...");
+        if ( deathYear != null && deathYear > dateUtils.now().getYear() ) {
+            throw new TestFailException("No future death year please!");
+        }
         List<String> listOfPpl = new ArrayList<>();
         for ( int i = 0 ; i < numOfSCs ; i++ ) {
-            listOfPpl.add(personFactory.createNewSCPersonId().getNaturalId());
+            PersonId personId = personFactory.createNewSCPersonId();
+            if ( deathYear != null ) {
+                if ( deathYear == LocalDate.now().getYear() ) {
+                    personDetailRepo.updateDeathDateForPerson(Phaker.validDate(LocalDate.of(deathYear, 1, 1), LocalDate.now()), personId.getPerson());
+                } else {
+                    personDetailRepo.updateDeathDateForPerson(Phaker.validDate(LocalDate.of(deathYear, 1, 1), LocalDate.of(deathYear, 12, 31)), personId.getPerson());
+                }
+            }
+            listOfPpl.add(personId.getNaturalId());
         }
-        testContext.set("listOfPpl", listOfPpl);
+
+        if (testContext.contains("listOfPpl")) {
+            List<String> newBody = testContext.remove("listOfPpl");
+            newBody.addAll(listOfPpl);
+            testContext.set("listOfPpl", newBody);
+        }
+        else {
+            testContext.set("listOfPpl", listOfPpl);
+        }
     }
 }

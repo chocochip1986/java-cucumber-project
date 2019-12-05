@@ -6,11 +6,11 @@ import io.cucumber.java.en.Given;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @Ignore
 public class IrasAiBulkSteps extends AbstractSteps {
-    @And("the iras ai bulk file is created")
-    public void theIrasAiBulkFileIsCreated() {
-
-    }
 }

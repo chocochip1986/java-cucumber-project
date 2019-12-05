@@ -10,6 +10,8 @@ import io.cucumber.core.api.Scenario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +30,7 @@ public class TestManager {
     private List<Scenario> listOfScenariosRan;
     private BrowserTypeEnums currentBrowserType;
     private TestEnvEnums testEnv;
+    private Path projectRoot;
 
     @Autowired
     public TestManager() {
@@ -41,6 +44,7 @@ public class TestManager {
         listOfScenariosRan = new ArrayList<Scenario>();
         currentBrowserType = getEnvVarBrowserType();
         testEnv = getEnvVarTestEnv();
+        projectRoot = setProjectRoot();
     }
 
     public void addToFailingListOfScenarios(Scenario scenario) {
@@ -61,6 +65,10 @@ public class TestManager {
 
     public BrowserTypeEnums getCurrentBrowserType() {
         return currentBrowserType;
+    }
+
+    public Path getProjectRoot() {
+        return projectRoot;
     }
 
     public TestEnvEnums getTestEnv() {
@@ -130,5 +138,9 @@ public class TestManager {
                 throw new UnsupportedBrowserException("Unsupported Browser Exception! "+System.getProperty("browser"));
             }
         }
+    }
+
+    private Path setProjectRoot() {
+        return Paths.get(System.getProperty("user.dir"));
     }
 }

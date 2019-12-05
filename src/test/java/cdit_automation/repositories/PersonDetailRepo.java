@@ -34,6 +34,19 @@ public interface PersonDetailRepo extends JpaRepository<PersonDetail, Long> {
 
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query("UPDATE PersonDetail p SET p.dateOfDeath = ?1 WHERE p.person = ?2")
+    @Query("UPDATE PersonDetail pd " +
+            "SET pd.dateOfDeath = ?1 " +
+            "WHERE pd.person = ?2 " +
+            "AND ( pd.biTemporalData.businessTemporalData.validFrom <= TRUNC(SYSDATE) " +
+            "AND ( pd.biTemporalData.businessTemporalData.validTill = null OR pd.biTemporalData.businessTemporalData.validTill >= TRUNC(SYSDATE) ) )")
     int updateDeathDateForPerson(LocalDate newDeathDate, Person person);
+
+  @Transactional
+  @Modifying(clearAutomatically = true)
+  @Query("UPDATE PersonDetail pd " +
+          "SET pd.dateOfDeath = ?1 " +
+          "WHERE pd.person = ?2 " +
+          "AND ( pd.biTemporalData.businessTemporalData.validFrom <= ?3 " +
+          "AND ( pd.biTemporalData.businessTemporalData.validTill = null OR pd.biTemporalData.businessTemporalData.validTill >= ?3 ) )")
+  int updateDeathDateForPerson(LocalDate newDeathDate, Person person, Date now);
 }

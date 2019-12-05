@@ -6,6 +6,9 @@ import io.cucumber.java.en.When;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 @Slf4j
 @Ignore
 public class CommandSteps extends AbstractSteps {
@@ -35,7 +38,9 @@ public class CommandSteps extends AbstractSteps {
 
     @When("^Datasource is triggered to generate the IRAS AI Bulk file$")
     public void datasourceIsTriggeredToGenerateTheIRASAIBulkFile() {
-        apiHelper.sendCallToTriggerOutgoingIrasAiJob(null, dateUtils.now());
+        Path filePath = Paths.get(testManager.getProjectRoot().toString(), "src", "test", "resources", "artifacts");
+        apiHelper.sendCallToTriggerOutgoingIrasAiJob( filePath.toFile(), dateUtils.now());
+        testContext.set("filePath", filePath);
     }
 
     private void trigger() {

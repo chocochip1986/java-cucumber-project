@@ -41,7 +41,7 @@ public class ApiHelper {
     public void sendCallToTriggerOutgoingIrasAiJob(@Nullable File file, @NotNull LocalDate date) {
         String requestParams = "date="+date.format(Phaker.DATETIME_FORMATTER_YYYYMMDD);
         if ( file != null ) {
-            requestParams = "filePath="+file.getAbsolutePath()+"&"+requestParams;
+            requestParams = "filePath="+file.getAbsolutePath()+"/"+"&"+requestParams;
         }
 
         String url = "http://"+testManager.getTestEnv().getDatasourceUrl()+":"+testManager.getTestEnv().getDatasourcePort()+"/egress/iras/ai/bulk?"+requestParams;
