@@ -26,6 +26,8 @@ import cdit_automation.repositories.CeasedCitizenRepo;
 import cdit_automation.utilities.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.function.Supplier;
+
 public class AbstractSteps {
 
     //Test suite related helpers
@@ -72,5 +74,31 @@ public class AbstractSteps {
             //Do nothing
         }
         return 0;
+    }
+
+    protected boolean waitUntilCondition(Supplier<Boolean> function) {
+        Double timer = 0.0;
+        Double maxWaitDuration = 10.0;
+        boolean isFound;
+        do {
+            isFound = function.get();
+            if ( isFound ) {
+                break;
+            } else {
+                testManager.sleep();
+                progressBar(timer);
+                timer++;
+            }
+        } while ( timer < maxWaitDuration+1.0 );
+        System.out.println(System.lineSeparator());
+        return isFound;
+    }
+
+    private void progressBar(double timer) {
+        StringBuilder stringCount = new StringBuilder(30);
+        stringCount
+                .append("\r")
+                .append(String.format("  Waited for %d seconds...", (int)timer));
+        System.out.print(stringCount);
     }
 }

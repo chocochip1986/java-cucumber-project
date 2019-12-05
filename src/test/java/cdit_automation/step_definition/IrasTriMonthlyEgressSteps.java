@@ -8,6 +8,8 @@ import cdit_automation.models.*;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.Ignore;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -20,6 +22,8 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
+@Ignore
 public class IrasTriMonthlyEgressSteps extends AbstractSteps {
 
   @Then("check PersonId object created as specified")

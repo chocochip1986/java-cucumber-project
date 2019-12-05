@@ -3,10 +3,12 @@ package cdit_automation.configuration;
 import cdit_automation.driver_management.DriverManager;
 import cdit_automation.enums.BrowserTypeEnums;
 import cdit_automation.enums.TestEnvEnums;
+import cdit_automation.exceptions.TestFailException;
 import cdit_automation.exceptions.UnsupportedBrowserException;
 import cdit_automation.exceptions.UnsupportedTestEnvException;
 import cdit_automation.page_navigation.PageUtils;
 import io.cucumber.core.api.Scenario;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +17,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Component
 public class TestManager {
 
@@ -110,6 +113,16 @@ public class TestManager {
 
     public DriverManager getDriverManager () {
         return driverManager;
+    }
+
+    public void sleep() {
+        try {
+            Thread.sleep(1000);
+        } catch ( InterruptedException e ) {
+            String errorMsg = "Somehow, system sleep operation is interrupted!"+System.lineSeparator()+e.getMessage();
+            log.error(errorMsg);
+            throw new TestFailException(errorMsg);
+        }
     }
 
     private TestEnvEnums getEnvVarTestEnv() {

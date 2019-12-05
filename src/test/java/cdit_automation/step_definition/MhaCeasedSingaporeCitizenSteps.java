@@ -11,6 +11,8 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.Ignore;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -20,6 +22,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Slf4j
+@Ignore
 public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
 
   @Given("the database populated with the following data:")
