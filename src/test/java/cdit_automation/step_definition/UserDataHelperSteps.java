@@ -2,7 +2,6 @@ package cdit_automation.step_definition;
 
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.exceptions.TestFailException;
-import cdit_automation.models.PersonDetail;
 import cdit_automation.models.PersonId;
 import io.cucumber.java.en.Given;
 import lombok.extern.slf4j.Slf4j;
@@ -38,8 +37,10 @@ public class UserDataHelperSteps extends  AbstractSteps {
                 } else {
                     personDetailRepo.updateDeathDateForPerson(Phaker.validDate(LocalDate.of(deathYear, 1, 1), LocalDate.of(deathYear, 12, 31)), personId.getPerson());
                 }
+                onlyRecordPplWhoPassedAwayFromTheStartOfLastYear(listOfPpl, deathYear, personId);
+            } else {
+                listOfPpl.add(personId.getNaturalId());
             }
-            listOfPpl.add(personId.getNaturalId());
         }
 
         if (testContext.contains("listOfPpl")) {
@@ -49,6 +50,12 @@ public class UserDataHelperSteps extends  AbstractSteps {
         }
         else {
             testContext.set("listOfPpl", listOfPpl);
+        }
+    }
+
+    private void onlyRecordPplWhoPassedAwayFromTheStartOfLastYear(List<String> listOfPpl, Integer deathYear, PersonId personId){
+        if ( deathYear > dateUtils.now().getYear() - 2 ) {
+            listOfPpl.add(personId.getNaturalId());
         }
     }
 }

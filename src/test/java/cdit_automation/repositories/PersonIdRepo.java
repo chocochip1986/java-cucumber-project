@@ -31,4 +31,12 @@ public interface PersonIdRepo extends JpaRepository<PersonId, Long> {
     @Query(value = "SELECT p.* FROM PERSON_ID AS OF PERIOD FOR validity_period_person_id ?2 p " +
             "WHERE p.natural_id = ?1", nativeQuery = true)
     PersonId findPersonByNaturalId(String identifier, Date date);
+
+    @Query(value = "SELECT p.* FROM PERSON_ID AS OF PERIOD FOR validity_period_person_id TRUNC(SYSDATE) p, PERSON_DETAIL AS OF PERIOD FOR validity_period_person_detail TRUNC(SYSDATE) pd" +
+            " WHERE p.entity_key IS NOT NULL AND pd.entity_key IS NOT NULL" +
+            " AND p.entity_key = pd.entity_key" +
+            " AND p.natural_id IS NOT NULL" +
+            " AND p.person_id_type IN (NRIC, FIN, PP)" +
+            " AND ( pd.date_of_death IS NOT NULL OR pd.date_of_death > TRUNC(ADD_MONTHS(SYSDATE,-12),'YEAR')-1 )", nativeQuery = true)
+    List<PersonId> findAllPeopleForIrasAIBulkFile();
 }
