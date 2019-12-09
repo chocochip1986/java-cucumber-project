@@ -19,7 +19,7 @@ import java.util.List;
 
 @Component
 public class BatchFileCreator extends AbstractFileCreator {
-    private final String absoluteFilePath = "src/test/resources/artifacts/";
+    private final String absoluteFilePath = "src/main/resources/artifacts/";
 
     public FileReceived fileCreator(FileDetail fileDetail, String fileName) {
         File file = new File(absoluteFilePath+fileName+".txt");

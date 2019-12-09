@@ -50,7 +50,7 @@ public class AddressJacksonObjectMapper {
 
   private List<Address> loadAddressesOf(String fileName) throws IOException {
     byte[] jsonData =
-        Files.readAllBytes(Paths.get("src/test/resources/artifacts/" + fileName + ".json"));
+        Files.readAllBytes(Paths.get("src/main/resources/artifacts/" + fileName + ".json"));
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     Address[] result = objectMapper.readValue(jsonData, Address[].class);
