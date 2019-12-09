@@ -3,7 +3,7 @@
 @mha
 Feature: Data processing for MHA dual citizenship
 
-  @Set_1
+  @Set_1 @GRYFFINDOR-877 @defect
   Scenario: Dual Citizen batch job processing runs successfully
     Given the mha dual citizen file has the following details:
     | NewDualCitizensInFile | ExistingDualCitizensInFile | ExpiredDualCitizens |
@@ -42,7 +42,7 @@ Feature: Data processing for MHA dual citizenship
     When the mha dual citizen job is ran
     And the Mha Dual Citizen batch job completes running with status FILE_CHECK_AGAINST_PREP_DATA
 
-  @Set_5
+  @Set_5 @defect @GRYFFINDOR-885
   Scenario: MHA sends a file with a cut-off date in the future
     Given the mha dual citizen file has a cut-off date in the future
     When the mha dual citizen job is ran

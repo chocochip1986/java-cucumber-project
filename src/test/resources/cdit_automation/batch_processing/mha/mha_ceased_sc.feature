@@ -14,7 +14,7 @@ Feature: Data processing for Mha ceased citizenship
       | Message                   | Count |
       | NRIC not found in System. | 1     |
 
-  @set_2 @GRYFFINDOR-908
+  @set_2 @GRYFFINDOR-908 @defect
   Scenario: Mha send a ceased citizenship file with a record that is already exist in system
     Given the database populated with the following data:
       | SingaporeCitizen | DualCitizen | CeasedCitizen |
@@ -28,7 +28,7 @@ Feature: Data processing for Mha ceased citizenship
       | Message                           | Count |
       | Not SC or Dual Citizen currently. | 1     |
 
-  @set_3 @GRYFFINDOR-908
+  @set_3 @GRYFFINDOR-908 @defect
   Scenario: Mha send a ceased citizenship file with duplicate record
     Given the database populated with the following data:
       | SingaporeCitizen | DualCitizen |
@@ -42,7 +42,7 @@ Feature: Data processing for Mha ceased citizenship
       | Message                       | Count |
       | Duplicate NRIC found in file. | 3     |
 
-  @set_4 @GRYFFINDOR-908
+  @set_4 @GRYFFINDOR-908 @defect
   Scenario: Mha send a ceased citizenship file with a record existing in the system and also duplicated in the file
     Given the database populated with the following data:
       | SingaporeCitizen | CeasedCitizen |
@@ -95,7 +95,7 @@ Feature: Data processing for Mha ceased citizenship
     And I verify the previous person detail valid till timestamp is the renunciation date at 2359HR
     And I verify the supersede person detail valid from timestamp is the day after renunciation date
 
-  @set_8
+  @set_8 @GRYFFINDOR-908 @defect
   Scenario: Mha send a ceased citizenship file with nric cancelled status of [Y] and nationality of [SG]
 
   This is a special case that will never happen because this file is for renunciation of
@@ -113,7 +113,7 @@ Feature: Data processing for Mha ceased citizenship
     And I verify the the people listed in the file have nationality of SINGAPORE_CITIZEN
     And I verify the the people listed in the file have nric cancelled status of 0
 
-  @set_9
+  @set_9 @GRYFFINDOR-908 @defect
   Scenario: Mha send a empty ceased citizenship file
     Given the file has the following details:
       | CeasedCitizen |

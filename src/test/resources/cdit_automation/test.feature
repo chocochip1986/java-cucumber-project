@@ -1,3 +1,4 @@
+@example_only
 Feature: This is a test feature
 
   @Set_1

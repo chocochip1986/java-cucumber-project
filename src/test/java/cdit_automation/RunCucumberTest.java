@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         plugin = {"pretty"},
         features = "src/test/resources/",
-        glue="cdit_automation.step_definition")
+        glue="cdit_automation.step_definition",
+        tags = {"not @wip", "not @defect", "not @example_only"})
 public class RunCucumberTest {
 }
