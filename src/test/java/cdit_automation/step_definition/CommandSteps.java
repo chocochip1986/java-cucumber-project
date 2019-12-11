@@ -8,6 +8,7 @@ import org.junit.Ignore;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 
 @Slf4j
 @Ignore
@@ -41,6 +42,20 @@ public class CommandSteps extends AbstractSteps {
         Path filePath = Paths.get(testManager.getProjectRoot().toString(), "src", "test", "resources", "artifacts");
         apiHelper.sendCallToTriggerOutgoingIrasAiJob( filePath.toFile(), dateUtils.now());
         testContext.set("filePath", filePath);
+    }
+
+    @When("^Datasource is triggered to generate the (first|subsequent) IRAS AI Tri Monthly file on ([0-9]{8})$")
+    public void datasourceIsTriggeredToGenerateTheIRASAITriMonthlyFile(String val, String date) {
+        boolean isFirstTriMonthly = val.equalsIgnoreCase("first");
+        LocalDate extractionDate = LocalDate.parse(date, dateUtils.DATETIME_FORMATTER_YYYYMMDD);
+        Path filePath = Paths.get(testManager.getProjectRoot().toString(), "src", "test", "resources", "artifacts");
+        apiHelper.sendCallToTriggerOutgoingIrasTriMonthlyAiJob(
+                extractionDate,
+                filePath.toFile(),
+                isFirstTriMonthly);
+        testContext.set("filePath", filePath);
+        testContext.set("isFirstTriMonthly", isFirstTriMonthly);
+        testContext.set("extractionDate", extractionDate);
     }
 
     private void trigger() {
