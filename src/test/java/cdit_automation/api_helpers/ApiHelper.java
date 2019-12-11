@@ -49,6 +49,15 @@ public class ApiHelper {
         getCall(url);
     }
 
+    public void sendCallToTriggerOutgoingIrasTriMonthlyAiJob(@NotNull LocalDate date, @Nullable File file, @NotNull boolean isFirst) {
+        String requestParams = "date=" + date.format(Phaker.DATETIME_FORMATTER_YYYYMMDD) + "&isFirstTriMonthly=" + (isFirst ? "true" : "false");
+        if ( file != null ) {
+            requestParams = "filePath="+file.getAbsolutePath()+"/"+"&"+requestParams;
+        }
+        String url = "http://"+testManager.getTestEnv().getDatasourceUrl()+":"+testManager.getTestEnv().getDatasourcePort()+"/egress/iras/ai/triMonthly?"+requestParams;
+        getCall(url);
+    }
+
     public void sendCallToTriggerBatchJob(@NotNull FileReceived fileReceived) {
         String url = "http://"+testManager.getTestEnv().getDatasourceUrl()+":"+testManager.getTestEnv().getDatasourcePort()+"/receiver/validateFile";
 

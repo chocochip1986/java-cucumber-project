@@ -23,6 +23,8 @@ import cdit_automation.repositories.PersonDetailRepo;
 import cdit_automation.repositories.PersonIdRepo;
 import cdit_automation.repositories.PersonRepo;
 import cdit_automation.repositories.CeasedCitizenRepo;
+import cdit_automation.repositories.PersonNameRepo;
+import cdit_automation.repositories.IncomeRepo;
 import cdit_automation.utilities.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -63,8 +65,10 @@ public class AbstractSteps {
     @Autowired protected PersonIdRepo personIdRepo;
     @Autowired protected PersonDetailRepo personDetailRepo;
     @Autowired protected DeathDateValidatedRepo deathDateValidatedRepo;
-    @Autowired AddressJacksonObjectMapper addressJacksonObjectMapper;
     @Autowired protected CeasedCitizenRepo ceasedCitizenRepo;
+    @Autowired protected PersonNameRepo personNameRepo;
+    @Autowired protected IncomeRepo incomeRepo;
+    @Autowired AddressJacksonObjectMapper addressJacksonObjectMapper;
 
 
     protected int parseStringSize(String size) {

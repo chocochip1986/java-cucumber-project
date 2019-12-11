@@ -45,4 +45,21 @@ public class Income extends AbstractEntity {
   private AssessableIncomeStatus assessableIncomeStatus;
 
   @Embedded private BiTemporalData biTemporalData;
+
+  public static Income create(
+      @NotNull Batch batch,
+      @NotNull Person person,
+      @NotNull Short year,
+      BigDecimal assessableIncome,
+      @NotNull AssessableIncomeStatus assessableIncomeStatus,
+      BiTemporalData biTemporalData) {
+    return Income.builder()
+        .batch(batch)
+        .person(person)
+        .year(year)
+        .assessableIncome(assessableIncome)
+        .assessableIncomeStatus(assessableIncomeStatus)
+        .biTemporalData(biTemporalData)
+        .build();
+  }
 }

@@ -2,25 +2,25 @@ package cdit_automation.data_helpers;
 
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.AssessableIncomeStatus;
-import cdit_automation.enums.Gender;
 import cdit_automation.enums.NationalityEnum;
 import cdit_automation.enums.PersonIdTypeEnum;
 import cdit_automation.models.*;
+import cdit_automation.models.embeddables.BiTemporalData;
+import cdit_automation.repositories.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Component
 public class IrasTriMonthlyEgressDataPrep extends BatchFileDataPrep {
+
+  @Autowired BatchRepo batchRepo;
 
   private enum ColumnHeaders {
     NAME("Name"),
@@ -29,8 +29,10 @@ public class IrasTriMonthlyEgressDataPrep extends BatchFileDataPrep {
     DATE_OF_DEATH("DOD"),
     NATIONALITY("Nationality"),
     CITIZENSHIP_RENUNCIATION_DATE("CitizenshipRenunciationDate"),
+    CITIZENSHIP_ATTAINMENT_DATE("CitizenshipAttainmentDate"),
     ASSESSABLE_INCOME_STATUS("AIStatus"),
-    ASSESSABLE_INCOME_YEAR("AIYear");
+    ASSESSABLE_INCOME_YEAR("AIYear"),
+    INDEX("Index");
 
     public final String label;
 
@@ -43,99 +45,154 @@ public class IrasTriMonthlyEgressDataPrep extends BatchFileDataPrep {
     }
   }
 
-  private String getValueOfColumn(Map<String, String> m, ColumnHeaders headers) {
-    return m.get(headers.getValue());
+  private Batch batch;
+
+  public void createBatch() {
+    this.batch = new Batch();
+    batch.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
+    batchRepo.save(batch);
   }
 
-  private boolean isMatches(String source, String pattern) {
-    return source.matches(pattern);
+  private Batch getBatch() {
+    return this.batch;
   }
 
-  public Optional<Income> getIncomeOpt(Map<String, String> m, Person person) {
-    String extractedStatus = getValueOfColumn(m, ColumnHeaders.ASSESSABLE_INCOME_STATUS);
-    if (!isMatches(extractedStatus, "^[^-]+$")) {
-      return Optional.empty();
-    }
-
-    Income result =
-        Income.builder()
-            .assessableIncomeStatus(
-                AssessableIncomeStatus.valueOf(
-                    getValueOfColumn(m, ColumnHeaders.ASSESSABLE_INCOME_STATUS)))
-            .person(person)
-            .assessableIncome(BigDecimal.valueOf(1000000))
-            .build();
-
-    String extractedYear = getValueOfColumn(m, ColumnHeaders.ASSESSABLE_INCOME_YEAR);
-    if (isMatches(extractedYear, "^[^-]+$")) {
-      result.setYear(Short.valueOf(extractedYear));
-    }
-
-    return Optional.of(result);
+  private boolean isValid(String source) {
+    return source.matches("^[^-]+$");
   }
 
-  public Optional<Nationality> getNationalityOpt(Map<String, String> m, Person person) {
+  public Income getIncome(Map<String, String> m, List<Person> persons) {
+    return Income.create(
+        getBatch(),
+        persons.get(parseStringSize(m.get(ColumnHeaders.INDEX.getValue())) - 1),
+        Short.valueOf(m.get(ColumnHeaders.ASSESSABLE_INCOME_YEAR.getValue())),
+        BigDecimal.valueOf(10000),
+        AssessableIncomeStatus.valueOf(m.get(ColumnHeaders.ASSESSABLE_INCOME_STATUS.getValue())),
+        new BiTemporalData()
+            .generateNewBiTemporalData(
+                dateUtils.beginningOfDayToTimestamp(dateUtils.monthsBeforeToday(1))));
+  }
+
+  public Nationality getNationality(Map<String, String> m, Person person) {
     Nationality result =
-        Nationality.builder()
-            .person(person)
-            .nationality(NationalityEnum.valueOf(getValueOfColumn(m, ColumnHeaders.NATIONALITY)))
-            .citizenshipAttainmentDate(Timestamp.valueOf(LocalDateTime.now().minusYears(25)))
-            .build();
+        Nationality.create(
+            getBatch(),
+            person,
+            NationalityEnum.valueOf(m.get(ColumnHeaders.NATIONALITY.getValue())),
+            new BiTemporalData()
+                .generateNewBiTemporalData(
+                    dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(10))),
+            null);
 
-    String extractedRenunciationDate =
-        getValueOfColumn(m, ColumnHeaders.CITIZENSHIP_RENUNCIATION_DATE);
-    if (isMatches(extractedRenunciationDate, "^[0-9]{8}$")) {
-      result.setCitizenshipRenunciationDate(
-          Timestamp.valueOf(
-              LocalDate.parse(
-                      getValueOfColumn(m, ColumnHeaders.CITIZENSHIP_RENUNCIATION_DATE),
-                      DateTimeFormatter.ofPattern("yyyyMMdd"))
-                  .atTime(LocalTime.MAX)));
+    String citizenshipAttainmentDateStr =
+        m.get(ColumnHeaders.CITIZENSHIP_ATTAINMENT_DATE.getValue());
+    boolean hasAttainmentDate = isValid(citizenshipAttainmentDateStr);
+    if (hasAttainmentDate) {
+      LocalDate attainmentDate =
+          LocalDate.parse(citizenshipAttainmentDateStr, dateUtils.DATETIME_FORMATTER_YYYYMMDD);
+      result.setCitizenshipAttainmentDate(dateUtils.beginningOfDayToTimestamp(attainmentDate));
+      result.setBiTemporalData(
+          new BiTemporalData()
+              .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(attainmentDate)));
     }
-    return Optional.of(result);
+
+    String citizenshipRenunciationDateStr =
+        m.get(ColumnHeaders.CITIZENSHIP_RENUNCIATION_DATE.getValue());
+    boolean hasCitizenshipCeased = isValid(citizenshipRenunciationDateStr);
+    if (hasCitizenshipCeased) {
+      LocalDate ceasedDate = LocalDate.parse(citizenshipRenunciationDateStr);
+      result.setCitizenshipRenunciationDate(dateUtils.beginningOfDayToTimestamp(ceasedDate));
+      result.setBiTemporalData(
+          new BiTemporalData()
+              .generateNewBiTemporalData(
+                  dateUtils.beginningOfDayToTimestamp(ceasedDate.plusDays(1))));
+    }
+    return result;
   }
 
-  public Optional<PersonDetail> getPersonDetailOpt(Map<String, String> m, Person person) {
+  public PersonDetail getPersonDetail(Map<String, String> m, Person person) {
     PersonDetail result =
-        PersonDetail.builder()
-            .person(person)
-            .gender(Gender.FEMALE)
-            .dateOfBirth(LocalDate.now().minusYears(25))
-            .build();
+        PersonDetail.create(
+            getBatch(),
+            person,
+            new BiTemporalData()
+                .generateNewBiTemporalData(
+                    dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(10))));
 
-    String extractedDeathDate = getValueOfColumn(m, ColumnHeaders.DATE_OF_DEATH);
-    if (isMatches(extractedDeathDate, "^[^-]+$")) {
-      result.setDateOfDeath(
-          LocalDate.parse(extractedDeathDate, DateTimeFormatter.ofPattern("yyyyMMdd")));
+    String citizenshipAttainmentDateStr =
+        m.get(ColumnHeaders.CITIZENSHIP_ATTAINMENT_DATE.getValue());
+    boolean hasAttainmentDate = isValid(citizenshipAttainmentDateStr);
+    if (hasAttainmentDate) {
+      result.setBiTemporalData(
+          new BiTemporalData()
+              .generateNewBiTemporalData(
+                  dateUtils.beginningOfDayToTimestamp(
+                      LocalDate.parse(
+                          citizenshipAttainmentDateStr, dateUtils.DATETIME_FORMATTER_YYYYMMDD))));
     }
-    return Optional.of(result);
+
+    String deathDateStr = m.get(ColumnHeaders.DATE_OF_DEATH.getValue());
+    boolean hasDeathDate = isValid(deathDateStr);
+    if (hasDeathDate) {
+      LocalDate deathDate = LocalDate.parse(deathDateStr, dateUtils.DATETIME_FORMATTER_YYYYMMDD);
+      result.setDateOfDeath(deathDate);
+      result.setBiTemporalData(
+          new BiTemporalData()
+              .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(deathDate)));
+    }
+
+    String citizenshipRenunciationDateStr =
+        m.get(ColumnHeaders.CITIZENSHIP_RENUNCIATION_DATE.getValue());
+    boolean hasCitizenshipCeased = isValid(citizenshipRenunciationDateStr);
+    if (hasCitizenshipCeased) {
+      result.setIsNricCancelled(true);
+      result.setBiTemporalData(
+          new BiTemporalData()
+              .generateNewBiTemporalData(
+                  dateUtils.beginningOfDayToTimestamp(
+                      LocalDate.parse(citizenshipRenunciationDateStr).plusDays(1))));
+    }
+    return result;
   }
 
-  public Optional<PersonId> getPersonIdOpt(Map<String, String> m, Person person) {
-    String autoGenerateNaturalId =
-        getValueOfColumn(m, ColumnHeaders.TYPE).equalsIgnoreCase(PersonIdTypeEnum.NRIC.toString())
-            ? Phaker.validNric()
-            : Phaker.validFin();
-    String extractedNaturalId = getValueOfColumn(m, ColumnHeaders.NATURAL_ID);
-    return Optional.of(
-        PersonId.builder()
-            .person(person)
-            .personIdType(PersonIdTypeEnum.valueOf(getValueOfColumn(m, ColumnHeaders.TYPE)))
-            .naturalId(
-                isMatches(extractedNaturalId, "^[STFG]\\d{7}[A-Z]$")
-                    ? extractedNaturalId
-                    : autoGenerateNaturalId)
-            .build());
+  public PersonId getPersonId(Map<String, String> m, Person person) {
+    PersonId result =
+        PersonId.create(
+            PersonIdTypeEnum.valueOf(m.get(ColumnHeaders.TYPE.getValue())),
+            person,
+            m.get(ColumnHeaders.NATURAL_ID.getValue()),
+            new BiTemporalData()
+                .generateNewBiTemporalData(
+                    dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(10))));
+
+    String citizenshipAttainmentDateStr =
+        m.get(ColumnHeaders.CITIZENSHIP_ATTAINMENT_DATE.getValue());
+    boolean hasAttainmentDate = isValid(citizenshipAttainmentDateStr);
+    if (hasAttainmentDate) {
+      result.setBiTemporalData(
+          new BiTemporalData()
+              .generateNewBiTemporalData(
+                  dateUtils.beginningOfDayToTimestamp(
+                      LocalDate.parse(
+                          citizenshipAttainmentDateStr, dateUtils.DATETIME_FORMATTER_YYYYMMDD))));
+    }
+
+    return result;
   }
 
-  public Optional<PersonName> getPersonNameOpt(Map<String, String> m, Person person) {
-    String extractedName = getValueOfColumn(m, ColumnHeaders.NAME);
-    String generatedName =
-        extractedName.equalsIgnoreCase("AUTO") ? Phaker.validName() : extractedName;
-    return Optional.of(PersonName.builder().person(person).name(generatedName).build());
+  public PersonName getPersonName(Map<String, String> m, Person person) {
+    String name = m.get(ColumnHeaders.NAME.getValue());
+    String generatedName = name.equalsIgnoreCase("AUTO") ? Phaker.validName() : name;
+    return PersonName.create(
+        getBatch(),
+        person,
+        generatedName,
+        new BiTemporalData()
+            .generateNewBiTemporalData(
+                dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(10))));
   }
 
-  public Optional<Person> getPersonOpt() {
-    return Optional.of(Person.create());
+  public Person getPerson() {
+    return Person.create();
   }
 }
