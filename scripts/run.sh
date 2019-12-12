@@ -1,12 +1,13 @@
 #!/bin/bash
+# ================================================================================================================================================================
+# This bash script is meant to run the cdit-automation test suite via command line. This means copying the test suite into a directory
+# , installing all required dependencies and running via command line. Do not mistake this as running the test suite from an executable jar via
+# command line.
 
-#This bash script is meant to run the cdit-automation test suite via command line. This means copying the test suite into a directory
-#, installing all required dependencies and running via command line. Do not mistake this as running the test suite from an executable jar via
-#command line.
-
-#Required tools needed:
-#-Java RunTime Environment(1.8)
-#-Maven 3.6.2
+# Required tools needed:
+# -Java RunTime Environment(1.8)
+# -Maven 3.6.2
+# ================================================================================================================================================================
 
 function processInputArguments() {
   if [ $# -eq 0  ]
