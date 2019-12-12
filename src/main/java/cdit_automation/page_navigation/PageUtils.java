@@ -3,7 +3,6 @@ package cdit_automation.page_navigation;
 import cdit_automation.driver_management.DriverManager;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -16,10 +15,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 @Slf4j
