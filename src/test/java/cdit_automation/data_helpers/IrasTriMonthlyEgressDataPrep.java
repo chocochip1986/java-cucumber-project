@@ -100,7 +100,8 @@ public class IrasTriMonthlyEgressDataPrep extends BatchFileDataPrep {
         m.get(ColumnHeaders.CITIZENSHIP_RENUNCIATION_DATE.getValue());
     boolean hasCitizenshipCeased = isValid(citizenshipRenunciationDateStr);
     if (hasCitizenshipCeased) {
-      LocalDate ceasedDate = LocalDate.parse(citizenshipRenunciationDateStr);
+      LocalDate ceasedDate =
+          LocalDate.parse(citizenshipRenunciationDateStr, dateUtils.DATETIME_FORMATTER_YYYYMMDD);
       result.setCitizenshipRenunciationDate(dateUtils.beginningOfDayToTimestamp(ceasedDate));
       result.setBiTemporalData(
           new BiTemporalData()
@@ -150,7 +151,9 @@ public class IrasTriMonthlyEgressDataPrep extends BatchFileDataPrep {
           new BiTemporalData()
               .generateNewBiTemporalData(
                   dateUtils.beginningOfDayToTimestamp(
-                      LocalDate.parse(citizenshipRenunciationDateStr).plusDays(1))));
+                      LocalDate.parse(
+                              citizenshipRenunciationDateStr, dateUtils.DATETIME_FORMATTER_YYYYMMDD)
+                          .plusDays(1))));
     }
     return result;
   }
