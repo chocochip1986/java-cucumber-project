@@ -12,15 +12,12 @@ function processInputArguments() {
   if [ $# -eq 0  ]
   then
     echo "No input arguments applied! Please follow required format..."
+    exit_error
   fi
 
-  arrayOfArguments=("$@")
-
-  # shellcheck disable=SC2068
-  for i in ${arrayOfArguments[@]}
+  for i in "${arrayOfArguments[@]}"
   do
-    echo $i
-    if [[ $i =~ ^browser=[a-zA-Z]*$  ]]
+    if [[ $i =~ ^browser=[a-zA-Z]*$ ]]
     then
       browser=$i
     fi
@@ -30,7 +27,7 @@ function processInputArguments() {
     fi
   done
 
-  if [ -z "$browser"]
+  if [ -z "$browser" ]
   then
     echo "Using default browser: chrome"
     browser=chrome
@@ -42,11 +39,16 @@ function processInputArguments() {
   fi
 }
 
-processInputArguments
+function exit_error() {
+  exit
+}
+
+arrayOfArguments=("$@")
+processInputArguments arrayOfArguments
 
 if [ $env = local ] || [ $env = qa ] || [ $env = dev ] || [ $env = uat ]
 then
-  echo "Running test suite on ${env} environment..."
+  echo "Running test suite on ${env} environment on ${browser} browser"
   mvn test -Dbrowser=$browser -Denv=$env
 fi
 
