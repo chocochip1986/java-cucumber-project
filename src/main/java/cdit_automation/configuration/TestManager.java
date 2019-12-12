@@ -131,7 +131,7 @@ public class TestManager {
         }
         else {
             try {
-                return TestEnvEnums.valueOf(System.getProperty("env"));
+                return TestEnvEnums.valueOf(System.getProperty("env").toUpperCase());
             }
             catch ( IllegalArgumentException e ) {
                 throw new UnsupportedTestEnvException("Unsupported Test Environment Exception! "+System.getProperty("env"));
