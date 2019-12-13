@@ -6,7 +6,7 @@
 - ####[File structure](#file-structure)
     - ####[Notable File structure](#notable-file-structure)  
     - ####[Notable classes and their purposes](#notable-classes-and-their-purposes)
-- ####[Running the test suite]
+- ####[Running the test suite](#running-the-test-suite)
     - ####[Running a scenario using Intellij](#running-a-scenario-using-intellij)  
     - ####[Running via Command Line](#running-via-command-line)  
     - ####[Running via Command Line with tags](#running-via-command-line-with-tags)
