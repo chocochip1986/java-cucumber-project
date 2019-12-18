@@ -6,6 +6,7 @@
 - ####[File structure](#file-structure)
     - ####[Notable File structure](#notable-file-structure)  
     - ####[Notable classes and their purposes](#notable-classes-and-their-purposes)
+- ####[How it works](#how-it-works)
 - ####[Running the test suite](#running-the-test-suite)
     - ####[Running a scenario using Intellij](#running-a-scenario-using-intellij)  
     - ####[Running via Command Line](#running-via-command-line)  
@@ -76,7 +77,13 @@ git clone https://gitlab.cpfb.gds-gov.tech/cdit/cdit-automation.git
 * TestEnvEnums
     * This enum class is used to house all test environment related information. i.e. database connections, urls, ports.
 ---
-
+##How it works
+* Entry point to the test suite
+    * RunCucumberTest is the entry point to the test suite.
+* How does spring boot come into the picture?
+    * Cucumber-spring is the dependency that is required to create the application context.
+    * This context is shared across all test scenarios during the automation run.
+    * In order for Cucumber to be aware of the test configurations, you simply need a class to be annotated with @SpringBootTest. In this case, we use the SpringContextLoader class.
 ##Running the test suite
 ###Running a scenario using Intellij
 1. Goto any file with a .feature file type

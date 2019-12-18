@@ -28,6 +28,7 @@
                 </configuration>
             </plugin>
             <plugin>
+                <!--This plugin is added to clean out the deployment folder which isn't removed by default-->
                 <artifactId>maven-clean-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
@@ -42,6 +43,37 @@
                     </filesets>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/deployment/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-jar-plugin</artifactId>-->
+<!--                <version>3.0.2</version>-->
+<!--                <configuration>-->
+<!--                    <archive>-->
+<!--                        <manifest>-->
+<!--                            <addClasspath>true</addClasspath>-->
+<!--                            <classpathPrefix>lib</classpathPrefix>-->
+<!--                            <mainClass>cdit_automation.RunCucumberTest</mainClass>-->
+<!--                        </manifest>-->
+<!--                    </archive>-->
+<!--                    <finalName>${artifactId}-${groupId}.jar</finalName>-->
+<!--                    <outputDirectory>${project.basedir}/deployment</outputDirectory>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -68,20 +100,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.basedir}/deployment</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
         <testSourceDirectory>src/main/java/cdit_automation</testSourceDirectory>
     </build>
@@ -89,11 +107,11 @@
     <packaging>jar</packaging>
 
     <dependencies>
-        <dependency>
-            <groupId>com.govtech</groupId>
-            <artifactId>datasource-repo</artifactId>
-            <version>1.0.28-SNAPSHOT</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.govtech</groupId>-->
+<!--            <artifactId>datasource-repo</artifactId>-->
+<!--            <version>1.0.28-SNAPSHOT</version>-->
+<!--        </dependency>-->
         
         <!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-java -->
         <dependency>
@@ -192,29 +210,28 @@
             <version>2.10.0.pr3</version>
         </dependency>
     </dependencies>
+<!--    <distributionManagement>-->
+<!--        <snapshotRepository>-->
+<!--            <id>nexus-snapshots</id>-->
+<!--            <url>https://nexus-repo.cpfb.gds-gov.tech/repository/maven-snapshots/</url>-->
+<!--        </snapshotRepository>-->
+<!--        <repository>-->
+<!--            <id>nexus-releases</id>-->
+<!--            <url>https://nexus-repo.cpfb.gds-gov.tech/repository/maven-releases/</url>-->
+<!--        </repository>-->
+<!--    </distributionManagement>-->
+<!--    <repositories>-->
+<!--        <repository>-->
+<!--            <id>nexus-snapshots</id>-->
+<!--            <url>https://nexus-repo.cpfb.gds-gov.tech/repository/maven-public/</url>-->
+<!--            <releases>-->
+<!--                <enabled>true</enabled>-->
+<!--            </releases>-->
 
-    <distributionManagement>
-        <snapshotRepository>
-            <id>nexus-snapshots</id>
-            <url>https://nexus-repo.cpfb.gds-gov.tech/repository/maven-snapshots/</url>
-        </snapshotRepository>
-        <repository>
-            <id>nexus-releases</id>
-            <url>https://nexus-repo.cpfb.gds-gov.tech/repository/maven-releases/</url>
-        </repository>
-    </distributionManagement>
-    <repositories>
-        <repository>
-            <id>nexus-snapshots</id>
-            <url>https://nexus-repo.cpfb.gds-gov.tech/repository/maven-public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+<!--            <snapshots>-->
+<!--                <enabled>true</enabled>-->
+<!--            </snapshots>-->
+<!--        </repository>-->
+<!--    </repositories>-->
 
 </project>
