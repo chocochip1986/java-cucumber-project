@@ -28,6 +28,27 @@
                 </configuration>
             </plugin>
             <plugin>
+                <!--This pluing is added to copy the Dockerfile to the deployment folder from the scripts folder-->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <outputDirectory>target</outputDirectory>
+                    <resources>
+                        <resource>
+                            <directory>scripts</directory>
+                            <includes>
+                                <include>Dockerfile</include>
+                            </includes>
+                            <excludes>
+                                <exclude>
+                                    ^~(Dockerfile)$
+                                </exclude>
+                            </excludes>
+                        </resource>
+                    </resources>
+                </configuration>
+            </plugin>
+            <plugin>
                 <!--This plugin is added to clean out the deployment folder which isn't removed by default-->
                 <artifactId>maven-clean-plugin</artifactId>
                 <version>3.1.0</version>
@@ -37,6 +58,8 @@
                             <directory>deployment</directory>
                             <includes>
                                 <include>**/*.jar</include>
+                                <include>Dockerfile</include>
+                                <include>lib</include>
                             </includes>
                             <followSymlinks>false</followSymlinks>
                         </fileset>
