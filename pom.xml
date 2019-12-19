@@ -33,6 +33,7 @@
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>copy-resources-1</id>
                         <phase>validate</phase>
                         <goals>
                             <goal>copy-resources</goal>
@@ -50,6 +51,21 @@
                                             ^~(Dockerfile)$
                                         </exclude>
                                     </excludes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-resources-2</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>deployment/artifacts</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/src/main/resources/artifacts</directory>
                                 </resource>
                             </resources>
                         </configuration>
@@ -110,6 +126,15 @@
                             </transformers>
                             <outputDirectory>./deployment</outputDirectory>
                             <outputFile>./deployment/uber-${artifactId}.jar</outputFile>
+                            <filters>
+                                <filter>
+                                    <artifact>com.govtech.cditautomation:cdit-automation</artifact>
+                                    <excludes>
+                                        <exclude>artifacts/*.json</exclude>
+                                        <exclude>artifacts/*.txt</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
                         </configuration>
                     </execution>
                 </executions>
