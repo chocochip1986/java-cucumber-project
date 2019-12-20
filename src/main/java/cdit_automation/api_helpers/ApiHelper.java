@@ -1,5 +1,6 @@
 package cdit_automation.api_helpers;
 
+import cdit_automation.configuration.TestEnv;
 import cdit_automation.configuration.TestManager;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.exceptions.TestFailException;
@@ -8,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,6 +33,8 @@ public class ApiHelper {
 
     @Autowired TestManager testManager;
 
+    @Autowired TestEnv testEnv;
+
     private RestTemplate restService;
 
     @Autowired
@@ -44,7 +48,7 @@ public class ApiHelper {
             requestParams = "filePath="+file.getAbsolutePath()+"/"+"&"+requestParams;
         }
 
-        String url = "http://"+testManager.getTestEnv().getDatasourceUrl()+":"+testManager.getTestEnv().getDatasourcePort()+"/egress/iras/ai/bulk?"+requestParams;
+        String url = "http://"+testEnv.getDatasourceUiUrl()+":"+testEnv.getDatasourceUiPort()+"/egress/iras/ai/bulk?"+requestParams;
 
         getCall(url);
     }
@@ -54,12 +58,12 @@ public class ApiHelper {
         if ( file != null ) {
             requestParams = "filePath="+file.getAbsolutePath()+"/"+"&"+requestParams;
         }
-        String url = "http://"+testManager.getTestEnv().getDatasourceUrl()+":"+testManager.getTestEnv().getDatasourcePort()+"/egress/iras/ai/triMonthly?"+requestParams;
+        String url = "http://"+testEnv.getDatasourceUiUrl()+":"+testEnv.getDatasourceUiPort()+"/egress/iras/ai/triMonthly?"+requestParams;
         getCall(url);
     }
 
     public void sendCallToTriggerBatchJob(@NotNull FileReceived fileReceived) {
-        String url = "http://"+testManager.getTestEnv().getDatasourceUrl()+":"+testManager.getTestEnv().getDatasourcePort()+"/receiver/validateFile";
+        String url = "http://"+testEnv.getDatasourceUiUrl()+":"+testEnv.getDatasourceUiPort()+"/receiver/validateFile";
 
         MultiValueMap<String, String> httpHeader = new LinkedMultiValueMap<>();
         httpHeader.put("Content-Type", Arrays.asList(MediaType.APPLICATION_JSON_VALUE));

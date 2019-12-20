@@ -29,10 +29,12 @@ public class TestManager {
     @Autowired
     private PageUtils pageUtils;
 
+    @Autowired
+    public TestEnv testEnv;
+
     private List<Scenario> listOfFailingScenarios;
     private List<Scenario> listOfScenariosRan;
     private BrowserTypeEnums currentBrowserType;
-    private TestEnvEnums testEnv;
     private Path projectRoot;
 
     @Autowired
@@ -46,7 +48,6 @@ public class TestManager {
         listOfFailingScenarios = new ArrayList<Scenario>();
         listOfScenariosRan = new ArrayList<Scenario>();
         currentBrowserType = getEnvVarBrowserType();
-        testEnv = getEnvVarTestEnv();
         projectRoot = setProjectRoot();
     }
 
@@ -74,10 +75,6 @@ public class TestManager {
         return projectRoot;
     }
 
-    public TestEnvEnums getTestEnv() {
-        return testEnv;
-    }
-
     public void updateTestStatistics(Scenario scenario) {
         switch( scenario.getStatus() ) {
             case PASSED:
@@ -98,12 +95,12 @@ public class TestManager {
 
     @Autowired
     public void setExplicitWait() {
-        pageUtils.setExplicitWait(this.testEnv.getExplicitWait());
+        pageUtils.setExplicitWait(testEnv.getExplicitWait());
     }
 
     public void openBrowser() {
         driverManager.open();
-        driverManager.setImplicitWait(this.testEnv.getImplicitWait());
+        driverManager.setImplicitWait(testEnv.getImplicitWait());
         pageUtils.setupExplicitWait();
     }
 
