@@ -58,7 +58,7 @@ public class ApiHelper {
         if ( file != null ) {
             requestParams = "filePath="+file.getAbsolutePath()+"/"+"&"+requestParams;
         }
-        String url = "http://"+testEnv.getDatasourceUiUrl()+":"+testEnv.getDatasourceUiPort()+"/egress/iras/ai/triMonthly?"+requestParams;
+        String url = "http://"+testEnv.getDatasourceUiUrl()+":"+testEnv.getDatasourceUiPort()+"/egress/iras/ai/thriceMonthly?"+requestParams;
         getCall(url);
     }
 
