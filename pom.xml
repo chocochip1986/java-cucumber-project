@@ -66,6 +66,11 @@
                             <resources>
                                 <resource>
                                     <directory>${project.basedir}/src/main/resources/artifacts</directory>
+                                    <excludes>
+                                        <exclude>
+                                            *.txt
+                                        </exclude>
+                                    </excludes>
                                 </resource>
                             </resources>
                         </configuration>
@@ -132,7 +137,6 @@
                                 <filter>
                                     <artifact>com.govtech.cditautomation:cdit-automation</artifact>
                                     <excludes>
-                                        <exclude>artifacts/*.json</exclude>
                                         <exclude>artifacts/*.txt</exclude>
                                     </excludes>
                                 </filter>
