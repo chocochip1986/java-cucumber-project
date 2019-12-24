@@ -1,4 +1,6 @@
 ### Intellig IDEA ###
 .idea
+output_artifacts
+deployment
 target/
 *.iml
