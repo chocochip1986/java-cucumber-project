@@ -27,14 +27,14 @@ spring:
       ddl-auto: none
     show-sql: true
     database-platform: org.hibernate.dialect.Oracle12cDialect
-    datasource:
-      url: jdbc:oracle:thin:@localhost:1521:ORCLCDB
-      username: C##DATASOURCE
-      password: pwd
-      driver-class-name: oracle.jdbc.OracleDriver
-    output:
-      ansi:
-        enabled: always
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521:ORCLCDB
+    username: C##DATASOURCE
+    password: pwd
+    driver-class-name: oracle.jdbc.OracleDriver
+  output:
+    ansi:
+      enabled: always
 test-env:
   env-name: dev
   datasource-ui:
@@ -50,14 +50,14 @@ spring:
       ddl-auto: none
     show-sql: true
     database-platform: org.hibernate.dialect.Oracle12cDialect
-    datasource:
-      url: jdbc:oracle:thin:@localhost:1521:ORCLCDB
-      username: C##DATASOURCE
-      password: pwd
-      driver-class-name: oracle.jdbc.OracleDriver
-    output:
-      ansi:
-        enabled: always
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521:ORCLCDB
+    username: C##DATASOURCE
+    password: pwd
+    driver-class-name: oracle.jdbc.OracleDriver
+  output:
+    ansi:
+      enabled: always
 test-env:
   env-name: qa
   datasource-ui:
@@ -73,14 +73,14 @@ spring:
       ddl-auto: none
     show-sql: true
     database-platform: org.hibernate.dialect.Oracle12cDialect
-    datasource:
-      url: jdbc:oracle:thin:@localhost:1521:ORCLCDB
-      username: C##DATASOURCE
-      password: pwd
-      driver-class-name: oracle.jdbc.OracleDriver
-    output:
-      ansi:
-        enabled: always
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521:ORCLCDB
+    username: C##DATASOURCE
+    password: pwd
+    driver-class-name: oracle.jdbc.OracleDriver
+  output:
+    ansi:
+      enabled: always
 test-env:
   env-name: uat
   datasource-ui:
@@ -96,18 +96,18 @@ spring:
       ddl-auto: none
     show-sql: true
     database-platform: org.hibernate.dialect.Oracle12cDialect
-    datasource:
-      url: jdbc:oracle:thin:@oracle:1521:ORCLCDB
-      username: C##DATASOURCE
-      password: pwd
-      driver-class-name: oracle.jdbc.OracleDriver
-    output:
-      ansi:
-        enabled: always
+  datasource:
+    url: jdbc:oracle:thin:@oracle:1521:ORCLCDB
+    username: C##DATASOURCE
+    password: pwd
+    driver-class-name: oracle.jdbc.OracleDriver
+  output:
+    ansi:
+      enabled: always
 test-env:
   env-name: docker
   datasource-ui:
-    url: 192.168.1.104
+    url: 192.168.1.19
     port: 8081
   implicit-wait: 1
   explicit-wait: 10

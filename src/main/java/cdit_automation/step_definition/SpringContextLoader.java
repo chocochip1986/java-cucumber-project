@@ -16,14 +16,7 @@ public class SpringContextLoader {
     @Before(order = 0)
     public void setupContext() {
         System.out.println("======================Initializing spring context======================");
-        setActiveSpringProfile();
         System.out.println("Test Environment: "+testEnv.getEnv());
         System.out.println("Test Environment details: "+testEnv.toString());
-    }
-
-    private static void setActiveSpringProfile() {
-        if ( System.getProperty("spring.profiles.active") == null ) {
-            System.setProperty("spring.profiles.active", "local");
-        }
     }
 }

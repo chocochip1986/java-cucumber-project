@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties()
 public class TestEnv {
 
-    @Value(value = "${spring.profiles}")
     private String springProfile;
 
     @Value(value = "${spring.jpa.hibernate.ddl-auto}")
