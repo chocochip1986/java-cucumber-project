@@ -6,4 +6,4 @@ COPY lib /lib/
 COPY uber-cdit-automation.jar /uber-cdit-automation.jar
 WORKDIR .
 RUN echo "Creating docker image for test environment: ${env}"
-ENTRYPOINT java -Dspring.profiles.active=${env} -cp "/uber-cdit-automation.jar:/lib/*" "cdit_automation.RunCucumberTest"
+ENTRYPOINT ["java", "-Dspring.profiles.active=${env}", "-cp", "/uber-cdit-automation.jar:/lib/*", "cdit_automation.RunCucumberTest"]
