@@ -42,7 +42,7 @@ public class MhaDeathSteps extends AbstractSteps {
         listOfIdentifiersToWriteToFile.addAll(body);
         listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
 
-        batchFileCreator.writeToFile("mha_death_date.txt", listOfIdentifiersToWriteToFile);
+        batchFileCreator.writeToFile("mha_death_date", listOfIdentifiersToWriteToFile);
     }
 
     @Given("^the mha death file has the following details:$")
@@ -60,7 +60,7 @@ public class MhaDeathSteps extends AbstractSteps {
         listOfIdentifiersToWriteToFile.addAll(body);
         listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
 
-        batchFileCreator.writeToFile("mha_death_date.txt", listOfIdentifiersToWriteToFile);
+        batchFileCreator.writeToFile("mha_death_date", listOfIdentifiersToWriteToFile);
 
         testContext.set("listOfIdentifiersToWriteToFile", listOfIdentifiersToWriteToFile);
     }

@@ -77,7 +77,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         listOfIdentifiersToWriteToFile.add(mhaDualCitizenFileDataPrep.generateDoubleHeader());
         listOfIdentifiersToWriteToFile.addAll(body);
         listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
-        batchFileCreator.writeToFile("mha_dual_citizen.txt", listOfIdentifiersToWriteToFile);
+        batchFileCreator.writeToFile("mha_dual_citizen", listOfIdentifiersToWriteToFile);
 
         testContext.set("listOfIdentifiersToWriteToFile", listOfIdentifiersToWriteToFile);
     }
@@ -151,7 +151,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         listOfIdentifiersToWriteToFile.addAll(body);
         listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
 
-        batchFileCreator.writeToFile("mha_dual_citizen.txt", listOfIdentifiersToWriteToFile);
+        batchFileCreator.writeToFile("mha_dual_citizen", listOfIdentifiersToWriteToFile);
 
         testContext.set("invalidNric", invalidNric);
     }
@@ -184,7 +184,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         listOfIdentifiersToWriteToFile.addAll(body);
         listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
 
-        batchFileCreator.writeToFile("mha_dual_citizen.txt", listOfIdentifiersToWriteToFile);
+        batchFileCreator.writeToFile("mha_dual_citizen", listOfIdentifiersToWriteToFile);
 
         testContext.set("duplicateNric", body.get(0));
     }
@@ -201,7 +201,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         listOfIdentifiersToWriteToFile.addAll(body);
         listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
 
-        batchFileCreator.writeToFile("mha_dual_citizen.txt", listOfIdentifiersToWriteToFile);
+        batchFileCreator.writeToFile("mha_dual_citizen", listOfIdentifiersToWriteToFile);
     }
 
     @Given("the mha dual citizen file has a cut-off date in the future")
@@ -216,6 +216,6 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         listOfIdentifiersToWriteToFile.addAll(body);
         listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
 
-        batchFileCreator.writeToFile("mha_dual_citizen.txt", listOfIdentifiersToWriteToFile);
+        batchFileCreator.writeToFile("mha_dual_citizen", listOfIdentifiersToWriteToFile);
     }
 }

@@ -4,7 +4,6 @@ import cdit_automation.TestApplication;
 import cdit_automation.configuration.TestEnv;
 import io.cucumber.java.Before;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootContextLoader;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -19,6 +18,7 @@ public class SpringContextLoader {
         System.out.println("======================Initializing spring context======================");
         setActiveSpringProfile();
         System.out.println("Test Environment: "+testEnv.getEnv());
+        System.out.println("Test Environment details: "+testEnv.toString());
     }
 
     private static void setActiveSpringProfile() {

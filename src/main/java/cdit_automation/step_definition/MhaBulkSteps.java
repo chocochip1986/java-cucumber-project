@@ -44,7 +44,7 @@ public class MhaBulkSteps extends AbstractSteps {
         listOfIdentifiersToWriteToFile.addAll(body);
         listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
 
-        batchFileCreator.writeToFile("mha_bulk_citizen.txt", listOfIdentifiersToWriteToFile);
+        batchFileCreator.writeToFile("mha_bulk_citizen", listOfIdentifiersToWriteToFile);
 
         testContext.set("listOfIdentifiersToWriteToFile", listOfIdentifiersToWriteToFile);
     }

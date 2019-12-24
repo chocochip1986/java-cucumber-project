@@ -13,10 +13,14 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties
 @EnableConfigurationProperties()
 public class TestEnv {
+
+    @Value(value = "${spring.profiles}")
+    private String springProfile;
+
     @Value(value = "${spring.jpa.hibernate.ddl-auto}")
     private String ddlAuto;
 
-    @Value(value = "${spring.jpa.database-platform}")
+    @Value(value = "${spring.jpa.show-sql}")
     private String showSql;
 
     @Value(value = "${spring.jpa.database-platform}")
@@ -51,4 +55,22 @@ public class TestEnv {
 
     @Value(value = "${test-env.explicit-wait}")
     private Long explicitWait;
+
+    public String toString() {
+        String str = "spring.profiles: "+springProfile+"\n"
+                + "spring.jpa.hibernate.ddl-auto: "+ddlAuto+"\n"
+                +"spring.jpa.show-sql: "+showSql+"\n"
+                +"spring.jpa.database-platform: "+databasePlatform+"\n"
+                +"spring.datasource.url: "+url+"\n"
+                +"spring.datasource.username: "+datasourceDbUsername+"\n"
+                +"spring.datasource.password: "+datasourceDbPassword+"\n"
+                +"spring.datasource.driver-class-name: "+datasourceDbDriver+"\n"
+                +"spring.output.ansi.enabled: "+springOutputAnsiColor+"\n"
+                +"test-env.env-name: "+env+"\n"
+                +"test-env.datasource-ui.url: "+datasourceUiUrl+"\n"
+                +"test-env.datasource-ui.port: "+datasourceUiPort+"\n"
+                +"test-env.implicit-wait: "+implicitWait+"\n"
+                +"test-env.explicit-wait: "+explicitWait;
+        return str;
+    }
 }

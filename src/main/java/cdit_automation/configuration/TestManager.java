@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class TestManager {
     private List<Scenario> listOfScenariosRan;
     private BrowserTypeEnums currentBrowserType;
     private Path projectRoot;
+    private Path outputArtifactsDir;
 
     @Autowired
     public TestManager() {
@@ -49,6 +51,7 @@ public class TestManager {
         listOfScenariosRan = new ArrayList<Scenario>();
         currentBrowserType = getEnvVarBrowserType();
         projectRoot = setProjectRoot();
+        outputArtifactsDir = setOutputArtifactsDir();
     }
 
     public void addToFailingListOfScenarios(Scenario scenario) {
@@ -150,7 +153,19 @@ public class TestManager {
         }
     }
 
+    public Path getOutputArtifactsDir(){
+        return outputArtifactsDir;
+    }
+
     private Path setProjectRoot() {
         return Paths.get(System.getProperty("user.dir"));
+    }
+
+    private Path setOutputArtifactsDir() {
+        File outputDir = new File(projectRoot+File.separator+"output_artifacts");
+        if ( !outputDir.exists() || !outputDir.isDirectory() ) {
+            outputDir.mkdir();
+        }
+        return outputDir.toPath();
     }
 }

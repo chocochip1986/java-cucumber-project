@@ -49,7 +49,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
             dataTable.asMaps(String.class, String.class), testContext);
     listOfIdentifiersToWriteToFile.addAll(body);
     listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
-    batchFileCreator.writeToFile("mha_ceased_citizen.txt", listOfIdentifiersToWriteToFile);
+    batchFileCreator.writeToFile("mha_ceased_citizen", listOfIdentifiersToWriteToFile);
   }
 
   @And("^I verify the the people listed in the file have nationality of (.*)$")
