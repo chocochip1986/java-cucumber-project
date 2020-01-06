@@ -6,6 +6,9 @@ public class ErrorMessageConstants {
         // Not Needed
     }
 
+    public static final String ERROR_TYPE_ERROR = "ERROR";
+    public static final String ERROR_TYPE_WARNING = "WARNING";
+
     // General spring batch step errors
     public static final String HEADER_LENGTH_ERROR = "Wrong header length.";
     public static final String BODY_LENGTH_ERROR = "Wrong body length.";
@@ -24,6 +27,7 @@ public class ErrorMessageConstants {
             "Extraction Date must be equal/after Cut-off Date.";
     public static final String MHA_OVERSEAS_INDICATOR_AND_TYPE_ERROR =
             "If MHA address indicator is 'C', the MHA address type must also be 'C'.";
+    public static final String INVALID_HOME_TYPE = "Invalid home type.";
 
     // Common error messages
     public static final String YEAR_CANNOT_BE_LESS_THAN_1800 = "Year value cannot be less than 1800";
@@ -33,8 +37,29 @@ public class ErrorMessageConstants {
     public static final String DUPLICATE_FIN_FOUND_IN_FILE = "Duplicate FIN found in file.";
     public static final String MINIMUM_AGE_NOT_MET =
             "Age as at 31 Dec <File Cut-off Year> must be at least "
-                    + String.valueOf(Constants.MIN_AGE_AT_CUTOFF_YEAR)
+                    + Constants.MIN_AGE_AT_CUTOFF_YEAR
                     + ".";
+
+    // Common Header Dates error messages
+    public static final String EXTRACTION_DATE_AFTER_FILE_RECEIVED_DATE =
+            "Extraction date cannot be after File Received date.";
+    public static final String CUTOFF_DATE_AFTER_FILE_RECEIVED_DATE =
+            "Cut-off date cannot be after File Received date.";
+    public static final String NO_INTERACTION_HEADER_DATE_AFTER_FILE_RECEIVED_DATE =
+            "Header date cannot be after File Received date.";
+    public static final String SELF_EMPLOYED_TRANS_DATE_AFTER_FILE_RECEIVED_DATE =
+            "Trans date cannot be after File Received date.";
+    public static final String INVALID_DATE_FORMAT_DDMMYYYY =
+            "Must be in " + Constants.DATE_FORMAT_DDMMYYYY + " date format.";
+
+    // HDB Property
+    public static final String INVALID_PROPERTY_TYPE = "Invalid property type.";
+    public static final String INVALID_ACTION_CODE = "Invalid action code.";
+    public static final String INVALID_FLAT_TYPE = "Invalid flat type.";
+    public static final String INVALID_SHOP_HOUSE_TAG = "Invalid shop house tag.";
+    public static final String INVALID_SHOP_HOUSE_LIVING_QUARTER =
+            "Invalid shop house living quarter.";
+    public static final String INVALID_RENTAL_FLAT_VALUE = "Invalid rental flat value.";
 
     // MHA new citizen
     public static final String ACTIVE_PERSON = "NRIC still valid";
@@ -130,4 +155,72 @@ public class ErrorMessageConstants {
             "Date of birth should be at least 12 years old from cut-off date";
     public static final String DATA_ITEM_NEW_VALUE_ALREADY_IN_DB =
             "Data Item New Value should be a value not already in CDIT database";
+    public static final String DOB_YEAR_IS_EARLIER_THAN_1800 =
+            "Year for date of birth cannot be earlier than 1800";
+    public static final String DOD_YEAR_IS_EARLIER_THAN_1800 =
+            "Year for date of death cannot be earlier than 1800";
+
+    // IRAS Assessable Income
+    public static final String INVALID_HEADER_RECORD_TYPE =
+            "Wrong RecordType for header. Should be 0";
+    public static final String INVALID_BODY_RECORD_TYPE = "Wrong RecordType for body. Should be 1";
+    public static final String INVALID_FOOTER_RECORD_TYPE =
+            "Wrong RecordType for footer. Should be 2";
+    public static final String INVALID_RESULT_INDICATOR = "Result indicator provided is invalid.";
+    public static final String INVALID_ASSESSABLE_INCOME =
+            "Result indicator provided is not 01, AI should be 0 but is not.";
+    public static final String INVALID_ASSESSMENT_YEAR =
+            "Result indicator provided is 06, but Assessment Year is less than current +2 years back.";
+    public static final String ID_NOT_EXISTS = "ID does not exist in IRAS database";
+    public static final String NO_ASSESSMENT_RECORD_FOUND_RETURN_ISSUED =
+            "No assessment record found and Return was issued";
+    public static final String NO_ASSESSMENT_RECORD_FOUND_NO_RETURN_ISSUED =
+            "No assessment record found and NO Return was issued";
+    public static final String INVALID_ID = "INVALID NRIC or FIN provided";
+    public static final String YEAR_OF_ASSESSMENT_BEFORE_EXTRACTION_FOR_EXTRACTION_BEFORE_JUN =
+            "Year of assessment out of range for Extraction before June; YA >3 BEFORE Extraction Year";
+    public static final String YEAR_OF_ASSESSMENT_AFTER_EXTRACTION_FOR_EXTRACTION_BEFORE_JUN =
+            "Year of assessment out of range for Extraction before June; YA AFTER Extraction Year";
+    public static final String YEAR_OF_ASSESSMENT_EQUAL_EXTRACTION_FOR_EXTRACTION_BEFORE_JUN =
+            "Year of assessment out of range for Extraction before June; YA EQUAL Extraction Year";
+    public static final String YEAR_OF_ASSESSMENT_AFTER_EXTRACTION_FOR_EXTRACTION_AFTER_JUN =
+            "Year of assessment out of range for Extraction on/after June; YA AFTER Extraction Year";
+    public static final String YEAR_OF_ASSESSMENT_BEFORE_EXTRACTION_FOR_EXTRACTION_AFTER_JUN =
+            "Year of assessment out of range for Extraction on/after June; YA >2 BEFORE Extraction Year";
+    public static final String ASSESSABLE_INCOME_OUT_OF_RANGE =
+            "Amount is greater than 120k but not mapped properly";
+    public static final String COMPLETELY_DUPLICATE_RECORD_FOUND_ERROR_MESSAGE =
+            "Completely Duplicate Record found.";
+    public static final String PARTIALLY_DUPLICATE_RECORD_FOUND_ERROR_MESSAGE =
+            "Partially Duplicate Record found.";
+    public static final String RECORDS_WITH_RESULT_INDICATOR_03_OR_06 =
+            "Record found with resultIndicator 03 or 06 found in return file: ";
+
+    // Lorong Buangkok
+    public static final String POSTAL_CODE_CANNOT_BE_EMPTY = "Postal code cannot be empty";
+
+    // Singpost Self-Employed
+    public static final String INVALID_FOOTER_HIGH_VALUE = "Wrong High Value for footer. Should be 2";
+    public static final String INVALID_YES_NO_VALUE = "Invalid Yes/No value.";
+    public static final String INVALID_SIGN_VALUE = "Invalid (+/-) sign.";
+    public static final String INVALID_BODY_RECORD_TYPE_02 =
+            "Wrong Value for body 'record type 2'. Should be 02.";
+    public static final String RELEVANT_YEAR_AFTER_ERROR =
+            "Relevant Year must be after " + Constants.RELEVANT_YEAR_YEAR_OF_ASSESSMENT + ".";
+    public static final String RELEVANT_YEAR_EQUAL_BEFORE_CURRENT_YEAR =
+            "Relevant Year must be equal/before Current Year.";
+
+    // Declared NTI
+    public static final String YEAR_OF_ASSESSMENT_AFTER_ERROR =
+            "Year Of Assessment must be after " + Constants.RELEVANT_YEAR_YEAR_OF_ASSESSMENT + ".";
+
+    // CPFB Nursing Home
+    public static final String NURSING_HOME_COMPLETE_DUPLICATED_RECORD =
+            "Duplicated records found with same Postal, Block, Floor, Unit and Home type.";
+
+    public static final String NURSING_HOME_DUPLICATED_RECORD_DIFFERENT_HOMETYPE =
+            "Duplicated records found with same Postal, Block, Floor and Unit but different Home type.";
+
+    public static final String NURSING_HOME_POSTAL_MATCH_BUT_BLOCK_NOT_MATCH_WITH_PROPERTYDETAIL =
+            "Block number does not match prepared records given valid Postal Code";
 }
