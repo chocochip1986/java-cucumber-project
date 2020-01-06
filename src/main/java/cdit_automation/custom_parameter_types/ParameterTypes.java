@@ -1,7 +1,6 @@
 package cdit_automation.custom_parameter_types;
 
 import cdit_automation.data_setup.Phaker;
-import cdit_automation.enums.BatchStatusEnum;
 import io.cucumber.core.api.TypeRegistry;
 import io.cucumber.core.api.TypeRegistryConfigurer;
 import io.cucumber.cucumberexpressions.CaptureGroupTransformer;

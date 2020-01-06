@@ -42,8 +42,9 @@ Feature: Data processing for MHA dual citizenship
     When the mha dual citizen job is ran
     And the Mha Dual Citizen batch job completes running with status FILE_CHECK_AGAINST_PREP_DATA
 
-  @Set_5 @defect @GRYFFINDOR-885
-  Scenario: MHA sends a file with a cut-off date in the future
+  @Set_5
+  Scenario: MHA sends a file with a cut-off date after that file recevied date
     Given the mha dual citizen file has a cut-off date in the future
     When the mha dual citizen job is ran
-    And the Mha Dual Citizen batch job completes running with status RAW_DATA_ERROR
+    And the Mha Dual Citizen batch job completes running with status BULK_CHECK_VALIDATION_ERROR
+    And the error message is Cut-off date cannot be after File Received date.
