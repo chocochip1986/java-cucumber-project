@@ -36,16 +36,12 @@ public class MhaBulkSteps extends AbstractSteps {
     }
 
     @And("the mha bulk file is created")
-    public void theMhaBulkFileIsCreated() throws IOException {
-        List<String> body = testContext.get("body");
-        List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();
+    public void theMhaBulkFileIsCreated() {
+        batchFileDataWriter.end();
+    }
 
-        listOfIdentifiersToWriteToFile.add(mhaBulkFileDataPrep.generateDoubleHeader());
-        listOfIdentifiersToWriteToFile.addAll(body);
-        listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
-
-        batchFileCreator.writeToFile("mha_bulk_citizen", listOfIdentifiersToWriteToFile);
-
-        testContext.set("listOfIdentifiersToWriteToFile", listOfIdentifiersToWriteToFile);
+    @Given("^the mha bulk file is being created$")
+    public void theMhaBulkFileIsBeingCreated() {
+        batchFileDataWriter.begin(mhaBulkFileDataPrep.generateDoubleHeader(), FileTypeEnum.MHA_BULK_CITIZEN, null);
     }
 }

@@ -25,6 +25,7 @@ public class Hooks extends AbstractSteps {
         displayScenarioEndMessage(scenario);
         testManager.closeBrowser();
         testContext.flush();
+        batchFileDataWriter.reset();
     }
 
     @After(order=1)

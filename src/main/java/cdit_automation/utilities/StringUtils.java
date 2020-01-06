@@ -12,7 +12,9 @@ public class StringUtils {
     }
 
     public static String leftPad(String str, int finalLength, String padChar) {
-        if ( finalLength <= str.length() ) {
+        if ( finalLength < str.length() ) {
+            return str.substring(0, finalLength);
+        } else if ( finalLength == str.length() ) {
             return str;
         }
 
@@ -29,7 +31,9 @@ public class StringUtils {
 
 
     public static String rightPad(String str, int finalLength, String padChar) {
-        if ( finalLength <= str.length() ) {
+        if ( finalLength < str.length() ) {
+            return str.substring(0, finalLength);
+        } else if ( finalLength == str.length() ) {
             return str;
         }
 

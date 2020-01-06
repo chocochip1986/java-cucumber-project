@@ -31,7 +31,7 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
     private static final String DEFAULT_ADDRESS = "MHAAddress";
 
     private static final String RANDOM_PEOPLE_OPTION = "RandomPeople";
-    private static final String[] RESIDENTIAL_STATUS_OPTIONS = {"Singaporean", "PermanentResident", "Foreigner", "DualCitizen"};
+    private static final String[] RESIDENTIAL_STATUS_OPTIONS = {"Singaporean", "PermanentResident", "DualCitizen"};
     private static final String[] ADDRESS_OPTIONS = {"MHAAddress", "NCAAddress", "Overseas", "InvalidAddressInd"};
     private static final String[] VALID_ADDRESS_OPTIONS = {"MHAAddress", "NCAAddress", "Overseas"};
     private static final String[] PERSON_OPTIONS = {"Alive", "Dead",
@@ -63,16 +63,20 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
     private List<String> process(List<String> optionsList) {
         int quantity = getQuantity(optionsList);
         List<String> listOfPpl = new ArrayList<>();
+        String inputLine = null;
         for ( int i = 0 ; i < quantity ; i++ ) {
             if ( hasRandomPeopleOption(optionsList) ) {
-                listOfPpl.add(createRandomPerson(optionsList));
+                inputLine = createRandomPerson(optionsList);
+//                listOfPpl.add(createRandomPerson(optionsList));
             }
             else {
                 String residentialStatusOption = findResidentialStatusOption(optionsList);
                 String addressOption = findAddressOptions(optionsList);
                 String dob = createBirthDate(optionsList);
-                listOfPpl.add(createPerson(optionsList, dob)+createAddress(addressOption, optionsList)+createResidentialStatus(optionsList, residentialStatusOption, LocalDate.parse(dob, Phaker.DATETIME_FORMATTER_YYYYMMDD)));
+                inputLine = createPerson(optionsList, dob)+createAddress(addressOption, optionsList)+createResidentialStatus(optionsList, residentialStatusOption, LocalDate.parse(dob, Phaker.DATETIME_FORMATTER_YYYYMMDD));
+                listOfPpl.add(inputLine);
             }
+            batchFileDataWriter.chunkOrWrite(inputLine);
         }
 
         return listOfPpl;
@@ -83,7 +87,7 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
         String addressOption = VALID_ADDRESS_OPTIONS[new Random().nextInt(VALID_ADDRESS_OPTIONS.length)];
         String dob = createBirthDate(optionsList);
 
-        return createPerson(optionsList, dob)+createAddress(addressOption, optionsList)+createResidentialStatus(optionsList, residentialStatusOption, LocalDate.parse(dob, Phaker.DATETIME_FORMATTER_YYYYMMDD));
+        return createPerson(optionsList, dob)+createAddress(addressOption, generateValidAddressOptions(addressOption))+createResidentialStatus(optionsList, residentialStatusOption, LocalDate.parse(dob, Phaker.DATETIME_FORMATTER_YYYYMMDD));
     }
 
     private String createResidentialStatus(List<String> optionsList, String status, LocalDate birthDate) {
@@ -125,9 +129,47 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
             case "InvalidAddressInd":
                 break;
             default:
-
+                throw new TestFailException("No such address option: "+addressOption);
         }
         return line;
+    }
+
+    private List<String> generateValidAddressOptions(String addressOption) {
+        List<String> optionsList = new ArrayList<>();
+        switch (addressOption) {
+            case "NCAAddress":
+                optionsList.addAll(generateValidNCAAddressOptions());
+                break;
+            case "MHAAddress":
+            case "Overseas":
+                optionsList.addAll(generateValidMHAAddressOptions());
+                break;
+            default:
+                throw new TestFailException("No such address option: "+addressOption);
+        }
+        return optionsList;
+    }
+
+    private List<String> generateValidNCAAddressOptions() {
+        String[] arrayOfNCAAddressOptions = new String[]{"BlkNo", "StrtCode", "LvlNo", "UnitNo", "OldPostalCode", "PostalCode"};
+        List<String> results = new ArrayList<>();
+        generateRandomValidAddressOptions(arrayOfNCAAddressOptions, results);
+        return results;
+    }
+
+    private List<String> generateValidMHAAddressOptions() {
+        String[] arrayOfMhaAddressOptions = new String[]{"UnitNo", "BlkNo", "StrtName", "FlrNo", "BuildingName", "PostalCode", "NewPostalCode"};
+        List<String> results = new ArrayList<>();
+        generateRandomValidAddressOptions(arrayOfMhaAddressOptions, results);
+        return results;
+    }
+
+    private void generateRandomValidAddressOptions(String[] optionsList, List<String>results) {
+        for ( int i = 0 ; i < optionsList.length ; i++ ) {
+            if ( Math.random() >= 0.5 ) {
+                results.add(optionsList[i]);
+            }
+        }
     }
 
     private String mhaOverseasAddress(List<String> optionsList) {
@@ -191,17 +233,17 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
             if(option.matches("^OldPostalCode(:.{4})?$")) {
                 usedOptions.add(option);
                 if(option.length() == 13) {
-                    ncaAddress.unitNo = Phaker.validOldPostalCode();
+                    ncaAddress.oldPostalCode = Phaker.validOldPostalCode();
                 } else {
-                    ncaAddress.unitNo = StringUtils.leftPad(option.substring(14), 4);
+                    ncaAddress.oldPostalCode = StringUtils.leftPad(option.substring(14), 4);
                 }
             }
             if(option.matches("^PostalCode(:.{6})?$")) {
                 usedOptions.add(option);
                 if(option.length() == 10) {
-                    ncaAddress.unitNo = Phaker.validPostalCode();
+                    ncaAddress.postalCode = Phaker.validPostalCode();
                 } else {
-                    ncaAddress.unitNo = StringUtils.leftPad(option.substring(11), 6);
+                    ncaAddress.postalCode = StringUtils.leftPad(option.substring(11), 6);
                 }
             }
             if (option.matches(invalidAddressTagRegex)) {
@@ -414,7 +456,7 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
                         optionsList.remove(option);
                         return null;
                     }
-                }).orElse(Phaker.validPastDate().format(Phaker.DATETIME_FORMATTER_YYYYMMDD));
+                }).orElse(Phaker.validDateFromRange(Phaker.defaultLowerBoundaryDate, dateUtils.yearsBeforeToday(13) ).format(Phaker.DATETIME_FORMATTER_YYYYMMDD));
     }
 
     private String createName(List<String> optionsList) {

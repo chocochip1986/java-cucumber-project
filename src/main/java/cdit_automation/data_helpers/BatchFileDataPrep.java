@@ -18,6 +18,8 @@ public class BatchFileDataPrep {
 
     @Autowired protected PersonDetailRepo personDetailRepo;
 
+    @Autowired protected BatchFileDataWriter batchFileDataWriter;
+
     protected int parseStringSize(String size) {
         try {
             return Integer.valueOf(size);

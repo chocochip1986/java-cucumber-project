@@ -42,8 +42,8 @@ public class Phaker {
     private static final int[] DAYS_IN_MONTHS = new int[]{30, 27, 30, 29, 30, 29, 30, 30, 29, 30, 29, 30};
     public static final DateTimeFormatter DATETIME_FORMATTER_YYYYMMDD =
             DateTimeFormatter.ofPattern("yyyyMMdd");
-    private static final LocalDate defaultLowerBoundaryDate = LocalDate.of(LocalDate.now().getYear() - 200, 1, 1);
-    private static final LocalDate defaultUpperBoundaryDate = LocalDate.of(LocalDate.now().getYear() + 200, 12, 31);
+    public static final LocalDate defaultLowerBoundaryDate = LocalDate.of(LocalDate.now().getYear() - 200, 1, 1);
+    public static final LocalDate defaultUpperBoundaryDate = LocalDate.of(LocalDate.now().getYear() + 200, 12, 31);
 
     public static final int[] rangeOfLeapYears = calculateRangeOfLeapYears();
 
@@ -190,10 +190,10 @@ public class Phaker {
     }
 
     private static boolean isABlackListedNric(String nric) {
-        Pattern blacklistedNricPattern = Pattern.compile("^S555[0-9]{4}[A-Z]");
-        Matcher match = blacklistedNricPattern.matcher(nric);
+        Pattern blacklistedNricPatternS555 = Pattern.compile("^S555[0-9]{4}[A-Z]");
+        Pattern blacklistedNricPatternS888 = Pattern.compile("^S888[0-9]{4}[A-Z]");
 
-        return match.find();
+        return blacklistedNricPatternS555.matcher(nric).find() || blacklistedNricPatternS888.matcher(nric).find();
     }
 
     private static String nric() {
