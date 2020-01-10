@@ -87,6 +87,26 @@ public class PersonFactory extends AbstractFactory {
         return personId;
     }
 
+    public PersonId createNewSCPersonId(String nric) {
+        Batch batch = Batch.builder().build();
+        Person person = Person.create();
+        BiTemporalData biTemporalData = new BiTemporalData()
+                .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1)));
+        PersonId personId = PersonId.create(PersonIdTypeEnum.NRIC, person, nric, biTemporalData);
+        PersonDetail personDetail = PersonDetail.create(batch, person, biTemporalData);
+        PersonName personName = PersonName.create(batch, person, biTemporalData);
+        Nationality nationality = Nationality.create(batch, person, NationalityEnum.SINGAPORE_CITIZEN, biTemporalData, dateUtils.beginningOfDayToTimestamp(personDetail.getDateOfBirth()));
+
+        batchRepo.save(batch);
+        personRepo.save(person);
+        personDetailRepo.save(personDetail);
+        nationalityRepo.save(nationality);
+        personIdrepo.save(personId);
+        personNameRepo.save(personName);
+
+        return personId;
+    }
+
     public PersonId createDualCitizen() {
         Batch batch = Batch.builder().build();
         Person person = Person.create();

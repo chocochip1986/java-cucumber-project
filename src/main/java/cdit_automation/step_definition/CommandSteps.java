@@ -37,6 +37,12 @@ public class CommandSteps extends AbstractSteps {
         trigger();
     }
 
+    @When("^the mha person details job is ran")
+    public void theMhaChangeInPersonalDetailsJobIsRan() {
+        log.info("Triggering MHA change of personal details job to run");
+        trigger();
+    }
+
     @When("^Datasource is triggered to generate the IRAS AI Bulk file$")
     public void datasourceIsTriggeredToGenerateTheIRASAIBulkFile() {
         Path filePath = Paths.get(testManager.getProjectRoot().toString(), "src", "main", "resources", "artifacts");

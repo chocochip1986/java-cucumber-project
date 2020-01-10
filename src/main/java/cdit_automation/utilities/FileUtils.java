@@ -6,15 +6,15 @@ import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 
 public class FileUtils {
     public static File findOrCreate(String absolutePathToFile) {
         File file = new File(absolutePathToFile);
         try {
-            if (!file.exists()) {
-                file.createNewFile();
-            }
+            Files.deleteIfExists(file.toPath());
+            file.createNewFile();
         } catch ( IOException e ) {
             throw new TestFailException("Unable to create file at path: "+absolutePathToFile);
         }

@@ -67,7 +67,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
     @Given("the mha dual citizen file has the following details:")
     public void thatTheMhaDualCitizenFileHasTheFollowingDetails(DataTable table) throws IOException {
         FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_DUAL_CITIZEN);
-        testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, "mha_dual_citizen"));
+        testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, FileTypeEnum.MHA_DUAL_CITIZEN.getValue().toLowerCase()));
 
         List<Map<String, String>> list = table.asMaps(String.class, String.class);
         List<String> body = mhaDualCitizenFileDataPrep.bodyCreator(list, testContext);
@@ -77,7 +77,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         listOfIdentifiersToWriteToFile.add(mhaDualCitizenFileDataPrep.generateDoubleHeader());
         listOfIdentifiersToWriteToFile.addAll(body);
         listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
-        batchFileCreator.writeToFile("mha_dual_citizen", listOfIdentifiersToWriteToFile);
+        batchFileCreator.writeToFile(FileTypeEnum.MHA_DUAL_CITIZEN.getValue().toLowerCase(), listOfIdentifiersToWriteToFile);
 
         testContext.set("listOfIdentifiersToWriteToFile", listOfIdentifiersToWriteToFile);
     }
@@ -145,13 +145,13 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         body.add(invalidNric);
 
         FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_DUAL_CITIZEN);
-        testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, "mha_dual_citizen"));
+        testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, FileTypeEnum.MHA_DUAL_CITIZEN.getValue().toLowerCase()));
 
         listOfIdentifiersToWriteToFile.add(0, mhaDualCitizenFileDataPrep.generateDoubleHeader());
         listOfIdentifiersToWriteToFile.addAll(body);
         listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
 
-        batchFileCreator.writeToFile("mha_dual_citizen", listOfIdentifiersToWriteToFile);
+        batchFileCreator.writeToFile(FileTypeEnum.MHA_DUAL_CITIZEN.getValue().toLowerCase(), listOfIdentifiersToWriteToFile);
 
         testContext.set("invalidNric", invalidNric);
     }
@@ -178,13 +178,13 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         List<String> body = mhaDualCitizenFileDataPrep.createDuplicatedValidNricEntries();
 
         FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_DUAL_CITIZEN);
-        testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, "mha_dual_citizen"));
+        testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, FileTypeEnum.MHA_DUAL_CITIZEN.getValue().toLowerCase()));
 
         listOfIdentifiersToWriteToFile.add(0, mhaDualCitizenFileDataPrep.generateDoubleHeader());
         listOfIdentifiersToWriteToFile.addAll(body);
         listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
 
-        batchFileCreator.writeToFile("mha_dual_citizen", listOfIdentifiersToWriteToFile);
+        batchFileCreator.writeToFile(FileTypeEnum.MHA_DUAL_CITIZEN.getValue().toLowerCase(), listOfIdentifiersToWriteToFile);
 
         testContext.set("duplicateNric", body.get(0));
     }
@@ -192,7 +192,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
     @Given("the mha dual citizen file is empty")
     public void theMhaDualCitizenFileIsEmpty() throws IOException {
         FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_DUAL_CITIZEN);
-        testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, "mha_dual_citizen"));
+        testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, FileTypeEnum.MHA_DUAL_CITIZEN.getValue().toLowerCase()));
 
         List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();;
         List<String> body = Lists.emptyList();
@@ -201,13 +201,13 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         listOfIdentifiersToWriteToFile.addAll(body);
         listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
 
-        batchFileCreator.writeToFile("mha_dual_citizen", listOfIdentifiersToWriteToFile);
+        batchFileCreator.writeToFile(FileTypeEnum.MHA_DUAL_CITIZEN.getValue().toLowerCase(), listOfIdentifiersToWriteToFile);
     }
 
     @Given("the mha dual citizen file has a cut-off date in the future")
     public void theMhaDualCitizenFileHasACutOffDateInTheFuture() throws IOException {
         FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_DUAL_CITIZEN);
-        testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, "mha_dual_citizen"));
+        testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, FileTypeEnum.MHA_DUAL_CITIZEN.getValue().toLowerCase()));
 
         List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();;
         List<String> body = Lists.emptyList();
@@ -216,6 +216,6 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         listOfIdentifiersToWriteToFile.addAll(body);
         listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
 
-        batchFileCreator.writeToFile("mha_dual_citizen", listOfIdentifiersToWriteToFile);
+        batchFileCreator.writeToFile(FileTypeEnum.MHA_DUAL_CITIZEN.getValue().toLowerCase(), listOfIdentifiersToWriteToFile);
     }
 }

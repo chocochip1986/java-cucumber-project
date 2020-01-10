@@ -32,8 +32,8 @@ import java.util.stream.Stream;
 public class MhaDeathSteps extends AbstractSteps {
     @Given("^the mha death file is empty$")
     public void theMhaDeathFileIsEmpty() throws IOException {
-        FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_DUAL_CITIZEN);
-        testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, "mha_death_date"));
+        FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_DEATH_DATE);
+        testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, FileTypeEnum.MHA_DEATH_DATE.getValue().toLowerCase()));
 
         List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();;
         List<String> body = Lists.emptyList();
@@ -42,13 +42,13 @@ public class MhaDeathSteps extends AbstractSteps {
         listOfIdentifiersToWriteToFile.addAll(body);
         listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
 
-        batchFileCreator.writeToFile("mha_death_date", listOfIdentifiersToWriteToFile);
+        batchFileCreator.writeToFile(FileTypeEnum.MHA_DEATH_DATE.getValue().toLowerCase(), listOfIdentifiersToWriteToFile);
     }
 
     @Given("^the mha death file has the following details:$")
     public void theMhaDeathFileHasTheFollowingDetails(DataTable table) throws IOException {
         FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_DEATH_DATE);
-        FileReceived fileReceived = batchFileCreator.fileCreator(fileDetail, "mha_death_date");
+        FileReceived fileReceived = batchFileCreator.fileCreator(fileDetail, FileTypeEnum.MHA_DEATH_DATE.getValue().toLowerCase());
         testContext.set("fileReceived", fileReceived);
 
         List<Map<String, String>> list = table.asMaps(String.class, String.class);
@@ -60,7 +60,7 @@ public class MhaDeathSteps extends AbstractSteps {
         listOfIdentifiersToWriteToFile.addAll(body);
         listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
 
-        batchFileCreator.writeToFile("mha_death_date", listOfIdentifiersToWriteToFile);
+        batchFileCreator.writeToFile(FileTypeEnum.MHA_DEATH_DATE.getValue().toLowerCase(), listOfIdentifiersToWriteToFile);
 
         testContext.set("listOfIdentifiersToWriteToFile", listOfIdentifiersToWriteToFile);
     }

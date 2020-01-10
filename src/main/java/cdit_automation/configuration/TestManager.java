@@ -45,7 +45,7 @@ public class TestManager {
     }
 
     private void initialize() {
-        System.out.println("Initializing test suite...");
+        log.info("Initializing test suite...");
 
         listOfFailingScenarios = new ArrayList<Scenario>();
         listOfScenariosRan = new ArrayList<Scenario>();

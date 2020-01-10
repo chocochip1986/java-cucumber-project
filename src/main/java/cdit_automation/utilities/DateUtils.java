@@ -1,5 +1,6 @@
 package cdit_automation.utilities;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
@@ -10,6 +11,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
+@Slf4j
 @Component
 public class DateUtils {
 
@@ -109,5 +111,14 @@ public class DateUtils {
 
     public Date localDateToDate(LocalDate localDate) {
         return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
+    public LocalDate parse(String date) {
+        try {
+            return LocalDate.parse(date, DATETIME_FORMATTER_YYYYMMDD);
+        } catch ( IllegalArgumentException e ) {
+            log.error("Unable to parse string input "+date+" into a LocalDate object");
+            return null;
+        }
     }
 }

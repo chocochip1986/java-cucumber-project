@@ -7,6 +7,7 @@ import cdit_automation.configuration.TestManager;
 import cdit_automation.data_helpers.BatchFileCreator;
 import cdit_automation.data_helpers.BatchFileDataWriter;
 import cdit_automation.data_helpers.MhaBulkFileDataPrep;
+import cdit_automation.data_helpers.MhaChangePersonDetailsDataPrep;
 import cdit_automation.data_helpers.MhaDeathDateFileDataPrep;
 import cdit_automation.data_helpers.MhaDualCitizenFileDataPrep;
 import cdit_automation.data_helpers.MhaCeasedCitizenFileDataPrep;
@@ -52,6 +53,7 @@ public class AbstractSteps {
     //Batch File Data Helpers
     @Autowired protected MhaDualCitizenFileDataPrep mhaDualCitizenFileDataPrep;
     @Autowired protected MhaDeathDateFileDataPrep mhaDeathDateFileDataPrep;
+    @Autowired protected MhaChangePersonDetailsDataPrep mhaChangePersonDetailsDataPrep;
     @Autowired protected MhaCeasedCitizenFileDataPrep mhaCeasedCitizenFileDataPrep;
     @Autowired protected MhaBulkFileDataPrep mhaBulkFileDataPrep;
     @Autowired protected IrasTriMonthlyEgressDataPrep irasTriMonthlyEgressDataPrep;

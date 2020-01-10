@@ -36,7 +36,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
   @Given("the file has the following details:")
   public void theFileHasTheFollowingDetails(DataTable dataTable) throws IOException {
     FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_CEASED_CITIZEN);
-    testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, "mha_ceased_citizen"));
+    testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, FileTypeEnum.MHA_CEASED_CITIZEN.getValue().toLowerCase()));
 
     List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();
     LocalDate cutOffDate = dateUtils.daysBeforeToday(5);
@@ -49,7 +49,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
             dataTable.asMaps(String.class, String.class), testContext);
     listOfIdentifiersToWriteToFile.addAll(body);
     listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
-    batchFileCreator.writeToFile("mha_ceased_citizen", listOfIdentifiersToWriteToFile);
+    batchFileCreator.writeToFile(FileTypeEnum.MHA_CEASED_CITIZEN.getValue().toLowerCase(), listOfIdentifiersToWriteToFile);
   }
 
   @And("^I verify the the people listed in the file have nationality of (.*)$")

@@ -129,10 +129,6 @@ public class Phaker {
         return genRandomNumbers(2);
     }
 
-    public static String invalidNric() {
-        return Faker.instance().bothify("?#######?").toUpperCase();
-    }
-
     public static String validNumber(@Positive int size) {
         return size < 1 ? genRandomNumbers(1) : genRandomNumbers(size);
     }
@@ -175,6 +171,12 @@ public class Phaker {
             return null;
         }
         return generatedFin;
+    }
+
+    public static String invalidNric() {
+        String validNric = nric();
+        char checksum = validNric.toCharArray()[validNric.length()];
+        return validNric.replace(checksum, (char)((checksum+1 - 'A') % 26 + 'A'));
     }
 
     public static String obtainValidNricChecksum(String firstChar, String digits) {

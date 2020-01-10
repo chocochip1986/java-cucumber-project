@@ -1,8 +1,14 @@
 package cdit_automation.data_helpers;
 
+import cdit_automation.constants.TestConstants;
 import cdit_automation.data_helpers.factories.PersonFactory;
 import cdit_automation.data_setup.Phaker;
+import cdit_automation.repositories.BatchRepo;
+import cdit_automation.repositories.CeasedCitizenRepo;
+import cdit_automation.repositories.NationalityRepo;
 import cdit_automation.repositories.PersonDetailRepo;
+import cdit_automation.repositories.PersonIdRepo;
+import cdit_automation.repositories.PersonNameRepo;
 import cdit_automation.utilities.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,6 +23,11 @@ public class BatchFileDataPrep {
     @Autowired protected PersonFactory personFactory;
 
     @Autowired protected PersonDetailRepo personDetailRepo;
+    @Autowired protected PersonNameRepo personNameRepo;
+    @Autowired protected BatchRepo batchRepo;
+    @Autowired protected CeasedCitizenRepo ceasedCitizenRepo;
+    @Autowired protected PersonIdRepo personIdRepo;
+    @Autowired protected NationalityRepo nationalityRepo;
 
     @Autowired protected BatchFileDataWriter batchFileDataWriter;
 
@@ -44,10 +55,10 @@ public class BatchFileDataPrep {
 
     public String generateDoubleHeader(@Nullable LocalDate extractionDate, @Nullable LocalDate cutOffDate) {
         if ( extractionDate == null ) {
-            extractionDate = dateUtils.daysBeforeToday(5);
+            extractionDate = TestConstants.DEFAULT_EXTRACTION_DATE;
         }
         if ( cutOffDate == null ) {
-            cutOffDate = dateUtils.daysBeforeToday(5);
+            cutOffDate = TestConstants.DEFAULT_CUTOFF_DATE;
         }
 
         return extractionDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD)+cutOffDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD);

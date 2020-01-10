@@ -9,11 +9,6 @@ import cdit_automation.models.*;
 import cdit_automation.models.embeddables.BiTemporalData;
 import cdit_automation.models.embeddables.BusinessTemporalData;
 import cdit_automation.models.embeddables.DbTemporalData;
-import cdit_automation.repositories.BatchRepo;
-import cdit_automation.repositories.CeasedCitizenRepo;
-import cdit_automation.repositories.NationalityRepo;
-import cdit_automation.repositories.PersonIdRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
@@ -25,11 +20,6 @@ import java.util.stream.Stream;
 
 @Component
 public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
-
-  @Autowired BatchRepo batchRepo;
-  @Autowired CeasedCitizenRepo ceasedCitizenRepo;
-  @Autowired PersonIdRepo personIdRepo;
-  @Autowired NationalityRepo nationalityRepo;
 
   private Random random = new Random();
   private BiTemporalData biTemporalData = new BiTemporalData();
