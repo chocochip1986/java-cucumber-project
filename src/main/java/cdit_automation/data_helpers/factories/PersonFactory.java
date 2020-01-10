@@ -9,10 +9,46 @@ import cdit_automation.models.PersonDetail;
 import cdit_automation.models.PersonId;
 import cdit_automation.models.PersonName;
 import cdit_automation.models.embeddables.BiTemporalData;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class PersonFactory extends AbstractFactory {
+    @Getter
+    @Setter
+    private class PersonOptions {
+        private LocalDate birthDate;
+        private LocalDate deathDate;
+        private String name;
+        private Gender gender;
+        private NationalityEnum nationality;
+        private String identifier;
+
+        private PersonOptions() {
+            this.birthDate = Phaker.validDateFromRange(dateUtils.yearsBeforeToday(13), TestConstants.DEFAULT_CUTOFF_DATE);
+            this.deathDate = null;
+            this.name = Phaker.validName();
+            this.gender = Phaker.validGender();
+            this.nationality = NationalityEnum.SINGAPORE_CITIZEN;
+            this.identifier = null;
+        }
+
+        public String getIdentifier(){
+            //The getNric() function also stores the nric generated because Phaker will keep a list of unique NRICs generated for the lifetime of the automation run. I don't want to waste it.
+            if ( this.identifier == null ) {
+                this.identifier = Phaker.validNric();
+                return this.identifier;
+            } else {
+                return this.identifier;
+            }
+        }
+    }
 
     public PersonId createNewPersonId(String residentialStatus) {
         switch ( residentialStatus ) {
@@ -28,74 +64,82 @@ public class PersonFactory extends AbstractFactory {
     }
 
     public PersonId createNewPPPersonId() {
-        Batch batch = Batch.builder().build();
-        Person person = Person.create();
-        BiTemporalData biTemporalData = new BiTemporalData()
-                .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1)));
-        PersonId personId = PersonId.create(PersonIdTypeEnum.PP, person, biTemporalData);
-        PersonDetail personDetail = PersonDetail.create(batch, person, biTemporalData);
-        PersonName personName = PersonName.create(batch, person, biTemporalData);
-        Nationality nationality = Nationality.create(batch, person, NationalityEnum.PERMANENT_RESIDENT, biTemporalData, dateUtils.beginningOfDayToTimestamp(personDetail.getDateOfBirth()));
+        return createNewPPPersonId(null, null, null, null, null);
+    }
 
-        batchRepo.save(batch);
-        personRepo.save(person);
-        personIdrepo.save(personId);
-        personDetailRepo.save(personDetail);
-        personNameRepo.save(personName);
-        nationalityRepo.save(nationality);
+    public PersonId createNewPPPersonId(String nric) {
+        return createNewPPPersonId(null, null, null, null, nric);
+    }
 
-        return personId;
+    public PersonId createNewPPPersonId(LocalDate birthDate, LocalDate deathDate, String name, Gender gender, String identifier) {
+        return createPersonData(birthDate, deathDate, name, gender, NationalityEnum.PERMANENT_RESIDENT, identifier);
     }
 
     public PersonId createNewFRPersonId() {
-        Batch batch = Batch.builder().build();
-        Person person = Person.create();
-        BiTemporalData biTemporalData = new BiTemporalData()
-                .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1)));
-        PersonId personId = PersonId.create(PersonIdTypeEnum.FIN, person, biTemporalData);
-        PersonDetail personDetail = PersonDetail.create(batch, person, biTemporalData);
-        PersonName personName = PersonName.create(batch, person, biTemporalData);
-        Nationality nationality = Nationality.create(batch, person, NationalityEnum.NON_SINGAPORE_CITIZEN, biTemporalData, dateUtils.beginningOfDayToTimestamp(personDetail.getDateOfBirth()));
+        return createNewFRPersonId(null, null, null, null, null);
+    }
 
-        batchRepo.save(batch);
-        personRepo.save(person);
-        personDetailRepo.save(personDetail);
-        nationalityRepo.save(nationality);
-        personIdrepo.save(personId);
-        personNameRepo.save(personName);
+    public PersonId createNewFRPersonId(String fin) {
+        return createNewFRPersonId(null, null, null, null, fin);
+    }
 
-        return personId;
+    public PersonId createNewFRPersonId(LocalDate birthDate, LocalDate deathDate, String name, Gender gender, String identifier) {
+        return createPersonData(birthDate, deathDate, name, gender, NationalityEnum.NON_SINGAPORE_CITIZEN, identifier);
     }
 
     public PersonId createNewSCPersonId() {
-        Batch batch = Batch.builder().build();
-        Person person = Person.create();
-        BiTemporalData biTemporalData = new BiTemporalData()
-                .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1)));
-        PersonId personId = PersonId.create(PersonIdTypeEnum.NRIC, person, biTemporalData);
-        PersonDetail personDetail = PersonDetail.create(batch, person, biTemporalData);
-        PersonName personName = PersonName.create(batch, person, biTemporalData);
-        Nationality nationality = Nationality.create(batch, person, NationalityEnum.SINGAPORE_CITIZEN, biTemporalData, dateUtils.beginningOfDayToTimestamp(personDetail.getDateOfBirth()));
-
-        batchRepo.save(batch);
-        personRepo.save(person);
-        personDetailRepo.save(personDetail);
-        nationalityRepo.save(nationality);
-        personIdrepo.save(personId);
-        personNameRepo.save(personName);
-
-        return personId;
+        return createNewSCPersonId(null, null, null, null, null);
     }
 
     public PersonId createNewSCPersonId(String nric) {
-        Batch batch = Batch.builder().build();
+        return createNewSCPersonId(null, null, null, null, nric);
+    }
+
+    public PersonId createNewSCPersonId(LocalDate birthDate, LocalDate deathDate, String name, Gender gender, String identifier) {
+        return createPersonData(birthDate, deathDate, name, gender, NationalityEnum.SINGAPORE_CITIZEN, identifier);
+    }
+
+    public PersonId createDualCitizen() {
+        return createDualCitizen(null, null, null, null, null);
+    }
+
+    public PersonId createDualCitizen(String identifier) {
+        return createDualCitizen(null, null, null, null, identifier);
+    }
+
+    public PersonId createDualCitizen(LocalDate birthDate, LocalDate deathDate, String name, Gender gender, String identifier) {
+        return createPersonData(birthDate, deathDate, name, gender, NationalityEnum.DUAL_CITIZENSHIP, identifier);
+    }
+
+    public PersonId createPersonData(LocalDate birthDate, LocalDate deathDate, String name, Gender gender, NationalityEnum nationalityEnum, String identifier) {
+        PersonOptions personOptions = new PersonOptions();
+        if ( birthDate != null ) {
+            personOptions.setBirthDate(birthDate);
+        }
+        if ( deathDate != null ) {
+            personOptions.setDeathDate(deathDate);
+        }
+        if ( gender != null ) {
+            personOptions.setGender(gender);
+        }
+        if ( identifier != null ) {
+            personOptions.setIdentifier(identifier);
+        }
+        if ( nationalityEnum != null ) {
+            personOptions.setNationality(nationalityEnum);
+        }
+        return createPerson(personOptions);
+    }
+
+    private PersonId createPerson(PersonOptions personOptions) {
+        Batch batch = Batch.createCompleted();
         Person person = Person.create();
         BiTemporalData biTemporalData = new BiTemporalData()
-                .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1)));
-        PersonId personId = PersonId.create(PersonIdTypeEnum.NRIC, person, nric, biTemporalData);
-        PersonDetail personDetail = PersonDetail.create(batch, person, biTemporalData);
-        PersonName personName = PersonName.create(batch, person, biTemporalData);
-        Nationality nationality = Nationality.create(batch, person, NationalityEnum.SINGAPORE_CITIZEN, biTemporalData, dateUtils.beginningOfDayToTimestamp(personDetail.getDateOfBirth()));
+                .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(personOptions.getBirthDate()));
+        PersonId personId = PersonId.create(mapNationalityToPersonIdType(personOptions.getNationality()), person, personOptions.getIdentifier(), biTemporalData);
+        PersonDetail personDetail = PersonDetail.create(batch, person, personOptions.getBirthDate(), personOptions.getDeathDate(), personOptions.getGender(), false, biTemporalData);
+        PersonName personName = PersonName.create(batch, person, personOptions.getName(), biTemporalData);
+        Nationality nationality = Nationality.create(batch, person, personOptions.getNationality(), biTemporalData, dateUtils.beginningOfDayToTimestamp(personOptions.getBirthDate()));
 
         batchRepo.save(batch);
         personRepo.save(person);
@@ -107,23 +151,15 @@ public class PersonFactory extends AbstractFactory {
         return personId;
     }
 
-    public PersonId createDualCitizen() {
-        Batch batch = Batch.builder().build();
-        Person person = Person.create();
-        BiTemporalData biTemporalData = new BiTemporalData()
-                .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1)));
-        PersonId personId = PersonId.create(PersonIdTypeEnum.NRIC, person, biTemporalData);
-        PersonDetail personDetail = PersonDetail.create(batch, person, biTemporalData);
-        PersonName personName = PersonName.create(batch, person, biTemporalData);
-        Nationality nationality = Nationality.create(batch, person, NationalityEnum.DUAL_CITIZENSHIP, biTemporalData, dateUtils.beginningOfDayToTimestamp(personDetail.getDateOfBirth()));
-
-        batchRepo.save(batch);
-        personRepo.save(person);
-        personDetailRepo.save(personDetail);
-        nationalityRepo.save(nationality);
-        personIdrepo.save(personId);
-        personNameRepo.save(personName);
-
-        return personId;
+    private PersonIdTypeEnum mapNationalityToPersonIdType(NationalityEnum nationalityEnum) {
+        if ( nationalityEnum == NationalityEnum.NON_SINGAPORE_CITIZEN ) {
+            return PersonIdTypeEnum.FIN;
+        } else if ( nationalityEnum == NationalityEnum.SINGAPORE_CITIZEN || nationalityEnum == NationalityEnum.DUAL_CITIZENSHIP ) {
+            return PersonIdTypeEnum.NRIC;
+        } else if ( nationalityEnum == NationalityEnum.PERMANENT_RESIDENT ) {
+            return PersonIdTypeEnum.PP;
+        } else {
+            return PersonIdTypeEnum.FIN;
+        }
     }
 }

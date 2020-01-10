@@ -56,4 +56,12 @@ public class Batch extends AbstractEntity  {
     @JsonIgnore
     @OneToMany(mappedBy = "batch", cascade = CascadeType.ALL)
     private List<IncomingRecord> incomingRecords;
+
+    public static Batch create(BatchStatusEnum batchStatusEnum) {
+        return Batch.builder().status(batchStatusEnum).build();
+    }
+
+    public static Batch createCompleted() {
+        return create(BatchStatusEnum.CLEANUP);
+    }
 }
