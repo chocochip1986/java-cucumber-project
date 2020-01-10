@@ -1,5 +1,8 @@
 package cdit_automation.data_helpers.factories;
 
+import cdit_automation.constants.TestConstants;
+import cdit_automation.data_setup.Phaker;
+import cdit_automation.enums.Gender;
 import cdit_automation.enums.NationalityEnum;
 import cdit_automation.enums.PersonIdTypeEnum;
 import cdit_automation.models.Batch;
@@ -10,13 +13,10 @@ import cdit_automation.models.PersonId;
 import cdit_automation.models.PersonName;
 import cdit_automation.models.embeddables.BiTemporalData;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class PersonFactory extends AbstractFactory {
