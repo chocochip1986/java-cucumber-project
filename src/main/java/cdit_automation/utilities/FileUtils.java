@@ -13,10 +13,22 @@ public class FileUtils {
     public static File findOrCreate(String absolutePathToFile) {
         File file = new File(absolutePathToFile);
         try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+        } catch ( IOException e ) {
+            throw new TestFailException("Unable to create file at path: "+absolutePathToFile);
+        }
+        return file;
+    }
+
+    public static File replaceFile(String absolutePathToFile) {
+        File file = new File(absolutePathToFile);
+        try {
             Files.deleteIfExists(file.toPath());
             file.createNewFile();
         } catch ( IOException e ) {
-            throw new TestFailException("Unable to create file at path: "+absolutePathToFile);
+            throw new TestFailException("Unable to replace file at path: "+absolutePathToFile);
         }
         return file;
     }
@@ -37,6 +49,18 @@ public class FileUtils {
         } catch ( IOException e ) {
             throw new TestFailException("Unable to write to file at path: "+file.getAbsolutePath());
         }
+    }
+
+    public static File createAndWriteToFile(File file, String line) {
+        try {
+            Files.deleteIfExists(file.toPath());
+            FileOutputStream fos = new FileOutputStream(file, true);
+            fos.write(line.getBytes());
+            fos.close();
+        } catch ( IOException e ) {
+            throw new TestFailException("Unable to replace file at path: "+file.getAbsolutePath());
+        }
+        return file;
     }
 
     public static void writeToFile(@NotNull File file, @NotNull String line) {

@@ -36,7 +36,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
   @Given("the file has the following details:")
   public void theFileHasTheFollowingDetails(DataTable dataTable) throws IOException {
     FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_CEASED_CITIZEN);
-    testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, FileTypeEnum.MHA_CEASED_CITIZEN.getValue().toLowerCase()));
+    testContext.set("fileReceived", batchFileCreator.replaceFile(fileDetail, FileTypeEnum.MHA_CEASED_CITIZEN.getValue().toLowerCase()));
 
     List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();
     LocalDate cutOffDate = dateUtils.daysBeforeToday(5);

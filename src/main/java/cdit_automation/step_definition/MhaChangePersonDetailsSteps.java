@@ -16,7 +16,7 @@ public class MhaChangePersonDetailsSteps extends AbstractSteps{
     @Given("^the mha change in person details file is empty$")
     public void theMhaChangeInPersonDetailsFileIsEmpty() throws IOException {
         FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_PERSON_DETAIL_CHANGE);
-        testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, FileTypeEnum.MHA_PERSON_DETAIL_CHANGE.getValue().toLowerCase()));
+        testContext.set("fileReceived", batchFileCreator.replaceFile(fileDetail, FileTypeEnum.MHA_PERSON_DETAIL_CHANGE.getValue().toLowerCase()));
 
         List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();;
         List<String> body = Lists.emptyList();
@@ -31,7 +31,7 @@ public class MhaChangePersonDetailsSteps extends AbstractSteps{
     @Given("the mha person details file has the following details:")
     public void theMhaPersonDetailsFileHasTheFollowingDetails(DataTable dataTable) throws IOException {
         FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_PERSON_DETAIL_CHANGE);
-        FileReceived fileReceived = batchFileCreator.fileCreator(fileDetail, FileTypeEnum.MHA_PERSON_DETAIL_CHANGE.getValue().toLowerCase());
+        FileReceived fileReceived = batchFileCreator.replaceFile(fileDetail, FileTypeEnum.MHA_PERSON_DETAIL_CHANGE.getValue().toLowerCase());
         testContext.set("fileReceived", fileReceived);
 
         List<Map<String, String>> list = dataTable.asMaps(String.class, String.class);

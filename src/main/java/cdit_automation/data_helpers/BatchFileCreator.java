@@ -15,6 +15,20 @@ import java.util.List;
 
 @Component
 public class BatchFileCreator extends AbstractFileCreator {
+    public FileReceived replaceFile(FileDetail fileDetail, String fileName) {
+        File file = FileUtils.replaceFile(testManager.getOutputArtifactsDir()+File.separator+fileName+".txt");
+
+        FileReceived fileReceived = FileReceived.builder()
+                .receivedTimestamp(Timestamp.valueOf(LocalDateTime.now()))
+                .filePath(file.getAbsolutePath())
+                .fileDetail(fileDetail)
+                .build();
+
+        fileReceivedRepo.save(fileReceived);
+
+        return fileReceived;
+    }
+
     public FileReceived fileCreator(FileDetail fileDetail, String fileName) {
         File file = FileUtils.findOrCreate(testManager.getOutputArtifactsDir()+File.separator+fileName+".txt");
 

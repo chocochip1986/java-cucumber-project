@@ -33,7 +33,7 @@ public class MhaDeathSteps extends AbstractSteps {
     @Given("^the mha death file is empty$")
     public void theMhaDeathFileIsEmpty() throws IOException {
         FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_DEATH_DATE);
-        testContext.set("fileReceived", batchFileCreator.fileCreator(fileDetail, FileTypeEnum.MHA_DEATH_DATE.getValue().toLowerCase()));
+        testContext.set("fileReceived", batchFileCreator.replaceFile(fileDetail, FileTypeEnum.MHA_DEATH_DATE.getValue().toLowerCase()));
 
         List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();;
         List<String> body = Lists.emptyList();
@@ -48,7 +48,7 @@ public class MhaDeathSteps extends AbstractSteps {
     @Given("^the mha death file has the following details:$")
     public void theMhaDeathFileHasTheFollowingDetails(DataTable table) throws IOException {
         FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_DEATH_DATE);
-        FileReceived fileReceived = batchFileCreator.fileCreator(fileDetail, FileTypeEnum.MHA_DEATH_DATE.getValue().toLowerCase());
+        FileReceived fileReceived = batchFileCreator.replaceFile(fileDetail, FileTypeEnum.MHA_DEATH_DATE.getValue().toLowerCase());
         testContext.set("fileReceived", fileReceived);
 
         List<Map<String, String>> list = table.asMaps(String.class, String.class);
