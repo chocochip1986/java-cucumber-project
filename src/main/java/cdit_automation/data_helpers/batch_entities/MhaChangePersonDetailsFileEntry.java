@@ -4,10 +4,12 @@ import cdit_automation.enums.PersonDetailDataItemChangedEnum;
 import cdit_automation.utilities.StringUtils;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Builder
 public class MhaChangePersonDetailsFileEntry {
     private String nric;
@@ -16,7 +18,14 @@ public class MhaChangePersonDetailsFileEntry {
     private String dataItemChangeDate;
     private PersonDetailDataItemChangedEnum dataItemCat;
 
-    @Override
+    public MhaChangePersonDetailsFileEntry(String nric, String dataItemOriginalValue, String dataItemChangeVal, String dataItemChangeDate, PersonDetailDataItemChangedEnum personDetailDataItemChangedEnum) {
+        this.nric = nric;
+        this.dataItemOriginalValue = dataItemOriginalValue;
+        this.dataItemChangeVal = dataItemChangeVal;
+        this.dataItemChangeDate = dataItemChangeDate;
+        this.dataItemCat = personDetailDataItemChangedEnum;
+    }
+
     public String toString() {
         return StringUtils.leftPad(nric, 9)
                 +StringUtils.leftPad(dataItemCat.getValue(), 1)

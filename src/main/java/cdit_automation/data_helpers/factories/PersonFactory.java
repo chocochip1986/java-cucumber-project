@@ -111,6 +111,13 @@ public class PersonFactory extends AbstractFactory {
         return createPersonData(birthDate, deathDate, name, gender, NationalityEnum.DUAL_CITIZENSHIP, identifier);
     }
 
+    public void updateBirthdate(Person person, LocalDate birthDate, LocalDate oldValidFrom) {
+        personDetailRepo.updateBirthDateForPerson(birthDate, person);
+        personIdrepo.updateValidFrom(dateUtils.localDateToDate(birthDate), person, dateUtils.localDateToDate(oldValidFrom));
+        personNameRepo.updateValidFrom(dateUtils.localDateToDate(birthDate), person, dateUtils.localDateToDate(oldValidFrom));
+        nationalityRepo.updateValidFrom(dateUtils.localDateToDate(birthDate), person, dateUtils.localDateToDate(oldValidFrom));
+    }
+
     public PersonId createPersonData(LocalDate birthDate, LocalDate deathDate, String name, Gender gender, NationalityEnum nationalityEnum, String identifier) {
         PersonOptions personOptions = new PersonOptions();
         if ( birthDate != null ) {

@@ -1,9 +1,12 @@
 package cdit_automation.repositories;
 
+import cdit_automation.models.Person;
 import cdit_automation.models.PersonId;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -39,4 +42,12 @@ public interface PersonIdRepo extends JpaRepository<PersonId, Long> {
             " AND p.person_id_type IN (NRIC, FIN, PP)" +
             " AND ( pd.date_of_death IS NOT NULL OR pd.date_of_death > TRUNC(ADD_MONTHS(SYSDATE,-12),'YEAR')-1 )", nativeQuery = true)
     List<PersonId> findAllPeopleForIrasAIBulkFile();
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE PersonId pi " +
+            "SET pi.biTemporalData.businessTemporalData.validFrom = ?1 " +
+            "WHERE pi.person = ?2 " +
+            "AND ( pi.biTemporalData.businessTemporalData.validFrom = TRUNC(?3) )")
+    int updateValidFrom(Date newValidFrom, Person person, Date oldValidFrom);
 }

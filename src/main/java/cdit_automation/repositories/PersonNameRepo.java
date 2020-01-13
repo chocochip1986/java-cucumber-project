@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 @Repository
 public interface PersonNameRepo extends JpaRepository<PersonName, Long> {
 
@@ -19,4 +21,12 @@ public interface PersonNameRepo extends JpaRepository<PersonName, Long> {
             "AND ( pn.biTemporalData.businessTemporalData.validFrom <= TRUNC(SYSDATE) " +
             "AND ( pn.biTemporalData.businessTemporalData.validTill = null OR pn.biTemporalData.businessTemporalData.validTill >= TRUNC(SYSDATE) ) )")
     int updateNameForPerson(String name, Person person);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE PersonName pn " +
+            "SET pn.biTemporalData.businessTemporalData.validFrom = ?1 " +
+            "WHERE pn.person = ?2 " +
+            "AND ( pn.biTemporalData.businessTemporalData.validFrom = TRUNC(?3) )")
+    int updateValidFrom(Date newValidFrom, Person person, Date oldValidFrom);
 }

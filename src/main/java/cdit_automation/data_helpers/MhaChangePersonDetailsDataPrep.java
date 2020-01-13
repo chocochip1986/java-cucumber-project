@@ -27,14 +27,14 @@ public class MhaChangePersonDetailsDataPrep extends BatchFileDataPrep {
     }
 
     public String createScenarioEntry(Map<String, String> scenario) {
-        MhaChangePersonDetailsFileEntry mhaChangePersonDetailsFileEntry = MhaChangePersonDetailsFileEntry.builder()
-                .nric(nricFieldOptions(scenario.get("nric")))
-                .dataItemCat(createDataItemChangeCategory(scenario.get("data_item_change_category")))
-                .dataItemChangeVal(
+        MhaChangePersonDetailsFileEntry mhaChangePersonDetailsFileEntry =
+                new MhaChangePersonDetailsFileEntry(
+                        nricFieldOptions(scenario.get("nric")),
+                        scenario.get("data_item_orig_value"),
                         createDataItemChangeValue(PersonDetailDataItemChangedEnum.fromString(scenario.get("data_item_change_category")),
-                                scenario.get("data_item_orig_value"), scenario.get("data_item_change_value")))
-                .dataItemChangeDate(createItemChangeDate(scenario.get("data_item_change_date")))
-                .build();
+                                scenario.get("data_item_orig_value"), scenario.get("data_item_change_value")),
+                        createItemChangeDate(scenario.get("data_item_change_date")),
+                        createDataItemChangeCategory(scenario.get("data_item_change_category")));
         //Generate the fake data
         setupDateForScenario(mhaChangePersonDetailsFileEntry.getDataItemCat(), mhaChangePersonDetailsFileEntry);
         return mhaChangePersonDetailsFileEntry.toString();
@@ -44,13 +44,15 @@ public class MhaChangePersonDetailsDataPrep extends BatchFileDataPrep {
         PersonId personId = personFactory.createNewSCPersonId(entry.getNric());
         switch (itemChangeCat) {
             case GENDER:
-                personDetailRepo.updateGenderForPerson(entry.getDataItemOriginalValue(), personId.getPerson());
+                Gender originalGender = Gender.fromString(entry.getDataItemOriginalValue());
+                personDetailRepo.updateGenderForPerson(originalGender, personId.getPerson());
                 break;
             case NAME:
                 personNameRepo.updateNameForPerson(entry.getDataItemOriginalValue(), personId.getPerson());
                 break;
             case DATE_OF_BIRTH:
-                personDetailRepo.updateBirthDateForPerson(dateUtils.parse(entry.getDataItemOriginalValue()), personId.getPerson());
+                LocalDate origBirthDate = dateUtils.parse(entry.getDataItemOriginalValue());
+                personFactory.updateBirthdate(personId.getPerson(), origBirthDate, origBirthDate);
                 break;
             case DATE_OF_DEATH:
                 personDetailRepo.updateDeathDateForPerson(dateUtils.parse(entry.getDataItemOriginalValue()), personId.getPerson());
