@@ -152,3 +152,13 @@ Assuming your current working directory is the cdit-automation project root
 ```
 bash script/run.sh
 ```
+
+###Steps to resolve failure to find OJDBC8 12.2.0.1 library
+1.   Copy OJDBC 12.2.0.1.jar to project /resources and rename as ojdbc.jar
+```
+cp ~/.m2/repository/com/oracle/ojdbc8/12.2.0.1/ojdbc8-12.2.0.1.jar ~/folder/cdit-automation/src/main/resources/ojdbc.jar
+```
+2. Run the below command to install the jar to the project
+```
+mvn install:install-file -DgroupId=com.oracle -DartifactId=ojdbc8 \ -Dversion=12.2.0.1 -Dpackaging=jar -Dfile=./src/main/resources/ojdbc.jar
+```
