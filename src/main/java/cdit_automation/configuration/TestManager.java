@@ -125,6 +125,10 @@ public class TestManager {
         }
     }
 
+    public String getTestEnvironment() {
+        return this.testEnv.getEnv();
+    }
+
     private TestEnvEnums getEnvVarTestEnv() {
         if ( System.getProperty("env") == null ) {
             return TestEnvEnums.LOCAL;

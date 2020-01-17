@@ -16,11 +16,6 @@ import java.util.List;
 public class MhaBulkSteps extends AbstractSteps {
     @Given("^the mha bulk file has the following details:$")
     public void theMhaBulkFileHasTheFollowingDetails(DataTable table) {
-        FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_BULK_CITIZEN);
-//        FileReceived fileReceived = batchFileCreator.fileCreator(fileDetail, FileTypeEnum.MHA_BULK_CITIZEN.getValue().toLowerCase());
-        FileReceived fileReceived = batchFileCreator.createFileReceived(fileDetail, FileTypeEnum.MHA_BULK_CITIZEN.getValue().toLowerCase());
-        testContext.set("fileReceived", fileReceived);
-
         List<String> entries = table.asList();
         List<String> body = mhaBulkFileDataPrep.createBodyOfTestScenarios(entries, testContext);
 

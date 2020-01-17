@@ -1,6 +1,8 @@
 package cdit_automation.step_definition;
 
 import cdit_automation.api_helpers.ApiHelper;
+import cdit_automation.aws.modules.S3;
+import cdit_automation.aws.modules.Slack;
 import cdit_automation.configuration.AddressJacksonObjectMapper;
 import cdit_automation.configuration.StepDefLevelTestContext;
 import cdit_automation.configuration.TestManager;
@@ -47,6 +49,9 @@ public class AbstractSteps {
 
     @Autowired protected ApiHelper apiHelper;
 
+    @Autowired protected Slack slack;
+    @Autowired protected S3 s3;
+
     //Data creators
     @Autowired protected PersonFactory personFactory;
 
@@ -86,7 +91,12 @@ public class AbstractSteps {
 
     protected boolean waitUntilCondition(Supplier<Boolean> function) {
         Double timer = 0.0;
-        Double maxWaitDuration = 10.0;
+        Double maxWaitDuration;
+        if ( testManager.getTestEnvironment().equals("local")) {
+            maxWaitDuration = 10.0;
+        } else {
+            maxWaitDuration = 180.0;
+        }
         boolean isFound;
         do {
             isFound = function.get();

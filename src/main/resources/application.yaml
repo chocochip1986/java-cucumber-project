@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: qa
+    active: local
   jpa:
     hibernate:
       ddl-auto: none
@@ -30,8 +30,13 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@oracle-db.co6e722tselv.ap-southeast-1.rds.amazonaws.com:1521:ALLOT
     username: datasource_qa
+    password: perMaNalTY
 test-env:
   env-name: qa
   datasource-ui:
     url: https://datasource-qa.cpfb.gds-gov.tech
-
+  implicit-wait: 5
+  explicit-wait: 30
+aws:
+  sns:
+    topicArn: "arn:aws:sns:ap-southeast-1:026083545547:slack-topic"

@@ -55,6 +55,9 @@ public class TestEnv {
     @Value(value = "${test-env.explicit-wait}")
     private Long explicitWait;
 
+    @Value(value = "${aws.sns.topic-arn}")
+    private String topicArn;
+
     public String toString() {
         String str = "spring.profiles: "+springProfile+"\n"
                 + "spring.jpa.hibernate.ddl-auto: "+ddlAuto+"\n"
@@ -69,7 +72,8 @@ public class TestEnv {
                 +"test-env.datasource-ui.url: "+datasourceUiUrl+"\n"
                 +"test-env.datasource-ui.port: "+datasourceUiPort+"\n"
                 +"test-env.implicit-wait: "+implicitWait+"\n"
-                +"test-env.explicit-wait: "+explicitWait;
+                +"test-env.explicit-wait: "+explicitWait+"\n"
+                +"aws.sns.topic-arn: "+topicArn;
         return str;
     }
 }

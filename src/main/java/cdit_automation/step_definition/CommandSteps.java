@@ -1,7 +1,11 @@
 package cdit_automation.step_definition;
 
+import cdit_automation.enums.FileStatusEnum;
+import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.exceptions.TestFailException;
+import cdit_automation.models.FileDetail;
 import cdit_automation.models.FileReceived;
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
@@ -9,6 +13,7 @@ import org.junit.Ignore;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.function.Supplier;
 
 @Slf4j
 @Ignore
@@ -64,12 +69,83 @@ public class CommandSteps extends AbstractSteps {
         testContext.set("extractionDate", extractionDate);
     }
 
-    private void trigger() {
-        FileReceived fileReceived = testContext.get("fileReceived");
-        if ( fileReceived == null ) {
-            throw new TestFailException("No file received record created!!!");
+    @When("^Datasource is triggered to create a file received record for (MHA_DEATH_DATE)$")
+    public void datasourceIsTriggeredToCreateAFileReceivedRecord(FileTypeEnum fileTypeEnum) {
+        FileDetail fileDetail = fileDetailRepo.findByFileEnum(fileTypeEnum);
+        testContext.set("fileReceived", batchFileCreator.replaceFile(fileDetail, fileTypeEnum.getValue().toLowerCase()));
+    }
+
+    @When("^MHA sends the (MHA_BULK_CITIZEN) file to Datasource sftp for processing$")
+    public void mhaSendsTheDeath_dateFileToDatasourceSftpForProcessing(FileTypeEnum fileTypeEnum) {
+        if ( testManager.getTestEnvironment().equals("local") ) {
+            FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_BULK_CITIZEN);
+            FileReceived fileReceived = batchFileCreator.createFileReceived(fileDetail, FileTypeEnum.MHA_BULK_CITIZEN.getValue().toLowerCase());
+            testContext.set("fileReceived", fileReceived);
+        } else {
+            //Fire call to sftp, for testing purposes only
+            slack.sendToSlack(testManager.testEnv.getTopicArn(), "Running MHA Bulk Citizen File", AwsSteps.Level.NEUTRAL);
+            log.info("Uploading file "+fileTypeEnum.getValue().toLowerCase()+" at "+batchFileDataWriter.getDestionationFile().getAbsolutePath()+" to S3...");
+            s3.uploadToS3(batchFileDataWriter.getDestionationFile(), "gds-cpfb-ftp-trial", "ready/mha");
+
+            log.info("Verifying that file received record is created...");
+            FileDetail fileDetail = fileDetailRepo.findByFileEnum(fileTypeEnum);
+            boolean isFound = waitUntilCondition(new Supplier<Boolean>(){
+                public Boolean get() {
+                    FileReceived fileReceived = fileReceivedRepo.findTopByFileDetailIdAndFileStatusEnumOrderByReceivedTimestampDesc(fileDetail.getId(), FileStatusEnum.OK);
+                    if (fileReceived != null) {
+                        return Boolean.TRUE;
+                    } else {
+                        return Boolean.FALSE;
+                    }
+                }
+            });
+
+            if ( !isFound ) {
+                throw new TestFailException("Unable to find a File Received record...");
+            }
+
+            FileReceived fileReceived = fileReceivedRepo.findTopByFileDetailIdAndFileStatusEnumOrderByReceivedTimestampDesc(fileDetail.getId(), FileStatusEnum.OK);
+            if ( !testContext.contains("fileReceived") ) {
+                testContext.set("fileReceived", fileReceived);
+            }
         }
-        triggerBatchJob(fileReceived);
+    }
+
+    @Then("^I verify that file received record for (MHA_BULK_CITIZEN) file exists with status (OK)$")
+    public void iVerifyThatFileReceivedRecordExistsWithStatusOk(FileTypeEnum fileTypeEnum, FileStatusEnum fileStatusEnum) {
+        log.info("Verifying that file received record is created...");
+        FileDetail fileDetail = fileDetailRepo.findByFileEnum(fileTypeEnum);
+        boolean isFound = waitUntilCondition(new Supplier<Boolean>(){
+            public Boolean get() {
+                FileReceived fileReceived = fileReceivedRepo.findTopByFileDetailIdAndFileStatusEnumOrderByReceivedTimestampDesc(fileDetail.getId(), fileStatusEnum);
+                if (fileReceived != null) {
+                    return Boolean.TRUE;
+                } else {
+                    return Boolean.FALSE;
+                }
+            }
+        });
+
+        if ( !isFound ) {
+            throw new TestFailException("Unable to find a File Received record...");
+        }
+
+        FileReceived fileReceived = fileReceivedRepo.findTopByFileDetailIdAndFileStatusEnumOrderByReceivedTimestampDesc(fileDetail.getId(), fileStatusEnum);
+        if ( !testContext.contains("fileReceived") ) {
+            testContext.set("fileReceived", fileReceived);
+        }
+    }
+
+    private void trigger() {
+        if ( testManager.getTestEnvironment().equals("local") ) {
+            FileReceived fileReceived = testContext.get("fileReceived");
+            if ( fileReceived == null ) {
+                throw new TestFailException("No file received record created!!!");
+            }
+            triggerBatchJob(fileReceived);
+        } else {
+            //DO NOTHING
+        }
     }
 
     private void triggerBatchJob(FileReceived fileReceived) {

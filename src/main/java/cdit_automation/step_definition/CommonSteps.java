@@ -2,8 +2,6 @@ package cdit_automation.step_definition;
 
 import cdit_automation.api_helpers.ApiHelper;
 import cdit_automation.asserts.Assert;
-import cdit_automation.aws.Aws;
-import cdit_automation.aws.modules.Slack;
 import cdit_automation.enums.BatchStatusEnum;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.Batch;
@@ -20,12 +18,6 @@ import java.util.List;
 @Ignore
 public class CommonSteps extends AbstractSteps {
 
-    @Autowired
-    ApiHelper apiHelper;
-
-    @Autowired
-    Aws aws;
-
     @And("I open a new tab")
     public void iOpenANewTab() {
         pageUtils.openNewTab();
@@ -37,19 +29,19 @@ public class CommonSteps extends AbstractSteps {
     }
 
     @And("^the (Mha|Iras) (.*) batch job completes running with status (.*)$")
-    public void theBatchJobCompletesRunning(String agencyName, String batchJobName, BatchStatusEnum expectedBatchStatus) throws InterruptedException {
-        log.info("Sleeping for 5 mins");
-//        Thread.sleep(300000);
+    public void theBatchJobCompletesRunning(String agencyName, String batchJobName, BatchStatusEnum expectedBatchStatus) {
         log.info("Veryfing that batch job ended with status: "+expectedBatchStatus);
         if (testContext.contains("fileReceived")) {
             FileReceived fileReceived = testContext.get("fileReceived");
             Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
             testContext.set("batch", batch);
 
-            if (batch == null) {
-                aws.notifySlack("No batch record created for fileReceived record: "+fileReceived.getId().toString());
-            } else {
-                aws.notifySlack(String.format("Status:%s", batch.getStatus()));
+            if ( testManager.getTestEnvironment().equals("qa") ) {
+                if (batch == null) {
+                    slack.sendToSlack(testManager.testEnv.getTopicArn(), "No batch record created for fileReceived record: "+fileReceived.getId().toString(), AwsSteps.Level.NEUTRAL);
+                } else {
+                    slack.sendToSlack(testManager.testEnv.getTopicArn(), String.format("Status:%s", batch.getStatus()), AwsSteps.Level.NEUTRAL);
+                }
             }
 
             Assert.assertNotNull(batch, "No batch record created for fileReceived record: "+fileReceived.getId().toString());
