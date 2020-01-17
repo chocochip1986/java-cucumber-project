@@ -2,6 +2,7 @@ package cdit_automation.api_helpers;
 
 import cdit_automation.configuration.TestEnv;
 import cdit_automation.configuration.TestManager;
+import cdit_automation.data_helpers.FileReceivedDataDto;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.FileReceived;
@@ -9,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -60,6 +60,17 @@ public class ApiHelper {
         }
         String url = "http://"+testEnv.getDatasourceUiUrl()+":"+testEnv.getDatasourceUiPort()+"/egress/iras/ai/thriceMonthly?"+requestParams;
         getCall(url);
+    }
+
+    public void sendCallToCreateFileReceivedRecord(FileReceivedDataDto fileReceivedDataDto) {
+        String url = "http://"+testEnv.getDatasourceUiUrl()+":"+testEnv.getDatasourceUiPort()+"/v1/fileReceived";
+        MultiValueMap<String, String> httpHeader = new LinkedMultiValueMap<>();
+        httpHeader.put("Content-Type", Arrays.asList(MediaType.APPLICATION_JSON_VALUE));
+
+        postCall(url, httpHeader, fileReceivedDataDto.toJsonAsString());
+//        Map<String, String> requestBodyKeyValuePairs = new HashMap<>(); {{
+//
+//        }};
     }
 
     public void sendCallToTriggerBatchJob(@NotNull FileReceived fileReceived) {

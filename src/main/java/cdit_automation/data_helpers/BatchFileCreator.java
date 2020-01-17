@@ -1,5 +1,8 @@
 package cdit_automation.data_helpers;
 
+import cdit_automation.data_setup.Phaker;
+import cdit_automation.enums.FileStatusEnum;
+import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.FileDetail;
 import cdit_automation.models.FileReceived;
 import cdit_automation.utilities.FileUtils;
@@ -12,6 +15,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.function.Supplier;
 
 @Component
 public class BatchFileCreator extends AbstractFileCreator {
@@ -39,6 +43,40 @@ public class BatchFileCreator extends AbstractFileCreator {
                 .build();
 
         fileReceivedRepo.save(fileReceived);
+
+        return fileReceived;
+    }
+
+    public FileReceived createFileReceived(FileDetail fileDetail, String fileName) {
+        File file = FileUtils.findOrCreate(testManager.getOutputArtifactsDir()+File.separator+fileName+".txt");
+
+        FileReceivedDataDto fileReceivedDataDto = FileReceivedDataDto.builder()
+                .fileDetailId(fileDetail.getId())
+                .filePath(file.getAbsolutePath())
+                .fileSize(10.0)
+                .hash(Phaker.fakeMd5())
+                .receivedTimestamp(dateUtils.beginningOfDayToTimestamp(dateUtils.now()))
+                .fileStatusEnum(FileStatusEnum.OK)
+                .build();
+
+        apiHelper.sendCallToCreateFileReceivedRecord(fileReceivedDataDto);
+
+        boolean isFound = waitUntilCondition(new Supplier<Boolean>(){
+            public Boolean get() {
+                FileReceived fileReceived = fileReceivedRepo.findByFileDetailIdAndFileStatusEnumAndHash(fileReceivedDataDto.getFileDetailId(), fileReceivedDataDto.getFileStatusEnum(), fileReceivedDataDto.getHash());
+                if (fileReceived != null) {
+                    return Boolean.TRUE;
+                } else {
+                    return Boolean.FALSE;
+                }
+            }
+        });
+
+        if ( !isFound ) {
+            throw new TestFailException("Unable to find a File Received record corresponding to the following information: "+fileReceivedDataDto.toString());
+        }
+
+        FileReceived fileReceived = fileReceivedRepo.findByFileDetailIdAndFileStatusEnumAndHash(fileReceivedDataDto.getFileDetailId(), fileReceivedDataDto.getFileStatusEnum(), fileReceivedDataDto.getHash());
 
         return fileReceived;
     }

@@ -47,6 +47,10 @@ public class Phaker {
 
     public static final int[] rangeOfLeapYears = calculateRangeOfLeapYears();
 
+    public static String fakeMd5() {
+        return genRandomALPHABETS(64);
+    }
+
     public static LocalDate validLeapDay() {
         int indexOfYearElement = 0 + (int)Math.round(Math.random() * rangeOfLeapYears.length-1);
 
