@@ -1,9 +1,6 @@
 FROM openjdk:8
-#ENV = {docker_local, qa, uat, dev}
-ARG env=docker
-ENV env=${env}
-COPY lib /lib/
-COPY uber-cdit-automation.jar /uber-cdit-automation.jar
-WORKDIR .
-RUN echo "Creating docker image for test environment: ${env}"
-ENTRYPOINT ["java", "-Dspring.profiles.active=${env}", "-cp", "/uber-cdit-automation.jar:/lib/*", "cdit_automation.RunCucumberTest"]
+WORKDIR /app
+COPY lib /app/lib/
+COPY artifacts /app/src/main/resources/artifacts/
+COPY uber-cdit-automation.jar /app/uber-cdit-automation.jar
+ENTRYPOINT ["java", "-Dspring.profiles.active=qa", "-cp", "/app/uber-cdit-automation.jar:/app/lib/*", "cdit_automation.RunCucumberTest", "--tags", "@bulk_citizen", "--tags", "@mha" ]

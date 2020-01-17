@@ -1,6 +1,9 @@
 package cdit_automation.step_definition;
 
+import cdit_automation.api_helpers.ApiHelper;
 import cdit_automation.asserts.Assert;
+import cdit_automation.aws.Aws;
+import cdit_automation.aws.modules.Slack;
 import cdit_automation.enums.BatchStatusEnum;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.Batch;
@@ -9,12 +12,19 @@ import cdit_automation.models.FileReceived;
 import io.cucumber.java.en.And;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 @Slf4j
 @Ignore
 public class CommonSteps extends AbstractSteps {
+
+    @Autowired
+    ApiHelper apiHelper;
+
+    @Autowired
+    Aws aws;
 
     @And("I open a new tab")
     public void iOpenANewTab() {
@@ -27,12 +37,20 @@ public class CommonSteps extends AbstractSteps {
     }
 
     @And("^the (Mha|Iras) (.*) batch job completes running with status (.*)$")
-    public void theBatchJobCompletesRunning(String agencyName, String batchJobName, BatchStatusEnum expectedBatchStatus) {
+    public void theBatchJobCompletesRunning(String agencyName, String batchJobName, BatchStatusEnum expectedBatchStatus) throws InterruptedException {
+        log.info("Sleeping for 5 mins");
+//        Thread.sleep(300000);
         log.info("Veryfing that batch job ended with status: "+expectedBatchStatus);
         if (testContext.contains("fileReceived")) {
             FileReceived fileReceived = testContext.get("fileReceived");
             Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
             testContext.set("batch", batch);
+
+            if (batch == null) {
+                aws.notifySlack("No batch record created for fileReceived record: "+fileReceived.getId().toString());
+            } else {
+                aws.notifySlack(String.format("Status:%s", batch.getStatus()));
+            }
 
             Assert.assertNotNull(batch, "No batch record created for fileReceived record: "+fileReceived.getId().toString());
             Assert.assertEquals(expectedBatchStatus, batch.getStatus(), "The "+batchJobName+" job from "+agencyName+" did not complete!!!");

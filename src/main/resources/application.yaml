@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: qa
   jpa:
     hibernate:
       ddl-auto: none
@@ -19,95 +21,17 @@ test-env:
     port: 8081
   implicit-wait: 1
   explicit-wait: 10
----
-spring:
-  profiles: dev
-  jpa:
-    hibernate:
-      ddl-auto: none
-    show-sql: true
-    database-platform: org.hibernate.dialect.Oracle12cDialect
-  datasource:
-    url: jdbc:oracle:thin:@localhost:1521:ORCLCDB
-    username: C##DATASOURCE
-    password: pwd
-    driver-class-name: oracle.jdbc.OracleDriver
-  output:
-    ansi:
-      enabled: always
-test-env:
-  env-name: dev
-  datasource-ui:
-    url: localhost
-    port: 8081
-  implicit-wait: 1
-  explicit-wait: 10
+aws:
+  sns:
+    topicArn: ""
 ---
 spring:
   profiles: qa
-  jpa:
-    hibernate:
-      ddl-auto: none
-    show-sql: true
-    database-platform: org.hibernate.dialect.Oracle12cDialect
   datasource:
-    url: jdbc:oracle:thin:@localhost:1521:ORCLCDB
-    username: C##DATASOURCE
-    password: pwd
-    driver-class-name: oracle.jdbc.OracleDriver
-  output:
-    ansi:
-      enabled: always
+    url: jdbc:oracle:thin:@oracle-db.co6e722tselv.ap-southeast-1.rds.amazonaws.com:1521:ALLOT
+    username: datasource_qa
 test-env:
   env-name: qa
   datasource-ui:
-    url: localhost
-    port: 8081
-  implicit-wait: 1
-  explicit-wait: 10
----
-spring:
-  profiles: uat
-  jpa:
-    hibernate:
-      ddl-auto: none
-    show-sql: true
-    database-platform: org.hibernate.dialect.Oracle12cDialect
-  datasource:
-    url: jdbc:oracle:thin:@localhost:1521:ORCLCDB
-    username: C##DATASOURCE
-    password: pwd
-    driver-class-name: oracle.jdbc.OracleDriver
-  output:
-    ansi:
-      enabled: always
-test-env:
-  env-name: uat
-  datasource-ui:
-    url: localhost
-    port: 8081
-  implicit-wait: 1
-  explicit-wait: 10
----
-spring:
-  profiles: docker
-  jpa:
-    hibernate:
-      ddl-auto: none
-    show-sql: true
-    database-platform: org.hibernate.dialect.Oracle12cDialect
-  datasource:
-    url: jdbc:oracle:thin:@oracle:1521:ORCLCDB
-    username: C##DATASOURCE
-    password: pwd
-    driver-class-name: oracle.jdbc.OracleDriver
-  output:
-    ansi:
-      enabled: always
-test-env:
-  env-name: docker
-  datasource-ui:
-    url: 192.168.1.19
-    port: 8081
-  implicit-wait: 1
-  explicit-wait: 10
+    url: https://datasource-qa.cpfb.gds-gov.tech
+
