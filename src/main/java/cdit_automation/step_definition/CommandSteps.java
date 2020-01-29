@@ -1,5 +1,7 @@
 package cdit_automation.step_definition;
 
+import cdit_automation.aws.modules.Slack;
+import cdit_automation.configuration.TestEnv;
 import cdit_automation.enums.FileStatusEnum;
 import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.exceptions.TestFailException;
@@ -77,15 +79,15 @@ public class CommandSteps extends AbstractSteps {
 
     @When("^MHA sends the (MHA_BULK_CITIZEN) file to Datasource sftp for processing$")
     public void mhaSendsTheDeath_dateFileToDatasourceSftpForProcessing(FileTypeEnum fileTypeEnum) {
-        if ( testManager.getTestEnvironment().equals("local") ) {
-            FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_BULK_CITIZEN);
-            FileReceived fileReceived = batchFileCreator.createFileReceived(fileDetail, FileTypeEnum.MHA_BULK_CITIZEN.getValue().toLowerCase());
+        if ( testManager.getTestEnvironment().equals(TestEnv.Env.LOCAL) ) {
+            FileDetail fileDetail = fileDetailRepo.findByFileEnum(fileTypeEnum);
+            FileReceived fileReceived = batchFileCreator.createFileReceived(fileDetail, fileTypeEnum.getValue().toLowerCase());
             testContext.set("fileReceived", fileReceived);
         } else {
             //Fire call to sftp, for testing purposes only
-            slack.sendToSlack(testManager.testEnv.getTopicArn(), "Running MHA Bulk Citizen File", AwsSteps.Level.NEUTRAL);
+            slack.sendToSlack(testManager.testEnv.getTopicArn(), slack.MHA_BULK_FILE_VERIFICATION_MSG, Slack.Level.NEUTRAL);
             log.info("Uploading file "+fileTypeEnum.getValue().toLowerCase()+" at "+batchFileDataWriter.getDestionationFile().getAbsolutePath()+" to S3...");
-            s3.uploadToS3(batchFileDataWriter.getDestionationFile(), "gds-cpfb-ftp-trial", "ready/mha");
+            s3.uploadToS3(batchFileDataWriter.getDestionationFile(), s3.MHA_READY_BUCKET_PATH);
 
             log.info("Verifying that file received record is created...");
             FileDetail fileDetail = fileDetailRepo.findByFileEnum(fileTypeEnum);
@@ -137,7 +139,7 @@ public class CommandSteps extends AbstractSteps {
     }
 
     private void trigger() {
-        if ( testManager.getTestEnvironment().equals("local") ) {
+        if ( testManager.getTestEnvironment().equals(TestEnv.Env.LOCAL) ) {
             FileReceived fileReceived = testContext.get("fileReceived");
             if ( fileReceived == null ) {
                 throw new TestFailException("No file received record created!!!");

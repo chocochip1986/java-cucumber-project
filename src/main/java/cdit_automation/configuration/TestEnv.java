@@ -13,6 +13,17 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties
 @EnableConfigurationProperties()
 public class TestEnv {
+    @Getter
+    public enum Env {
+        LOCAL("local"),
+        QA("qa");
+
+        private String name;
+
+        Env(String name) {
+            this.name = name;
+        }
+    }
 
     private String springProfile;
 
@@ -41,7 +52,7 @@ public class TestEnv {
     private String springOutputAnsiColor;
 
     @Value(value = "${test-env.env-name}")
-    private String env;
+    private Env env;
 
     @Value(value = "${test-env.datasource-ui.url}")
     private String datasourceUiUrl;

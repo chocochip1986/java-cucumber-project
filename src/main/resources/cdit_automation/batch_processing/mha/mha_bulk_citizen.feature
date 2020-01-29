@@ -13,9 +13,6 @@ Feature: Data processing for MHA bulk citizen file
     | Singaporean,F,Name:Bak Chor Mee,MHAAddress,PostalCode:123456,BuildingName:Shenton way,UnitNo:12,BlkNo:212,StrtName:Kfc street,FlrNo:12,ctzIssDate:        ,Quantity:1                                                     |
 #    | RandomPeople,Quantity:100000                                                                                                                                                                          |
     And the mha bulk file is created
-#    And I notify in slack Running MHA Bulk Citizen File
-#    And I upload the file mha_bulk_citizen to bucket gds-cpfb-ftp-trial at path ready/mha
     When MHA sends the MHA_BULK_CITIZEN file to Datasource sftp for processing
-#    And slack notify Starting MHA Bulk file test
     When the mha bulk file is ran
     And the Mha Bulk batch job completes running with status FILE_CHECK_AGAINST_PREP_DATA

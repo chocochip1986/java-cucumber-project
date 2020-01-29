@@ -5,6 +5,7 @@ import cdit_automation.aws.modules.S3;
 import cdit_automation.aws.modules.Slack;
 import cdit_automation.configuration.AddressJacksonObjectMapper;
 import cdit_automation.configuration.StepDefLevelTestContext;
+import cdit_automation.configuration.TestEnv;
 import cdit_automation.configuration.TestManager;
 import cdit_automation.data_helpers.BatchFileCreator;
 import cdit_automation.data_helpers.BatchFileDataWriter;
@@ -92,7 +93,7 @@ public class AbstractSteps {
     protected boolean waitUntilCondition(Supplier<Boolean> function) {
         Double timer = 0.0;
         Double maxWaitDuration;
-        if ( testManager.getTestEnvironment().equals("local")) {
+        if ( testManager.getTestEnvironment().equals(TestEnv.Env.LOCAL)) {
             maxWaitDuration = 10.0;
         } else {
             maxWaitDuration = 180.0;

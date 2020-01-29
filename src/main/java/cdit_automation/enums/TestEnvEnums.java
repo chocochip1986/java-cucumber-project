@@ -3,6 +3,7 @@ package cdit_automation.enums;
 import lombok.Getter;
 
 @Getter
+@Deprecated
 public enum TestEnvEnums {
     LOCAL("local", "hostname", "testusername", "testpassword", "1521", "XE",
             "localhost", "8081", 1L, 10L);

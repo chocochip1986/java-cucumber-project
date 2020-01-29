@@ -11,11 +11,15 @@ import java.io.File;
 @Slf4j
 @Component
 public class S3 {
-    public void uploadToS3(File file, String bucketName, String bucketPath) {
+
+    public final String TEST_BUCKET = "gds-cpfb-ftp-trial";
+    public final String MHA_READY_BUCKET_PATH = "ready/mha";
+
+    public void uploadToS3(File file, String bucketPath) {
         long millis = System.currentTimeMillis();
         AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.AP_SOUTHEAST_1).build();
         s3.putObject(
-                bucketName,
+                TEST_BUCKET,
                 bucketPath + File.separator + file.getName() + '_' + millis + ".txt",
                 file
         );

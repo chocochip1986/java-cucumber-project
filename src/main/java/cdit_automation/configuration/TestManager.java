@@ -2,10 +2,8 @@ package cdit_automation.configuration;
 
 import cdit_automation.driver_management.DriverManager;
 import cdit_automation.enums.BrowserTypeEnums;
-import cdit_automation.enums.TestEnvEnums;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.exceptions.UnsupportedBrowserException;
-import cdit_automation.exceptions.UnsupportedTestEnvException;
 import cdit_automation.page_navigation.PageUtils;
 import io.cucumber.core.api.Scenario;
 import lombok.extern.slf4j.Slf4j;
@@ -125,22 +123,8 @@ public class TestManager {
         }
     }
 
-    public String getTestEnvironment() {
+    public TestEnv.Env getTestEnvironment() {
         return this.testEnv.getEnv();
-    }
-
-    private TestEnvEnums getEnvVarTestEnv() {
-        if ( System.getProperty("env") == null ) {
-            return TestEnvEnums.LOCAL;
-        }
-        else {
-            try {
-                return TestEnvEnums.valueOf(System.getProperty("env").toUpperCase());
-            }
-            catch ( IllegalArgumentException e ) {
-                throw new UnsupportedTestEnvException("Unsupported Test Environment Exception! "+System.getProperty("env"));
-            }
-        }
     }
 
     private BrowserTypeEnums getEnvVarBrowserType() {

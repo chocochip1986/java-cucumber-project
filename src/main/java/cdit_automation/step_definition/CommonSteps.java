@@ -2,6 +2,8 @@ package cdit_automation.step_definition;
 
 import cdit_automation.api_helpers.ApiHelper;
 import cdit_automation.asserts.Assert;
+import cdit_automation.aws.modules.Slack;
+import cdit_automation.configuration.TestEnv;
 import cdit_automation.enums.BatchStatusEnum;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.Batch;
@@ -36,11 +38,11 @@ public class CommonSteps extends AbstractSteps {
             Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
             testContext.set("batch", batch);
 
-            if ( testManager.getTestEnvironment().equals("qa") ) {
+            if ( testManager.getTestEnvironment().equals(TestEnv.Env.QA) ) {
                 if (batch == null) {
-                    slack.sendToSlack(testManager.testEnv.getTopicArn(), "No batch record created for fileReceived record: "+fileReceived.getId().toString(), AwsSteps.Level.NEUTRAL);
+                    slack.sendToSlack(testManager.testEnv.getTopicArn(), "No batch record created for fileReceived record: "+fileReceived.getId().toString(), Slack.Level.NEUTRAL);
                 } else {
-                    slack.sendToSlack(testManager.testEnv.getTopicArn(), String.format("Status:%s", batch.getStatus()), AwsSteps.Level.NEUTRAL);
+                    slack.sendToSlack(testManager.testEnv.getTopicArn(), String.format("Status:%s", batch.getStatus()), Slack.Level.NEUTRAL);
                 }
             }
 
