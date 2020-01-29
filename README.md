@@ -16,6 +16,7 @@
     - ####[Running via an executable jar with tags](#running-via-an-executable-jar-with-tags)
         - ####[Preparing the jar](#preparing-the-jar)
     - ####[Running via bash script](#running-via-bash-script)
+- ####[Restrictions](restrictions)
 
 ---
 ## Prerequisites
@@ -162,3 +163,7 @@ cp ~/.m2/repository/com/oracle/ojdbc8/12.2.0.1/ojdbc8-12.2.0.1.jar ~/folder/cdit
 ```
 mvn install:install-file -DgroupId=com.oracle -DartifactId=ojdbc8 \ -Dversion=12.2.0.1 -Dpackaging=jar -Dfile=./src/main/resources/ojdbc.jar
 ```
+
+###Restrictions
+1. If you are using JetBrains's Intellij to run this test suite, you must use the community edition. The cucumber and gherkin plugins only work on the community version.
+2. Intellij Community Edition 2019.3.1's "Cucumber for Java" plugin version 193.5662.7 does not support Cucumber's 5.1.0 @ParameterType feature so it'll look like there's a undefined step but it works actually.

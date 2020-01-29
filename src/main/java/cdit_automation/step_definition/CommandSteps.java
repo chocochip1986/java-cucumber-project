@@ -77,7 +77,7 @@ public class CommandSteps extends AbstractSteps {
         testContext.set("fileReceived", batchFileCreator.replaceFile(fileDetail, fileTypeEnum.getValue().toLowerCase()));
     }
 
-    @When("^MHA sends the (MHA_BULK_CITIZEN) file to Datasource sftp for processing$")
+    @When("^MHA sends the {fileType} file to Datasource sftp for processing$")
     public void mhaSendsTheDeath_dateFileToDatasourceSftpForProcessing(FileTypeEnum fileTypeEnum) {
         if ( testManager.getTestEnvironment().equals(TestEnv.Env.LOCAL) ) {
             FileDetail fileDetail = fileDetailRepo.findByFileEnum(fileTypeEnum);

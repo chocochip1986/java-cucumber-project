@@ -15,4 +15,4 @@ Feature: Data processing for MHA bulk citizen file
     And the mha bulk file is created
     When MHA sends the MHA_BULK_CITIZEN file to Datasource sftp for processing
     When the mha bulk file is ran
-    And the Mha Bulk batch job completes running with status FILE_CHECK_AGAINST_PREP_DATA
+    And the Mha Bulk batch job completes running with status CLEANUP
