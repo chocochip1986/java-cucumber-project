@@ -9,7 +9,7 @@ Feature: Data processing for MHA dual citizenship
     | NewDualCitizensInFile | ExistingDualCitizensInFile | ExpiredDualCitizens |
     | 1                     | 1                          | 1                   |
     When the mha dual citizen job is ran
-    And the Mha Dual Citizen batch job completes running with status FILE_CHECK_AGAINST_PREP_DATA
+    And the Mha Dual Citizen batch job completes running with status CLEANUP
     Then I verify that there are new dual citizen in datasource db
     Then I verify that no changes were made to existing dual citizens
     Then I verify that the dual citizens who are not in the file will be Singaporeans
@@ -40,7 +40,7 @@ Feature: Data processing for MHA dual citizenship
   Scenario: MHA sends an empty Dual Citizen file
     Given the mha dual citizen file is empty
     When the mha dual citizen job is ran
-    And the Mha Dual Citizen batch job completes running with status FILE_CHECK_AGAINST_PREP_DATA
+    And the Mha Dual Citizen batch job completes running with status CLEANUP
 
   @Set_5
   Scenario: MHA sends a file with a cut-off date after that file recevied date

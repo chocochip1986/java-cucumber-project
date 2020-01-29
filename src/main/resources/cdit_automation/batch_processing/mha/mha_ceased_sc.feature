@@ -88,7 +88,7 @@ Feature: Data processing for Mha ceased citizenship
       | CeasedCitizen |
       | 2             |
     When the mha ceased sc job is ran
-    Then the Mha Ceased Citizen batch job completes running with status FILE_CHECK_AGAINST_PREP_DATA
+    Then the Mha Ceased Citizen batch job completes running with status CLEANUP
     And I verify the the people listed in the file have nationality of NON_SINGAPORE_CITIZEN
     And I verify the previous nationality valid till timestamp is the renunciation date at 2359HR
     And I verify the supersede nationality valid from timestamp is the day after renunciation date
@@ -109,7 +109,7 @@ Feature: Data processing for Mha ceased citizenship
       | AwardedSingaporeCitizen |
       | 1                       |
     When the mha ceased sc job is ran
-    Then the Mha Ceased Citizen batch job completes running with status FILE_CHECK_AGAINST_PREP_DATA
+    Then the Mha Ceased Citizen batch job completes running with status CLEANUP
     And I verify the the people listed in the file have nationality of SINGAPORE_CITIZEN
     And I verify the the people listed in the file have nric cancelled status of 0
 
@@ -119,4 +119,4 @@ Feature: Data processing for Mha ceased citizenship
       | CeasedCitizen |
       | 0             |
     When the mha ceased sc job is ran
-    Then the Mha Ceased Citizen batch job completes running with status FILE_CHECK_AGAINST_PREP_DATA
+    Then the Mha Ceased Citizen batch job completes running with status CLEANUP

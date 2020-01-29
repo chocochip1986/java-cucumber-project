@@ -7,7 +7,7 @@ Feature: Data processing for Mha Change in Person Details
   Scenario: Mha sends an empty file for Change in Person details
     Given the mha change in person details file is empty
     When the mha person details job is ran
-    And the Mha Change of Personal Details batch job completes running with status FILE_CHECK_AGAINST_PREP_DATA
+    And the Mha Change of Personal Details batch job completes running with status CLEANUP
 
   @set_2
   Scenario: Mha sends a Change in Person details file for processing
@@ -18,4 +18,4 @@ Feature: Data processing for Mha Change in Person Details
     | valid | B                         | 19860924             | 20000924                | valid                 |
     | valid | D                         | 20180909             | 20190909                | valid                 |
     When the mha person details job is ran
-    And the Mha Change of Personal Details batch job completes running with status FILE_CHECK_AGAINST_PREP_DATA
+    And the Mha Change of Personal Details batch job completes running with status CLEANUP

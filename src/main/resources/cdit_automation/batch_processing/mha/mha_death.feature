@@ -16,7 +16,7 @@ Feature: Data processing for MHA death broadcast
     | ValidSCDeathCases | ValidPPDeathCases |
     | 1                 | 1                 |
     When the mha death job is ran
-    And the Mha Death batch job completes running with status FILE_CHECK_AGAINST_PREP_DATA
+    And the Mha Death batch job completes running with status CLEANUP
     Then I verify that the people listed in the death file have the correct death dates
 
   @set_3
