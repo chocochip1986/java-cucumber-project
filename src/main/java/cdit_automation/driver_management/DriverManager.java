@@ -86,6 +86,16 @@ public class DriverManager {
         }
     }
 
+    public void setPathToWebDriver() {
+        switch(this.currentWebDriver) {
+            case CHROME:
+                System.setProperty("webdriver.chrome.driver", "webdrivers/chrome/chromedriver");
+                break;
+            default:
+                throw new UnsupportedWebDriverException("No such driver supported! "+this.currentWebDriver.name());
+        }
+    }
+
     private void removeWindowHandleFromList(String windowHandle) {
         listOfCurrentWindowHandles.remove(windowHandle);
     }

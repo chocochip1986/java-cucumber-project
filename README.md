@@ -96,25 +96,25 @@ git clone https://gitlab.cpfb.gds-gov.tech/cdit/cdit-automation.git
 2. In your terminal, go to the cdit-automation project root directory.
 3. Type the following
 ```
-mvn test -Dcucumber.options="src/main/resources/cdit_automation/batch_processing/mha/mha_dual_citizen.feature:7"
+mvn test -Dcucumber.options="src/main/resources/cdit_automation/test.feature:20"
 ```
 ---
 ###Running via Command line with tags
 Run with just 1 tag
 ```
-mvn test -Dcucumber.options="src/main/resources/cdit_automation/batch_processing/mha/mha_dual_citizen.feature:7 --tags @tagname"
+mvn test -Dcucumber.options="src/main/resources/cdit_automation/test.feature:20 --tags @tagname"
 ```
 Run with multiple tags with AND condition
 ```
-mvn test -Dcucumber.options="src/main/resources/cdit_automation/batch_processing/mha/mha_dual_citizen.feature:7 --tags @tagname1 --tags @tagname2"
+mvn test -Dcucumber.options="src/main/resources/cdit_automation/test.feature:20 --tags @tagname1 --tags @tagname2"
 ```
 Run with multiple tags with OR condition (Take note: No spacing between tag names)
 ```
-mvn test -Dcucumber.options="src/main/resources/cdit_automation/batch_processing/mha/mha_dual_citizen.feature:7 --tags @tagname1,@tagname2"
+mvn test -Dcucumber.options="src/main/resources/cdit_automation/test.feature:20 --tags @tagname1,@tagname2"
 ```
 Run with exclude tags
 ```
-mvn test -Dcucumber.options="src/main/resources/cdit_automation/batch_processing/mha/mha_dual_citizen.feature:7 --tags @tagname1 --tags ~@tagname2"
+mvn test -Dcucumber.options="src/main/resources/cdit_automation/test.feature:20 --tags @tagname1 --tags ~@tagname2"
 ```
 ---
 ###Running via an executable jar
@@ -126,24 +126,24 @@ mvn clean package -DskipTests=true
 ```
 Assuming your current working directory is the cdit-automation project root
 ```
-java -cp "${$(pwd)}/deployment/uber-cdit-automation.jar:${$(pwd)}/deployment/*" cdit_automation.RunCucumberTest
+java -cp "${$(pwd)}/deployment/uber-cdit-automation.jar:${$(pwd)}/deployment/lib/*" cdit_automation.RunCucumberTest
 ```
 ###Running via an executable jar with tags
 Run with just 1 tag
 ```
-java -cp "${$(pwd)}/deployment/uber-cdit-automation.jar:${$(pwd)}/deployment/*" cdit_automation.RunCucumberTest --tags @tagname
+java -cp "${$(pwd)}/deployment/uber-cdit-automation.jar:${$(pwd)}/deployment/lib/*" cdit_automation.RunCucumberTest --tags @tagname
 ```
 Run with multiple tags with AND condition
 ```
-java -cp "${$(pwd)}/deployment/uber-cdit-automation.jar:${$(pwd)}/deployment/*" cdit_automation.RunCucumberTest --tags @tagname1 --tags ~@tagname2
+java -cp "${$(pwd)}/deployment/uber-cdit-automation.jar:${$(pwd)}/deployment/lib/*" cdit_automation.RunCucumberTest --tags @tagname1 --tags ~@tagname2
 ```
 Run with multiple tags with OR condition
 ```
-java -cp "${$(pwd)}/deployment/uber-cdit-automation.jar:${$(pwd)}/deployment/*" cdit_automation.RunCucumberTest --tags @tagname1,@tagname2
+java -cp "${$(pwd)}/deployment/uber-cdit-automation.jar:${$(pwd)}/deployment/lib/*" cdit_automation.RunCucumberTest --tags @tagname1,@tagname2
 ```
 Run with exclude tags
 ```
-java -cp "${$(pwd)}/deployment/uber-cdit-automation.jar:${$(pwd)}/deployment/*" cdit_automation.RunCucumberTest --tags ~@tagname
+java -cp "${$(pwd)}/deployment/uber-cdit-automation.jar:${$(pwd)}/deployment/lib/*" cdit_automation.RunCucumberTest --tags ~@tagname
 ```
 ---
 ###Running via bash script

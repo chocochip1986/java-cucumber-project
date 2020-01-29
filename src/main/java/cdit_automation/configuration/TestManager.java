@@ -92,6 +92,7 @@ public class TestManager {
     @Autowired
     public void setWebDriverConfiguration() {
         driverManager.setCurrentWebDriver(currentBrowserType);
+        driverManager.setPathToWebDriver();
     }
 
     @Autowired

@@ -70,6 +70,21 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
+                            <outputDirectory>deployment/webdrivers</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>webdrivers</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-resources-3</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
                             <outputDirectory>deployment/artifacts</outputDirectory>
                             <resources>
                                 <resource>
@@ -99,6 +114,7 @@
                                 <include>Dockerfile</include>
                                 <include>lib</include>
                                 <include>artifacts</include>
+                                <include>webdrivers/</include>
                             </includes>
                             <followSymlinks>false</followSymlinks>
                         </fileset>
@@ -166,11 +182,11 @@
     <packaging>jar</packaging>
 
     <dependencies>
-<!--        <dependency>-->
-<!--            <groupId>com.govtech</groupId>-->
-<!--            <artifactId>datasource-repo</artifactId>-->
-<!--            <version>1.0.28-SNAPSHOT</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.govtech</groupId>-->
+        <!--            <artifactId>datasource-repo</artifactId>-->
+        <!--            <version>1.0.28-SNAPSHOT</version>-->
+        <!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-java -->
         <dependency>
