@@ -148,7 +148,8 @@ public class MhaNoInteractionSteps extends AbstractSteps {
   private void addToListIfNotNull(List<String> writeToFileList, String detailString) {
       
       if (detailString != null) {
-          writeToFileList.add(detailString);
+          writeToFileList.add(
+                  mhaNoInteractionFileDataPrep.emptyStringIfInputIsKeywordBlank(detailString));
       }
   }
 }

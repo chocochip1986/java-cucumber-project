@@ -63,7 +63,7 @@ Feature: Data processing for MHA no interaction list (NIL)
       |nric         |valid_from_date   |valid_till_date   |
       |valid        |19901001          |20201230          |
     Given the file have the following footer details:
-      ||
+      |blank    |
     And the MHA no interaction file is created
     When MHA sends the MHA_NO_INTERACTION file to Datasource sftp for processing
     When the MHA no interaction file is ran
@@ -147,7 +147,7 @@ Feature: Data processing for MHA no interaction list (NIL)
   @set_9
   Scenario: Datasource service processes a MHA no interaction list file with empty header provided.
     Given the file have the following header details:
-      ||
+      |blank           |
     Given the file have the following record details:
       |nric         |valid_from_date   |valid_till_date   |
       |valid        |19901001          |20201230          |
@@ -259,7 +259,7 @@ Feature: Data processing for MHA no interaction list (NIL)
       |2019010120190101|
     Given the file have the following record details:
       |nric         |valid_from_date   |valid_till_date   |
-      |blank        |                  |                  |
+      |blank        |blank             |blank             |
     Given the file have the following footer details:
       |000000001|
     And the MHA no interaction file is created

@@ -41,8 +41,8 @@ public class MhaNoInteractionFileDataPrep extends BatchFileDataPrep {
         MhaNoInteractionFileEntry mhaNoInteractionFileEntry =
                 new MhaNoInteractionFileEntry(
                         nricFieldOptions(map.get(FIELD_NRIC)),
-                        map.get(FIELD_VALID_FROM_DATE),
-                        map.get(FIELD_VALID_TILL_DATE));
+                        emptyStringIfInputIsKeywordBlank(map.get(FIELD_VALID_FROM_DATE)),
+                        emptyStringIfInputIsKeywordBlank(map.get(FIELD_VALID_TILL_DATE)));
         
         return mhaNoInteractionFileEntry.toString();
     }
@@ -61,7 +61,16 @@ public class MhaNoInteractionFileDataPrep extends BatchFileDataPrep {
                         .generateNewBiTemporalData(
                                 dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(10))));
     }
-     
+
+    public String emptyStringIfInputIsKeywordBlank(String detailString) {
+        
+        if (BLANK.equalsIgnoreCase(detailString)) {
+            return "";
+        }
+        
+        return detailString;
+    }
+    
     private String nricFieldOptions(String nricOption) {
         
         String nricValue = "";
