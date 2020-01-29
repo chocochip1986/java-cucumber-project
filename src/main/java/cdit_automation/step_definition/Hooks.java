@@ -1,11 +1,11 @@
 package cdit_automation.step_definition;
 
 import cdit_automation.utilities.Timer;
-import io.cucumber.core.api.Scenario;
 import io.cucumber.java.After;
 import io.cucumber.java.AfterStep;
 import io.cucumber.java.Before;
 import io.cucumber.java.BeforeStep;
+import io.cucumber.java.Scenario;
 import org.junit.Ignore;
 
 @Ignore

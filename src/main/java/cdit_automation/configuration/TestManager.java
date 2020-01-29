@@ -5,7 +5,7 @@ import cdit_automation.enums.BrowserTypeEnums;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.exceptions.UnsupportedBrowserException;
 import cdit_automation.page_navigation.PageUtils;
-import io.cucumber.core.api.Scenario;
+import io.cucumber.java.Scenario;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

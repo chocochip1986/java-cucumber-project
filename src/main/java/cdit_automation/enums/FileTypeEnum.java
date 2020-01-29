@@ -26,4 +26,13 @@ public enum FileTypeEnum {
     FileTypeEnum(String value) {
         this.value = value;
     }
+
+    public static FileTypeEnum fromString(String name) {
+        for (FileTypeEnum enumVal : FileTypeEnum.values()) {
+            if (enumVal.getValue().equals(name)) {
+                return enumVal;
+            }
+        }
+        return null;
+    }
 }
