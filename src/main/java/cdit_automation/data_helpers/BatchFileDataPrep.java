@@ -3,6 +3,7 @@ package cdit_automation.data_helpers;
 import cdit_automation.constants.TestConstants;
 import cdit_automation.data_helpers.factories.PersonFactory;
 import cdit_automation.data_setup.Phaker;
+import cdit_automation.models.Batch;
 import cdit_automation.repositories.BatchRepo;
 import cdit_automation.repositories.CeasedCitizenRepo;
 import cdit_automation.repositories.NationalityRepo;
@@ -13,7 +14,9 @@ import cdit_automation.utilities.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nullable;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,5 +69,14 @@ public class BatchFileDataPrep {
 
     public String generateDoubleHeader() {
         return generateDoubleHeader(null, null);
+    }
+
+    public Batch generateAndSaveBatch() {
+        
+        Batch batch = new Batch();
+        batch.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
+        batchRepo.save(batch);
+        
+        return batch;
     }
 }

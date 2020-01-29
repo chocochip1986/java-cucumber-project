@@ -179,7 +179,7 @@ public class Phaker {
 
     public static String invalidNric() {
         String validNric = nric();
-        char checksum = validNric.toCharArray()[validNric.length()];
+        char checksum = validNric.toCharArray()[validNric.length()-1];
         return validNric.replace(checksum, (char)((checksum+1 - 'A') % 26 + 'A'));
     }
 

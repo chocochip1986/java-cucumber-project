@@ -1,26 +1,26 @@
 package cdit_automation.step_definition;
 
 import cdit_automation.asserts.Assert;
-import cdit_automation.data_setup.Phaker;
-import cdit_automation.enums.CeasedCitizenNationalityEnum;
-import cdit_automation.enums.CeasedCitizenNricCancelledStatusEnum;
 import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.enums.NationalityEnum;
-import cdit_automation.models.*;
+import cdit_automation.models.CeasedCitizen;
+import cdit_automation.models.FileDetail;
+import cdit_automation.models.Nationality;
+import cdit_automation.models.PersonDetail;
+import cdit_automation.models.PersonId;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
 
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Ignore
@@ -180,30 +180,5 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
                   + actualValidFrom
                   + " ]");
         });
-  }
-
-  @And("I verify that the following error message appeared:")
-  public void iVerifyThatTheFollowingErrorMessageAppeared(DataTable table) {
-    Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(testContext.get("fileReceived"));
-    List<String> errorMessages =
-        errorMessageRepo.findByBatch(batch).stream()
-            .map(ErrorMessage::getMessage)
-            .collect(Collectors.toList());
-    table
-        .asMaps(String.class, String.class)
-        .forEach(
-            m -> {
-              int expectedMessageCount = parseStringSize((String) m.get("Count"));
-              String expectedErrorMessage = m.get("Message").toString();
-              Assert.assertEquals(
-                  (long) expectedMessageCount,
-                  errorMessages.stream()
-                      .filter(z -> z.equalsIgnoreCase(expectedErrorMessage))
-                      .count(),
-                  "Unexpected repetition of [ " + expectedErrorMessage + " ] error message");
-              errorMessages.removeIf(e -> e.equalsIgnoreCase(expectedErrorMessage));
-            });
-
-    Assert.assertEquals(Collections.EMPTY_LIST, errorMessages, "Unexpected error message found!");
   }
 }

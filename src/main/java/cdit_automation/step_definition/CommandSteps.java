@@ -50,6 +50,12 @@ public class CommandSteps extends AbstractSteps {
         trigger();
     }
 
+    @When("the MHA no interaction file is ran")
+    public void theMhaNoInteractionFileIsRan() {
+        log.info("Triggering MHA no interaction batch job to run");
+        trigger();
+    }
+
     @When("^Datasource is triggered to generate the IRAS AI Bulk file$")
     public void datasourceIsTriggeredToGenerateTheIRASAIBulkFile() {
         Path filePath = Paths.get(testManager.getProjectRoot().toString(), "src", "main", "resources", "artifacts");
@@ -77,7 +83,7 @@ public class CommandSteps extends AbstractSteps {
         testContext.set("fileReceived", batchFileCreator.replaceFile(fileDetail, fileTypeEnum.getValue().toLowerCase()));
     }
 
-    @When("^MHA sends the {fileType} file to Datasource sftp for processing$")
+    @When("^MHA sends the (MHA_BULK_CITIZEN|MHA_NO_INTERACTION) file to Datasource sftp for processing$")
     public void mhaSendsTheDeath_dateFileToDatasourceSftpForProcessing(FileTypeEnum fileTypeEnum) {
         if ( testManager.getTestEnvironment().equals(TestEnv.Env.LOCAL) ) {
             FileDetail fileDetail = fileDetailRepo.findByFileEnum(fileTypeEnum);

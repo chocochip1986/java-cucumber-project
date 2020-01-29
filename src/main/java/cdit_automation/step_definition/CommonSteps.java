@@ -1,6 +1,5 @@
 package cdit_automation.step_definition;
 
-import cdit_automation.api_helpers.ApiHelper;
 import cdit_automation.asserts.Assert;
 import cdit_automation.aws.modules.Slack;
 import cdit_automation.configuration.TestEnv;
@@ -9,12 +8,15 @@ import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.Batch;
 import cdit_automation.models.ErrorMessage;
 import cdit_automation.models.FileReceived;
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Ignore
@@ -65,5 +67,32 @@ public class CommonSteps extends AbstractSteps {
         List<ErrorMessage> errorMessage = errorMessageRepo.findByBatch(batch);
 
         Assert.assertEquals(true, errorMessage.stream().filter(errMsg -> errMsg.getMessage().equals(errorMsg)).findFirst().isPresent(), "No such error message is found for batch: "+batch.getId());
+    }
+
+    @And("I verify that the following error message appeared:")
+    public void iVerifyThatTheFollowingErrorMessageAppeared(DataTable table) {
+        
+        Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(testContext.get("fileReceived"));
+        List<String> errorMessages =
+                errorMessageRepo.findByBatch(batch).stream()
+                        .map(ErrorMessage::getMessage)
+                        .collect(Collectors.toList());
+        
+        List<Map<String, String>> dataMap = table.asMaps(String.class, String.class);
+        dataMap
+                .forEach(
+                        m -> {
+                            int expectedMessageCount = parseStringSize((String) m.get("Count"));
+                            String expectedErrorMessage = m.get("Message").toString();
+                            Assert.assertEquals(
+                                    (long) expectedMessageCount,
+                                    errorMessages.stream()
+                                            .filter(z -> z.equalsIgnoreCase(expectedErrorMessage))
+                                            .count(),
+                                    "Unexpected repetition of [ " + expectedErrorMessage + " ] error message");
+                            errorMessages.removeIf(e -> e.equalsIgnoreCase(expectedErrorMessage));
+                        });
+        
+        Assert.assertEquals(Collections.emptyList(), errorMessages, "Unexpected error message found!");
     }
 }

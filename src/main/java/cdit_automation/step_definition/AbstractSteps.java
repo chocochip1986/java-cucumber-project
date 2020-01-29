@@ -15,6 +15,7 @@ import cdit_automation.data_helpers.MhaDeathDateFileDataPrep;
 import cdit_automation.data_helpers.MhaDualCitizenFileDataPrep;
 import cdit_automation.data_helpers.MhaCeasedCitizenFileDataPrep;
 import cdit_automation.data_helpers.IrasTriMonthlyEgressDataPrep;
+import cdit_automation.data_helpers.MhaNoInteractionFileDataPrep;
 import cdit_automation.data_helpers.factories.PersonFactory;
 import cdit_automation.page_navigation.PageUtils;
 import cdit_automation.repositories.BatchRepo;
@@ -24,12 +25,14 @@ import cdit_automation.repositories.FileDetailRepo;
 import cdit_automation.repositories.FileReceivedRepo;
 import cdit_automation.repositories.IncomingRecordRepo;
 import cdit_automation.repositories.NationalityRepo;
+import cdit_automation.repositories.NoInteractionValidatedRepo;
 import cdit_automation.repositories.PersonDetailRepo;
 import cdit_automation.repositories.PersonIdRepo;
 import cdit_automation.repositories.PersonRepo;
 import cdit_automation.repositories.CeasedCitizenRepo;
 import cdit_automation.repositories.PersonNameRepo;
 import cdit_automation.repositories.IncomeRepo;
+import cdit_automation.repositories.PersonStatusRepo;
 import cdit_automation.utilities.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -62,6 +65,7 @@ public class AbstractSteps {
     @Autowired protected MhaChangePersonDetailsDataPrep mhaChangePersonDetailsDataPrep;
     @Autowired protected MhaCeasedCitizenFileDataPrep mhaCeasedCitizenFileDataPrep;
     @Autowired protected MhaBulkFileDataPrep mhaBulkFileDataPrep;
+    @Autowired protected MhaNoInteractionFileDataPrep mhaNoInteractionFileDataPrep;
     @Autowired protected IrasTriMonthlyEgressDataPrep irasTriMonthlyEgressDataPrep;
 
     //Model Repositories
@@ -78,6 +82,8 @@ public class AbstractSteps {
     @Autowired protected CeasedCitizenRepo ceasedCitizenRepo;
     @Autowired protected PersonNameRepo personNameRepo;
     @Autowired protected IncomeRepo incomeRepo;
+    @Autowired protected PersonStatusRepo personStatusRepo;
+    @Autowired protected NoInteractionValidatedRepo noInteractionValidatedRepo;
     @Autowired AddressJacksonObjectMapper addressJacksonObjectMapper;
 
 
