@@ -7,6 +7,7 @@ import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.FileDetail;
 import cdit_automation.models.FileReceived;
+import io.cucumber.java.ParameterType;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import lombok.extern.slf4j.Slf4j;
@@ -83,7 +84,7 @@ public class CommandSteps extends AbstractSteps {
         testContext.set("fileReceived", batchFileCreator.replaceFile(fileDetail, fileTypeEnum.getValue().toLowerCase()));
     }
 
-    @When("^MHA sends the (MHA_BULK_CITIZEN|MHA_NO_INTERACTION) file to Datasource sftp for processing$")
+    @When("MHA sends the {fileType} file to Datasource sftp for processing")
     public void mhaSendsTheDeath_dateFileToDatasourceSftpForProcessing(FileTypeEnum fileTypeEnum) {
         if ( testManager.getTestEnvironment().equals(TestEnv.Env.LOCAL) ) {
             FileDetail fileDetail = fileDetailRepo.findByFileEnum(fileTypeEnum);
@@ -142,6 +143,11 @@ public class CommandSteps extends AbstractSteps {
         if ( !testContext.contains("fileReceived") ) {
             testContext.set("fileReceived", fileReceived);
         }
+    }
+
+    @ParameterType(name = "fileType", value = "MHA_BULK_CITIZEN|MHA_NEW_CITIZEN|MHA_NO_INTERACTION|MHA_CHANGE_ADDRESS|MHA_DUAL_CITIZEN|MHA_PERSON_DETAIL_CHANGE|MHA_DEATH_DATE|MHA_CEASED_CITIZEN")
+    public FileTypeEnum fileType(String fileType) {
+        return FileTypeEnum.fromString(fileType);
     }
 
     private void trigger() {

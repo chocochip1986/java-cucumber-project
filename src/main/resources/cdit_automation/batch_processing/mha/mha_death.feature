@@ -6,9 +6,9 @@ Feature: Data processing for MHA death broadcast
   @set_1
   Scenario: MHA sends an empty Death file
     Given the mha death file is empty
-#    When MHA sends the MHA_DEATH_DATE file to Datasource sftp for processing
+    When MHA sends the MHA_DEATH_DATE file to Datasource sftp for processing
     When the mha death job is ran
-    And the Mha Death batch job completes running with status FILE_CHECK_AGAINST_PREP_DATA
+    And the Mha Death batch job completes running with status CLEANUP
 
   @set_2
   Scenario: MHA sends a Death file for processing
