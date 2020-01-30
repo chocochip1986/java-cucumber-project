@@ -44,7 +44,6 @@ import cdit_automation.repositories.PersonDetailRepo;
 import cdit_automation.repositories.PersonIdRepo;
 import cdit_automation.repositories.PersonPropertyRepo;
 import cdit_automation.repositories.PersonRepo;
-import cdit_automation.repositories.CeasedCitizenRepo;
 import cdit_automation.repositories.PersonNameRepo;
 import cdit_automation.repositories.IncomeRepo;
 import cdit_automation.repositories.PersonStatusRepo;
