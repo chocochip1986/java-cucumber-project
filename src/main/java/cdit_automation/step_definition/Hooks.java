@@ -8,6 +8,7 @@ import io.cucumber.java.BeforeStep;
 import io.cucumber.java.Scenario;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Ignore
@@ -79,6 +80,15 @@ public class Hooks extends AbstractSteps {
         deathDateValidatedRepo.deleteAllInBatch();
         ceasedCitizenValidatedRepo.deleteAllInBatch();
         nationalityRepo.deleteAllInBatch();
+        personPropertyRepo.deleteAllInBatch();
+        personNameRepo.deleteAllInBatch();
+        personDetailRepo.deleteAllInBatch();
+        propertyRepo.deleteAllInBatch();
+        personRepo.deleteAllInBatch();
+        errorMessageRepo.deleteAllInBatch();
+        incomingRecordRepo.deleteAllInBatch();
+        batchRepo.deleteAllInBatch();
+        fileReceivedRepo.deleteAllInBatch();
         System.out.println("Truncated all Datasource tables...");
     }
 }

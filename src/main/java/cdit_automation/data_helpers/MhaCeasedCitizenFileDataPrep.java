@@ -32,10 +32,10 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
         Stream.concat(scPersonIds.stream(), dcPersonIds.stream())
             .map(PersonId::getNaturalId)
             .collect(Collectors.toList());
-    List<CeasedCitizen> ceasedCitizens =
+    List<CeasedCitizenValidated> ceasedCitizens =
         populateCeasedCitizens(parseStringSize(map.get("CeasedCitizen")), availableNrics);
     List<String> usedNrics =
-        ceasedCitizens.stream().map(CeasedCitizen::getNric).collect(Collectors.toList());
+        ceasedCitizens.stream().map(CeasedCitizenValidated::getNric).collect(Collectors.toList());
     availableNrics.removeIf(usedNrics::contains);
 
     testContext.set("availableNrics", availableNrics);
@@ -49,30 +49,30 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
         testContext.get("availableNrics") == null
             ? new ArrayList<>()
             : testContext.get("availableNrics");
-    List<CeasedCitizen> presentCeasedCitizen =
+    List<CeasedCitizenValidated> presentCeasedCitizen =
         testContext.get("presentCeasedCitizen") == null
             ? new ArrayList<>()
             : testContext.get("presentCeasedCitizen");
 
-    List<CeasedCitizen> citizens =
+    List<CeasedCitizenValidated> citizens =
         getCitizens(parseStringSize(map.get("CeasedCitizen")), availableNrics);
-    List<CeasedCitizen> repeatedCitizens =
+    List<CeasedCitizenValidated> repeatedCitizens =
         getRepeatedCitizens(
             parseStringSize(map.get("RepeatedCeasedCitizen")), presentCeasedCitizen);
-    List<CeasedCitizen> emptyNameCitizens =
+    List<CeasedCitizenValidated> emptyNameCitizens =
         getEmptyNameCitizens(parseStringSize(map.get("EmptyName")));
-    List<CeasedCitizen> renunciationAfterCutOffDateCitizens =
+    List<CeasedCitizenValidated> renunciationAfterCutOffDateCitizens =
         getRenunciationAfterCutOffDateCitizens(
             parseStringSize(map.get("RenunciationDateAfterCutOff")));
-    List<CeasedCitizen> awardedCitizens =
+    List<CeasedCitizenValidated> awardedCitizens =
         getAwardedSCCitizens(parseStringSize(map.get("AwardedSingaporeCitizen")), availableNrics);
-    List<CeasedCitizen> duplicateCitizens =
+    List<CeasedCitizenValidated> duplicateCitizens =
         getDuplicateCitizens(
             parseStringSize(map.get("NumberOfDuplication")),
             Stream.concat(citizens.stream(), repeatedCitizens.stream())
                 .collect(Collectors.toList()));
 
-    List<CeasedCitizen> ceasedCitizens =
+    List<CeasedCitizenValidated> ceasedCitizens =
         Stream.of(
                 citizens,
                 repeatedCitizens,
@@ -84,7 +84,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
             .collect(Collectors.toList());
     testContext.set("ceasedCitizens", ceasedCitizens);
 
-    return ceasedCitizens.stream().map(CeasedCitizen::toString).collect(Collectors.toList());
+    return ceasedCitizens.stream().map(CeasedCitizenValidated::toString).collect(Collectors.toList());
   }
 
   public List<PersonId> populateSCs(int numOfRecords) {
@@ -105,10 +105,10 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
     return result;
   }
 
-  private List<CeasedCitizen> populateCeasedCitizens(int quantity, List<String> nrics) {
+  private List<CeasedCitizenValidated> populateCeasedCitizens(int quantity, List<String> nrics) {
     Random random = new Random();
     List<String> clonedNrics = new ArrayList<>(nrics);
-    List<CeasedCitizen> resultList = new ArrayList<>();
+    List<CeasedCitizenValidated> resultList = new ArrayList<>();
     int iterations = clonedNrics.size() == 0 ? quantity : Math.min(quantity, clonedNrics.size());
 
     Batch b = new Batch();
@@ -123,8 +123,8 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
         clonedNrics.remove(randomIndex);
       }
 
-      CeasedCitizen ceasedCitizen =
-          CeasedCitizen.builder()
+      CeasedCitizenValidated ceasedCitizen =
+          CeasedCitizenValidated.builder()
               .batch(b)
               .name(Phaker.validName())
               .nationality(CeasedCitizenNationalityEnum.BLANK)
@@ -146,7 +146,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
   }
 
   private void updatePersonDetailRecord(
-      Batch batch, CeasedCitizen ceasedCitizen, PersonId personId) {
+          Batch batch, CeasedCitizenValidated ceasedCitizen, PersonId personId) {
     PersonDetail currentPersonDetail = personDetailRepo.findByPerson(personId.getPerson());
     BiTemporalData currentPersonBiTemporalData = currentPersonDetail.getBiTemporalData();
     BusinessTemporalData newCurrentPersonBusinessTemporalData =
@@ -160,7 +160,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
   }
 
   private void generateNewPersonRecord(
-      Batch batch, CeasedCitizen ceasedCitizen, PersonId personId) {
+          Batch batch, CeasedCitizenValidated ceasedCitizen, PersonId personId) {
     PersonDetail currentPersonDetail =
         personDetailRepo.findByPerson(
             personId.getPerson(),
@@ -183,7 +183,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
     personDetailRepo.save(newPersonDetail);
   }
 
-  private void updateNationality(Batch batch, CeasedCitizen ceasedCitizen, PersonId personId) {
+  private void updateNationality(Batch batch, CeasedCitizenValidated ceasedCitizen, PersonId personId) {
     Nationality currentNationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
     BiTemporalData currentNationalityBiTemporalData = currentNationality.getBiTemporalData();
     BusinessTemporalData newCurrentNationalityBusinessTemporalDate =
@@ -198,7 +198,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
   }
 
   private void generateNewNationalityRecord(
-      Batch batch, CeasedCitizen ceasedCitizen, PersonId personId) {
+          Batch batch, CeasedCitizenValidated ceasedCitizen, PersonId personId) {
     Nationality currentNationality =
         nationalityRepo.findNationalityByPerson(
             personId.getPerson(),
@@ -221,9 +221,9 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
     nationalityRepo.save(newNationality);
   }
 
-  private List<CeasedCitizen> getCitizens(int quantity, List<String> nrics) {
+  private List<CeasedCitizenValidated> getCitizens(int quantity, List<String> nrics) {
     List<String> clonedNrics = new ArrayList<>(nrics);
-    List<CeasedCitizen> resultList = new ArrayList<>();
+    List<CeasedCitizenValidated> resultList = new ArrayList<>();
     int iterations = clonedNrics.isEmpty() ? quantity : Math.min(quantity, clonedNrics.size());
     for (int i = 0; i < iterations; i++) {
       String nric = "";
@@ -234,7 +234,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
       }
 
       resultList.add(
-          CeasedCitizen.builder()
+          CeasedCitizenValidated.builder()
               .name(Phaker.validName())
               .nationality(CeasedCitizenNationalityEnum.BLANK)
               .citizenRenunciationDate(dateUtils.daysBeforeToday(15))
@@ -245,14 +245,14 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
     return resultList;
   }
 
-  private List<CeasedCitizen> getRepeatedCitizens(
-      int quantity, List<CeasedCitizen> ceasedCitizens) {
-    List<CeasedCitizen> resultList = new ArrayList<>();
+  private List<CeasedCitizenValidated> getRepeatedCitizens(
+      int quantity, List<CeasedCitizenValidated> ceasedCitizens) {
+    List<CeasedCitizenValidated> resultList = new ArrayList<>();
     int iterations =
         ceasedCitizens.isEmpty() ? quantity : Math.min(quantity, ceasedCitizens.size());
     for (int i = 0; i < iterations; i++) {
       resultList.add(
-          CeasedCitizen.builder()
+          CeasedCitizenValidated.builder()
               .name(ceasedCitizens.get(i).getName())
               .nationality(CeasedCitizenNationalityEnum.BLANK)
               .citizenRenunciationDate(dateUtils.daysBeforeToday(15))
@@ -263,11 +263,11 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
     return resultList;
   }
 
-  private List<CeasedCitizen> getEmptyNameCitizens(int numOfRecords) {
-    List<CeasedCitizen> resultList = new ArrayList<>();
+  private List<CeasedCitizenValidated> getEmptyNameCitizens(int numOfRecords) {
+    List<CeasedCitizenValidated> resultList = new ArrayList<>();
     for (int i = 0; i < numOfRecords; i++) {
       resultList.add(
-          CeasedCitizen.builder()
+          CeasedCitizenValidated.builder()
               .name("")
               .nric(Phaker.validNric())
               .nationality(CeasedCitizenNationalityEnum.BLANK)
@@ -278,11 +278,11 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
     return resultList;
   }
 
-  private List<CeasedCitizen> getRenunciationAfterCutOffDateCitizens(int numOfRecords) {
-    List<CeasedCitizen> resultList = new ArrayList<>();
+  private List<CeasedCitizenValidated> getRenunciationAfterCutOffDateCitizens(int numOfRecords) {
+    List<CeasedCitizenValidated> resultList = new ArrayList<>();
     for (int i = 0; i < numOfRecords; i++) {
       resultList.add(
-          CeasedCitizen.builder()
+          CeasedCitizenValidated.builder()
               .name(Phaker.validName())
               .nric(Phaker.validNric())
               .nationality(CeasedCitizenNationalityEnum.BLANK)
@@ -293,8 +293,8 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
     return resultList;
   }
 
-  private List<CeasedCitizen> getAwardedSCCitizens(int numOfRecords, List<String> nrics) {
-    List<CeasedCitizen> resultList = new ArrayList<>();
+  private List<CeasedCitizenValidated> getAwardedSCCitizens(int numOfRecords, List<String> nrics) {
+    List<CeasedCitizenValidated> resultList = new ArrayList<>();
     List<String> clonedNrics = new ArrayList<>(nrics);
     int iterations = nrics.size() == 0 ? numOfRecords : Math.min(numOfRecords, nrics.size());
     for (int i = 0; i < iterations; i++) {
@@ -305,7 +305,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
         clonedNrics.remove(randomIndex);
       }
       resultList.add(
-          CeasedCitizen.builder()
+          CeasedCitizenValidated.builder()
               .name(Phaker.validName())
               .nric(nric.isEmpty() ? Phaker.validNric() : nric)
               .nationality(CeasedCitizenNationalityEnum.SG)
@@ -316,9 +316,9 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
     return resultList;
   }
 
-  private List<CeasedCitizen> getDuplicateCitizens(
-      int numberOfDuplication, List<CeasedCitizen> citizens) {
-    List<CeasedCitizen> results = new ArrayList<>();
+  private List<CeasedCitizenValidated> getDuplicateCitizens(
+      int numberOfDuplication, List<CeasedCitizenValidated> citizens) {
+    List<CeasedCitizenValidated> results = new ArrayList<>();
     if (numberOfDuplication != 0) {
       citizens.forEach(c -> results.addAll(Collections.nCopies(numberOfDuplication - 1, c)));
     }

@@ -44,11 +44,13 @@ import cdit_automation.repositories.OldMhaAddressRepo;
 import cdit_automation.repositories.OldNcaAddressRepo;
 import cdit_automation.repositories.PersonDetailRepo;
 import cdit_automation.repositories.PersonIdRepo;
+import cdit_automation.repositories.PersonPropertyRepo;
 import cdit_automation.repositories.PersonRepo;
 import cdit_automation.repositories.CeasedCitizenRepo;
 import cdit_automation.repositories.PersonNameRepo;
 import cdit_automation.repositories.IncomeRepo;
 import cdit_automation.repositories.PersonStatusRepo;
+import cdit_automation.repositories.PropertyRepo;
 import cdit_automation.utilities.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -90,29 +92,33 @@ public class AbstractSteps {
     @Autowired protected FileDetailRepo fileDetailRepo;
     @Autowired protected IncomingRecordRepo incomingRecordRepo;
     @Autowired protected NationalityRepo nationalityRepo;
-    @Autowired protected PersonRepo personRepo;
     @Autowired protected ErrorMessageRepo errorMessageRepo;
+    @Autowired protected PersonRepo personRepo;
     @Autowired protected PersonIdRepo personIdRepo;
     @Autowired protected PersonDetailRepo personDetailRepo;
-    @Autowired protected DeathDateValidatedRepo deathDateValidatedRepo;
-    @Autowired protected CeasedCitizenRepo ceasedCitizenRepo;
+    @Autowired protected PersonPropertyRepo personPropertyRepo;
+    @Autowired protected PropertyRepo propertyRepo;
     @Autowired protected PersonNameRepo personNameRepo;
-    @Autowired protected IncomeRepo incomeRepo;
     @Autowired protected PersonStatusRepo personStatusRepo;
+    @Autowired protected IncomeRepo incomeRepo;
+    @Autowired protected AnnualValueRepo annualValueRepo;
+
+    @Autowired protected DeathDateValidatedRepo deathDateValidatedRepo;
     @Autowired protected NoInteractionValidatedRepo noInteractionValidatedRepo;
     @Autowired protected BulkCitizenValidatedRepo bulkCitizenValidatedRepo;
     @Autowired protected BulkNcaAddressValidatedRepo bulkNcaAddressValidatedRepo;
     @Autowired protected BulkMhaAddressValidatedRepo bulkMhaAddressValidatedRepo;
     @Autowired protected ChangeAddressValidatedRepo changeAddressValidatedRepo;
+    @Autowired protected DualCitizenValidatedRepo dualCitizenValidatedRepo;
+    @Autowired protected DoubleDateHeaderValidatedRepo doubleDateHeaderValidatedRepo;
+    @Autowired protected CeasedCitizenValidatedRepo ceasedCitizenValidatedRepo;
+    @Autowired protected NewCitizenValidatedRepo newCitizenValidatedRepo;
+
     @Autowired protected OldMhaAddressRepo oldMhaAddressRepo;
     @Autowired protected OldNcaAddressRepo oldNcaAddressRepo;
     @Autowired protected NewMhaAddressRepo newMhaAddressRepo;
     @Autowired protected NewNcaAddressRepo newNcaAddressRepo;
-    @Autowired protected NewCitizenValidatedRepo newCitizenValidatedRepo;
-    @Autowired protected AnnualValueRepo annualValueRepo;
-    @Autowired protected DualCitizenValidatedRepo dualCitizenValidatedRepo;
-    @Autowired protected DoubleDateHeaderValidatedRepo doubleDateHeaderValidatedRepo;
-    @Autowired protected CeasedCitizenValidatedRepo ceasedCitizenValidatedRepo;
+
     @Autowired AddressJacksonObjectMapper addressJacksonObjectMapper;
 
 

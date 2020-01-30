@@ -3,7 +3,7 @@ package cdit_automation.step_definition;
 import cdit_automation.asserts.Assert;
 import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.enums.NationalityEnum;
-import cdit_automation.models.CeasedCitizen;
+import cdit_automation.models.CeasedCitizenValidated;
 import cdit_automation.models.FileDetail;
 import cdit_automation.models.Nationality;
 import cdit_automation.models.PersonDetail;
@@ -55,7 +55,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
   @And("^I verify the the people listed in the file have nationality of (.*)$")
   public void nationalityOfAllPersonShouldChangeToNON_SINGAPORE_CITIZEN(
       NationalityEnum nationalityEnum) {
-    List<CeasedCitizen> ceasedCitizens = testContext.get("ceasedCitizens");
+    List<CeasedCitizenValidated> ceasedCitizens = testContext.get("ceasedCitizens");
     ceasedCitizens.forEach(
         c -> {
           PersonId p = personIdRepo.findByNaturalId(c.getNric());
@@ -72,7 +72,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
 
   @And("I verify the the people listed in the file have nric cancelled status of {int}")
   public void iVerifyTheThePeopleListedInTheFileHaveNRIC_CANCELLED_STATUSOf(int status) {
-    List<CeasedCitizen> ceasedCitizens = testContext.get("ceasedCitizens");
+    List<CeasedCitizenValidated> ceasedCitizens = testContext.get("ceasedCitizens");
     ceasedCitizens.forEach(
         c -> {
           PersonId pi = personIdRepo.findByNaturalId(c.getNric());
@@ -89,7 +89,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
 
   @And("I verify the previous nationality valid till timestamp is the renunciation date at 2359HR")
   public void iVerifyThePreviousNationalityValidTillTimestampIsTheRenunciationDateAtHR() {
-    List<CeasedCitizen> ceasedCitizens = testContext.get("ceasedCitizens");
+    List<CeasedCitizenValidated> ceasedCitizens = testContext.get("ceasedCitizens");
     ceasedCitizens.forEach(
         c -> {
           Date recordValidityDate =
@@ -114,7 +114,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
 
   @And("I verify the supersede nationality valid from timestamp is the day after renunciation date")
   public void iVerifyTheSupersedeNationalityValidFromTimestampIsTheDayAfterRenunciationDate() {
-    List<CeasedCitizen> ceasedCitizens = testContext.get("ceasedCitizens");
+    List<CeasedCitizenValidated> ceasedCitizens = testContext.get("ceasedCitizens");
     ceasedCitizens.forEach(
         c -> {
           Timestamp expectedValidFrom =
@@ -137,7 +137,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
   @And(
       "I verify the previous person detail valid till timestamp is the renunciation date at 2359HR")
   public void iVerifyThePreviousPersonDetailValidTillTimestampIsTheRenunciationDateAtHR() {
-    List<CeasedCitizen> ceasedCitizens = testContext.get("ceasedCitizens");
+    List<CeasedCitizenValidated> ceasedCitizens = testContext.get("ceasedCitizens");
     ceasedCitizens.forEach(
         c -> {
           Date recordValidityDate =
@@ -162,7 +162,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
   @And(
       "I verify the supersede person detail valid from timestamp is the day after renunciation date")
   public void iVerifyTheSupersedePersonDetailValidFromTimestampIsTheDayAfterRenunciationDate() {
-    List<CeasedCitizen> ceasedCitizens = testContext.get("ceasedCitizens");
+    List<CeasedCitizenValidated> ceasedCitizens = testContext.get("ceasedCitizens");
     ceasedCitizens.forEach(
         c -> {
           Timestamp expectedValidFrom =
