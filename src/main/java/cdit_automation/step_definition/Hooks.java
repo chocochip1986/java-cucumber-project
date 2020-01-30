@@ -72,6 +72,13 @@ public class Hooks extends AbstractSteps {
         newNcaAddressRepo.deleteAllInBatch();
         oldMhaAddressRepo.deleteAllInBatch();
         oldNcaAddressRepo.deleteAllInBatch();
+        incomeRepo.deleteAllInBatch();
+        annualValueRepo.deleteAllInBatch();
+        dualCitizenValidatedRepo.deleteAllInBatch();
+        doubleDateHeaderValidatedRepo.deleteAllInBatch();
+        deathDateValidatedRepo.deleteAllInBatch();
+        ceasedCitizenValidatedRepo.deleteAllInBatch();
+        nationalityRepo.deleteAllInBatch();
         System.out.println("Truncated all Datasource tables...");
     }
 }

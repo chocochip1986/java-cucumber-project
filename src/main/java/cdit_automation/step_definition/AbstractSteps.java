@@ -21,12 +21,16 @@ import cdit_automation.models.NewMhaAddress;
 import cdit_automation.models.OldMhaAddress;
 import cdit_automation.models.OldNcaAddress;
 import cdit_automation.page_navigation.PageUtils;
+import cdit_automation.repositories.AnnualValueRepo;
 import cdit_automation.repositories.BatchRepo;
 import cdit_automation.repositories.BulkCitizenValidatedRepo;
 import cdit_automation.repositories.BulkMhaAddressValidatedRepo;
 import cdit_automation.repositories.BulkNcaAddressValidatedRepo;
+import cdit_automation.repositories.CeasedCitizenValidatedRepo;
 import cdit_automation.repositories.ChangeAddressValidatedRepo;
 import cdit_automation.repositories.DeathDateValidatedRepo;
+import cdit_automation.repositories.DoubleDateHeaderValidatedRepo;
+import cdit_automation.repositories.DualCitizenValidatedRepo;
 import cdit_automation.repositories.ErrorMessageRepo;
 import cdit_automation.repositories.FileDetailRepo;
 import cdit_automation.repositories.FileReceivedRepo;
@@ -105,6 +109,10 @@ public class AbstractSteps {
     @Autowired protected NewMhaAddressRepo newMhaAddressRepo;
     @Autowired protected NewNcaAddressRepo newNcaAddressRepo;
     @Autowired protected NewCitizenValidatedRepo newCitizenValidatedRepo;
+    @Autowired protected AnnualValueRepo annualValueRepo;
+    @Autowired protected DualCitizenValidatedRepo dualCitizenValidatedRepo;
+    @Autowired protected DoubleDateHeaderValidatedRepo doubleDateHeaderValidatedRepo;
+    @Autowired protected CeasedCitizenValidatedRepo ceasedCitizenValidatedRepo;
     @Autowired AddressJacksonObjectMapper addressJacksonObjectMapper;
 
 
