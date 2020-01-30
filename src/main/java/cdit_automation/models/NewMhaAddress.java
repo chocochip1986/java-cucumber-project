@@ -2,10 +2,10 @@ package cdit_automation.models;
 
 import cdit_automation.enums.MhaAddressTypeEnum;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,7 +18,7 @@ import javax.validation.constraints.Size;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @Table(name = "new_mha_address_validated")
 public class NewMhaAddress extends AbstractValidated {
     @OneToOne(mappedBy = "newMhaAddress")

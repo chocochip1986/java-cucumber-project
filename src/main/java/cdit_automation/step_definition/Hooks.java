@@ -80,6 +80,7 @@ public class Hooks extends AbstractSteps {
         deathDateValidatedRepo.deleteAllInBatch();
         ceasedCitizenValidatedRepo.deleteAllInBatch();
         nationalityRepo.deleteAllInBatch();
+        personIdRepo.deleteAllInBatch();
         personPropertyRepo.deleteAllInBatch();
         personNameRepo.deleteAllInBatch();
         personDetailRepo.deleteAllInBatch();
