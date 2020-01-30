@@ -19,6 +19,9 @@ import cdit_automation.data_helpers.MhaNoInteractionFileDataPrep;
 import cdit_automation.data_helpers.factories.PersonFactory;
 import cdit_automation.page_navigation.PageUtils;
 import cdit_automation.repositories.BatchRepo;
+import cdit_automation.repositories.BulkCitizenValidatedRepo;
+import cdit_automation.repositories.BulkMhaAddressValidatedRepo;
+import cdit_automation.repositories.BulkNcaAddressValidatedRepo;
 import cdit_automation.repositories.DeathDateValidatedRepo;
 import cdit_automation.repositories.ErrorMessageRepo;
 import cdit_automation.repositories.FileDetailRepo;
@@ -84,6 +87,9 @@ public class AbstractSteps {
     @Autowired protected IncomeRepo incomeRepo;
     @Autowired protected PersonStatusRepo personStatusRepo;
     @Autowired protected NoInteractionValidatedRepo noInteractionValidatedRepo;
+    @Autowired protected BulkCitizenValidatedRepo bulkCitizenValidatedRepo;
+    @Autowired protected BulkNcaAddressValidatedRepo bulkNcaAddressValidatedRepo;
+    @Autowired protected BulkMhaAddressValidatedRepo bulkMhaAddressValidatedRepo;
     @Autowired AddressJacksonObjectMapper addressJacksonObjectMapper;
 
 

@@ -6,8 +6,10 @@ import io.cucumber.java.AfterStep;
 import io.cucumber.java.Before;
 import io.cucumber.java.BeforeStep;
 import io.cucumber.java.Scenario;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
 
+@Slf4j
 @Ignore
 public class Hooks extends AbstractSteps {
 
@@ -17,6 +19,7 @@ public class Hooks extends AbstractSteps {
 
     @Before(order=2)
     public void beforeScenario(Scenario scenario) {
+        truncateAllTables();
         displayScenarioStartMessage(scenario);
     }
 
@@ -56,5 +59,13 @@ public class Hooks extends AbstractSteps {
         System.out.println("======================================================");
         System.out.println("Done - " +scenario.getName()+ " => Status: "+scenario.getStatus());
         System.out.println("======================================================");
+    }
+
+    private void truncateAllTables() {
+        System.out.println("Truncating all Datasource tables...");
+        bulkCitizenValidatedRepo.deleteAllInBatch();
+        bulkMhaAddressValidatedRepo.deleteAllInBatch();
+        bulkNcaAddressValidatedRepo.deleteAllInBatch();
+        System.out.println("Truncated all Datasource tables...");
     }
 }
