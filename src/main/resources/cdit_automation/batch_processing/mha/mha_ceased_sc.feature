@@ -8,7 +8,7 @@ Feature: Data processing for Mha ceased citizenship
     Given the file has the following details:
       | CeasedCitizen |
       | 1             |
-    When the mha ceased sc job is ran
+    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
     Then the Mha Ceased Citizen batch job completes running with status VALIDATED_TO_PREPARED_ERROR
     And I verify that the following error message appeared:
       | Message                   | Count |
@@ -22,7 +22,7 @@ Feature: Data processing for Mha ceased citizenship
     And the file has the following details:
       | RepeatedCeasedCitizen |
       | 1                     |
-    When the mha ceased sc job is ran
+    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
     Then the Mha Ceased Citizen batch job completes running with status VALIDATED_TO_PREPARED_ERROR
     And I verify that the following error message appeared:
       | Message                           | Count |
@@ -36,7 +36,7 @@ Feature: Data processing for Mha ceased citizenship
     And the file has the following details:
       | CeasedCitizen | NumberOfDuplication |
       | 1             | 3                   |
-    When the mha ceased sc job is ran
+    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
     Then the Mha Ceased Citizen batch job completes running with status BULK_CHECK_VALIDATION_ERROR
     And I verify that the following error message appeared:
       | Message                       | Count |
@@ -50,7 +50,7 @@ Feature: Data processing for Mha ceased citizenship
     And the file has the following details:
       | RepeatedCeasedCitizen | NumberOfDuplication |
       | 1                     | 2                   |
-    When the mha ceased sc job is ran
+    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
     Then the Mha Ceased Citizen batch job completes running with status VALIDATED_TO_PREPARED_ERROR
     And I verify that the following error message appeared:
       | Message                           | Count |
@@ -62,7 +62,7 @@ Feature: Data processing for Mha ceased citizenship
     Given the file has the following details:
       | EmptyName |
       | 1         |
-    When the mha ceased sc job is ran
+    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
     Then the Mha Ceased Citizen batch job completes running with status RAW_DATA_ERROR
     And I verify that the following error message appeared:
       | Message       | Count |
@@ -73,7 +73,7 @@ Feature: Data processing for Mha ceased citizenship
     Given the file has the following details:
       | RenunciationDateAfterCutOff |
       | 2                           |
-    When the mha ceased sc job is ran
+    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
     Then the Mha Ceased Citizen batch job completes running with status VALIDATED_TO_PREPARED_ERROR
     And I verify that the following error message appeared:
       | Message                                       | Count |
@@ -87,7 +87,7 @@ Feature: Data processing for Mha ceased citizenship
     And the file has the following details:
       | CeasedCitizen |
       | 2             |
-    When the mha ceased sc job is ran
+    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
     Then the Mha Ceased Citizen batch job completes running with status CLEANUP
     And I verify the the people listed in the file have nationality of NON_SINGAPORE_CITIZEN
     And I verify the previous nationality valid till timestamp is the renunciation date at 2359HR
@@ -108,7 +108,7 @@ Feature: Data processing for Mha ceased citizenship
     And the file has the following details:
       | AwardedSingaporeCitizen |
       | 1                       |
-    When the mha ceased sc job is ran
+    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
     Then the Mha Ceased Citizen batch job completes running with status CLEANUP
     And I verify the the people listed in the file have nationality of SINGAPORE_CITIZEN
     And I verify the the people listed in the file have nric cancelled status of 0
@@ -118,5 +118,5 @@ Feature: Data processing for Mha ceased citizenship
     Given the file has the following details:
       | CeasedCitizen |
       | 0             |
-    When the mha ceased sc job is ran
+    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
     Then the Mha Ceased Citizen batch job completes running with status CLEANUP
