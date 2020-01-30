@@ -17,4 +17,13 @@ public enum AgencyEnum {
     public String getValue() {
         return this.value;
     }
+
+    public static AgencyEnum fromString(String name) {
+        for (AgencyEnum enumVal : AgencyEnum.values()) {
+            if (enumVal.getValue().equals(name)) {
+                return enumVal;
+            }
+        }
+        return null;
+    }
 }

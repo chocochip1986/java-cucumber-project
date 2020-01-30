@@ -22,9 +22,11 @@ public enum FileTypeEnum {
     MHA_CEASED_CITIZEN("MHA_CEASED_CITIZEN");
 
     private String value;
+    private String humanized_value;
 
     FileTypeEnum(String value) {
         this.value = value;
+        this.humanized_value = value.replace("_", " ");
     }
 
     public static FileTypeEnum fromString(String name) {

@@ -14,5 +14,5 @@ Feature: Data processing for MHA bulk citizen file
 #    | RandomPeople,Quantity:100000                                                                                                                                                                          |
     And the mha bulk file is created
     When MHA sends the MHA_BULK_CITIZEN file to Datasource sftp for processing
-    When the mha bulk file is ran
+#    When the mha bulk file is ran
     And the Mha Bulk batch job completes running with status CLEANUP

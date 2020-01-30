@@ -48,6 +48,44 @@ public class PersonFactory extends AbstractFactory {
                 return this.identifier;
             }
         }
+
+        public void setNationalityAndIdentifier(NationalityEnum nationality, String identifier) {
+            if ( nationality == null && identifier != null ) {
+                this.identifier = identifier;
+                decideNationalityBasedOnIdentifier();
+            }
+            else if ( nationality != null && identifier == null ) {
+                this.nationality = nationality;
+                decideIdentifierBasedOnNationality();
+            }
+            else if ( nationality != null && identifier != null ) {
+                this.nationality = nationality;
+                this.identifier = identifier;
+            }
+        }
+
+        private void decideNationalityBasedOnIdentifier() {
+            if ( this.identifier.matches("^[F|G][0-9]{7}[A-Z]$") && !this.nationality.equals(NationalityEnum.NON_SINGAPORE_CITIZEN) ) {
+                this.nationality = NationalityEnum.NON_SINGAPORE_CITIZEN;
+            }
+            if ( !(this.nationality.equals(NationalityEnum.SINGAPORE_CITIZEN) ||
+                    this.nationality.equals(NationalityEnum.PERMANENT_RESIDENT) ||
+                    this.nationality.equals(NationalityEnum.DUAL_CITIZENSHIP)) &&
+                    this.identifier.matches("^[S|T][0-9]{7}[A-Z]$") ) {
+                this.nationality = NationalityEnum.SINGAPORE_CITIZEN;
+            }
+        }
+
+        private void decideIdentifierBasedOnNationality() {
+            if ( this.nationality.equals(NationalityEnum.NON_SINGAPORE_CITIZEN) ) {
+                this.identifier = Phaker.validFin();
+            }
+            if ( this.nationality.equals(NationalityEnum.SINGAPORE_CITIZEN) ||
+                    this.nationality.equals(NationalityEnum.PERMANENT_RESIDENT) ||
+                    this.nationality.equals(NationalityEnum.DUAL_CITIZENSHIP) ) {
+                this.identifier = Phaker.validNric();
+            }
+        }
     }
 
     public PersonId createNewPersonId(String residentialStatus) {
@@ -129,12 +167,8 @@ public class PersonFactory extends AbstractFactory {
         if ( gender != null ) {
             personOptions.setGender(gender);
         }
-        if ( identifier != null ) {
-            personOptions.setIdentifier(identifier);
-        }
-        if ( nationalityEnum != null ) {
-            personOptions.setNationality(nationalityEnum);
-        }
+        personOptions.setNationalityAndIdentifier(nationalityEnum, identifier);
+
         return createPerson(personOptions);
     }
 

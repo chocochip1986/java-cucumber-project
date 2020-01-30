@@ -7,7 +7,6 @@ Feature: Data processing for MHA death broadcast
   Scenario: MHA sends an empty Death file
     Given the mha death file is empty
     When MHA sends the MHA_DEATH_DATE file to Datasource sftp for processing
-    When the mha death job is ran
     And the Mha Death batch job completes running with status CLEANUP
 
   @set_2
@@ -15,7 +14,7 @@ Feature: Data processing for MHA death broadcast
     Given the mha death file has the following details:
     | ValidSCDeathCases | ValidPPDeathCases |
     | 1                 | 1                 |
-    When the mha death job is ran
+    When MHA sends the MHA_DEATH_DATE file to Datasource sftp for processing
     And the Mha Death batch job completes running with status CLEANUP
     Then I verify that the people listed in the death file have the correct death dates
 
@@ -24,7 +23,7 @@ Feature: Data processing for MHA death broadcast
     Given the mha death file has the following details:
       | ValidSCDeathCases | DeathDateEarlierThanBirthDate |
       | 1                 | 1                             |
-    When the mha death job is ran
+    When MHA sends the MHA_DEATH_DATE file to Datasource sftp for processing
     And the Mha Death batch job completes running with status VALIDATED_TO_PREPARED_ERROR
     Then I verify that there is an error message for invalid death dates
 
@@ -33,7 +32,7 @@ Feature: Data processing for MHA death broadcast
     Given the mha death file has the following details:
     | ValidFRDeathCases |
     | 1                 |
-    When the mha death job is ran
+    When MHA sends the MHA_DEATH_DATE file to Datasource sftp for processing
     And the Mha Death batch job completes running with status RAW_DATA_ERROR
     Then I verify that there is an error message for invalid nric
 
@@ -42,7 +41,7 @@ Feature: Data processing for MHA death broadcast
     Given the mha death file has the following details:
       | PplWhoAreAlreadyDead |
       | 1                    |
-    When the mha death job is ran
+    When MHA sends the MHA_DEATH_DATE file to Datasource sftp for processing
     And the Mha Death batch job completes running with status VALIDATED_TO_PREPARED_ERROR
     Then I verify that there is an error message for existing death case
 
@@ -51,6 +50,6 @@ Feature: Data processing for MHA death broadcast
     Given the mha death file has the following details:
       | PplWithFutureDeathDates |
       | 1                       |
-    When the mha death job is ran
+    When MHA sends the MHA_DEATH_DATE file to Datasource sftp for processing
     And the Mha Death batch job completes running with status VALIDATED_TO_PREPARED_ERROR
     Then I verify that there is an error message for future death date case

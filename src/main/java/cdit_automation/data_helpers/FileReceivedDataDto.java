@@ -1,7 +1,9 @@
 package cdit_automation.data_helpers;
 
+import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.FileStatusEnum;
 import cdit_automation.exceptions.TestFailException;
+import cdit_automation.models.FileDetail;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +15,9 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import javax.validation.constraints.NotNull;
+import java.io.File;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
@@ -85,5 +89,24 @@ public class FileReceivedDataDto {
             throw new TestFailException("Unable to create http request body!");
         }
         return httpBody;
+    }
+
+    public static FileReceivedDataDto createOk(FileDetail fileDetail, File file, Timestamp timestamp) {
+        Timestamp receivedTimestamp = timestamp;
+        if ( receivedTimestamp == null ) {
+            receivedTimestamp = Timestamp.valueOf(LocalDate.now().atStartOfDay().withNano(0));
+        }
+        return create(fileDetail, file, receivedTimestamp, FileStatusEnum.OK);
+    }
+
+    public static FileReceivedDataDto create(FileDetail fileDetail, File file, Timestamp receivedTimestamp, FileStatusEnum fileStatusEnum) {
+        return FileReceivedDataDto.builder()
+                .fileDetailId(fileDetail.getId())
+                .filePath(file.getAbsolutePath())
+                .fileSize(10.0)
+                .hash(Phaker.fakeMd5())
+                .receivedTimestamp(receivedTimestamp)
+                .fileStatusEnum(fileStatusEnum)
+                .build();
     }
 }

@@ -1,6 +1,6 @@
 package cdit_automation.aws.modules;
 
-import cdit_automation.step_definition.AwsSteps;
+import cdit_automation.enums.FileTypeEnum;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClientBuilder;
@@ -16,8 +16,6 @@ import javax.validation.constraints.NotNull;
 @Component
 public class Slack {
 
-    public final String MHA_BULK_FILE_VERIFICATION_MSG = "Running MHA Bulk Citizen File";
-
     public enum Level {
         NEUTRAL,
         SUCCESS,
@@ -29,5 +27,9 @@ public class Slack {
         AmazonSNS sns = AmazonSNSClientBuilder.standard().withRegion(Regions.AP_SOUTHEAST_1).build();
         final PublishRequest publishRequest = new PublishRequest(topicArn, msg);
         sns.publish(publishRequest);
+    }
+
+    public String slackMessage(FileTypeEnum fileTypeEnum) {
+        return "Running "+fileTypeEnum.getValue().replace("_", " ")+" File";
     }
 }

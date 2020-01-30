@@ -84,15 +84,18 @@ public class CommandSteps extends AbstractSteps {
         testContext.set("fileReceived", batchFileCreator.replaceFile(fileDetail, fileTypeEnum.getValue().toLowerCase()));
     }
 
-    @When("MHA sends the {fileType} file to Datasource sftp for processing")
-    public void mhaSendsTheDeath_dateFileToDatasourceSftpForProcessing(FileTypeEnum fileTypeEnum) {
+    @When("^(?:MHA|IRAS) sends the (MHA_BULK_CITIZEN|MHA_NEW_CITIZEN|MHA_NO_INTERACTION|MHA_CHANGE_ADDRESS|MHA_DUAL_CITIZEN|MHA_PERSON_DETAIL_CHANGE|MHA_DEATH_DATE|MHA_CEASED_CITIZEN) file to Datasource sftp for processing$")
+    public void mhaSendsTheFileToDatasourceSftpForProcessing(FileTypeEnum fileTypeEnum) {
         if ( testManager.getTestEnvironment().equals(TestEnv.Env.LOCAL) ) {
             FileDetail fileDetail = fileDetailRepo.findByFileEnum(fileTypeEnum);
-            FileReceived fileReceived = batchFileCreator.createFileReceived(fileDetail, fileTypeEnum.getValue().toLowerCase());
+            FileReceived fileReceived = batchFileCreator.createFileReceived(fileDetail, fileTypeEnum.getValue().toLowerCase(), testContext.get("receivedTimestamp"));
             testContext.set("fileReceived", fileReceived);
+
+            log.info("Triggering "+fileTypeEnum.getHumanized_value()+" job is run");
+            trigger();
         } else {
             //Fire call to sftp, for testing purposes only
-            slack.sendToSlack(testManager.testEnv.getTopicArn(), slack.MHA_BULK_FILE_VERIFICATION_MSG, Slack.Level.NEUTRAL);
+            slack.sendToSlack(testManager.testEnv.getTopicArn(), slack.slackMessage(fileTypeEnum), Slack.Level.NEUTRAL);
             log.info("Uploading file "+fileTypeEnum.getValue().toLowerCase()+" at "+batchFileDataWriter.getDestionationFile().getAbsolutePath()+" to S3...");
             s3.uploadToS3(batchFileDataWriter.getDestionationFile(), s3.MHA_READY_BUCKET_PATH);
 

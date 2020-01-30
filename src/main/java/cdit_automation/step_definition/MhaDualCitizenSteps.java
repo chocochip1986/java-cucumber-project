@@ -1,10 +1,8 @@
 package cdit_automation.step_definition;
 
 import cdit_automation.asserts.Assert;
-import cdit_automation.constants.ErrorMessageConstants;
 import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.enums.NationalityEnum;
-import cdit_automation.enums.PersonIdTypeEnum;
 import cdit_automation.exceptions.TestDataSetupErrorException;
 import cdit_automation.models.Batch;
 import cdit_automation.models.ErrorMessage;
@@ -22,14 +20,11 @@ import org.junit.Ignore;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Slf4j
 @Ignore
@@ -166,7 +161,9 @@ public class MhaDualCitizenSteps extends AbstractSteps {
 
         List<ErrorMessage> errorMessages = errorMessageRepo.findByBatch(batch);
 
-        Assert.assertEquals(true, errorMessages.stream().anyMatch(errorMessage -> errorMessage.getMessage().equals(ErrorMessageConstants.INVALID_NRIC_FORMAT)), "No invalid nric error message found!");
+        Assert.assertEquals(true,
+                errorMessages.stream().anyMatch(errorMessage -> errorMessage.getMessage().matches(".*Must be valid NRIC in format.*")),
+                "No invalid nric error message found!");
     }
 
     @Given("the mha dual citizen file have duplicate nric record")

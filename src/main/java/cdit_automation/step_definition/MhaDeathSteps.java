@@ -7,7 +7,6 @@ import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.models.Batch;
 import cdit_automation.models.DeathDateValidated;
 import cdit_automation.models.ErrorMessage;
-import cdit_automation.models.FileDetail;
 import cdit_automation.models.FileReceived;
 import cdit_automation.models.PersonDetail;
 import cdit_automation.models.PersonId;
@@ -19,6 +18,7 @@ import org.assertj.core.util.Lists;
 import org.junit.Ignore;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,12 +44,10 @@ public class MhaDeathSteps extends AbstractSteps {
 
     @Given("^the mha death file has the following details:$")
     public void theMhaDeathFileHasTheFollowingDetails(DataTable table) throws IOException {
-        FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_DEATH_DATE);
-        FileReceived fileReceived = batchFileCreator.replaceFile(fileDetail, FileTypeEnum.MHA_DEATH_DATE.getValue().toLowerCase());
-        testContext.set("fileReceived", fileReceived);
+        Timestamp receivedTimestamp = dateUtils.beginningOfDayToTimestamp(dateUtils.now());
 
         List<Map<String, String>> list = table.asMaps(String.class, String.class);
-        List<String> body = mhaDeathDateFileDataPrep.createBodyOfTestScenarios(list, testContext, fileReceived);
+        List<String> body = mhaDeathDateFileDataPrep.createBodyOfTestScenarios(list, testContext, receivedTimestamp);
 
         List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();
 
@@ -59,6 +57,7 @@ public class MhaDeathSteps extends AbstractSteps {
 
         batchFileCreator.writeToFile(FileTypeEnum.MHA_DEATH_DATE.getValue().toLowerCase(), listOfIdentifiersToWriteToFile);
 
+        testContext.set("receivedTimestamp", receivedTimestamp);
         testContext.set("listOfIdentifiersToWriteToFile", listOfIdentifiersToWriteToFile);
     }
 

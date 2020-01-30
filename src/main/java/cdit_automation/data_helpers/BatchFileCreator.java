@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Supplier;
@@ -47,17 +48,10 @@ public class BatchFileCreator extends AbstractFileCreator {
         return fileReceived;
     }
 
-    public FileReceived createFileReceived(FileDetail fileDetail, String fileName) {
+    public FileReceived createFileReceived(FileDetail fileDetail, String fileName, Timestamp timestamp) {
         File file = FileUtils.findOrCreate(testManager.getOutputArtifactsDir()+File.separator+fileName+".txt");
 
-        FileReceivedDataDto fileReceivedDataDto = FileReceivedDataDto.builder()
-                .fileDetailId(fileDetail.getId())
-                .filePath(file.getAbsolutePath())
-                .fileSize(10.0)
-                .hash(Phaker.fakeMd5())
-                .receivedTimestamp(dateUtils.beginningOfDayToTimestamp(dateUtils.now()))
-                .fileStatusEnum(FileStatusEnum.OK)
-                .build();
+        FileReceivedDataDto fileReceivedDataDto = FileReceivedDataDto.createOk(fileDetail, file, timestamp);
 
         apiHelper.sendCallToCreateFileReceivedRecord(fileReceivedDataDto);
 
