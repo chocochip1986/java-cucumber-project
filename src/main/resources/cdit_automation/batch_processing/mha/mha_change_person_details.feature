@@ -6,7 +6,7 @@ Feature: Data processing for Mha Change in Person Details
   @set_1
   Scenario: Mha sends an empty file for Change in Person details
     Given the mha change in person details file is empty
-    When the mha person details job is ran
+    When MHA sends the MHA_PERSON_DETAIL_CHANGE file to Datasource sftp for processing
     And the Mha Change of Personal Details batch job completes running with status CLEANUP
 
   @set_2
@@ -17,5 +17,5 @@ Feature: Data processing for Mha Change in Person Details
     | valid | N                         | Chao Ah Beng         | Tan Ah Beng             | valid                 |
     | valid | B                         | 19860924             | 20000924                | valid                 |
     | valid | D                         | 20180909             | 20190909                | valid                 |
-    When the mha person details job is ran
+    When MHA sends the MHA_PERSON_DETAIL_CHANGE file to Datasource sftp for processing
     And the Mha Change of Personal Details batch job completes running with status CLEANUP
