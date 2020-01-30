@@ -149,9 +149,9 @@ public class CommandSteps extends AbstractSteps {
     }
 
     //As of cucumber 5.1.0, this is not fully supported by Intellij's cucumber plugin, hence steps which are using this will be marked by Intellij as undefined.
-    //However, the test suite is runs fine without syntax error.
-    //This may make it difficult and confusing for anyone to using the test suite, as it will come across as a false negative. So for the mean time, please refrain from using this.
-    //As example, your step defintion has to be as such
+    //However, the test suite runs fine without syntax error.
+    //This may make it difficult and confusing for anyone working on the test suite, as it will come across as a false negative. So for the mean time, please refrain from using this.
+    //As an example, your step definition has to be as such:
     //@When("the {fileType} is wicked")
     //You can't declare this in a parent step and use this in a child step. It does not work.
     //Secondly, when you use such a regex, you cannot have other forms of regular expressions in the same step like so:
