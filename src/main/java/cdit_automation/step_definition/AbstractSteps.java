@@ -17,9 +17,6 @@ import cdit_automation.data_helpers.MhaCeasedCitizenFileDataPrep;
 import cdit_automation.data_helpers.IrasTriMonthlyEgressDataPrep;
 import cdit_automation.data_helpers.MhaNoInteractionFileDataPrep;
 import cdit_automation.data_helpers.factories.PersonFactory;
-import cdit_automation.models.NewMhaAddress;
-import cdit_automation.models.OldMhaAddress;
-import cdit_automation.models.OldNcaAddress;
 import cdit_automation.page_navigation.PageUtils;
 import cdit_automation.repositories.AnnualValueRepo;
 import cdit_automation.repositories.BatchRepo;
@@ -42,6 +39,7 @@ import cdit_automation.repositories.NewNcaAddressRepo;
 import cdit_automation.repositories.NoInteractionValidatedRepo;
 import cdit_automation.repositories.OldMhaAddressRepo;
 import cdit_automation.repositories.OldNcaAddressRepo;
+import cdit_automation.repositories.PersonDetailChangeValidatedRepo;
 import cdit_automation.repositories.PersonDetailRepo;
 import cdit_automation.repositories.PersonIdRepo;
 import cdit_automation.repositories.PersonPropertyRepo;
@@ -113,6 +111,7 @@ public class AbstractSteps {
     @Autowired protected DoubleDateHeaderValidatedRepo doubleDateHeaderValidatedRepo;
     @Autowired protected CeasedCitizenValidatedRepo ceasedCitizenValidatedRepo;
     @Autowired protected NewCitizenValidatedRepo newCitizenValidatedRepo;
+    @Autowired protected PersonDetailChangeValidatedRepo personDetailChangeValidatedRepo;
 
     @Autowired protected OldMhaAddressRepo oldMhaAddressRepo;
     @Autowired protected OldNcaAddressRepo oldNcaAddressRepo;
