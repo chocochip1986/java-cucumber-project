@@ -2,11 +2,11 @@ package cdit_automation.models;
 
 import cdit_automation.enums.PersonDetailDataItemChangedEnum;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,7 +21,7 @@ import java.time.LocalDate;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @Table(name = "person_detail_change_validated")
 public class PersonDetailChangeValidated extends AbstractValidated {
     @Column(name = "nric")
