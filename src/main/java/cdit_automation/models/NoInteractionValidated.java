@@ -25,14 +25,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode
 @Table(name = "no_interaction_validated")
 @SuperBuilder
-public class NoInteractionValidated extends AbstractEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "batch_id")
-    private Batch batch;
+public class NoInteractionValidated extends AbstractValidated {
 
     @Column(name = "nric")
     private String nric;
