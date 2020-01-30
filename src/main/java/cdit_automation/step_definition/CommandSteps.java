@@ -148,6 +148,15 @@ public class CommandSteps extends AbstractSteps {
         }
     }
 
+    //As of cucumber 5.1.0, this is not fully supported by Intellij's cucumber plugin, hence steps which are using this will be marked by Intellij as undefined.
+    //However, the test suite is runs fine without syntax error.
+    //This may make it difficult and confusing for anyone to using the test suite, as it will come across as a false negative. So for the mean time, please refrain from using this.
+    //As example, your step defintion has to be as such
+    //@When("the {fileType} is wicked")
+    //You can't declare this in a parent step and use this in a child step. It does not work.
+    //Secondly, when you use such a regex, you cannot have other forms of regular expressions in the same step like so:
+    //@When("^the (hihi|hoho) {fileType} is wicked$")
+    //The first capture group is unrecognizable by cucumber and the '^' and '$' is also unrecognizable by cucumber. Strange but not sure why.
     @ParameterType(name = "fileType", value = "MHA_BULK_CITIZEN|MHA_NEW_CITIZEN|MHA_NO_INTERACTION|MHA_CHANGE_ADDRESS|MHA_DUAL_CITIZEN|MHA_PERSON_DETAIL_CHANGE|MHA_DEATH_DATE|MHA_CEASED_CITIZEN")
     public FileTypeEnum fileType(String fileType) {
         return FileTypeEnum.fromString(fileType);
