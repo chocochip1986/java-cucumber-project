@@ -1,5 +1,5 @@
 @development
-@bulk_citizen
+@egress_bulk_citizen
 @iras
 Feature: Data processing for IRAS tri-monthly citizen file
 

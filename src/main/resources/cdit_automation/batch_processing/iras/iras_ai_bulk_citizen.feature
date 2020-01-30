@@ -1,5 +1,5 @@
 @development
-@bulk_citizen
+@ingresss_bulk_citizen
 @iras
 Feature: Data processing for IRAS bulk citizen file
 
