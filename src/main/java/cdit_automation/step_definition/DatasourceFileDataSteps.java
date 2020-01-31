@@ -8,6 +8,7 @@ import cdit_automation.models.Batch;
 import cdit_automation.models.FileDetail;
 import cdit_automation.models.FileReceived;
 import io.cucumber.java.en.Given;
+import java.util.ArrayList;
 import java.util.Collections;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
@@ -17,7 +18,7 @@ import org.junit.Ignore;
 public class DatasourceFileDataSteps extends AbstractSteps {
     @Given("^There are ([0-9]+) files that were previously processed by Datasource$")
     public void thereAreMHAFilesThatWerePreviouslyProcessedByDatasource(int count) {
-        log.info("Creating "+count+" files randomly...");
+        log.info("Creating {} files randomly...", count);
         for ( int i = 0 ; i < count ; i++ ) {
             Batch batch = Batch.create(BatchStatusEnum.randomValidBatchStatusEnum());
 
@@ -26,8 +27,8 @@ public class DatasourceFileDataSteps extends AbstractSteps {
                     .fileDetail(fileDetail)
                     .filePath("/subdir1/subdir2/subdir3/"+fileDetail.getFileName()+".txt")
                     .receivedTimestamp(dateUtils.beginningOfDayToTimestamp(Phaker.validPastDate()))
-                    .batches(Collections.singletonList(batch))
-                    .fileSize(Double.valueOf(Phaker.validNumber(10000)))
+                    .batches(new ArrayList<Batch>(){{ add(batch); }})
+                    .fileSize(Double.valueOf(Phaker.validNumber(6)))
                     .fileStatusEnum(FileStatusEnum.randomValidFileStatusEnum())
                     .build();
 
