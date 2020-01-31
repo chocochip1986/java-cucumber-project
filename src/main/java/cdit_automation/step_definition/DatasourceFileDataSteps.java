@@ -31,6 +31,8 @@ public class DatasourceFileDataSteps extends AbstractSteps {
                     .fileStatusEnum(FileStatusEnum.randomValidFileStatusEnum())
                     .build();
 
+            batch.setFileReceived(fileReceived);
+
             fileReceivedRepo.save(fileReceived);
             batchRepo.save(batch);
         }
