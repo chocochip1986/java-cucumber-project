@@ -13,9 +13,11 @@ import io.cucumber.java.en.And;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
 
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -38,18 +40,29 @@ public class CommonSteps extends AbstractSteps {
         if (testContext.contains("fileReceived")) {
             FileReceived fileReceived = testContext.get("fileReceived");
             Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
-            testContext.set("batch", batch);
 
             if ( testManager.getTestEnvironment().equals(TestEnv.Env.QA) ) {
+                boolean isVerified = waitUntilCondition(new Supplier<Boolean>(){
+                    public Boolean get() {
+                        Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
+                        if ( batch != null && batch.getStatus().equals(expectedBatchStatus) ) {
+                            return Boolean.TRUE;
+                        } else {
+                            return Boolean.FALSE;
+                        }
+                    }
+                });
+                batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
                 if (batch == null) {
                     slack.sendToSlack(testManager.testEnv.getTopicArn(), "No batch record created for fileReceived record: "+fileReceived.getId().toString(), Slack.Level.NEUTRAL);
                 } else {
                     slack.sendToSlack(testManager.testEnv.getTopicArn(), String.format("Status:%s", batch.getStatus()), Slack.Level.NEUTRAL);
                 }
+                Assert.assertEquals(true, isVerified, "The "+batchJobName+" job from "+agencyName+" did not complete!!!");
+            } else {
+                Assert.assertEquals(expectedBatchStatus, batch.getStatus(), "The "+batchJobName+" job from "+agencyName+" did not complete!!!");
             }
-
-            Assert.assertNotNull(batch, "No batch record created for fileReceived record: "+fileReceived.getId().toString());
-            Assert.assertEquals(expectedBatchStatus, batch.getStatus(), "The "+batchJobName+" job from "+agencyName+" did not complete!!!");
+            testContext.set("batch", batch);
         } else {
             throw new TestFailException("No batch job previously created!");
         }

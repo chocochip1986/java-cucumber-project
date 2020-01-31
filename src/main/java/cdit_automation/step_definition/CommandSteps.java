@@ -96,7 +96,7 @@ public class CommandSteps extends AbstractSteps {
         } else {
             //Fire call to sftp, for testing purposes only
             slack.sendToSlack(testManager.testEnv.getTopicArn(), slack.slackMessage(fileTypeEnum), Slack.Level.NEUTRAL);
-            log.info("Uploading file "+fileTypeEnum.getValue().toLowerCase()+" at "+batchFileDataWriter.getDestionationFile().getAbsolutePath()+" to S3...");
+            log.info("Uploading file "+fileTypeEnum.getHumanized_value()+" to S3...");
             s3.uploadToS3(batchFileDataWriter.getDestionationFile(), s3.MHA_READY_BUCKET_PATH);
 
             log.info("Verifying that file received record is created...");

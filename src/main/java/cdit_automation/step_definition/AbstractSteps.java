@@ -96,6 +96,7 @@ public class AbstractSteps {
     @Autowired protected PersonPropertyRepo personPropertyRepo;
     @Autowired protected PropertyRepo propertyRepo;
     @Autowired protected PersonNameRepo personNameRepo;
+    @Autowired protected PersonDetailRepo propertyDetailRepo;
     @Autowired protected PersonStatusRepo personStatusRepo;
     @Autowired protected IncomeRepo incomeRepo;
     @Autowired protected AnnualValueRepo annualValueRepo;
@@ -135,7 +136,7 @@ public class AbstractSteps {
         if ( testManager.getTestEnvironment().equals(TestEnv.Env.LOCAL)) {
             maxWaitDuration = 10.0;
         } else {
-            maxWaitDuration = 180.0;
+            maxWaitDuration = 600.0;
         }
         boolean isFound;
         do {

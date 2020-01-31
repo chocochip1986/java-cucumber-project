@@ -117,6 +117,8 @@ Run with exclude tags
 ```
 mvn test -Dcucumber.options="src/main/resources/cdit_automation/test.feature:20 --tags @tagname1 --tags ~@tagname2"
 ```
+Running in
+
 ---
 ###Running via an executable jar
 ####Preparing the jar  
