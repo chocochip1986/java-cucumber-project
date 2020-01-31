@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 public class AwsSteps extends AbstractSteps {
     @Then("^I notify in slack ([A-Za-z\\s]+)$")
     public void notifySlack (@NotNull String msg) {
-        if ( testManager.getTestEnvironment().equals(TestEnv.Env.QA)) {
+        if ( testManager.getTestEnvironment().getEnv().equals(TestEnv.Env.QA)) {
             slack.sendToSlack(testManager.testEnv.getTopicArn(), msg, Slack.Level.NEUTRAL);
         }
     }

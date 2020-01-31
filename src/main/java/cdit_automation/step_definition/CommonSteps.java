@@ -41,7 +41,7 @@ public class CommonSteps extends AbstractSteps {
             FileReceived fileReceived = testContext.get("fileReceived");
             Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
 
-            if ( testManager.getTestEnvironment().equals(TestEnv.Env.QA) ) {
+            if ( testManager.getTestEnvironment().getEnv().equals(TestEnv.Env.QA) ) {
                 boolean isVerified = waitUntilCondition(new Supplier<Boolean>(){
                     public Boolean get() {
                         Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);

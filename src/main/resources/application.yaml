@@ -21,6 +21,7 @@ test-env:
     port: 8081
   implicit-wait: 1
   explicit-wait: 10
+  wait: 10
 aws:
   sns:
     topicArn: ""
@@ -37,6 +38,7 @@ test-env:
     url: https://datasource-qa.cpfb.gds-gov.tech
   implicit-wait: 5
   explicit-wait: 30
+  wait: 600
 aws:
   sns:
     topicArn: "arn:aws:sns:ap-southeast-1:026083545547:slack-topic"

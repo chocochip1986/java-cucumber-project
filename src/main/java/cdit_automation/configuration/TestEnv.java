@@ -66,6 +66,9 @@ public class TestEnv {
     @Value(value = "${test-env.explicit-wait}")
     private Long explicitWait;
 
+    @Value(value = "${test-env.wait}")
+    private Double wait;
+
     @Value(value = "${aws.sns.topic-arn}")
     private String topicArn;
 

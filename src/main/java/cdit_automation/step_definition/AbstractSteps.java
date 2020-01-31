@@ -132,12 +132,7 @@ public class AbstractSteps {
 
     protected boolean waitUntilCondition(Supplier<Boolean> function) {
         Double timer = 0.0;
-        Double maxWaitDuration;
-        if ( testManager.getTestEnvironment().equals(TestEnv.Env.LOCAL)) {
-            maxWaitDuration = 10.0;
-        } else {
-            maxWaitDuration = 600.0;
-        }
+        Double maxWaitDuration = testManager.getTestEnvironment().getWait();
         boolean isFound;
         do {
             isFound = function.get();

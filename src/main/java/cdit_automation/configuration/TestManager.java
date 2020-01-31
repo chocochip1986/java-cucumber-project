@@ -124,8 +124,8 @@ public class TestManager {
         }
     }
 
-    public TestEnv.Env getTestEnvironment() {
-        return this.testEnv.getEnv();
+    public TestEnv getTestEnvironment() {
+        return this.testEnv;
     }
 
     private BrowserTypeEnums getEnvVarBrowserType() {
