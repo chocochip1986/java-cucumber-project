@@ -9,7 +9,6 @@ import cdit_automation.models.FileDetail;
 import cdit_automation.models.FileReceived;
 import io.cucumber.java.en.Given;
 import java.util.ArrayList;
-import java.util.Collections;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
 
