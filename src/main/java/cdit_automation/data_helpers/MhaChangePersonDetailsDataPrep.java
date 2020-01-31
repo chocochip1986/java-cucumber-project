@@ -201,10 +201,10 @@ public class MhaChangePersonDetailsDataPrep extends BatchFileDataPrep {
                 nricFieldOption = Phaker.invalidNric();
                 break;
             default:
-                if ( nricOption.matches("^[S|T|F|G][0-9][A-Z]$") ) {
+                if ( nricOption.matches("^[S|T|F|G][0-9]{7}[A-Z]$") ) {
                     nricFieldOption = nricOption;
                 } else {
-                    throw new TestFailException("Unsupported option when building a file entry in the Mha Change Person Details file with following option: "+nricFieldOption);
+                    throw new TestFailException("Unsupported nric option when building a file entry in the Mha Change Person Details file with following option: "+nricOption);
                 }
         }
         return nricFieldOption;
