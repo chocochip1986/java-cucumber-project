@@ -16,19 +16,19 @@ public class MhaChangePersonDetailsFileEntry {
     private String dataItemOriginalValue;
     private String dataItemChangeVal;
     private String dataItemChangeDate;
-    private PersonDetailDataItemChangedEnum dataItemCat;
+    private char dataItemCat;
 
-    public MhaChangePersonDetailsFileEntry(String nric, String dataItemOriginalValue, String dataItemChangeVal, String dataItemChangeDate, PersonDetailDataItemChangedEnum personDetailDataItemChangedEnum) {
+    public MhaChangePersonDetailsFileEntry(String nric, String dataItemOriginalValue, String dataItemChangeVal, String dataItemChangeDate, char personDetailDataItemChanged) {
         this.nric = nric;
         this.dataItemOriginalValue = dataItemOriginalValue;
         this.dataItemChangeVal = dataItemChangeVal;
         this.dataItemChangeDate = dataItemChangeDate;
-        this.dataItemCat = personDetailDataItemChangedEnum;
+        this.dataItemCat = personDetailDataItemChanged;
     }
 
     public String toString() {
         return StringUtils.leftPad(nric, 9)
-                +StringUtils.leftPad(dataItemCat.getValue(), 1)
+                +StringUtils.leftPad(String.valueOf(dataItemCat), 1)
                 +StringUtils.leftPad(dataItemChangeVal, 66)
                 +StringUtils.leftPad(dataItemChangeDate, 8);
     }

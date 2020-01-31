@@ -69,6 +69,20 @@ public class CommonSteps extends AbstractSteps {
         Assert.assertEquals(true, errorMessage.stream().filter(errMsg -> errMsg.getMessage().equals(errorMsg)).findFirst().isPresent(), "No such error message is found for batch: "+batch.getId());
     }
 
+    @And("^the error message contains (.*)$")
+    public void theErrorMessageContains(String errorMsg) {
+        FileReceived fileReceived = testContext.get("fileReceived");
+        Batch batch = testContext.get("batch");
+        if ( batch == null ) {
+            throw new TestFailException("No batch record is found in the testContext!!!");
+        }
+        log.info("Verifying that the batch job ("+batch.getId()+") contains a corresponding error message record with error: "+errorMsg);
+
+        List<ErrorMessage> errorMessage = errorMessageRepo.findByBatch(batch);
+
+        Assert.assertEquals(true, errorMessage.stream().filter(errMsg -> errMsg.getMessage().matches(".*"+errorMsg+".*")).findFirst().isPresent(), "No such error message is found for batch: "+batch.getId());
+    }
+
     @And("I verify that the following error message appeared:")
     public void iVerifyThatTheFollowingErrorMessageAppeared(DataTable table) {
         

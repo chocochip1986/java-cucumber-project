@@ -7,6 +7,7 @@ import cdit_automation.enums.Gender;
 import cdit_automation.enums.PersonDetailDataItemChangedEnum;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.PersonId;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Component
 public class MhaChangePersonDetailsDataPrep extends BatchFileDataPrep {
     public List<String> createBodyOfTestScenarios(List<Map<String, String>> listOfScenarios) {
@@ -31,34 +33,34 @@ public class MhaChangePersonDetailsDataPrep extends BatchFileDataPrep {
                 new MhaChangePersonDetailsFileEntry(
                         nricFieldOptions(scenario.get("nric")),
                         scenario.get("data_item_orig_value"),
-                        createDataItemChangeValue(PersonDetailDataItemChangedEnum.fromString(scenario.get("data_item_change_category")),
+                        createDataItemChangeValue(scenario.get("data_item_change_category"),
                                 scenario.get("data_item_orig_value"), scenario.get("data_item_change_value")),
                         createItemChangeDate(scenario.get("data_item_change_date")),
-                        createDataItemChangeCategory(scenario.get("data_item_change_category")));
+                        scenario.get("data_item_change_category").charAt(0));
         //Generate the fake data
         setupDateForScenario(mhaChangePersonDetailsFileEntry.getDataItemCat(), mhaChangePersonDetailsFileEntry);
         return mhaChangePersonDetailsFileEntry.toString();
     }
 
-    private void setupDateForScenario(PersonDetailDataItemChangedEnum itemChangeCat, MhaChangePersonDetailsFileEntry entry) {
+    private void setupDateForScenario(char itemChangeCat, MhaChangePersonDetailsFileEntry entry) {
         PersonId personId = personFactory.createNewSCPersonId(entry.getNric());
         switch (itemChangeCat) {
-            case GENDER:
+            case 'S':
                 Gender originalGender = Gender.fromString(entry.getDataItemOriginalValue());
                 personDetailRepo.updateGenderForPerson(originalGender, personId.getPerson());
                 break;
-            case NAME:
+            case 'N':
                 personNameRepo.updateNameForPerson(entry.getDataItemOriginalValue(), personId.getPerson());
                 break;
-            case DATE_OF_BIRTH:
+            case 'B':
                 LocalDate origBirthDate = dateUtils.parse(entry.getDataItemOriginalValue());
                 personFactory.updateBirthdate(personId.getPerson(), origBirthDate, origBirthDate);
                 break;
-            case DATE_OF_DEATH:
+            case 'D':
                 personDetailRepo.updateDeathDateForPerson(dateUtils.parse(entry.getDataItemOriginalValue()), personId.getPerson());
                 break;
             default:
-                throw new TestFailException("No such Person Details Data Item Change category: "+itemChangeCat);
+                log.info("Unsupported item change category: "+itemChangeCat);
         }
     }
 
@@ -81,25 +83,28 @@ public class MhaChangePersonDetailsDataPrep extends BatchFileDataPrep {
         return changeDate;
     }
 
-    private String createDataItemChangeValue(PersonDetailDataItemChangedEnum personDetailDataItemChangedEnum, String origValue, String dataItemChangeValue) {
+    private String createDataItemChangeValue(String personDetailDataItemChanged, String origValue, String dataItemChangeValue) {
         String dataItemChangeFieldValue = "";
-        switch ( personDetailDataItemChangedEnum ) {
-            case GENDER:
-                dataItemChangeFieldValue = createGenderChangeOption(origValue, dataItemChangeValue);
-                break;
-            case NAME:
-                dataItemChangeFieldValue = createNameChangeOption(origValue, dataItemChangeValue);
-                break;
-            case DATE_OF_BIRTH:
-                dataItemChangeFieldValue = createDateOfBirthOption(origValue, dataItemChangeValue);
-                break;
-            case DATE_OF_DEATH:
-                dataItemChangeFieldValue = createDateOfDeathOption(origValue, dataItemChangeValue);
-                break;
-            default:
-                throw new TestFailException("Invalid person details change data item option: "+personDetailDataItemChangedEnum.getValue());
+        if ( PersonDetailDataItemChangedEnum.fromString(personDetailDataItemChanged) == null ) {
+            dataItemChangeFieldValue = personDetailDataItemChanged;
+        } else {
+            switch ( PersonDetailDataItemChangedEnum.fromString(personDetailDataItemChanged) ) {
+                case GENDER:
+                    dataItemChangeFieldValue = createGenderChangeOption(origValue, dataItemChangeValue);
+                    break;
+                case NAME:
+                    dataItemChangeFieldValue = createNameChangeOption(origValue, dataItemChangeValue);
+                    break;
+                case DATE_OF_BIRTH:
+                    dataItemChangeFieldValue = createDateOfBirthOption(origValue, dataItemChangeValue);
+                    break;
+                case DATE_OF_DEATH:
+                    dataItemChangeFieldValue = createDateOfDeathOption(origValue, dataItemChangeValue);
+                    break;
+                default:
+                    throw new TestFailException("Unsupported Person Detail Data Item Change Enum");
+            }
         }
-
         return dataItemChangeFieldValue;
     }
 
@@ -184,14 +189,6 @@ public class MhaChangePersonDetailsDataPrep extends BatchFileDataPrep {
                 }
         }
         return fieldOption;
-    }
-
-    private PersonDetailDataItemChangedEnum createDataItemChangeCategory(String dataItemChangeCategoryOption) {
-        PersonDetailDataItemChangedEnum dataItemChangeCategoryFieldOption = PersonDetailDataItemChangedEnum.fromString(dataItemChangeCategoryOption);
-        if ( dataItemChangeCategoryFieldOption == null ) {
-            throw new TestFailException("Unsupported data item change category option: "+dataItemChangeCategoryOption);
-        }
-        return dataItemChangeCategoryFieldOption;
     }
 
     private String nricFieldOptions(String nricOption) {
