@@ -75,6 +75,10 @@ public class FileDetail extends AbstractEntity  {
     @OneToMany(mappedBy = "fileDetail", cascade = CascadeType.ALL)
     private List<FileReceived> fileReceivedList;
 
+    @NotNull
+    @Column(name = "file_name")
+    private String fileName;
+
     @SuppressWarnings("squid:S2637")
     public FileDetail(FileTypeEnum fileEnum) {
         this.fileEnum = fileEnum;

@@ -1,5 +1,7 @@
 package cdit_automation.enums;
 
+import java.util.Random;
+
 public enum BatchStatusEnum {
     INIT("INIT"),
     INIT_ERROR("INIT_ERROR"),
@@ -35,5 +37,9 @@ public enum BatchStatusEnum {
     @Override
     public String toString() {
         return this.value;
+    }
+
+    public static BatchStatusEnum randomValidBatchStatusEnum() {
+        return BatchStatusEnum.values()[new Random().nextInt(BatchStatusEnum.values().length)];
     }
 }

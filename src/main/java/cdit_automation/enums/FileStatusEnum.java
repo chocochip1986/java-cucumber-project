@@ -1,5 +1,7 @@
 package cdit_automation.enums;
 
+import java.util.Random;
+
 public enum FileStatusEnum {
     ENCRYPTED_HAS_VIRUS("ENCRYPTED_HAS_VIRUS"),
     FAIL_TO_DECRYPT("FAIL_TO_DECRYPT"),
@@ -13,5 +15,9 @@ public enum FileStatusEnum {
 
     FileStatusEnum(String value) {
         this.value = value;
+    }
+
+    public static FileStatusEnum randomValidFileStatusEnum() {
+        return FileStatusEnum.values()[new Random().nextInt(FileStatusEnum.values().length)];
     }
 }

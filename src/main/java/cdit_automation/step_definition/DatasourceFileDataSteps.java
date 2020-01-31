@@ -1,5 +1,6 @@
 package cdit_automation.step_definition;
 
+import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.BatchStatusEnum;
 import cdit_automation.enums.FileStatusEnum;
 import cdit_automation.enums.FileTypeEnum;
@@ -14,14 +15,21 @@ import org.junit.Ignore;
 @Slf4j
 @Ignore
 public class DatasourceFileDataSteps extends AbstractSteps {
-    @Given("^There are ([0-9]+) MHA files that were previously processed by Datasource$")
+    @Given("^There are ([0-9]+) files that were previously processed by Datasource$")
     public void thereAreMHAFilesThatWerePreviouslyProcessedByDatasource(int count) {
-        log.info("Creating "+count+" MHA files randomly...");
+        log.info("Creating "+count+" files randomly...");
         for ( int i = 0 ; i < count ; i++ ) {
-            Batch batch = Batch.builder().status(BatchStatusEnum.CLEANUP).build();
+            Batch batch = Batch.create(BatchStatusEnum.randomValidBatchStatusEnum());
 
-            FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_DUAL_CITIZEN);
-            FileReceived fileReceived = FileReceived.builder().fileDetail(fileDetail).filePath("hihi").receivedTimestamp(dateUtils.beginningOfDayToTimestamp(dateUtils.now())).batches(Collections.singletonList(batch)).fileSize(10.0).fileStatusEnum(FileStatusEnum.OK).build();
+            FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.randomValidFileTypeEnum());
+            FileReceived fileReceived = FileReceived.builder()
+                    .fileDetail(fileDetail)
+                    .filePath("/subdir1/subdir2/subdir3/"+fileDetail.getFileName()+".txt")
+                    .receivedTimestamp(dateUtils.beginningOfDayToTimestamp(Phaker.validPastDate()))
+                    .batches(Collections.singletonList(batch))
+                    .fileSize(Double.valueOf(Phaker.validNumber(10000)))
+                    .fileStatusEnum(FileStatusEnum.randomValidFileStatusEnum())
+                    .build();
 
             fileReceivedRepo.save(fileReceived);
             batchRepo.save(batch);

@@ -3,15 +3,11 @@ package cdit_automation.enums;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Random;
+
 @Getter
 @Slf4j
 public enum FileTypeEnum {
-    HDB_PROPERTY("HDB_PROPERTY"),
-    MSF_PWD("MSF_PWD"),
-    MSF_TRANSITIONAL_SHELTER("MSF_TRANSITIONAL_SHELTER"),
-    IRAS_FORM_B("IRAS_FORM_B"),
-    IRAS_DECLARED_NTI("IRAS_DECLARED_NTI"),
-    SINGPOST_SELF_EMPLOYED("SINGPOST_SELF_EMPLOYED"),
     MHA_BULK_CITIZEN("MHA_BULK_CITIZEN"),
     MHA_NEW_CITIZEN("MHA_NEW_CITIZEN"),
     MHA_NO_INTERACTION("MHA_NO_INTERACTION"),
@@ -19,7 +15,20 @@ public enum FileTypeEnum {
     MHA_DUAL_CITIZEN("MHA_DUAL_CITIZEN"),
     MHA_PERSON_DETAIL_CHANGE("MHA_PERSON_DETAIL_CHANGE"),
     MHA_DEATH_DATE("MHA_DEATH_DATE"),
-    MHA_CEASED_CITIZEN("MHA_CEASED_CITIZEN");
+    MHA_CEASED_CITIZEN("MHA_CEASED_CITIZEN"),
+
+    IRAS_FORM_B("IRAS_FORM_B"),
+    IRAS_DECLARED_NTI("IRAS_DECLARED_NTI"),
+    IRAS_ASSESSABLE_INCOME("IRAS_ASSESSABLE_INCOME"),
+
+    HDB_PROPERTY("HDB_PROPERTY"),
+    MSF_PWD("MSF_PWD"),
+    MSF_TRANSITIONAL_SHELTER("MSF_TRANSITIONAL_SHELTER"),
+    SINGPOST_SELF_EMPLOYED("SINGPOST_SELF_EMPLOYED"),
+
+    CPFB_CLASSIFIED_ACCOUNT("CPFB_CLASSIFIED_ACCOUNT"),
+    CPFB_LORONG_BUANGKOK("CPFB_LORONG_BUANGKOK"),
+    CPFB_NURSING_HOME("CPFB_NURSING_HOME");
 
     private String value;
     private String humanized_value;
@@ -36,5 +45,9 @@ public enum FileTypeEnum {
             }
         }
         return null;
+    }
+
+    public static FileTypeEnum randomValidFileTypeEnum() {
+        return FileTypeEnum.values()[new Random().nextInt(FileTypeEnum.values().length)];
     }
 }
