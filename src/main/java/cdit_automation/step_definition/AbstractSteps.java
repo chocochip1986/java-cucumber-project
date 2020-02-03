@@ -17,6 +17,7 @@ import cdit_automation.data_helpers.MhaCeasedCitizenFileDataPrep;
 import cdit_automation.data_helpers.IrasTriMonthlyEgressDataPrep;
 import cdit_automation.data_helpers.MhaNoInteractionFileDataPrep;
 import cdit_automation.data_helpers.factories.PersonFactory;
+import cdit_automation.models.Batch;
 import cdit_automation.page_navigation.PageUtils;
 import cdit_automation.repositories.AnnualValueRepo;
 import cdit_automation.repositories.BatchRepo;
@@ -51,6 +52,7 @@ import cdit_automation.repositories.PropertyRepo;
 import cdit_automation.utilities.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class AbstractSteps {
@@ -136,6 +138,24 @@ public class AbstractSteps {
         boolean isFound;
         do {
             isFound = function.get();
+            if ( isFound ) {
+                break;
+            } else {
+                testManager.sleep();
+                progressBar(timer);
+                timer++;
+            }
+        } while ( timer < maxWaitDuration+1.0 );
+        System.out.println(System.lineSeparator());
+        return isFound;
+    }
+
+    protected boolean waitUntilConditionForBatch(Predicate<Batch> function, Batch batch) {
+        Double timer = 0.0;
+        Double maxWaitDuration = testManager.getTestEnvironment().getWait();
+        boolean isFound;
+        do {
+            isFound = function.test(batch);
             if ( isFound ) {
                 break;
             } else {
