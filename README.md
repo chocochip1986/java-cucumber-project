@@ -11,6 +11,7 @@
     - ####[Running a scenario using Intellij](#running-a-scenario-using-intellij)  
     - ####[Running via Command Line](#running-via-command-line)  
     - ####[Running via Command Line with tags](#running-via-command-line-with-tags)
+    - ####[Running against an external environment via Command line](#running-against-an-external-environment-via-command-line)
     - ####[Running via an executable jar](#running-via-an-executable-jar)
         - ####[Preparing the jar](#preparing-the-jar)
     - ####[Running via an executable jar with tags](#running-via-an-executable-jar-with-tags)
@@ -117,7 +118,10 @@ Run with exclude tags
 ```
 mvn test -Dcucumber.options="src/main/resources/cdit_automation/test.feature:20 --tags @tagname1 --tags ~@tagname2"
 ```
-Running in
+Running against an external environment via Command line
+```
+mvn test -Dcucumber.options="src/main/resources/cdit_automation/test.feature:20 --tags @tagname1" -Dspring.profiles.active=qa
+```
 
 ---
 ###Running via an executable jar
