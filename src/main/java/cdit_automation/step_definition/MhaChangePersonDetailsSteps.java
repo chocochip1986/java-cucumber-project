@@ -22,14 +22,6 @@ public class MhaChangePersonDetailsSteps extends AbstractSteps{
         log.info("Creating an empty person details file file...");
         batchFileDataWriter.begin(mhaChangePersonDetailsDataPrep.generateDoubleHeader(), FileTypeEnum.MHA_PERSON_DETAIL_CHANGE, null);
         batchFileDataWriter.end();
-//        List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();;
-//        List<String> body = Lists.emptyList();
-
-//        listOfIdentifiersToWriteToFile.add(mhaDualCitizenFileDataPrep.generateDoubleHeader());
-//        listOfIdentifiersToWriteToFile.addAll(body);
-//        listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
-
-//        batchFileCreator.writeToFile(FileTypeEnum.MHA_PERSON_DETAIL_CHANGE.getValue().toLowerCase(), listOfIdentifiersToWriteToFile);
     }
 
     @Given("the mha person details file has the following details:")
