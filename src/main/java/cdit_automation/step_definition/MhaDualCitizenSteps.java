@@ -180,14 +180,8 @@ public class MhaDualCitizenSteps extends AbstractSteps {
 
     @Given("the mha dual citizen file is empty")
     public void theMhaDualCitizenFileIsEmpty() throws IOException {
-        List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();;
-        List<String> body = Lists.emptyList();
-
-        listOfIdentifiersToWriteToFile.add(mhaDualCitizenFileDataPrep.generateDoubleHeader());
-        listOfIdentifiersToWriteToFile.addAll(body);
-        listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
-
-        batchFileCreator.writeToFile(FileTypeEnum.MHA_DUAL_CITIZEN.getValue().toLowerCase(), listOfIdentifiersToWriteToFile);
+        batchFileDataWriter.begin(mhaChangePersonDetailsDataPrep.generateDoubleHeader(), FileTypeEnum.MHA_DUAL_CITIZEN, null);
+        batchFileDataWriter.end();
     }
 
     @Given("the mha dual citizen file has a cut-off date in the future")
