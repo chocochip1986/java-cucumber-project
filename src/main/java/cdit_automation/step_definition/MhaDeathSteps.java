@@ -32,14 +32,8 @@ import java.util.stream.Stream;
 public class MhaDeathSteps extends AbstractSteps {
     @Given("^the mha death file is empty$")
     public void theMhaDeathFileIsEmpty() throws IOException {
-        List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();;
-        List<String> body = Lists.emptyList();
-
-        listOfIdentifiersToWriteToFile.add(mhaDualCitizenFileDataPrep.generateDoubleHeader());
-        listOfIdentifiersToWriteToFile.addAll(body);
-        listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
-
-        batchFileCreator.writeToFile(FileTypeEnum.MHA_DEATH_DATE.getValue().toLowerCase(), listOfIdentifiersToWriteToFile);
+        batchFileDataWriter.begin(mhaChangePersonDetailsDataPrep.generateDoubleHeader(), FileTypeEnum.MHA_DEATH_DATE, null);
+        batchFileDataWriter.end();
     }
 
     @Given("^the mha death file has the following details:$")
