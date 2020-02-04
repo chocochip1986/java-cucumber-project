@@ -100,6 +100,10 @@ public class TestManager {
         pageUtils.setExplicitWait(testEnv.getExplicitWait());
     }
 
+    public boolean failFastEnabled() {
+        return testEnv.isFailFast();
+    }
+
     public void openBrowser() {
         driverManager.open();
         driverManager.setImplicitWait(testEnv.getImplicitWait());
@@ -120,6 +124,7 @@ public class TestManager {
 
     private void tearDown() {
         log.info("Exiting test suite...");
+        System.exit(0);
     }
 
     public void sleep() {

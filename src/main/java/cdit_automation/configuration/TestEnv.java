@@ -72,21 +72,25 @@ public class TestEnv {
     @Value(value = "${aws.sns.topic-arn}")
     private String topicArn;
 
+    @Value(value = "${test-env.fail-fast}")
+    private boolean failFast;
+
     public String toString() {
-        String str = "spring.profiles: "+springProfile+"\n"
-                + "spring.jpa.hibernate.ddl-auto: "+ddlAuto+"\n"
-                +"spring.jpa.show-sql: "+showSql+"\n"
-                +"spring.jpa.database-platform: "+databasePlatform+"\n"
-                +"spring.datasource.url: "+url+"\n"
-                +"spring.datasource.username: "+datasourceDbUsername+"\n"
-                +"spring.datasource.password: "+datasourceDbPassword+"\n"
-                +"spring.datasource.driver-class-name: "+datasourceDbDriver+"\n"
-                +"spring.output.ansi.enabled: "+springOutputAnsiColor+"\n"
-                +"test-env.env-name: "+env+"\n"
-                +"test-env.datasource-ui.url: "+datasourceUiUrl+"\n"
-                +"test-env.datasource-ui.port: "+datasourceUiPort+"\n"
-                +"test-env.implicit-wait: "+implicitWait+"\n"
-                +"test-env.explicit-wait: "+explicitWait+"\n"
+        String str = "spring.profiles: "+springProfile+System.lineSeparator()
+                + "spring.jpa.hibernate.ddl-auto: "+ddlAuto+System.lineSeparator()
+                +"spring.jpa.show-sql: "+showSql+System.lineSeparator()
+                +"spring.jpa.database-platform: "+databasePlatform+System.lineSeparator()
+                +"spring.datasource.url: "+url+System.lineSeparator()
+                +"spring.datasource.username: "+datasourceDbUsername+System.lineSeparator()
+                +"spring.datasource.password: "+datasourceDbPassword+System.lineSeparator()
+                +"spring.datasource.driver-class-name: "+datasourceDbDriver+System.lineSeparator()
+                +"spring.output.ansi.enabled: "+springOutputAnsiColor+System.lineSeparator()
+                +"test-env.env-name: "+env+System.lineSeparator()
+                +"test-env.datasource-ui.url: "+datasourceUiUrl+System.lineSeparator()
+                +"test-env.datasource-ui.port: "+datasourceUiPort+System.lineSeparator()
+                +"test-env.implicit-wait: "+implicitWait+System.lineSeparator()
+                +"test-env.explicit-wait: "+explicitWait+System.lineSeparator()
+                +"test-env.fail-fast: "+failFast+System.lineSeparator()
                 +"aws.sns.topic-arn: "+topicArn;
         return str;
     }
