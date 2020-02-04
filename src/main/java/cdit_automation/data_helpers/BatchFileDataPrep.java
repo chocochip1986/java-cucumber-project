@@ -43,15 +43,6 @@ public class BatchFileDataPrep {
         return 0;
     }
 
-    public List<String> createListOfInvalidNrics(int size) {
-        List<String> listOfInvalidNrics = new ArrayList<>();
-        for ( int i = 0 ; i < size ; i++ ) {
-            listOfInvalidNrics.add(Phaker.invalidNric());
-        }
-
-        return listOfInvalidNrics;
-    }
-
     public String createInvalidNric() {
         return Phaker.invalidNric();
     }

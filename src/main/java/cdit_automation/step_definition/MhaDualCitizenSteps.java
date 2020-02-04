@@ -61,19 +61,12 @@ public class MhaDualCitizenSteps extends AbstractSteps {
 
     @Given("the mha dual citizen file has the following details:")
     public void thatTheMhaDualCitizenFileHasTheFollowingDetails(DataTable table) throws IOException {
-//        FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.MHA_DUAL_CITIZEN);
-//        testContext.set("fileReceived", batchFileCreator.replaceFile(fileDetail, FileTypeEnum.MHA_DUAL_CITIZEN.getValue().toLowerCase()));
+        batchFileDataWriter.begin(mhaChangePersonDetailsDataPrep.generateDoubleHeader(), FileTypeEnum.MHA_DUAL_CITIZEN, null);
         List<Map<String, String>> list = table.asMaps(String.class, String.class);
         List<String> body = mhaDualCitizenFileDataPrep.bodyCreator(list, testContext);
 
-        List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();
-
-        listOfIdentifiersToWriteToFile.add(mhaDualCitizenFileDataPrep.generateDoubleHeader());
-        listOfIdentifiersToWriteToFile.addAll(body);
-        listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
-        batchFileCreator.writeToFile(FileTypeEnum.MHA_DUAL_CITIZEN.getValue().toLowerCase(), listOfIdentifiersToWriteToFile);
-
-        testContext.set("listOfIdentifiersToWriteToFile", listOfIdentifiersToWriteToFile);
+        testContext.set("listOfIdentifiersToWriteToFile", body);
+        batchFileDataWriter.end();
     }
 
     @Then("I verify that there are new dual citizen in datasource db")

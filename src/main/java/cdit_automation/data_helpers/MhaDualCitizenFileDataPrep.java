@@ -1,6 +1,7 @@
 package cdit_automation.data_helpers;
 
 import cdit_automation.configuration.StepDefLevelTestContext;
+import cdit_automation.data_setup.Phaker;
 import cdit_automation.models.PersonId;
 import com.github.javafaker.Faker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class MhaDualCitizenFileDataPrep extends BatchFileDataPrep {
     public List<String> bodyCreator(List<Map<String, String>> list, StepDefLevelTestContext testContext) {
         List<String> listOfNewDCs = createListOfNewDualCitizens(parseStringSize(list.get(0).get("NewDualCitizensInFile")));
         List<String> listOfExistingDCs = createListOfExistingDualCitizens(parseStringSize(list.get(0).get("ExistingDualCitizensInFile")));
-        List<String> listOfExpiredDCs = createListOfExistingDualCitizens(parseStringSize(list.get(0).get("ExpiredDualCitizens")));
+        List<String> listOfExpiredDCs = createListOfExpiredDualCitizens(parseStringSize(list.get(0).get("ExpiredDualCitizens")));
         List<String> listOfDuplicatedNrics = createDuplicatedValidNricEntries(parseStringSize(list.get(0).get("DuplicatedNrics")));
         List<String> listOfInvalidNrics = createListOfInvalidNrics(parseStringSize(list.get(0).get("InvalidNrics")));
 
@@ -34,9 +35,7 @@ public class MhaDualCitizenFileDataPrep extends BatchFileDataPrep {
         testContext.set("listOfDuplicatedNrics", listOfDuplicatedNrics);
         testContext.set("listOfInvalidNrics", listOfInvalidNrics);
 
-        List<String> listOfNricsForBatchFile = Stream.of(listOfNewDCs, listOfExistingDCs, listOfDuplicatedNrics, listOfInvalidNrics).flatMap(Collection::stream).collect(Collectors.toList());
-
-        return listOfNricsForBatchFile;
+        return Stream.of(listOfNewDCs, listOfExistingDCs, listOfDuplicatedNrics, listOfInvalidNrics).flatMap(Collection::stream).collect(Collectors.toList());
     }
 
     public List<String> createDuplicatedValidNricEntries(int numOfDuplicatedEntries) {
@@ -44,14 +43,16 @@ public class MhaDualCitizenFileDataPrep extends BatchFileDataPrep {
         for ( int i = 0 ; i < numOfDuplicatedEntries ; i++ ) {
             PersonId personId = personFactory.createNewSCPersonId();
             duplicatedList.addAll(new ArrayList<>(Arrays.asList(personId.getNaturalId(), personId.getNaturalId())));
+            batchFileDataWriter.chunkOrWrite(personId.getNaturalId());
         }
-
         return duplicatedList;
     }
 
     public List<String> createDuplicatedValidNricEntries() {
         PersonId personId = personFactory.createNewSCPersonId();
         List<String> duplicateedList = new ArrayList<>(Arrays.asList(personId.getNaturalId(), personId.getNaturalId()));
+        batchFileDataWriter.chunkOrWrite(personId.getNaturalId());
+        batchFileDataWriter.chunkOrWrite(personId.getNaturalId());
 
         return duplicateedList;
     }
@@ -60,17 +61,41 @@ public class MhaDualCitizenFileDataPrep extends BatchFileDataPrep {
         List<String> listOfNewDCs = new ArrayList<>();
         for ( int i = 0 ; i < numOfNewDCs ; i++ ) {
             PersonId personId = personFactory.createNewSCPersonId();
-            listOfNewDCs.add(personId.getNaturalId());
+            String inputLine = personId.getNaturalId();
+            listOfNewDCs.add(inputLine);
+            batchFileDataWriter.chunkOrWrite(inputLine);
         }
         return listOfNewDCs;
     }
 
-    public List<String> createListOfExistingDualCitizens(@Positive int numOfExistingDCs) {
+    public List<String> createListOfExpiredDualCitizens(@Positive int numOfExistingDCs) {
         List<String> listOfExistingDCs = new ArrayList<>();
         for ( int i = 0 ; i < numOfExistingDCs ; i++ ) {
             PersonId existingDC = personFactory.createDualCitizen();
             listOfExistingDCs.add(existingDC.getNaturalId());
         }
         return listOfExistingDCs;
+    }
+
+    public List<String> createListOfExistingDualCitizens(@Positive int numOfExistingDCs) {
+        List<String> listOfExistingDCs = new ArrayList<>();
+        for ( int i = 0 ; i < numOfExistingDCs ; i++ ) {
+            PersonId existingDC = personFactory.createDualCitizen();
+            String inputLine = existingDC.getNaturalId();
+            listOfExistingDCs.add(inputLine);
+            batchFileDataWriter.chunkOrWrite(inputLine);
+        }
+        return listOfExistingDCs;
+    }
+
+    public List<String> createListOfInvalidNrics(int size) {
+        List<String> listOfInvalidNrics = new ArrayList<>();
+        for ( int i = 0 ; i < size ; i++ ) {
+            String inputLine = Phaker.invalidNric();
+            batchFileDataWriter.chunkOrWrite(inputLine);
+            listOfInvalidNrics.add(inputLine);
+        }
+
+        return listOfInvalidNrics;
     }
 }
