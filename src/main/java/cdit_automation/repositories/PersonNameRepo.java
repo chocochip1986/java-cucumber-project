@@ -29,4 +29,8 @@ public interface PersonNameRepo extends JpaRepository<PersonName, Long> {
             "WHERE pn.person = ?2 " +
             "AND ( pn.biTemporalData.businessTemporalData.validFrom = TRUNC(?3) )")
     int updateValidFrom(Date newValidFrom, Person person, Date oldValidFrom);
+
+    @Query(value = "SELECT p.* FROM PERSON_NAME AS OF PERIOD FOR validity_period_person_name TRUNC(SYSDATE) p " +
+            "WHERE p.entity_key = ?1", nativeQuery = true)
+    PersonName findByPerson(Person person);
 }

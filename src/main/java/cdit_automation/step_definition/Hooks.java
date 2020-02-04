@@ -34,6 +34,9 @@ public class Hooks extends AbstractSteps {
     @After(order=1)
     public void after(Scenario scenario) {
         testManager.updateTestStatistics(scenario);
+        if ( scenario.isFailed() ) {
+            testManager.quit();
+        }
     }
 
     @BeforeStep(order=0)

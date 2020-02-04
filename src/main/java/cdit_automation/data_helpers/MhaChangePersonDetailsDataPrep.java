@@ -2,12 +2,18 @@ package cdit_automation.data_helpers;
 
 import cdit_automation.constants.TestConstants;
 import cdit_automation.data_helpers.batch_entities.MhaChangePersonDetailsFileEntry;
+import cdit_automation.data_helpers.batch_entities.MhaChangePersonDetailsFileEntryCatBirthDate;
+import cdit_automation.data_helpers.batch_entities.MhaChangePersonDetailsFileEntryCatGender;
+import cdit_automation.data_helpers.batch_entities.MhaChangePersonDetailsFileEntryCatName;
+import cdit_automation.data_helpers.batch_entities.MhaChangePersonDetailsFileEntryCatUnsupported;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.Gender;
 import cdit_automation.enums.PersonDetailDataItemChangedEnum;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.PersonId;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -19,6 +25,8 @@ import java.util.Map;
 @Slf4j
 @Component
 public class MhaChangePersonDetailsDataPrep extends BatchFileDataPrep {
+    private @Autowired AutowireCapableBeanFactory beanFactory;
+
     public List<String> createBodyOfTestScenarios(List<Map<String, String>> listOfScenarios) {
         List<String> body = new ArrayList<>();
 
@@ -29,56 +37,84 @@ public class MhaChangePersonDetailsDataPrep extends BatchFileDataPrep {
     }
 
     public String createScenarioEntry(Map<String, String> scenario) {
-        MhaChangePersonDetailsFileEntry mhaChangePersonDetailsFileEntry =
-                new MhaChangePersonDetailsFileEntry(
-                        nricFieldOptions(scenario.get("nric")),
-                        scenario.get("data_item_orig_value"),
-                        createDataItemChangeValue(scenario.get("data_item_change_category"),
-                                scenario.get("data_item_orig_value"), scenario.get("data_item_change_value")),
-                        createItemChangeDate(scenario.get("data_item_change_date")),
-                        scenario.get("data_item_change_category").charAt(0));
-        //Generate the fake data
-        setupDateForScenario(mhaChangePersonDetailsFileEntry.getDataItemCat(), mhaChangePersonDetailsFileEntry);
+        return setupDataForScenario(scenario.get("data_item_change_category").charAt(0), scenario);
+    }
+
+    private String setupDataForScenario(char itemChangeCat, Map<String, String> scenario) {
+        MhaChangePersonDetailsFileEntry mhaChangePersonDetailsFileEntry;
+        LocalDate dataItemChangeDate = createItemChangeDate(scenario.get("data_item_change_date"));
+        LocalDate birthDate = generateBirthDate(dataItemChangeDate);
+        String nric = nricFieldOptions(scenario.get("nric"));
+        PersonId personId;
+        switch (itemChangeCat) {
+            case 'S':
+                Gender originalGender = Gender.fromString(scenario.get("data_item_orig_value"));
+                personId = personFactory.createNewSCPersonId(birthDate, null, null, originalGender, nric);
+                mhaChangePersonDetailsFileEntry = new MhaChangePersonDetailsFileEntryCatGender(
+                        nric,
+                        scenario.get("data_item_change_value"),
+                        dataItemChangeDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD),
+                        scenario.get("data_item_change_category").charAt(0), personId );
+                break;
+            case 'N':
+                personId = personFactory.createNewSCPersonId(birthDate, null, scenario.get("data_item_orig_value"), null, nric);
+                mhaChangePersonDetailsFileEntry = new MhaChangePersonDetailsFileEntryCatName(
+                        nric,
+                        scenario.get("data_item_change_value"),
+                        dataItemChangeDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD),
+                        scenario.get("data_item_change_category").charAt(0), personId);
+                break;
+            case 'B':
+                LocalDate origBirthDate = dateUtils.parse(scenario.get("data_item_orig_value"));
+                personId = personFactory.createNewSCPersonId(origBirthDate, null, null, null, nric);
+                mhaChangePersonDetailsFileEntry = new MhaChangePersonDetailsFileEntryCatBirthDate(
+                        nric,
+                        scenario.get("data_item_change_value"),
+                        dataItemChangeDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD),
+                        scenario.get("data_item_change_category").charAt(0), personId);
+                break;
+            case 'D':
+                //NOT GOING TO SUPPORT DEATH DATE CHANGES
+                throw new TestFailException("Death Category will not supported!");
+            default:
+                mhaChangePersonDetailsFileEntry = new MhaChangePersonDetailsFileEntryCatUnsupported(nric,
+                        scenario.get("data_item_change_value"),
+                        dataItemChangeDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD),
+                        scenario.get("data_item_change_category").charAt(0), null);
+                log.info("Unsupported item change category: "+itemChangeCat);
+        }
+        beanFactory.autowireBean(mhaChangePersonDetailsFileEntry);
+        if ( !mhaChangePersonDetailsFileEntry.isValid() ) {
+            String errorMsg = "Error with Mha Change Person Details Data Entry: "+mhaChangePersonDetailsFileEntry.getNric();
+            errorMsg += System.lineSeparator()+String.join(System.lineSeparator(), mhaChangePersonDetailsFileEntry.getErrorMessages());
+            log.warn(errorMsg);
+        }
         return mhaChangePersonDetailsFileEntry.toString();
     }
 
-    private void setupDateForScenario(char itemChangeCat, MhaChangePersonDetailsFileEntry entry) {
-        PersonId personId = personFactory.createNewSCPersonId(entry.getNric());
-        switch (itemChangeCat) {
-            case 'S':
-                Gender originalGender = Gender.fromString(entry.getDataItemOriginalValue());
-                personDetailRepo.updateGenderForPerson(originalGender, personId.getPerson());
-                break;
-            case 'N':
-                personNameRepo.updateNameForPerson(entry.getDataItemOriginalValue(), personId.getPerson());
-                break;
-            case 'B':
-                LocalDate origBirthDate = dateUtils.parse(entry.getDataItemOriginalValue());
-                personFactory.updateBirthdate(personId.getPerson(), origBirthDate, origBirthDate);
-                break;
-            case 'D':
-                personDetailRepo.updateDeathDateForPerson(dateUtils.parse(entry.getDataItemOriginalValue()), personId.getPerson());
-                break;
-            default:
-                log.info("Unsupported item change category: "+itemChangeCat);
+    private LocalDate generateBirthDate(LocalDate upperBound) {
+        LocalDate upperBoundaryDate = upperBound;
+        if ( upperBound == null || upperBound.isAfter(TestConstants.DEFAULT_CUTOFF_DATE) ) {
+            upperBoundaryDate = TestConstants.DEFAULT_CUTOFF_DATE;
         }
+        return Phaker.validDateFromRange(dateUtils.yearsBeforeToday(13), upperBoundaryDate);
     }
 
-    private String createItemChangeDate(String date) {
-        String changeDate = "";
+    private LocalDate createItemChangeDate(String date) {
+        LocalDate changeDate;
         switch(date.toUpperCase()) {
             case "VALID":
-                changeDate = Phaker.validDateFromRange(dateUtils.yearsBeforeToday(13), TestConstants.DEFAULT_CUTOFF_DATE).format(dateUtils.DATETIME_FORMATTER_YYYYMMDD);
+                changeDate = Phaker.validDateFromRange(dateUtils.yearsBeforeToday(13), TestConstants.DEFAULT_CUTOFF_DATE);
                 break;
             case "FUTUREDATE":
-                changeDate = dateUtils.daysAfterToday(1).format(dateUtils.DATETIME_FORMATTER_YYYYMMDD);
+                changeDate = dateUtils.daysAfterToday(1);
                 break;
             default:
                 LocalDate itemChangeDate = dateUtils.parse(date);
                 if ( itemChangeDate == null ) {
                     throw new TestFailException("Invalid item change date: "+date);
                 }
-                changeDate = itemChangeDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD);
+                changeDate = itemChangeDate;
         }
         return changeDate;
     }

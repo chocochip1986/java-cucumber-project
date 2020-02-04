@@ -114,6 +114,14 @@ public class TestManager {
         return driverManager;
     }
 
+    public void quit() {
+        tearDown();
+    }
+
+    private void tearDown() {
+        log.info("Exiting test suite...");
+    }
+
     public void sleep() {
         try {
             Thread.sleep(1000);

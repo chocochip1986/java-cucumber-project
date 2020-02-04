@@ -13,12 +13,10 @@ import io.cucumber.java.en.And;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
 
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -61,9 +59,11 @@ public class CommonSteps extends AbstractSteps {
                     slack.sendToSlack(testManager.testEnv.getTopicArn(), String.format("Status:%s", batch.getStatus()), Slack.Level.NEUTRAL);
                     Assert.assertEquals(expectedBatchStatus, batch.getStatus(), "The "+batchJobName+" job from "+agencyName+" did not complete!!!");
                 }
+                testContext.set("batch", batch);
             } else {
                 Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
                 Assert.assertEquals(expectedBatchStatus, batch.getStatus(), "The "+batchJobName+" job from "+agencyName+" did not complete!!!");
+                testContext.set("batch", batch);
             }
         } else {
             throw new TestFailException("No batch job previously created!");

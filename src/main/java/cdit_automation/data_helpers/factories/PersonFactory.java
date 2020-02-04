@@ -167,6 +167,9 @@ public class PersonFactory extends AbstractFactory {
         if ( gender != null ) {
             personOptions.setGender(gender);
         }
+        if ( name != null ) {
+            personOptions.setName(name);
+        }
         personOptions.setNationalityAndIdentifier(nationalityEnum, identifier);
 
         return createPerson(personOptions);

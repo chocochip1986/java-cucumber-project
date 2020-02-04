@@ -1,35 +1,100 @@
 package cdit_automation.data_helpers.batch_entities;
 
-import cdit_automation.enums.PersonDetailDataItemChangedEnum;
-import cdit_automation.utilities.StringUtils;
-import lombok.Builder;
+import cdit_automation.data_helpers.factories.PersonFactory;
+import cdit_automation.data_setup.Phaker;
+import cdit_automation.models.PersonDetail;
+import cdit_automation.models.PersonId;
+import cdit_automation.repositories.PersonDetailRepo;
+import cdit_automation.utilities.DateUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+import org.springframework.beans.factory.annotation.Autowire;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@Builder
+@SuperBuilder
+@Configurable(autowire = Autowire.BY_NAME)
 public class MhaChangePersonDetailsFileEntry {
-    private String nric;
-    private String dataItemOriginalValue;
-    private String dataItemChangeVal;
-    private String dataItemChangeDate;
-    private char dataItemCat;
+    @Autowired protected PersonDetailRepo personDetailRepo;
+    @Autowired protected PersonFactory personFactory;
+    @Autowired protected DateUtils dateUtils;
 
-    public MhaChangePersonDetailsFileEntry(String nric, String dataItemOriginalValue, String dataItemChangeVal, String dataItemChangeDate, char personDetailDataItemChanged) {
+    protected String nric;
+    protected String dataItemChangeDate;
+    protected char dataItemCat;
+    protected PersonId personId;
+
+    protected List<String> errorMessages;
+
+    public MhaChangePersonDetailsFileEntry(String nric, String dataItemChangeDate, char personDetailDataItemChanged) {
         this.nric = nric;
-        this.dataItemOriginalValue = dataItemOriginalValue;
-        this.dataItemChangeVal = dataItemChangeVal;
         this.dataItemChangeDate = dataItemChangeDate;
         this.dataItemCat = personDetailDataItemChanged;
+        errorMessages = new ArrayList<>();
+    }
+
+    public void checkValid() {
+        if ( isPersonIdNull() ) {
+            errorMessages.add("No person_id record created!");
+        }
+        if ( isDataItemChangeDateParsable() ) {
+            errorMessages.add("Unable to parse item change date: "+this.dataItemChangeDate);
+        }
+        if ( isItemChangeDateOlderThanBirthDate() ) {
+            errorMessages.add("Item Change Date is older than Person, "+this.nric+", Birth Date ");
+        }
+    }
+
+    public boolean isValid() {
+        checkValid();
+        if ( errorMessages.isEmpty() ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    protected boolean isPersonIdNull() {
+        if ( this.personId == null ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    protected  boolean isDataItemChangeDateParsable() {
+        return isDateParsable(this.dataItemChangeDate);
+    }
+
+    protected boolean isItemChangeDateOlderThanBirthDate() {
+        PersonDetail personDetail = personDetailRepo.findByPerson(this.personId.getPerson());
+        if ( personDetail == null ) {
+            return false;
+        } else {
+            return LocalDate.parse(this.dataItemChangeDate, dateUtils.DATETIME_FORMATTER_YYYYMMDD).isBefore(personDetail.getDateOfBirth());
+        }
+    }
+
+    protected boolean isDateParsable(String date) {
+        try {
+            LocalDate.parse(date, Phaker.DATETIME_FORMATTER_YYYYMMDD);
+            return true;
+        } catch ( DateTimeParseException e ) {
+            return false;
+        }
     }
 
     public String toString() {
-        return StringUtils.leftPad(nric, 9)
-                +StringUtils.leftPad(String.valueOf(dataItemCat), 1)
-                +StringUtils.leftPad(dataItemChangeVal, 66)
-                +StringUtils.leftPad(dataItemChangeDate, 8);
+        return "Do not use this.";
     }
 }

@@ -16,7 +16,6 @@ Feature: Data processing for Mha Change in Person Details
     | valid | S                         | M                    | F                       | valid                 |
     | valid | N                         | Chao Ah Beng         | Tan Ah Beng             | valid                 |
     | valid | B                         | 19860924             | 20000924                | valid                 |
-    | valid | D                         | 20180909             | 20190909                | valid                 |
     When MHA sends the MHA_PERSON_DETAIL_CHANGE file to Datasource sftp for processing
     And the Mha Change of Personal Details batch job completes running with status CLEANUP
 
@@ -27,19 +26,39 @@ Feature: Data processing for Mha Change in Person Details
       | valid | S                         | M                    | F                       | valid                 |
       | valid | N                         | Chao Ah Beng         | Tan Ah Beng             | valid                 |
       | valid | X                         | 19860924             | 20000924                | valid                 |
-      | valid | D                         | 20180909             | 20190909                | valid                 |
     When MHA sends the MHA_PERSON_DETAIL_CHANGE file to Datasource sftp for processing
     And the Mha Change of Personal Details batch job completes running with status RAW_DATA_ERROR
     And the error message contains Invalid Person Detail Data Item Changed type
 
   @set_4
-  Scenario: Mha sends a file with repeated original name
+  Scenario: Mha sends a file with repeated partial duplicated name
     Given the mha person details file has the following details:
       | nric      | data_item_change_category | data_item_orig_value | data_item_change_value  | data_item_change_date |
       | S5881915H | N                         | Jay Chou             | Tan Ah Beng             | valid                 |
-      | valid     | X                         | 19860924             | 20000924                | valid                 |
-      | valid     | D                         | 20180909             | 20190909                | valid                 |
-      | S5881915H | N                         | Jay Chou             | Tan Ah Beng             | valid                 |
+      | valid     | B                         | 19860924             | 20000924                | valid                 |
+      | S5881915H | N                         | Jay Chou             | Tan Tan Ah Beng         | valid                 |
+    When MHA sends the MHA_PERSON_DETAIL_CHANGE file to Datasource sftp for processing
+    And the Mha Change of Personal Details batch job completes running with status BULK_CHECK_VALIDATION_ERROR
+    And the error message contains Partially Duplicate Record found
+
+   @set_5
+   Scenario: MHa sends a file with repeated partial duplicated gender
+     Given the mha person details file has the following details:
+       | nric      | data_item_change_category | data_item_orig_value | data_item_change_value  | data_item_change_date |
+       | S5881915H | S                         | M                    | F                       | valid                 |
+       | valid     | N                         | Chao Ah Beng         | Tan Ah Beng             | valid                 |
+       | S5881915H | S                         | U                    | F                       | valid                 |
+     When MHA sends the MHA_PERSON_DETAIL_CHANGE file to Datasource sftp for processing
+     And the Mha Change of Personal Details batch job completes running with status BULK_CHECK_VALIDATION_ERROR
+     And the error message contains Partially Duplicate Record found
+
+  @set_6
+  Scenario: MHa sends a file with repeated partial duplicated birth date
+    Given the mha person details file has the following details:
+      | nric      | data_item_change_category | data_item_orig_value | data_item_change_value  | data_item_change_date |
+      | S5881915H | B                         | 20180909             | 20191231                | valid                 |
+      | valid     | N                         | Chao Ah Beng         | Tan Ah Beng             | valid                 |
+      | S5881915H | B                         | 20180919             | 20191231                | valid                 |
     When MHA sends the MHA_PERSON_DETAIL_CHANGE file to Datasource sftp for processing
     And the Mha Change of Personal Details batch job completes running with status BULK_CHECK_VALIDATION_ERROR
     And the error message contains Partially Duplicate Record found
