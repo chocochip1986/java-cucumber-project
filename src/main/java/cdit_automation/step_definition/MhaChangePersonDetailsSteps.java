@@ -5,35 +5,45 @@ import cdit_automation.models.FileDetail;
 import cdit_automation.models.FileReceived;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Lists;
+import org.junit.Ignore;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
+@Ignore
 public class MhaChangePersonDetailsSteps extends AbstractSteps{
     @Given("^the mha change in person details file is empty$")
     public void theMhaChangeInPersonDetailsFileIsEmpty() throws IOException {
-        List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();;
-        List<String> body = Lists.emptyList();
+        log.info("Creating an empty person details file file...");
+        batchFileDataWriter.begin(mhaChangePersonDetailsDataPrep.generateDoubleHeader(), FileTypeEnum.MHA_PERSON_DETAIL_CHANGE, null);
+        batchFileDataWriter.end();
+//        List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();;
+//        List<String> body = Lists.emptyList();
 
-        listOfIdentifiersToWriteToFile.add(mhaDualCitizenFileDataPrep.generateDoubleHeader());
-        listOfIdentifiersToWriteToFile.addAll(body);
-        listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
+//        listOfIdentifiersToWriteToFile.add(mhaDualCitizenFileDataPrep.generateDoubleHeader());
+//        listOfIdentifiersToWriteToFile.addAll(body);
+//        listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
 
-        batchFileCreator.writeToFile(FileTypeEnum.MHA_PERSON_DETAIL_CHANGE.getValue().toLowerCase(), listOfIdentifiersToWriteToFile);
+//        batchFileCreator.writeToFile(FileTypeEnum.MHA_PERSON_DETAIL_CHANGE.getValue().toLowerCase(), listOfIdentifiersToWriteToFile);
     }
 
     @Given("the mha person details file has the following details:")
     public void theMhaPersonDetailsFileHasTheFollowingDetails(DataTable dataTable) throws IOException {
-        List<Map<String, String>> list = dataTable.asMaps(String.class, String.class);
-        List<String> body = mhaChangePersonDetailsDataPrep.createBodyOfTestScenarios(list);
+        batchFileDataWriter.begin(mhaChangePersonDetailsDataPrep.generateDoubleHeader(), FileTypeEnum.MHA_PERSON_DETAIL_CHANGE, null);
 
-        List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();
-        listOfIdentifiersToWriteToFile.add(mhaChangePersonDetailsDataPrep.generateDoubleHeader());
-        listOfIdentifiersToWriteToFile.addAll(body);
-        listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
-        batchFileCreator.writeToFile(FileTypeEnum.MHA_PERSON_DETAIL_CHANGE.getValue().toLowerCase(), listOfIdentifiersToWriteToFile);
+        List<Map<String, String>> list = dataTable.asMaps(String.class, String.class);
+        mhaChangePersonDetailsDataPrep.createBodyOfTestScenarios(list);
+
+        batchFileDataWriter.end();
+    }
+
+    @Given("^the mha person details file is being created$")
+    public void theMhaPersonDetailsFileIsBeingCreated() {
+        batchFileDataWriter.begin(mhaChangePersonDetailsDataPrep.generateDoubleHeader(), FileTypeEnum.MHA_PERSON_DETAIL_CHANGE, null);
     }
 }

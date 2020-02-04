@@ -46,6 +46,8 @@ public class CommonSteps extends AbstractSteps {
                         batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
                         if ( batch != null && batch.getStatus().equals(expectedBatchStatus) ) {
                             return Boolean.TRUE;
+                        } else if ( batch != null && BatchStatusEnum.isBatchStatusAnErrorStatus(batch.getStatus()) ) {
+                            return Boolean.TRUE;
                         } else {
                             return Boolean.FALSE;
                         }

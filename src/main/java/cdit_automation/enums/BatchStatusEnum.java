@@ -21,12 +21,26 @@ public enum BatchStatusEnum {
     ERROR_RATE_ERROR("ERROR_RATE_ERROR"),
     MAPPED_DATA("MAPPED_DATA"),
     MAPPING_ERROR("MAPPING_ERROR"),
-    BULK_MAPPED_DATA("BULK_MAPPED_DATA"),
-    BULK_MAPPED_DATA_ERROR("BULK_MAPPED_DATA_ERROR"),
+    FILE_CHECK_AGAINST_PREP_DATA("FILE_CHECK_AGAINST_PREP_DATA"),
+    FILE_CHECK_AGAINST_PREP_DATA_ERROR("FILE_CHECK_AGAINST_PREP_DATA_ERROR"),
     CLEANUP("CLEANUP"),
     CLEANUP_ERROR("CLEANUP_ERROR"),
     SENT_DATA("SENT_DATA"),
     SENDING_ERROR("SENDING_ERROR");
+
+    private static BatchStatusEnum[] ERROR_STATUSES = new BatchStatusEnum[]{
+            INIT_ERROR,
+            LINE_ERROR,
+            FILE_ERROR,
+            RAW_DATA_ERROR,
+            BULK_CHECK_VALIDATION_ERROR,
+            VALIDATED_TO_PREPARED_ERROR,
+            ERROR_RATE_ERROR,
+            MAPPING_ERROR,
+            FILE_CHECK_AGAINST_PREP_DATA_ERROR,
+            CLEANUP_ERROR,
+            SENDING_ERROR
+    };
 
     private String value;
 
@@ -41,5 +55,14 @@ public enum BatchStatusEnum {
 
     public static BatchStatusEnum randomValidBatchStatusEnum() {
         return BatchStatusEnum.values()[new Random().nextInt(BatchStatusEnum.values().length)];
+    }
+
+    public static boolean isBatchStatusAnErrorStatus(BatchStatusEnum batchStatusEnum){
+        for(BatchStatusEnum batchStatus : ERROR_STATUSES) {
+            if ( batchStatusEnum.equals(batchStatus) ) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -37,7 +37,9 @@ public class MhaChangePersonDetailsDataPrep extends BatchFileDataPrep {
     }
 
     public String createScenarioEntry(Map<String, String> scenario) {
-        return setupDataForScenario(scenario.get("data_item_change_category").charAt(0), scenario);
+        String inputLine = setupDataForScenario(scenario.get("data_item_change_category").charAt(0), scenario);
+        batchFileDataWriter.chunkOrWrite(inputLine);
+        return inputLine;
     }
 
     private String setupDataForScenario(char itemChangeCat, Map<String, String> scenario) {
