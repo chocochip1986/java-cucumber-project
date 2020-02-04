@@ -38,21 +38,14 @@ public class MhaDeathSteps extends AbstractSteps {
 
     @Given("^the mha death file has the following details:$")
     public void theMhaDeathFileHasTheFollowingDetails(DataTable table) throws IOException {
+        batchFileDataWriter.begin(mhaChangePersonDetailsDataPrep.generateDoubleHeader(), FileTypeEnum.MHA_DEATH_DATE, null);
         Timestamp receivedTimestamp = dateUtils.beginningOfDayToTimestamp(dateUtils.now());
 
         List<Map<String, String>> list = table.asMaps(String.class, String.class);
-        List<String> body = mhaDeathDateFileDataPrep.createBodyOfTestScenarios(list, testContext, receivedTimestamp);
+        mhaDeathDateFileDataPrep.createBodyOfTestScenarios(list, testContext, receivedTimestamp);
 
-        List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();
-
-        listOfIdentifiersToWriteToFile.add(mhaDeathDateFileDataPrep.generateDoubleHeader());
-        listOfIdentifiersToWriteToFile.addAll(body);
-        listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
-
-        batchFileCreator.writeToFile(FileTypeEnum.MHA_DEATH_DATE.getValue().toLowerCase(), listOfIdentifiersToWriteToFile);
-
+        batchFileDataWriter.end();
         testContext.set("receivedTimestamp", receivedTimestamp);
-        testContext.set("listOfIdentifiersToWriteToFile", listOfIdentifiersToWriteToFile);
     }
 
     @Then("I verify that the people listed in the death file have the correct death dates")

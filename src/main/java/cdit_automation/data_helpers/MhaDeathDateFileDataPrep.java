@@ -58,7 +58,9 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
         List<String> listOfInvalidNrics = new ArrayList<>();
 
         for ( int i = 0 ; i < numOfInvalidNrics ; i++ ) {
-            listOfInvalidNrics.add(Phaker.invalidNric()+randomDeathDate());
+            String inputLine = Phaker.invalidNric()+randomDeathDate();
+            listOfInvalidNrics.add(inputLine);
+            batchFileDataWriter.chunkOrWrite(inputLine);
         }
 
         return listOfInvalidNrics;
@@ -70,8 +72,13 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
         for ( int i = 0 ; i < numOfDuplicatedEntries ; i++ ) {
             String dupNric = Phaker.validNric();
             String randomDeathDate = randomDeathDate();
-            listOfDuplicatedEntries.add(dupNric+randomDeathDate);
-            listOfDuplicatedEntries.add(dupNric+randomDeathDate);
+            String inputLine = dupNric+randomDeathDate;
+
+            listOfDuplicatedEntries.add(inputLine);
+            listOfDuplicatedEntries.add(inputLine);
+
+            batchFileDataWriter.chunkOrWrite(inputLine);
+            batchFileDataWriter.chunkOrWrite(inputLine);
         }
 
         return listOfDuplicatedEntries;
@@ -82,8 +89,13 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
 
         for ( int i = 0 ; i < numOfDuplicatedEntries ; i++ ) {
             String dupNric = Phaker.validNric();
-            listOfDuplicatedEntries.add(dupNric+randomDeathDate());
-            listOfDuplicatedEntries.add(dupNric+randomDeathDate());
+            String inputLine1 = dupNric+randomDeathDate();
+            String inputLine2 = dupNric+randomDeathDate();
+            listOfDuplicatedEntries.add(inputLine1);
+            listOfDuplicatedEntries.add(inputLine2);
+
+            batchFileDataWriter.chunkOrWrite(inputLine1);
+            batchFileDataWriter.chunkOrWrite(inputLine2);
         }
 
         return listOfDuplicatedEntries;
@@ -95,7 +107,9 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
         for ( int i = 0 ; i < numOfValidDeathCases ; i++ ) {
             PersonId personId = personFactory.createNewSCPersonId();
             PersonDetail personDetail = personDetailRepo.findByPerson(personId.getPerson());
-            listOfValidDeathCases.add(personId.getNaturalId()+randomDeathDate(fileReceivedDate, personDetail.getDateOfBirth()));
+            String inputLine = personId.getNaturalId()+randomDeathDate(fileReceivedDate, personDetail.getDateOfBirth());
+            listOfValidDeathCases.add(inputLine);
+            batchFileDataWriter.chunkOrWrite(inputLine);
         }
 
         return listOfValidDeathCases;
@@ -107,7 +121,9 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
         for ( int i = 0 ; i < numOfValidDeathCases ; i++ ) {
             PersonId personId = personFactory.createNewPPPersonId();
             PersonDetail personDetail = personDetailRepo.findByPerson(personId.getPerson());
-            listOfValidDeathCases.add(personId.getNaturalId()+randomDeathDate(fileReceivedDate, personDetail.getDateOfBirth()));
+            String inputLine = personId.getNaturalId()+randomDeathDate(fileReceivedDate, personDetail.getDateOfBirth());
+            listOfValidDeathCases.add(inputLine);
+            batchFileDataWriter.chunkOrWrite(inputLine);
         }
 
         return listOfValidDeathCases;
@@ -119,7 +135,9 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
         for ( int i = 0 ; i < numOfValidDeathCases ; i++ ) {
             PersonId personId = personFactory.createNewFRPersonId();
             PersonDetail personDetail = personDetailRepo.findByPerson(personId.getPerson());
-            listOfValidDeathCases.add(personId.getNaturalId()+randomDeathDate(fileReceivedDate, personDetail.getDateOfBirth()));
+            String inputLine = personId.getNaturalId()+randomDeathDate(fileReceivedDate, personDetail.getDateOfBirth());
+            listOfValidDeathCases.add(inputLine);
+            batchFileDataWriter.chunkOrWrite(inputLine);
         }
 
         return listOfValidDeathCases;
@@ -132,8 +150,9 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
             PersonId personId = personFactory.createNewSCPersonId();
             PersonDetail personDetail = personDetailRepo.findByPerson(personId.getPerson());
             personDetailRepo.updateBirthDateForPerson(dateUtils.now().minusDays(20), personDetail.getPerson());
-
-            listOfPpl.add(personId.getNaturalId()+dateUtils.now().minusDays(21).format(Phaker.DATETIME_FORMATTER_YYYYMMDD));
+            String inputLine = personId.getNaturalId()+dateUtils.now().minusDays(21).format(Phaker.DATETIME_FORMATTER_YYYYMMDD);
+            listOfPpl.add(inputLine);
+            batchFileDataWriter.chunkOrWrite(inputLine);
         }
 
         return listOfPpl;
@@ -146,8 +165,9 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
             PersonId personId = personFactory.createNewSCPersonId();
             PersonDetail personDetail = personDetailRepo.findByPerson(personId.getPerson());
             personDetailRepo.updateDeathDateForPerson(Phaker.validDate(personDetail.getDateOfBirth(), dateUtils.now()), personId.getPerson());
-
-            listOfPpl.add(personId.getNaturalId()+randomDeathDate(fileReceivedDate, personDetail.getDateOfBirth()));
+            String inputLine = personId.getNaturalId()+randomDeathDate(fileReceivedDate, personDetail.getDateOfBirth());
+            listOfPpl.add(inputLine);
+            batchFileDataWriter.chunkOrWrite(inputLine);
         }
 
         return listOfPpl;
@@ -158,8 +178,9 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
 
         for ( int i = 0 ; i < numOfPpl ; i++ ) {
             PersonId personId = personFactory.createNewSCPersonId();
-
-            listOfPpl.add(personId.getNaturalId()+dateUtils.tomorrow().format(Phaker.DATETIME_FORMATTER_YYYYMMDD));
+            String inputLine = personId.getNaturalId()+dateUtils.tomorrow().format(Phaker.DATETIME_FORMATTER_YYYYMMDD);
+            listOfPpl.add(inputLine);
+            batchFileDataWriter.chunkOrWrite(inputLine);
         }
 
         return listOfPpl;

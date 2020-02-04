@@ -124,7 +124,7 @@ public class TestManager {
 
     private void tearDown() {
         log.info("Exiting test suite...");
-        System.exit(0);
+        throw new IllegalArgumentException("Exiting test suite...");
     }
 
     public void sleep() {
