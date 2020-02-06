@@ -165,7 +165,7 @@ public class TestManager {
         String summary = System.lineSeparator()+"Number of tests ran: "+listOfScenariosRan.size();
         summary += System.lineSeparator()+"Number of tests passed: "+(listOfScenariosRan.size()-listOfFailingScenarios.size());
         summary += System.lineSeparator()+"Number of tests failed: "+listOfFailingScenarios.size();
-        summary += System.lineSeparator()+"Test Run Duration: "+getTestRunDuration();
+        summary += System.lineSeparator()+"Test Run Duration: "+getTestRunDuration()+" mins";
         return summary;
     }
 
