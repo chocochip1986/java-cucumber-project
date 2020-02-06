@@ -16,6 +16,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +26,7 @@ import java.util.List;
 public class TestManager {
 
     private static final Long DEFAULT_WAIT=10L;
+    private final String TEST_SUMMARY_TITLE="==============Test Run Summary==============";
 
     @Autowired
     private DriverManager driverManager;
@@ -43,6 +46,8 @@ public class TestManager {
     private Path projectRoot;
     private Path outputArtifactsDir;
     private boolean hasStarted;
+    private ZonedDateTime testRunStartTime;
+    private ZonedDateTime testRunEndTime;
 
     @Autowired
     public TestManager() {
@@ -57,24 +62,18 @@ public class TestManager {
         currentBrowserType = getEnvVarBrowserType();
         projectRoot = setProjectRoot();
         outputArtifactsDir = setOutputArtifactsDir();
+        testRunStartTime = null;
+        testRunEndTime = null;
         hasStarted = false;
-    }
-
-    private void establishTestSuiteShutDownHook() {
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                log.info(constructSummaryNotification());
-                sendNotificationToSlack(constructSummaryNotification());
-            }
-        });
     }
 
     public void begin() {
         if ( !hasStarted ) {
             String message = "CDS Datasource Automation begins running at "+ LocalDateTime.now(ZoneId.systemDefault()).toString();
+            constructTestRunSummary(message);
             sendNotificationToSlack(message);
             establishTestSuiteShutDownHook();
+            testRunStartTime = getLocalDateTimeNow();
             hasStarted = true;
         }
     }
@@ -146,7 +145,7 @@ public class TestManager {
     }
 
     public void quit() {
-        sendNotificationToSlack(constructSummaryNotification());
+        sendNotificationToSlack(constructTestRunSummary(constructSummaryNotification()));
         tearDown();
     }
 
@@ -156,12 +155,17 @@ public class TestManager {
         }
     }
 
+    private String constructTestRunSummary(String message) {
+        message = System.lineSeparator()+TEST_SUMMARY_TITLE+message;
+        message += System.lineSeparator()+TEST_SUMMARY_TITLE;
+        return message;
+    }
+
     private String constructSummaryNotification() {
-        String summary = System.lineSeparator()+"==============Test Run Summary==============";
-        summary += System.lineSeparator()+"Number of tests ran: "+listOfScenariosRan.size();
+        String summary = System.lineSeparator()+"Number of tests ran: "+listOfScenariosRan.size();
         summary += System.lineSeparator()+"Number of tests passed: "+(listOfScenariosRan.size()-listOfFailingScenarios.size());
         summary += System.lineSeparator()+"Number of tests failed: "+listOfFailingScenarios.size();
-        summary += System.lineSeparator()+"==============Test Run Summary==============";
+        summary += System.lineSeparator()+"Test Run Duration: "+getTestRunDuration();
         return summary;
     }
 
@@ -212,5 +216,28 @@ public class TestManager {
             outputDir.mkdir();
         }
         return outputDir.toPath();
+    }
+
+    private void establishTestSuiteShutDownHook() {
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                testRunEndTime = getLocalDateTimeNow();
+                log.info(constructTestRunSummary(constructSummaryNotification()));
+                sendNotificationToSlack(constructTestRunSummary(constructSummaryNotification()));
+            }
+        });
+    }
+
+    private long getTestRunDuration() {
+        if ( testRunStartTime != null && testRunEndTime != null ) {
+            return ChronoUnit.MINUTES.between(testRunStartTime, testRunEndTime);
+        } else {
+            return 0;
+        }
+    }
+
+    private ZonedDateTime getLocalDateTimeNow() {
+        return ZonedDateTime.now(ZoneId.of("Asia/Singapore"));
     }
 }
