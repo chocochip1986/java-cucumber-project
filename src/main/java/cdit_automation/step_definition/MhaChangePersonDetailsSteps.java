@@ -1,16 +1,12 @@
 package cdit_automation.step_definition;
 
 import cdit_automation.enums.FileTypeEnum;
-import cdit_automation.models.FileDetail;
-import cdit_automation.models.FileReceived;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.util.Lists;
 import org.junit.Ignore;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +14,7 @@ import java.util.Map;
 @Ignore
 public class MhaChangePersonDetailsSteps extends AbstractSteps{
     @Given("^the mha change in person details file is empty$")
-    public void theMhaChangeInPersonDetailsFileIsEmpty() throws IOException {
+    public void theMhaChangeInPersonDetailsFileIsEmpty() {
         log.info("Creating an empty person details file file...");
         batchFileDataWriter.begin(mhaChangePersonDetailsDataPrep.generateDoubleHeader(), FileTypeEnum.MHA_PERSON_DETAIL_CHANGE, null);
         batchFileDataWriter.end();

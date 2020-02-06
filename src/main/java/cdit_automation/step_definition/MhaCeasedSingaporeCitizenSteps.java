@@ -4,7 +4,6 @@ import cdit_automation.asserts.Assert;
 import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.enums.NationalityEnum;
 import cdit_automation.models.CeasedCitizenValidated;
-import cdit_automation.models.FileDetail;
 import cdit_automation.models.Nationality;
 import cdit_automation.models.PersonDetail;
 import cdit_automation.models.PersonId;
@@ -38,7 +37,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
     List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();
     LocalDate cutOffDate = dateUtils.daysBeforeToday(5);
     testContext.set("cutOffDate", cutOffDate);
-    LocalDate extractionDate = dateUtils.daysBeforeToday(3);
+    LocalDate extractionDate = dateUtils.daysBeforeToday(5);
     listOfIdentifiersToWriteToFile.add(
         mhaCeasedCitizenFileDataPrep.generateDoubleHeader(extractionDate, cutOffDate));
     List<String> body =

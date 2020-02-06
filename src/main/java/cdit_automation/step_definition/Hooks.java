@@ -15,6 +15,7 @@ public class Hooks extends AbstractSteps {
 
     @Before(order=1)
     public void before() {
+        testManager.begin();
     }
 
     @Before(order=2)
@@ -34,8 +35,14 @@ public class Hooks extends AbstractSteps {
     @After(order=1)
     public void after(Scenario scenario) {
         testManager.updateTestStatistics(scenario);
-        if ( scenario.isFailed() && testManager.failFastEnabled() ) {
-            testManager.quit();
+        if ( scenario.isFailed() ) {
+            String message = "======================================================";
+            message += System.lineSeparator()+"Scenario: "+scenario.getName()+ " => Status: "+scenario.getStatus();
+            message += System.lineSeparator()+"======================================================";
+            testManager.sendNotificationToSlack(message);
+            if ( testManager.failFastEnabled() ) {
+                testManager.quit();
+            }
         }
     }
 
@@ -50,18 +57,20 @@ public class Hooks extends AbstractSteps {
     }
 
     private void displayScenarioStartMessage(Scenario scenario) {
-        System.out.println("======================================================");
-        System.out.println("Feature: " +scenario.getId());
-        System.out.println("Scenario - " +scenario.getName()+ " at line: "+scenario.getLine());
-        System.out.println("Scenario tags: " +scenario.getSourceTagNames());
-        System.out.println("Scenario url: " +scenario.getUri());
-        System.out.println("======================================================");
+        String sceanrioStartMessage = "======================================================";
+        sceanrioStartMessage += System.lineSeparator()+"Feature: " +scenario.getId();
+        sceanrioStartMessage += System.lineSeparator()+"Scenario - " +scenario.getName()+ " at line: "+scenario.getLine();
+        sceanrioStartMessage += System.lineSeparator()+"Scenario tags: " +scenario.getSourceTagNames();
+        sceanrioStartMessage += System.lineSeparator()+"Scenario url: " +scenario.getUri();
+        sceanrioStartMessage += System.lineSeparator()+"======================================================";
+        log.info(sceanrioStartMessage);
     }
 
     private void displayScenarioEndMessage(Scenario scenario) {
-        System.out.println("======================================================");
-        System.out.println("Done - " +scenario.getName()+ " => Status: "+scenario.getStatus());
-        System.out.println("======================================================");
+        String scenarioEndMessage = "======================================================";
+        scenarioEndMessage += System.lineSeparator()+"Scenario - " +scenario.getName()+ " => Status: "+scenario.getStatus();
+        scenarioEndMessage += System.lineSeparator()+"======================================================";
+        log.info(scenarioEndMessage);
     }
 
     private void truncateAllTables() {

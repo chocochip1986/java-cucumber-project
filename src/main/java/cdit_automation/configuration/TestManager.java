@@ -1,5 +1,6 @@
 package cdit_automation.configuration;
 
+import cdit_automation.aws.modules.Slack;
 import cdit_automation.driver_management.DriverManager;
 import cdit_automation.enums.BrowserTypeEnums;
 import cdit_automation.exceptions.TestFailException;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,11 +34,15 @@ public class TestManager {
     @Autowired
     public TestEnv testEnv;
 
+    @Autowired
+    public Slack slack;
+
     private List<Scenario> listOfFailingScenarios;
     private List<Scenario> listOfScenariosRan;
     private BrowserTypeEnums currentBrowserType;
     private Path projectRoot;
     private Path outputArtifactsDir;
+    private boolean hasStarted;
 
     @Autowired
     public TestManager() {
@@ -50,6 +57,26 @@ public class TestManager {
         currentBrowserType = getEnvVarBrowserType();
         projectRoot = setProjectRoot();
         outputArtifactsDir = setOutputArtifactsDir();
+        hasStarted = false;
+    }
+
+    private void establishTestSuiteShutDownHook() {
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                log.info(constructSummaryNotification());
+                sendNotificationToSlack(constructSummaryNotification());
+            }
+        });
+    }
+
+    public void begin() {
+        if ( !hasStarted ) {
+            String message = "CDS Datasource Automation begins running at "+ LocalDateTime.now(ZoneId.systemDefault()).toString();
+            sendNotificationToSlack(message);
+            establishTestSuiteShutDownHook();
+            hasStarted = true;
+        }
     }
 
     public void addToFailingListOfScenarios(Scenario scenario) {
@@ -119,7 +146,23 @@ public class TestManager {
     }
 
     public void quit() {
+        sendNotificationToSlack(constructSummaryNotification());
         tearDown();
+    }
+
+    public void sendNotificationToSlack(String message) {
+        if ( testEnv.getEnv().equals(TestEnv.Env.QA) ) {
+            slack.sendToSlack(testEnv.getTopicArn(), message, Slack.Level.NEUTRAL);
+        }
+    }
+
+    private String constructSummaryNotification() {
+        String summary = System.lineSeparator()+"==============Test Run Summary==============";
+        summary += System.lineSeparator()+"Number of tests ran: "+listOfScenariosRan.size();
+        summary += System.lineSeparator()+"Number of tests passed: "+(listOfScenariosRan.size()-listOfFailingScenarios.size());
+        summary += System.lineSeparator()+"Number of tests failed: "+listOfFailingScenarios.size();
+        summary += System.lineSeparator()+"==============Test Run Summary==============";
+        return summary;
     }
 
     private void tearDown() {

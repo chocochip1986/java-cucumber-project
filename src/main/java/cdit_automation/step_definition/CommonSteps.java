@@ -55,10 +55,10 @@ public class CommonSteps extends AbstractSteps {
                 }, batch);
                 batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
                 if (batch == null) {
-                    slack.sendToSlack(testManager.testEnv.getTopicArn(), "No batch record created for fileReceived record: "+fileReceived.getId().toString(), Slack.Level.NEUTRAL);
+//                    slack.sendToSlack(testManager.testEnv.getTopicArn(), "No batch record created for fileReceived record: "+fileReceived.getId().toString(), Slack.Level.NEUTRAL);
                     Assert.assertNotNull(batch, "The "+batchJobName+" job from "+agencyName+" is null!!!");
                 } else {
-                    slack.sendToSlack(testManager.testEnv.getTopicArn(), String.format("Status:%s", batch.getStatus()), Slack.Level.NEUTRAL);
+//                    slack.sendToSlack(testManager.testEnv.getTopicArn(), String.format("Status:%s", batch.getStatus()), Slack.Level.NEUTRAL);
                     Assert.assertEquals(expectedBatchStatus, batch.getStatus(), "The "+batchJobName+" job from "+agencyName+" did not complete!!!");
                 }
                 testContext.set("batch", batch);
