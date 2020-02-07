@@ -1,8 +1,6 @@
 package cdit_automation.step_definition;
 
 import cdit_automation.enums.FileTypeEnum;
-import cdit_automation.models.FileDetail;
-import cdit_automation.models.FileReceived;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;

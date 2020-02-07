@@ -1,6 +1,5 @@
 package cdit_automation.step_definition;
 
-import cdit_automation.aws.modules.Slack;
 import cdit_automation.configuration.TestEnv;
 import cdit_automation.enums.FileStatusEnum;
 import cdit_automation.enums.FileTypeEnum;

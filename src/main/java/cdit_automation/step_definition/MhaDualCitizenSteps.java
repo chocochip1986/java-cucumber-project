@@ -6,7 +6,6 @@ import cdit_automation.enums.NationalityEnum;
 import cdit_automation.exceptions.TestDataSetupErrorException;
 import cdit_automation.models.Batch;
 import cdit_automation.models.ErrorMessage;
-import cdit_automation.models.FileDetail;
 import cdit_automation.models.FileReceived;
 import cdit_automation.models.Nationality;
 import cdit_automation.models.PersonId;

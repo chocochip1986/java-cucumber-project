@@ -14,13 +14,11 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.util.Lists;
 import org.junit.Ignore;
 
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;

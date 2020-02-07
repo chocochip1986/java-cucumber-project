@@ -5,7 +5,6 @@ import cdit_automation.aws.modules.S3;
 import cdit_automation.aws.modules.Slack;
 import cdit_automation.configuration.AddressJacksonObjectMapper;
 import cdit_automation.configuration.StepDefLevelTestContext;
-import cdit_automation.configuration.TestEnv;
 import cdit_automation.configuration.TestManager;
 import cdit_automation.data_helpers.BatchFileCreator;
 import cdit_automation.data_helpers.BatchFileDataWriter;
