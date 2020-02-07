@@ -48,6 +48,7 @@ import cdit_automation.repositories.PersonNameRepo;
 import cdit_automation.repositories.IncomeRepo;
 import cdit_automation.repositories.PersonStatusRepo;
 import cdit_automation.repositories.PropertyRepo;
+import cdit_automation.repositories.SingleDateHeaderValidatedRepo;
 import cdit_automation.utilities.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -110,6 +111,7 @@ public class AbstractSteps {
     @Autowired protected ChangeAddressValidatedRepo changeAddressValidatedRepo;
     @Autowired protected DualCitizenValidatedRepo dualCitizenValidatedRepo;
     @Autowired protected DoubleDateHeaderValidatedRepo doubleDateHeaderValidatedRepo;
+    @Autowired protected SingleDateHeaderValidatedRepo singleDateHeaderValidatedRepo;
     @Autowired protected CeasedCitizenValidatedRepo ceasedCitizenValidatedRepo;
     @Autowired protected NewCitizenValidatedRepo newCitizenValidatedRepo;
     @Autowired protected PersonDetailChangeValidatedRepo personDetailChangeValidatedRepo;
