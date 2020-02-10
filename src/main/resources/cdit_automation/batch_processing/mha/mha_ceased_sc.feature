@@ -95,8 +95,8 @@ Feature: Data processing for Mha ceased citizenship
     And I verify the previous person detail valid till timestamp is the renunciation date at 2359HR
     And I verify the supersede person detail valid from timestamp is the day after renunciation date
 
-  @set_8 @GRYFFINDOR-908 @defect
-  Scenario: Mha send a ceased citizenship file with nric cancelled status of [Y] and nationality of [SG]
+  @set_8
+  Scenario: Mha send a ceased citizenship file with nationality of [SG]
 
   This is a special case that will never happen because this file is for renunciation of
   singapore citizenship, not award singapore citizenship. Therefore, datasource will
@@ -109,9 +109,7 @@ Feature: Data processing for Mha ceased citizenship
       | AwardedSingaporeCitizen |
       | 1                       |
     When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
-    Then the Mha Ceased Citizen batch job completes running with status CLEANUP
-    And I verify the the people listed in the file have nationality of SINGAPORE_CITIZEN
-    And I verify the the people listed in the file have nric cancelled status of 0
+    Then the Mha Ceased Citizen batch job completes running with status RAW_DATA_ERROR
 
   @set_9 @GRYFFINDOR-908 @defect
   Scenario: Mha send a empty ceased citizenship file

@@ -137,6 +137,22 @@ public class Phaker {
         return size < 1 ? genRandomNumbers(1) : genRandomNumbers(size);
     }
 
+    public static String randomCountryCode() {
+        return genRandomALPHABETS(2);
+    }
+
+    public static String randomNonSGCountryCode() {
+        String countryCode;
+        do {
+            countryCode = randomCountryCode();
+            if ( !countryCode.equals("SG")) {
+                break;
+            }
+        } while (true);
+
+        return countryCode;
+    }
+
     public static String validNric() {
         int count = 0;
         int retryCount = 10000;

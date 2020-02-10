@@ -1,9 +1,8 @@
 package cdit_automation.data_helpers;
 
 import cdit_automation.configuration.StepDefLevelTestContext;
+import cdit_automation.data_helpers.batch_entities.MhaCeasedCitizenFileEntry;
 import cdit_automation.data_setup.Phaker;
-import cdit_automation.enums.CeasedCitizenNationalityEnum;
-import cdit_automation.enums.CeasedCitizenNricCancelledStatusEnum;
 import cdit_automation.enums.NationalityEnum;
 import cdit_automation.models.*;
 import cdit_automation.models.embeddables.BiTemporalData;
@@ -12,7 +11,6 @@ import cdit_automation.models.embeddables.DbTemporalData;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -54,25 +52,25 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
             ? new ArrayList<>()
             : testContext.get("presentCeasedCitizen");
 
-    List<CeasedCitizenValidated> citizens =
+    List<MhaCeasedCitizenFileEntry> citizens =
         getCitizens(parseStringSize(map.get("CeasedCitizen")), availableNrics);
-    List<CeasedCitizenValidated> repeatedCitizens =
+    List<MhaCeasedCitizenFileEntry> repeatedCitizens =
         getRepeatedCitizens(
             parseStringSize(map.get("RepeatedCeasedCitizen")), presentCeasedCitizen);
-    List<CeasedCitizenValidated> emptyNameCitizens =
+    List<MhaCeasedCitizenFileEntry> emptyNameCitizens =
         getEmptyNameCitizens(parseStringSize(map.get("EmptyName")));
-    List<CeasedCitizenValidated> renunciationAfterCutOffDateCitizens =
+    List<MhaCeasedCitizenFileEntry> renunciationAfterCutOffDateCitizens =
         getRenunciationAfterCutOffDateCitizens(
             parseStringSize(map.get("RenunciationDateAfterCutOff")));
-    List<CeasedCitizenValidated> awardedCitizens =
+    List<MhaCeasedCitizenFileEntry> awardedCitizens =
         getAwardedSCCitizens(parseStringSize(map.get("AwardedSingaporeCitizen")), availableNrics);
-    List<CeasedCitizenValidated> duplicateCitizens =
+    List<MhaCeasedCitizenFileEntry> duplicateCitizens =
         getDuplicateCitizens(
             parseStringSize(map.get("NumberOfDuplication")),
             Stream.concat(citizens.stream(), repeatedCitizens.stream())
                 .collect(Collectors.toList()));
 
-    List<CeasedCitizenValidated> ceasedCitizens =
+    List<MhaCeasedCitizenFileEntry> ceasedCitizens =
         Stream.of(
                 citizens,
                 repeatedCitizens,
@@ -84,7 +82,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
             .collect(Collectors.toList());
     testContext.set("ceasedCitizens", ceasedCitizens);
 
-    return ceasedCitizens.stream().map(CeasedCitizenValidated::toString).collect(Collectors.toList());
+    return ceasedCitizens.stream().map(MhaCeasedCitizenFileEntry::toString).collect(Collectors.toList());
   }
 
   public List<PersonId> populateSCs(int numOfRecords) {
@@ -127,10 +125,9 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
           CeasedCitizenValidated.builder()
               .batch(b)
               .name(Phaker.validName())
-              .nationality(CeasedCitizenNationalityEnum.BLANK)
+              .nationality(Phaker.randomNonSGCountryCode())
               .citizenRenunciationDate(dateUtils.daysBeforeToday(30))
               .nric(nric)
-              .nricCancelledStatus(CeasedCitizenNricCancelledStatusEnum.YES)
               .build();
       ceasedCitizenRepo.save(ceasedCitizen);
       PersonId currentPersonId = personIdRepo.findPersonByNaturalId(nric);
@@ -177,7 +174,6 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
             .dateOfBirth(currentPersonDetail.getDateOfBirth())
             .dateOfDeath(currentPersonDetail.getDateOfDeath())
             .gender(currentPersonDetail.getGender())
-            .isNricCancelled(ceasedCitizen.getNricCancelledStatus().getBooleanValue())
             .biTemporalData(newBiTemporalData)
             .build();
     personDetailRepo.save(newPersonDetail);
@@ -221,9 +217,9 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
     nationalityRepo.save(newNationality);
   }
 
-  private List<CeasedCitizenValidated> getCitizens(int quantity, List<String> nrics) {
+  private List<MhaCeasedCitizenFileEntry> getCitizens(int quantity, List<String> nrics) {
     List<String> clonedNrics = new ArrayList<>(nrics);
-    List<CeasedCitizenValidated> resultList = new ArrayList<>();
+    List<MhaCeasedCitizenFileEntry> resultList = new ArrayList<>();
     int iterations = clonedNrics.isEmpty() ? quantity : Math.min(quantity, clonedNrics.size());
     for (int i = 0; i < iterations; i++) {
       String nric = "";
@@ -233,68 +229,68 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
         clonedNrics.remove(randomIndex);
       }
 
-      resultList.add(
-          CeasedCitizenValidated.builder()
-              .name(Phaker.validName())
-              .nationality(CeasedCitizenNationalityEnum.BLANK)
-              .citizenRenunciationDate(dateUtils.daysBeforeToday(15))
+      MhaCeasedCitizenFileEntry mhaCeasedCitizenFileEntry = MhaCeasedCitizenFileEntry.builder()
               .nric(nric.isEmpty() ? Phaker.validNric() : nric)
-              .nricCancelledStatus(CeasedCitizenNricCancelledStatusEnum.YES)
-              .build());
+              .name(Phaker.validName())
+              .nationality(Phaker.randomNonSGCountryCode())
+              .citizenRenunciationDate(dateUtils.daysBeforeToday(15))
+              .build();
+      batchFileDataWriter.chunkOrWrite(mhaCeasedCitizenFileEntry.toString());
+      resultList.add(mhaCeasedCitizenFileEntry);
     }
     return resultList;
   }
 
-  private List<CeasedCitizenValidated> getRepeatedCitizens(
+  private List<MhaCeasedCitizenFileEntry> getRepeatedCitizens(
       int quantity, List<CeasedCitizenValidated> ceasedCitizens) {
-    List<CeasedCitizenValidated> resultList = new ArrayList<>();
+    List<MhaCeasedCitizenFileEntry> resultList = new ArrayList<>();
     int iterations =
         ceasedCitizens.isEmpty() ? quantity : Math.min(quantity, ceasedCitizens.size());
     for (int i = 0; i < iterations; i++) {
-      resultList.add(
-          CeasedCitizenValidated.builder()
-              .name(ceasedCitizens.get(i).getName())
-              .nationality(CeasedCitizenNationalityEnum.BLANK)
-              .citizenRenunciationDate(dateUtils.daysBeforeToday(15))
+      MhaCeasedCitizenFileEntry mhaCeasedCitizenFileEntry = MhaCeasedCitizenFileEntry.builder()
               .nric(ceasedCitizens.get(i).getNric())
-              .nricCancelledStatus(CeasedCitizenNricCancelledStatusEnum.YES)
-              .build());
+              .name(ceasedCitizens.get(i).getName())
+              .nationality(Phaker.randomNonSGCountryCode())
+              .citizenRenunciationDate(dateUtils.daysBeforeToday(15))
+              .build();
+      batchFileDataWriter.chunkOrWrite(mhaCeasedCitizenFileEntry.toString());
+      resultList.add(mhaCeasedCitizenFileEntry);
     }
     return resultList;
   }
 
-  private List<CeasedCitizenValidated> getEmptyNameCitizens(int numOfRecords) {
-    List<CeasedCitizenValidated> resultList = new ArrayList<>();
+  private List<MhaCeasedCitizenFileEntry> getEmptyNameCitizens(int numOfRecords) {
+    List<MhaCeasedCitizenFileEntry> resultList = new ArrayList<>();
     for (int i = 0; i < numOfRecords; i++) {
-      resultList.add(
-          CeasedCitizenValidated.builder()
+      MhaCeasedCitizenFileEntry mhaCeasedCitizenFileEntry = MhaCeasedCitizenFileEntry.builder()
+              .nric(Phaker.validNric())
               .name("")
-              .nric(Phaker.validNric())
-              .nationality(CeasedCitizenNationalityEnum.BLANK)
-              .nricCancelledStatus(CeasedCitizenNricCancelledStatusEnum.YES)
-              .citizenRenunciationDate(LocalDate.now().minusDays(6))
-              .build());
+              .nationality(Phaker.randomNonSGCountryCode())
+              .citizenRenunciationDate(dateUtils.daysBeforeToday(6))
+              .build();
+      batchFileDataWriter.chunkOrWrite(mhaCeasedCitizenFileEntry.toString());
+      resultList.add(mhaCeasedCitizenFileEntry);
     }
     return resultList;
   }
 
-  private List<CeasedCitizenValidated> getRenunciationAfterCutOffDateCitizens(int numOfRecords) {
-    List<CeasedCitizenValidated> resultList = new ArrayList<>();
+  private List<MhaCeasedCitizenFileEntry> getRenunciationAfterCutOffDateCitizens(int numOfRecords) {
+    List<MhaCeasedCitizenFileEntry> resultList = new ArrayList<>();
     for (int i = 0; i < numOfRecords; i++) {
-      resultList.add(
-          CeasedCitizenValidated.builder()
-              .name(Phaker.validName())
+      MhaCeasedCitizenFileEntry mhaCeasedCitizenFileEntry = MhaCeasedCitizenFileEntry.builder()
               .nric(Phaker.validNric())
-              .nationality(CeasedCitizenNationalityEnum.BLANK)
-              .nricCancelledStatus(CeasedCitizenNricCancelledStatusEnum.YES)
-              .citizenRenunciationDate(LocalDate.now().plusDays(10))
-              .build());
+              .name(Phaker.validName())
+              .nationality(Phaker.randomNonSGCountryCode())
+              .citizenRenunciationDate(dateUtils.daysBeforeToday(10))
+              .build();
+      batchFileDataWriter.chunkOrWrite(mhaCeasedCitizenFileEntry.toString());
+      resultList.add(mhaCeasedCitizenFileEntry);
     }
     return resultList;
   }
 
-  private List<CeasedCitizenValidated> getAwardedSCCitizens(int numOfRecords, List<String> nrics) {
-    List<CeasedCitizenValidated> resultList = new ArrayList<>();
+  private List<MhaCeasedCitizenFileEntry> getAwardedSCCitizens(int numOfRecords, List<String> nrics) {
+    List<MhaCeasedCitizenFileEntry> resultList = new ArrayList<>();
     List<String> clonedNrics = new ArrayList<>(nrics);
     int iterations = nrics.size() == 0 ? numOfRecords : Math.min(numOfRecords, nrics.size());
     for (int i = 0; i < iterations; i++) {
@@ -304,23 +300,29 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
         nric = clonedNrics.get(randomIndex);
         clonedNrics.remove(randomIndex);
       }
-      resultList.add(
-          CeasedCitizenValidated.builder()
-              .name(Phaker.validName())
+      MhaCeasedCitizenFileEntry mhaCeasedCitizenFileEntry = MhaCeasedCitizenFileEntry.builder()
               .nric(nric.isEmpty() ? Phaker.validNric() : nric)
-              .nationality(CeasedCitizenNationalityEnum.SG)
-              .nricCancelledStatus(CeasedCitizenNricCancelledStatusEnum.YES)
-              .citizenRenunciationDate(LocalDate.now().minusDays(6))
-              .build());
+              .name(Phaker.validName())
+              .nationality("SG")
+              .citizenRenunciationDate(dateUtils.daysBeforeToday(6))
+              .build();
+      batchFileDataWriter.chunkOrWrite(mhaCeasedCitizenFileEntry.toString());
+      resultList.add(mhaCeasedCitizenFileEntry);
     }
     return resultList;
   }
 
-  private List<CeasedCitizenValidated> getDuplicateCitizens(
-      int numberOfDuplication, List<CeasedCitizenValidated> citizens) {
-    List<CeasedCitizenValidated> results = new ArrayList<>();
+  private List<MhaCeasedCitizenFileEntry> getDuplicateCitizens(
+      int numberOfDuplication, List<MhaCeasedCitizenFileEntry> citizens) {
+    List<MhaCeasedCitizenFileEntry> results = new ArrayList<>();
     if (numberOfDuplication != 0) {
-      citizens.forEach(c -> results.addAll(Collections.nCopies(numberOfDuplication - 1, c)));
+      citizens.forEach(c -> {
+        List<MhaCeasedCitizenFileEntry> duplicateList = Collections.nCopies(numberOfDuplication - 1, c);
+        for( MhaCeasedCitizenFileEntry dup : duplicateList ) {
+          batchFileDataWriter.chunkOrWrite(dup.toString());
+        }
+        results.addAll(duplicateList);
+      });
     }
     return results;
   }

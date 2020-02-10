@@ -1,11 +1,14 @@
 package cdit_automation.models;
 
 import cdit_automation.constants.ErrorMessageConstants;
+import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.CeasedCitizenNationalityEnum;
 import cdit_automation.enums.CeasedCitizenNricCancelledStatusEnum;
+import cdit_automation.utilities.DateUtils;
 import cdit_automation.utilities.StringUtils;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -32,24 +35,40 @@ public class CeasedCitizenValidated extends AbstractValidated {
   @NotBlank(message = ErrorMessageConstants.INVALID_NAME)
   private String name;
 
-  @Enumerated(EnumType.STRING)
   @Column(name = "nationality")
-  private CeasedCitizenNationalityEnum nationality;
+  private String nationality;
 
   @Column(name = "citizen_renunciation_date")
   @NotNull(message = ErrorMessageConstants.INVALID_RENUNCIATION_DATE)
   private LocalDate citizenRenunciationDate;
 
-  @Enumerated(EnumType.STRING)
-  @Column(name = "nric_cancelled_status")
-  private CeasedCitizenNricCancelledStatusEnum nricCancelledStatus;
-
   @Override
   public String toString() {
     return StringUtils.rightPad(this.nric, 9)
             + StringUtils.rightPad(this.name, 66)
-            + StringUtils.rightPad(this.nationality.getValue(), 2)
-            + StringUtils.rightPad(this.citizenRenunciationDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")), 8)
-            + StringUtils.rightPad(this.nricCancelledStatus.getValue(), 1);
+            + StringUtils.rightPad(this.nationality, 2)
+            + StringUtils.rightPad(this.citizenRenunciationDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")), 8);
+  }
+
+  public static CeasedCitizenValidated create(@NotNull Batch batch, @NotNull LocalDate citizenRenunciationDate) {
+    return build(batch, Phaker.validNric(), Phaker.validName(), Phaker.randomNonSGCountryCode(), citizenRenunciationDate);
+  }
+
+  public static CeasedCitizenValidated create(@NotNull Batch batch,
+                                              @NotNull String nric,
+                                              @NotNull String name,
+                                              @NotNull String nationality,
+                                              @NotNull LocalDate citizenRenunciationDate) {
+    return build(batch, nric, name, nationality, citizenRenunciationDate);
+  }
+
+  public static CeasedCitizenValidated build(Batch batch, String nric, String name, String nationality, LocalDate citizenRenunciationDate ) {
+    return CeasedCitizenValidated.builder()
+            .batch(batch)
+            .nric(nric)
+            .name(name)
+            .nationality(nationality)
+            .citizenRenunciationDate(citizenRenunciationDate)
+            .build();
   }
 }

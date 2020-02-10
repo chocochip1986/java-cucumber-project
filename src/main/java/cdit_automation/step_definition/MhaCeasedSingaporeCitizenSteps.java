@@ -1,6 +1,7 @@
 package cdit_automation.step_definition;
 
 import cdit_automation.asserts.Assert;
+import cdit_automation.data_helpers.batch_entities.MhaCeasedCitizenFileEntry;
 import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.enums.NationalityEnum;
 import cdit_automation.models.CeasedCitizenValidated;
@@ -15,7 +16,6 @@ import org.junit.Ignore;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,23 +35,18 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
   @Given("the file has the following details:")
   public void theFileHasTheFollowingDetails(DataTable dataTable) throws IOException {
     List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();
-    LocalDate cutOffDate = dateUtils.daysBeforeToday(5);
-    testContext.set("cutOffDate", cutOffDate);
-    LocalDate extractionDate = dateUtils.daysBeforeToday(5);
-    listOfIdentifiersToWriteToFile.add(
-        mhaCeasedCitizenFileDataPrep.generateDoubleHeader(extractionDate, cutOffDate));
-    List<String> body =
-        mhaCeasedCitizenFileDataPrep.createBodyOfTestScenarios(
-            dataTable.asMaps(String.class, String.class), testContext);
-    listOfIdentifiersToWriteToFile.addAll(body);
-    listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
-    batchFileCreator.writeToFile(FileTypeEnum.MHA_CEASED_CITIZEN.getValue().toLowerCase(), listOfIdentifiersToWriteToFile);
+
+    batchFileDataWriter.begin(mhaBulkFileDataPrep.generateSingleHeader(), FileTypeEnum.MHA_CEASED_CITIZEN, null);
+
+    mhaCeasedCitizenFileDataPrep.createBodyOfTestScenarios(
+        dataTable.asMaps(String.class, String.class), testContext);
+    batchFileDataWriter.end();
   }
 
   @And("^I verify the the people listed in the file have nationality of (.*)$")
   public void nationalityOfAllPersonShouldChangeToNON_SINGAPORE_CITIZEN(
       NationalityEnum nationalityEnum) {
-    List<CeasedCitizenValidated> ceasedCitizens = testContext.get("ceasedCitizens");
+    List<MhaCeasedCitizenFileEntry> ceasedCitizens = testContext.get("ceasedCitizens");
     ceasedCitizens.forEach(
         c -> {
           PersonId p = personIdRepo.findByNaturalId(c.getNric());

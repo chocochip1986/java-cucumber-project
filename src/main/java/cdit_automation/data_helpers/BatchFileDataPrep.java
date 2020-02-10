@@ -11,6 +11,7 @@ import cdit_automation.repositories.PersonDetailRepo;
 import cdit_automation.repositories.PersonIdRepo;
 import cdit_automation.repositories.PersonNameRepo;
 import cdit_automation.utilities.DateUtils;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nullable;
@@ -56,6 +57,17 @@ public class BatchFileDataPrep {
         }
 
         return extractionDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD)+cutOffDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD);
+    }
+
+    public String generateSingleHeader(@Nullable LocalDate extractionDate) {
+        if ( extractionDate == null ) {
+            extractionDate = TestConstants.DEFAULT_EXTRACTION_DATE;
+        }
+        return extractionDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD);
+    }
+
+    public String generateSingleHeader() {
+        return generateSingleHeader(null);
     }
 
     public String generateDoubleHeader() {

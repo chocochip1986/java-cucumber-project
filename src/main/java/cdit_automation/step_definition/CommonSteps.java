@@ -117,10 +117,12 @@ public class CommonSteps extends AbstractSteps {
                             Assert.assertEquals(
                                     (long) expectedMessageCount,
                                     errorMessages.stream()
-                                            .filter(z -> z.equalsIgnoreCase(expectedErrorMessage))
+                                            .filter(z -> z.equalsIgnoreCase(expectedErrorMessage) ||
+                                                    z.matches(".*"+expectedErrorMessage+".*"))
                                             .count(),
                                     "Unexpected repetition of [ " + expectedErrorMessage + " ] error message");
-                            errorMessages.removeIf(e -> e.equalsIgnoreCase(expectedErrorMessage));
+                            errorMessages.removeIf(e -> e.equalsIgnoreCase(expectedErrorMessage) ||
+                                    e.matches(".*"+expectedErrorMessage+".*"));
                         });
         
         Assert.assertEquals(Collections.emptyList(), errorMessages, "Unexpected error message found!");
