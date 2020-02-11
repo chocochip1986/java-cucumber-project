@@ -2,6 +2,7 @@ package cdit_automation.data_helpers;
 
 import cdit_automation.configuration.StepDefLevelTestContext;
 import cdit_automation.data_helpers.batch_entities.MhaCeasedCitizenFileEntry;
+import cdit_automation.data_helpers.factories.PersonFactory;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.NationalityEnum;
 import cdit_automation.models.*;
@@ -265,9 +266,11 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
   private List<MhaCeasedCitizenFileEntry> getCeasedCitizenWithSG(int numOfRecords) {
     List<MhaCeasedCitizenFileEntry> resultList = new ArrayList<>();
     for (int i = 0; i < numOfRecords; i++) {
+      PersonId personId = personFactory.createNewSCPersonId();
+      PersonName personName = personNameRepo.findByPerson(personId.getPerson());
       MhaCeasedCitizenFileEntry mhaCeasedCitizenFileEntry = MhaCeasedCitizenFileEntry.builder()
-              .nric(Phaker.validNric())
-              .name(Phaker.validName())
+              .nric(personId.getNaturalId())
+              .name(personName.getName())
               .nationality("SG")
               .citizenRenunciationDate(dateUtils.daysBeforeToday(6))
               .build();
