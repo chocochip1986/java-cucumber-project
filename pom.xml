@@ -299,5 +299,12 @@
             <artifactId>aws-java-sdk-s3</artifactId>
             <version>1.11.505</version>
         </dependency>
+        <dependency>
+            <groupId>com.govtech</groupId>
+            <artifactId>cds_model</artifactId>
+            <version>1.0.5</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/commons-0.1-SNAPSHOT.jar</systemPath>
+        </dependency>
     </dependencies>
 </project>
