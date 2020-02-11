@@ -118,3 +118,14 @@ Feature: Data processing for Mha ceased citizenship
       | 0             |
     When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
     Then the Mha Ceased Citizen batch job completes running with status CLEANUP
+
+  @set_10
+  Scenario: Mha sends a ceased citizenship with an SG country code
+    Given the file has the following details:
+      | CeasedCitizenWithSGCountryCode |
+      | 1                              |
+    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
+    Then the Mha Ceased Citizen batch job completes running with status RAW_DATA_ERROR
+    And I verify that the following error message appeared:
+      | Message                                 | Count |
+      | Nationality must not be SG country code | 1     |

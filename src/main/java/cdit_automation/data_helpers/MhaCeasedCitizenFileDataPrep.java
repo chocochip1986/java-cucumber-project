@@ -69,6 +69,8 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
             parseStringSize(map.get("NumberOfDuplication")),
             Stream.concat(citizens.stream(), repeatedCitizens.stream())
                 .collect(Collectors.toList()));
+    List<MhaCeasedCitizenFileEntry> ceasedCitizenWithSGCountryCode =
+            getCeasedCitizenWithSG(parseStringSize(map.get("CeasedCitizenWithSGCountryCode")));
 
     List<MhaCeasedCitizenFileEntry> ceasedCitizens =
         Stream.of(
@@ -77,7 +79,8 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
                 emptyNameCitizens,
                 renunciationAfterCutOffDateCitizens,
                 awardedCitizens,
-                duplicateCitizens)
+                duplicateCitizens,
+                ceasedCitizenWithSGCountryCode)
             .flatMap(Collection::stream)
             .collect(Collectors.toList());
     testContext.set("ceasedCitizens", ceasedCitizens);
@@ -252,6 +255,21 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
               .name(ceasedCitizens.get(i).getName())
               .nationality(Phaker.randomNonSGCountryCode())
               .citizenRenunciationDate(dateUtils.daysBeforeToday(15))
+              .build();
+      batchFileDataWriter.chunkOrWrite(mhaCeasedCitizenFileEntry.toString());
+      resultList.add(mhaCeasedCitizenFileEntry);
+    }
+    return resultList;
+  }
+
+  private List<MhaCeasedCitizenFileEntry> getCeasedCitizenWithSG(int numOfRecords) {
+    List<MhaCeasedCitizenFileEntry> resultList = new ArrayList<>();
+    for (int i = 0; i < numOfRecords; i++) {
+      MhaCeasedCitizenFileEntry mhaCeasedCitizenFileEntry = MhaCeasedCitizenFileEntry.builder()
+              .nric(Phaker.validNric())
+              .name(Phaker.validName())
+              .nationality("SG")
+              .citizenRenunciationDate(dateUtils.daysBeforeToday(6))
               .build();
       batchFileDataWriter.chunkOrWrite(mhaCeasedCitizenFileEntry.toString());
       resultList.add(mhaCeasedCitizenFileEntry);

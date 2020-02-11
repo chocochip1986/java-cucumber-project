@@ -80,7 +80,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
 
   @And("I verify the previous nationality valid till timestamp is the renunciation date at 2359HR")
   public void iVerifyThePreviousNationalityValidTillTimestampIsTheRenunciationDateAtHR() {
-    List<CeasedCitizenValidated> ceasedCitizens = testContext.get("ceasedCitizens");
+    List<MhaCeasedCitizenFileEntry> ceasedCitizens = testContext.get("ceasedCitizens");
     ceasedCitizens.forEach(
         c -> {
           Date recordValidityDate =
