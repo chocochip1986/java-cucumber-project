@@ -84,10 +84,9 @@ public class BatchFileDataWriter {
         writeAndResetChunk();
         if ( fileDetail.getFooter() ) {
             String footerLine = "";
+            footerLine = constructFooter();
             if ( fileDetail.getHasFooterFiller() ) {
-                footerLine = StringUtils.leftPad(String.valueOf(finalBodyLength), fileDetail.getFooterFillerSize());
-            } else {
-                footerLine = String.valueOf(finalBodyLength);
+                footerLine = StringUtils.leftPad(footerLine, fileDetail.getFooterFillerSize());
             }
             FileUtils.writeToFile(destionationFile, footerLine);
         }
@@ -126,6 +125,15 @@ public class BatchFileDataWriter {
             return line+System.lineSeparator();
         } else {
             return line;
+        }
+    }
+
+    private String constructFooter() {
+        switch (fileDetail.getFileEnum()) {
+            case MHA_CEASED_CITIZEN:
+                return StringUtils.leftPad(String.valueOf(finalBodyLength), 9, "0");
+            default:
+                return String.valueOf(finalBodyLength);
         }
     }
 }
