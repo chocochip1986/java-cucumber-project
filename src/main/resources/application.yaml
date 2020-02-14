@@ -23,7 +23,7 @@ test-env:
     password: cdit
   datasource-ui:
     url: localhost
-    port: 8081
+    port: 4200
   implicit-wait: 1
   explicit-wait: 10
   wait: 10
@@ -42,7 +42,7 @@ test-env:
   env-name: qa
   datasource:
     url: localhost
-    port: 8081
+    port: 4200
     username: cdit
     password: cdit
   datasource-ui:

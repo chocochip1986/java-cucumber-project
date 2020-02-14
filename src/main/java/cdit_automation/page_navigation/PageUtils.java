@@ -46,6 +46,21 @@ public class PageUtils {
                 .ignoring(Exception.class);
     }
 
+    public boolean hasElement(String cssOrXpath) {
+        WebElement webElement;
+        try {
+            webElement = findElement(cssOrXpath);
+        } catch (WebDriverException e) {
+            return false;
+        }
+
+        if ( webElement == null ) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public WebElement findElementWithWait(String cssOrXpath) {
         WebElement resultWebElement = (WebElement)wait.until(new Function<WebDriver, WebElement>(){
             public WebElement apply(WebDriver webDriver) {

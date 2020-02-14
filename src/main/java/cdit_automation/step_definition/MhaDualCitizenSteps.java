@@ -54,7 +54,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
             PersonId actualPersonId = personIdRepo.findByNaturalId(expectedPersonId.getNaturalId());
 
             Assert.assertNotNull(actualPersonId, "No such person id db:" +expectedPersonId.getNaturalId());
-            Assert.assertTrue(expectedPersonId.getNaturalId(), actualPersonId.getNaturalId(), "No such person in db!");
+            Assert.assertEquals(expectedPersonId.getNaturalId(), actualPersonId.getNaturalId(), "No such person in db!");
         }
     }
 

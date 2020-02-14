@@ -56,6 +56,9 @@ public class DriverManager {
     }
 
     public WebDriver getDriver() {
+        if ( driver == null ) {
+            return open();
+        }
         return driver;
     }
 

@@ -1,6 +1,5 @@
 package cdit_automation.pages;
 
-import cdit_automation.page_navigation.PageUtils;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Component;
 

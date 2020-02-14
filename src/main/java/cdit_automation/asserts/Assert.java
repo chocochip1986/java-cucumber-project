@@ -21,20 +21,43 @@ public class Assert {
         }
     }
 
-    public static void assertTrue (String expected, String actual, String errorMsg) {
-        if ( !actual.equals(expected) ) {
-            raiseError(errorMsg);
+    public static void assertTrue(Boolean actual, String errorMsg) {
+        if ( !actual ) {
+            String finalMsg = errorMsg+"\nExpected: true"+"\nActual: "+actual.toString();
+            raiseError(finalMsg);
         }
     }
 
-    public static void assertFalse(String expected, String actual, String errorMsg) {
+    public static void assertFalse(Boolean actual, String errorMsg) {
+        if ( actual ) {
+            String finalMsg = errorMsg+"\nExpected: true"+"\nActual: "+actual.toString();
+            raiseError(finalMsg);
+        }
+    }
+
+    public static void assertEquals (String expected, String actual, String errorMsg) {
+        if ( !actual.equals(expected) ) {
+            String finalMsg = errorMsg+"\nExpected: "+expected+"\nActual: "+actual;
+            raiseError(finalMsg);
+        }
+    }
+
+    public static void assertNotEquals(String expected, String actual, String errorMsg) {
         if ( actual.equals(expected) ) {
-            raiseError(errorMsg);
+            String finalMsg = errorMsg+"\nExpected: "+expected+"\nActual: "+actual;
+            raiseError(finalMsg);
         }
     }
 
     public static void assertEquals(Object expected, Object actual, String errorMsg) {
         if ( !actual.equals(expected) ) {
+            String finalMsg = errorMsg+"\nExpected: "+expected.toString()+"\nActual: "+actual.toString();
+            raiseError(finalMsg);
+        }
+    }
+
+    public static void assertNotEquals(Object expected, Object actual, String errorMsg) {
+        if ( actual.equals(expected) ) {
             String finalMsg = errorMsg+"\nExpected: "+expected.toString()+"\nActual: "+actual.toString();
             raiseError(finalMsg);
         }
