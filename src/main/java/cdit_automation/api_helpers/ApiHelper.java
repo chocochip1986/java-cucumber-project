@@ -34,7 +34,7 @@ public class ApiHelper extends AbstractApiHelper {
             requestParams = "filePath="+file.getAbsolutePath()+"/"+"&"+requestParams;
         }
 
-        String url = "http://"+testEnv.getDatasourceUiUrl()+":"+testEnv.getDatasourceUiPort()+"/egress/iras/ai/bulk?"+requestParams;
+        String url = "http://"+testEnv.getDatasourceUrl()+":"+testEnv.getDatasourcePort()+"/egress/iras/ai/bulk?"+requestParams;
 
         getCall(url);
     }
@@ -44,12 +44,12 @@ public class ApiHelper extends AbstractApiHelper {
         if ( file != null ) {
             requestParams = "filePath="+file.getAbsolutePath()+"/"+"&"+requestParams;
         }
-        String url = "http://"+testEnv.getDatasourceUiUrl()+":"+testEnv.getDatasourceUiPort()+"/egress/iras/ai/thriceMonthly?"+requestParams;
+        String url = "http://"+testEnv.getDatasourceUrl()+":"+testEnv.getDatasourcePort()+"/egress/iras/ai/thriceMonthly?"+requestParams;
         getCall(url);
     }
 
     public void sendCallToCreateFileReceivedRecord(FileReceivedDataDto fileReceivedDataDto) {
-        String url = "http://"+testEnv.getDatasourceUiUrl()+":"+testEnv.getDatasourceUiPort()+"/v1/fileReceived";
+        String url = "http://"+testEnv.getDatasourceUrl()+":"+testEnv.getDatasourcePort()+"/v1/fileReceived";
         MultiValueMap<String, String> httpHeader = new LinkedMultiValueMap<>();
         httpHeader.put("Content-Type", Arrays.asList(MediaType.APPLICATION_JSON_VALUE));
 
@@ -60,7 +60,7 @@ public class ApiHelper extends AbstractApiHelper {
     }
 
     public void sendCallToTriggerBatchJob(@NotNull FileReceived fileReceived) {
-        String url = "http://"+testEnv.getDatasourceUiUrl()+":"+testEnv.getDatasourceUiPort()+"/receiver/validateFile";
+        String url = "http://"+testEnv.getDatasourceUrl()+":"+testEnv.getDatasourcePort()+"/receiver/validateFile";
 
         MultiValueMap<String, String> httpHeader = new LinkedMultiValueMap<>();
         httpHeader.put("Content-Type", Arrays.asList(MediaType.APPLICATION_JSON_VALUE));

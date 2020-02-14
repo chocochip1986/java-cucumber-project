@@ -19,11 +19,11 @@ test-env:
   datasource:
     url: localhost
     port: 8081
-    username: cdit
-    password: cdit
   datasource-ui:
     url: localhost
     port: 4200
+    username: cdit
+    password: cdit
   implicit-wait: 1
   explicit-wait: 10
   wait: 10
@@ -41,12 +41,12 @@ spring:
 test-env:
   env-name: qa
   datasource:
+    url: https://datasource-qa.cpfb.gds-gov.tech
+  datasource-ui:
     url: localhost
     port: 4200
     username: cdit
     password: cdit
-  datasource-ui:
-    url: https://datasource-qa.cpfb.gds-gov.tech
   implicit-wait: 5
   explicit-wait: 30
   wait: 600

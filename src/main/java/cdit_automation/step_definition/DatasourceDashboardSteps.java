@@ -18,6 +18,16 @@ public class DatasourceDashboardSteps extends AbstractSteps {
         cdsPage.visitLogin();
     }
 
+    @And("^I login to CDS Intranet as a CPF officer$")
+    public void iLoginCdsIntranetAsCpfOfficer() {
+        log.info("Visiting CDS Intranet...");
+        cdsPage.visitLogin();
+        log.info("Login...");
+        cdsPage.clickLoginBtnToForm();
+        cdsPage.fillInLoginForm();
+        cdsPage.clickLoginBtn();
+    }
+
     @And("^I access datasource ui$")
     public void iAccessDatasourceUi() {
         log.info("");
