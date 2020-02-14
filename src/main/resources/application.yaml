@@ -16,6 +16,11 @@ spring:
       enabled: always
 test-env:
   env-name: local
+  datasource:
+    url: localhost
+    port: 8081
+    username: cdit
+    password: cdit
   datasource-ui:
     url: localhost
     port: 8081
@@ -35,6 +40,11 @@ spring:
     password: perMaNalTY
 test-env:
   env-name: qa
+  datasource:
+    url: localhost
+    port: 8081
+    username: cdit
+    password: cdit
   datasource-ui:
     url: https://datasource-qa.cpfb.gds-gov.tech
   implicit-wait: 5

@@ -60,6 +60,18 @@ public class TestEnv {
     @Value(value = "${test-env.datasource-ui.port}")
     private String datasourceUiPort;
 
+    @Value(value = "${test-env.datasource.url}")
+    private String datasourceUrl;
+
+    @Value(value = "${test-env.datasource.port}")
+    private String datasourcePort;
+
+    @Value(value = "${test-env.datasource.username}")
+    private String datasourceUsername;
+
+    @Value(value = "${test-env.datasource.password}")
+    private String datasourcePassword;
+
     @Value(value = "${test-env.implicit-wait}")
     private Long implicitWait;
 
@@ -88,6 +100,10 @@ public class TestEnv {
                 +"test-env.env-name: "+env+System.lineSeparator()
                 +"test-env.datasource-ui.url: "+datasourceUiUrl+System.lineSeparator()
                 +"test-env.datasource-ui.port: "+datasourceUiPort+System.lineSeparator()
+                +"test-env.datasource.url: "+datasourceUrl+System.lineSeparator()
+                +"test-env.datasource.port: "+datasourcePort+System.lineSeparator()
+                +"test-env.datasource.username: "+datasourceUsername+System.lineSeparator()
+                +"test-env.datasource.password: "+datasourcePassword+System.lineSeparator()
                 +"test-env.implicit-wait: "+implicitWait+System.lineSeparator()
                 +"test-env.explicit-wait: "+explicitWait+System.lineSeparator()
                 +"test-env.fail-fast: "+failFast+System.lineSeparator()
