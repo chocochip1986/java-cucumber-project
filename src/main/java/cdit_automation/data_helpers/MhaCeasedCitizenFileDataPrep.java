@@ -72,6 +72,8 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
                 .collect(Collectors.toList()));
     List<MhaCeasedCitizenFileEntry> ceasedCitizenWithSGCountryCode =
             getCeasedCitizenWithSG(parseStringSize(map.get("CeasedCitizenWithSGCountryCode")));
+    List<MhaCeasedCitizenFileEntry> ceasedCitizenWhoIsNonSG =
+            getCeasedCitizenWhoHasAForeignNationality(parseStringSize(map.get("CeasedCitizenWhoIsNonSG")));
 
     List<MhaCeasedCitizenFileEntry> ceasedCitizens =
         Stream.of(
@@ -81,7 +83,8 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
                 renunciationAfterCutOffDateCitizens,
                 awardedCitizens,
                 duplicateCitizens,
-                ceasedCitizenWithSGCountryCode)
+                ceasedCitizenWithSGCountryCode,
+                ceasedCitizenWhoIsNonSG)
             .flatMap(Collection::stream)
             .collect(Collectors.toList());
     testContext.set("ceasedCitizens", ceasedCitizens);
@@ -256,6 +259,25 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
               .name(ceasedCitizens.get(i).getName())
               .nationality(Phaker.randomNonSGCountryCode())
               .citizenRenunciationDate(dateUtils.daysBeforeToday(15))
+              .build();
+      batchFileDataWriter.chunkOrWrite(mhaCeasedCitizenFileEntry.toString());
+      resultList.add(mhaCeasedCitizenFileEntry);
+    }
+    return resultList;
+  }
+
+  private List<MhaCeasedCitizenFileEntry> getCeasedCitizenWhoHasAForeignNationality(int numOfRecords) {
+    List<MhaCeasedCitizenFileEntry> resultList = new ArrayList<>();
+    for (int i = 0; i < numOfRecords; i++) {
+      PersonId personId = personFactory.createNewSCPersonId();
+      nationalityRepo.updateNationality(NationalityEnum.randomNonSGCountryCode(), personId.getPerson());
+
+      PersonName personName = personNameRepo.findByPerson(personId.getPerson());
+      MhaCeasedCitizenFileEntry mhaCeasedCitizenFileEntry = MhaCeasedCitizenFileEntry.builder()
+              .nric(personId.getNaturalId())
+              .name(personName.getName())
+              .nationality(Phaker.randomNonSGCountryCode())
+              .citizenRenunciationDate(dateUtils.daysBeforeToday(6))
               .build();
       batchFileDataWriter.chunkOrWrite(mhaCeasedCitizenFileEntry.toString());
       resultList.add(mhaCeasedCitizenFileEntry);

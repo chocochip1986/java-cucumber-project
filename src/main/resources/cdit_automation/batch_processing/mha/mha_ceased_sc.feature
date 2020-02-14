@@ -129,3 +129,14 @@ Feature: Data processing for Mha ceased citizenship
     And I verify that the following error message appeared:
       | Message                                 | Count |
       | Nationality must not be SG country code | 1     |
+
+  @set_10
+  Scenario: Mha sends a ceased citizenship file containing a person who is already non Singaporean
+    Given the file has the following details:
+      | CeasedCitizenWhoIsNonSG |
+      | 1                       |
+    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
+    Then the Mha Ceased Citizen batch job completes running with status RAW_DATA_ERROR
+    And I verify that the following error message appeared:
+      | Message                                 | Count |
+      | Not SC or Dual Citizen currently.       | 1     |

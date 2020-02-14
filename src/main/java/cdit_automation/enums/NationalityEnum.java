@@ -1,5 +1,7 @@
 package cdit_automation.enums;
 
+import java.util.Random;
+
 public enum NationalityEnum {
     SINGAPORE_CITIZEN("SINGAPORE_CITIZEN"),
     PERMANENT_RESIDENT("PERMANENT_RESIDENT"),
@@ -269,5 +271,14 @@ public enum NationalityEnum {
             }
         }
         return null;
+    }
+
+    public static NationalityEnum randomNonSGCountryCode() {
+        do {
+            NationalityEnum nationalityEnum = NationalityEnum.values()[new Random().nextInt(NationalityEnum.values().length)];
+            if ( !( nationalityEnum.equals(SG) || nationalityEnum.equals(SINGAPORE_CITIZEN) || nationalityEnum.equals(DUAL_CITIZENSHIP) ) ) {
+                return nationalityEnum;
+            }
+        } while (true);
     }
 }

@@ -1,5 +1,6 @@
 package cdit_automation.repositories;
 
+import cdit_automation.enums.NationalityEnum;
 import cdit_automation.models.Nationality;
 import cdit_automation.models.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,4 +29,13 @@ public interface NationalityRepo extends JpaRepository<Nationality, Long> {
             "WHERE n.person = ?2 " +
             "AND ( n.biTemporalData.businessTemporalData.validFrom = TRUNC(?3) )")
     int updateValidFrom(Date newValidFrom, Person person, Date oldValidFrom);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE Nationality n " +
+            "SET n.nationality = ?1 " +
+            "WHERE n.person = ?2 " +
+            "AND ( n.biTemporalData.businessTemporalData.validFrom >= TRUNC(SYSDATE) " +
+            "AND ( n.biTemporalData.businessTemporalData.validTill = null OR n.biTemporalData.businessTemporalData.validTill <= TRUNC(SYSDATE) ))")
+    int updateNationality(NationalityEnum nationalityEnum, Person person);
 }
