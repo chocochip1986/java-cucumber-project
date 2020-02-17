@@ -124,6 +124,12 @@
                                 <include>*.txt</include>
                             </includes>
                         </fileset>
+                        <fileset>
+                            <directory>test_results</directory>
+                            <includes>
+                                <include>*.jpg</include>
+                            </includes>
+                        </fileset>
                     </filesets>
                 </configuration>
             </plugin>
@@ -299,7 +305,14 @@
             <artifactId>aws-java-sdk-s3</artifactId>
             <version>1.11.505</version>
         </dependency>
-<!--        <dependency>-->
+        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
+
+        <!--        <dependency>-->
 <!--            <groupId>com.govtech</groupId>-->
 <!--            <artifactId>cds_model</artifactId>-->
 <!--            <version>1.0.5</version>-->

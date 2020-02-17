@@ -1,6 +1,5 @@
 package cdit_automation.pages;
 
-import cdit_automation.asserts.Assert;
 import cdit_automation.exceptions.TestFailException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -46,7 +45,7 @@ public class CdsPage extends AbstractPage {
         }
         url = "http://"+testManager.getTestEnvironment().getDatasourceUiUrl()+":"+testManager.getTestEnvironment().getDatasourceUiPort()+url;
         log.info("Visiting webpage at: "+url);
-        driverManager.getDriver().get(url);
+        driverManager.open().get(url);
         verifyLoginPage();
     }
 
@@ -66,12 +65,12 @@ public class CdsPage extends AbstractPage {
     }
 
     public void verifyLoginForm() {
-        Assert.assertTrue(pageUtils.hasElement(LOGIN_USERNAME), "Cds Intranet Login Form - Username field not found!");
-        Assert.assertTrue(pageUtils.hasElement(LOGIN_PASSWORD), "Cds Intranet Login Form - Password field not found!");
+        testAssert.assertTrue(pageUtils.hasElement(LOGIN_USERNAME), "Cds Intranet Login Form - Username field not found!");
+        testAssert.assertTrue(pageUtils.hasElement(LOGIN_PASSWORD), "Cds Intranet Login Form - Password field not found!");
     }
 
     public void verifyLoginPage() {
-        Assert.assertTrue(pageUtils.hasElement(LOGIN_BTN_TO_FORM), "Cds Intranet Login button not found!" );
+        testAssert.assertTrue(pageUtils.hasElement(LOGIN_BTN_TO_FORM), "Cds Intranet Login button not found!" );
     }
 
     public void verifyLoggedInSuccess() {
@@ -81,15 +80,15 @@ public class CdsPage extends AbstractPage {
                 return pageUtils.hasElement(LOGOUT_BTN);
             }
         });
-        Assert.assertTrue(isFound, "CPF user did not log in successfully!");
+        testAssert.assertTrue(isFound, "CPF user did not log in successfully!");
     }
 
     public void accessDatasourceUI(String datasourceSubLink) {
         pageUtils.click_on(DATASOURCE_BTN);
-        Assert.assertTrue(pageUtils.hasElement(DATASOURCE_POPUP), "Datasource popup from clicking the Datasource button is not displayed!");
+        testAssert.assertTrue(pageUtils.hasElement(DATASOURCE_POPUP), "Datasource popup from clicking the Datasource button is not displayed!");
 
         pageUtils.click_on(retrieveDatasourceSublink(datasourceSubLink));
-        Assert.assertTrue(pageUtils.hasElement(retrieveDatasourceFunction(datasourceSubLink)), datasourceSubLink+" Profile page not displayed!");
+        testAssert.assertTrue(pageUtils.hasElement(retrieveDatasourceFunction(datasourceSubLink)), datasourceSubLink+" Profile page not displayed!");
     }
 
     private String retrieveDatasourceFunction(String datasourceSubLink) {

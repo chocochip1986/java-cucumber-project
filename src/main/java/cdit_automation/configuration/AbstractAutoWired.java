@@ -1,6 +1,7 @@
 package cdit_automation.configuration;
 
 import cdit_automation.api_helpers.ApiHelper;
+import cdit_automation.asserts.Assert;
 import cdit_automation.aws.modules.S3;
 import cdit_automation.aws.modules.Slack;
 import cdit_automation.data_helpers.BatchFileCreator;
@@ -59,6 +60,7 @@ public class AbstractAutoWired {
 
     @Autowired protected PageUtils pageUtils;
     @Autowired protected DateUtils dateUtils;
+    @Autowired protected Assert testAssert;
 
     @Autowired protected StepDefLevelTestContext testContext;
 

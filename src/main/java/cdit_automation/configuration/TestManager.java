@@ -45,6 +45,7 @@ public class TestManager {
     private BrowserTypeEnums currentBrowserType;
     private Path projectRoot;
     private Path outputArtifactsDir;
+    private Path testResultsDir;
     private boolean hasStarted;
     private ZonedDateTime testRunStartTime;
     private ZonedDateTime testRunEndTime;
@@ -62,6 +63,7 @@ public class TestManager {
         currentBrowserType = getEnvVarBrowserType();
         projectRoot = setProjectRoot();
         outputArtifactsDir = setOutputArtifactsDir();
+        testResultsDir = setTestResultsDir();
         testRunStartTime = null;
         testRunEndTime = null;
         hasStarted = false;
@@ -206,12 +208,24 @@ public class TestManager {
         return outputArtifactsDir;
     }
 
+    public Path getTestResultsDir() {
+        return testResultsDir;
+    }
+
     private Path setProjectRoot() {
         return Paths.get(System.getProperty("user.dir"));
     }
 
     private Path setOutputArtifactsDir() {
         File outputDir = new File(projectRoot+File.separator+"output_artifacts");
+        if ( !outputDir.exists() || !outputDir.isDirectory() ) {
+            outputDir.mkdir();
+        }
+        return outputDir.toPath();
+    }
+
+    private Path setTestResultsDir() {
+        File outputDir = new File(projectRoot+File.separator+"test_results");
         if ( !outputDir.exists() || !outputDir.isDirectory() ) {
             outputDir.mkdir();
         }

@@ -61,11 +61,11 @@ public class MhaDeathSteps extends AbstractSteps {
             PersonId personId = personIdRepo.findByNaturalId(nric);
             PersonDetail personDetail = personDetailRepo.findByPerson(personId.getPerson());
 
-            Assert.assertNotNull(personDetail, "No valid person detail record for: "+personId.getNaturalId());
+            testAssert.assertNotNull(personDetail, "No valid person detail record for: "+personId.getNaturalId());
 
             LocalDate expectedDeathDate = LocalDate.parse(listOfPeopleForValidation.get(i).substring(9), Phaker.DATETIME_FORMATTER_YYYYMMDD);
 
-            Assert.assertEquals(expectedDeathDate, personDetail.getDateOfDeath(), "Person with identifier, "+personId.getNaturalId()+", does not have the correct death date!");
+            testAssert.assertEquals(expectedDeathDate, personDetail.getDateOfDeath(), "Person with identifier, "+personId.getNaturalId()+", does not have the correct death date!");
         }
     }
 
@@ -82,8 +82,8 @@ public class MhaDeathSteps extends AbstractSteps {
             DeathDateValidated deathDateValidated = deathDateValidatedRepo.findByNricAndBatch(nric, batch);
             ErrorMessage errorMessage = errorMessageRepo.findByValidatedIdAndValidatedType(deathDateValidated.getId(), ErrorMessage.ValidatedTypes.DEATH_DATE);
 
-            Assert.assertNotNull(errorMessage, "No error messages at all!");
-            Assert.assertEquals(ErrorMessageConstants.DEATH_BEFORE_BIRTH, errorMessage.getMessage(), "Error message contains incorrect message!");
+            testAssert.assertNotNull(errorMessage, "No error messages at all!");
+            testAssert.assertEquals(ErrorMessageConstants.DEATH_BEFORE_BIRTH, errorMessage.getMessage(), "Error message contains incorrect message!");
         }
     }
 
@@ -100,8 +100,8 @@ public class MhaDeathSteps extends AbstractSteps {
             DeathDateValidated deathDateValidated = deathDateValidatedRepo.findByNricAndBatch(nric, batch);
             ErrorMessage errorMessage = errorMessageRepo.findByValidatedIdAndValidatedType(deathDateValidated.getId(), ErrorMessage.ValidatedTypes.DEATH_DATE);
 
-            Assert.assertNotNull(errorMessage, "No error messages at all!");
-            Assert.assertEquals(ErrorMessageConstants.MAP_TO_PREPARED_DATA_ERROR, errorMessage.getMessage(), "Error message contains incorrect message!");
+            testAssert.assertNotNull(errorMessage, "No error messages at all!");
+            testAssert.assertEquals(ErrorMessageConstants.MAP_TO_PREPARED_DATA_ERROR, errorMessage.getMessage(), "Error message contains incorrect message!");
         }
     }
 
@@ -118,8 +118,8 @@ public class MhaDeathSteps extends AbstractSteps {
             DeathDateValidated deathDateValidated = deathDateValidatedRepo.findByNricAndBatch(nric, batch);
             ErrorMessage errorMessage = errorMessageRepo.findByValidatedIdAndValidatedType(deathDateValidated.getId(), ErrorMessage.ValidatedTypes.DEATH_DATE);
 
-            Assert.assertNotNull(errorMessage, "No error messages at all!");
-            Assert.assertEquals(ErrorMessageConstants.MAP_TO_PREPARED_DATA_ERROR, errorMessage.getMessage(), "Error message contains incorrect message!");
+            testAssert.assertNotNull(errorMessage, "No error messages at all!");
+            testAssert.assertEquals(ErrorMessageConstants.MAP_TO_PREPARED_DATA_ERROR, errorMessage.getMessage(), "Error message contains incorrect message!");
         }
     }
 }

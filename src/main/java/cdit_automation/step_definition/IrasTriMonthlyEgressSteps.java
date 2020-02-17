@@ -116,7 +116,7 @@ public class IrasTriMonthlyEgressSteps extends AbstractSteps {
               try (Stream<String> lines =
                   Files.lines(
                       Paths.get(filePath.toString(), "input_trimonthly_assessable_income.txt"))) {
-                Assert.assertEquals(
+                testAssert.assertEquals(
                     true,
                     lines.anyMatch(s -> s.contains(r)),
                     "Missing record in file : [" + r + " ]");

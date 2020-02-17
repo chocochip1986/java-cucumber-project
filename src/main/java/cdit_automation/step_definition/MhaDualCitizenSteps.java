@@ -1,6 +1,5 @@
 package cdit_automation.step_definition;
 
-import cdit_automation.asserts.Assert;
 import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.enums.NationalityEnum;
 import cdit_automation.exceptions.TestDataSetupErrorException;
@@ -53,8 +52,8 @@ public class MhaDualCitizenSteps extends AbstractSteps {
             PersonId expectedPersonId = hashOfDCs.get("personId"+String.valueOf(i));
             PersonId actualPersonId = personIdRepo.findByNaturalId(expectedPersonId.getNaturalId());
 
-            Assert.assertNotNull(actualPersonId, "No such person id db:" +expectedPersonId.getNaturalId());
-            Assert.assertEquals(expectedPersonId.getNaturalId(), actualPersonId.getNaturalId(), "No such person in db!");
+            testAssert.assertNotNull(actualPersonId, "No such person id db:" +expectedPersonId.getNaturalId());
+            testAssert.assertEquals(expectedPersonId.getNaturalId(), actualPersonId.getNaturalId(), "No such person in db!");
         }
     }
 
@@ -79,7 +78,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         for(String identifier : listOfNewDCs) {
             personIds = personIdRepo.findDualCitizen(identifier);
 
-            Assert.assertEquals(1, personIds.size(), "Person with nric: "+identifier+" is not a dual citizen!");
+            testAssert.assertEquals(1, personIds.size(), "Person with nric: "+identifier+" is not a dual citizen!");
 
         }
 
@@ -96,7 +95,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         for(String identifier : listOfExistingDCs) {
             personIds = personIdRepo.findDualCitizen(identifier);
 
-            Assert.assertEquals(1, personIds.size(), "Person with nric: "+identifier+" has been modified!");
+            testAssert.assertEquals(1, personIds.size(), "Person with nric: "+identifier+" has been modified!");
         }
     }
 
@@ -112,12 +111,12 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         for(String identifier : listOfExpiredDCs) {
             personIds = personIdRepo.findDualCitizen(identifier);
 
-            Assert.assertEquals(0, personIds.size(), "Person with nric: "+identifier+" has an error!");
+            testAssert.assertEquals(0, personIds.size(), "Person with nric: "+identifier+" has an error!");
 
             PersonId personId = personIdRepo.findPersonByNaturalId(identifier);
             Nationality currentNationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
 
-            Assert.assertEquals(NationalityEnum.SINGAPORE_CITIZEN, currentNationality.getNationality(), "Person with nric "+identifier+" is not converted to Singaporean!");
+            testAssert.assertEquals(NationalityEnum.SINGAPORE_CITIZEN, currentNationality.getNationality(), "Person with nric "+identifier+" is not converted to Singaporean!");
         }
     }
 
@@ -149,7 +148,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
 
         List<ErrorMessage> errorMessages = errorMessageRepo.findByBatch(batch);
 
-        Assert.assertEquals(true,
+        testAssert.assertEquals(true,
                 errorMessages.stream().anyMatch(errorMessage -> errorMessage.getMessage().matches(".*Must be valid NRIC in format.*")),
                 "No invalid nric error message found!");
     }

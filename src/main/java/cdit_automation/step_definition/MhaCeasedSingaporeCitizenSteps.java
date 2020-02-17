@@ -51,7 +51,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
         c -> {
           PersonId p = personIdRepo.findByNaturalId(c.getNric());
           Nationality n = nationalityRepo.findNationalityByPerson(p.getPerson());
-          Assert.assertEquals(
+            testAssert.assertEquals(
               nationalityEnum,
               n.getNationality(),
               "Expecting person with nric : ["
@@ -68,7 +68,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
         c -> {
           PersonId pi = personIdRepo.findByNaturalId(c.getNric());
           PersonDetail pd = personDetailRepo.findByPerson(pi.getPerson());
-          Assert.assertEquals(
+            testAssert.assertEquals(
               status == 1,
               pd.getIsNricCancelled(),
               "Expecting person with nric : ["
@@ -92,7 +92,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
               nationalityRepo.findNationalityByPerson(p.getPerson(), recordValidityDate);
           Timestamp actualValidTill =
               n.getBiTemporalData().getBusinessTemporalData().getValidTill();
-          Assert.assertEquals(
+            testAssert.assertEquals(
               expectedValidTill,
               actualValidTill,
               "Expecting previous nationality valid till date to be : [ "
@@ -114,7 +114,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
           Nationality n = nationalityRepo.findNationalityByPerson(p.getPerson());
           Timestamp actualValidFrom =
               n.getBiTemporalData().getBusinessTemporalData().getValidFrom();
-          Assert.assertEquals(
+            testAssert.assertEquals(
               expectedValidFrom,
               actualValidFrom,
               "Expecting previous nationality valid till date to be : [ "
@@ -139,7 +139,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
           PersonDetail pd = personDetailRepo.findByPerson(pi.getPerson(), recordValidityDate);
           Timestamp actualValidTill =
               pd.getBiTemporalData().getBusinessTemporalData().getValidTill();
-          Assert.assertEquals(
+            testAssert.assertEquals(
               expectedValidTill,
               actualValidTill,
               "Expecting previous person detail valid till date to be : [ "
@@ -162,7 +162,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
           PersonDetail pd = personDetailRepo.findByPerson(pi.getPerson());
           Timestamp actualValidFrom =
               pd.getBiTemporalData().getBusinessTemporalData().getValidFrom();
-          Assert.assertEquals(
+            testAssert.assertEquals(
               expectedValidFrom,
               actualValidFrom,
               "Expecting previous nationality valid till date to be : [ "

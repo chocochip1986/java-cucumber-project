@@ -99,7 +99,7 @@ public class MhaNoInteractionSteps extends AbstractSteps {
           Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
           
           long count = noInteractionValidatedRepo.countAllByBatch(batch);
-          Assert.assertEquals(noOfRecords, count, "The expected number of record(s) does not match!!!");
+          testAssert.assertEquals(noOfRecords, count, "The expected number of record(s) does not match!!!");
           
       } else {
           throw new TestFailException("No batch job previously created!");
@@ -120,7 +120,7 @@ public class MhaNoInteractionSteps extends AbstractSteps {
                   personId -> {
                       PersonStatus ps = personStatusRepo.getByPersonAndType(personId.getPerson(), PersonStatusTypeEnum.NO_INTERACTION);
                       personStatusList.add(ps);
-                      Assert.assertEquals(PersonStatusTypeEnum.NO_INTERACTION, 
+                      testAssert.assertEquals(PersonStatusTypeEnum.NO_INTERACTION,
                               ps.getType(),
                               "Expecting person with nric : ["
                                       + personId.getNaturalId()
