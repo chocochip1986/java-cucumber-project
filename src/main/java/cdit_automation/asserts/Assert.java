@@ -78,7 +78,6 @@ public class Assert {
 
     private void raiseError(String errorMessage) {
         errorMessage(errorMessage);
-        takeScreenshot();
         throw new TestFailException(errorMessage);
     }
 
@@ -94,7 +93,7 @@ public class Assert {
 
     private void takeScreenshot() {
         File srcFile = ((TakesScreenshot)driverManager.getDriver()).getScreenshotAs(OutputType.FILE);
-        File destFile = new File(testManager.getTestResultsDir()+File.separator+"screenshot.jpg");
+        File destFile = new File(testManager.getTestResultsDir()+File.separator+"screenshot01.jpg");
         try {
             FileUtils.copyFile(srcFile, destFile);
         } catch ( IOException e ) {
