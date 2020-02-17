@@ -28,8 +28,9 @@ public class DatasourceDashboardSteps extends AbstractSteps {
         cdsPage.clickLoginBtn();
     }
 
-    @And("^I access datasource ui$")
-    public void iAccessDatasourceUi() {
-        log.info("");
+    @And("^I access Datasource UI (Files Dashboard|Data Enquiry|Error Rate) function$")
+    public void iAccessDatasourceUi(String datasourceSubLink) {
+        log.info("Accessing "+datasourceSubLink+" function in Datasource UI...");
+        cdsPage.accessDatasourceUI("Files DashBoard");
     }
 }
