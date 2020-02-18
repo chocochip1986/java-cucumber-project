@@ -80,6 +80,16 @@ public class PageUtils {
         }
     }
 
+    public WebElement findFirstElement(String cssOrXpath) {
+        List<WebElement> listOfWebElements = null;
+        if ( cssOrXpath.startsWith("//") ) {
+            listOfWebElements = findWebElementsByXpath(cssOrXpath);
+        } else {
+            listOfWebElements = findWebElementsByCss(cssOrXpath);
+        }
+        return listOfWebElements.get(0);
+    }
+
     public List<WebElement> findAllWebElements(String cssOrXpath) {
         List<WebElement> listOfWebElements = null;
         if ( cssOrXpath.startsWith("//") ) {
