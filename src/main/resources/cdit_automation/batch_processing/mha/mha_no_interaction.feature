@@ -14,7 +14,6 @@ Feature: Data processing for MHA no interaction list (NIL)
       |000000999|
     And the MHA no interaction file is created
     When MHA sends the MHA_NO_INTERACTION file to Datasource sftp for processing
-    When the MHA no interaction file is ran
     And the Mha no interaction batch job completes running with status FILE_ERROR
     And I verify that the following error message appeared:
       | Message                                       | Count |
@@ -32,7 +31,6 @@ Feature: Data processing for MHA no interaction list (NIL)
       |000000abc|
     And the MHA no interaction file is created
     When MHA sends the MHA_NO_INTERACTION file to Datasource sftp for processing
-    When the MHA no interaction file is ran
     And the Mha no interaction batch job completes running with status FILE_ERROR
     And I verify that the following error message appeared:
       | Message                                       | Count |
@@ -48,11 +46,11 @@ Feature: Data processing for MHA no interaction list (NIL)
       |valid        |19901001          |20201230          |
     And the MHA no interaction file is created
     When MHA sends the MHA_NO_INTERACTION file to Datasource sftp for processing
-    When the MHA no interaction file is ran
     And the Mha no interaction batch job completes running with status FILE_ERROR
     And I verify that the following error message appeared:
       | Message                                       | Count |
       | Footer record count must be numeric.          | 1     |
+      | Must have at least 1 valid body record.       | 1     |
     And I verify number of records in MHA no interaction validated table is 0
 
   @set_4 @defect @GRYFFINDOR-1094
@@ -66,11 +64,10 @@ Feature: Data processing for MHA no interaction list (NIL)
       |blank    |
     And the MHA no interaction file is created
     When MHA sends the MHA_NO_INTERACTION file to Datasource sftp for processing
-    When the MHA no interaction file is ran
     And the Mha no interaction batch job completes running with status FILE_ERROR
     And I verify that the following error message appeared:
       | Message                                       | Count |
-      | Footer record count must be numeric.          | 1     |
+      | Must have 1 Footer record.                    | 1     |
     And I verify number of records in MHA no interaction validated table is 0
     
   @set_5
@@ -84,7 +81,6 @@ Feature: Data processing for MHA no interaction list (NIL)
       |000000001|
     And the MHA no interaction file is created
     When MHA sends the MHA_NO_INTERACTION file to Datasource sftp for processing
-    When the MHA no interaction file is ran
     And the Mha no interaction batch job completes running with status FILE_ERROR
     And I verify that the following error message appeared:
       | Message                                       | Count |
@@ -102,11 +98,10 @@ Feature: Data processing for MHA no interaction list (NIL)
       |000000001|
     And the MHA no interaction file is created
     When MHA sends the MHA_NO_INTERACTION file to Datasource sftp for processing
-    When the MHA no interaction file is ran
     And the Mha no interaction batch job completes running with status RAW_DATA_ERROR
     And I verify that the following error message appeared:
       | Message                                                | Count |
-      | {extractionDate=[Must be in yyyymmdd date format]}     | 1     |
+      | {"extractionDate":["Must be in yyyymmdd date format"]} | 1     |
     And I verify number of records in MHA no interaction validated table is 1
 
   @set_7
@@ -120,11 +115,10 @@ Feature: Data processing for MHA no interaction list (NIL)
       |000000001|
     And the MHA no interaction file is created
     When MHA sends the MHA_NO_INTERACTION file to Datasource sftp for processing
-    When the MHA no interaction file is ran
     And the Mha no interaction batch job completes running with status RAW_DATA_ERROR
     And I verify that the following error message appeared:
       | Message                                                | Count |
-      | {cutOffDate=[Must be in yyyymmdd date format]}         | 1     |
+      | {"cutOffDate":["Must be in yyyymmdd date format"]}     | 1     |
     And I verify number of records in MHA no interaction validated table is 1
 
   @set_8
@@ -136,12 +130,12 @@ Feature: Data processing for MHA no interaction list (NIL)
       |000000001|
     And the MHA no interaction file is created
     When MHA sends the MHA_NO_INTERACTION file to Datasource sftp for processing
-    When the MHA no interaction file is ran
     And the Mha no interaction batch job completes running with status FILE_ERROR
     And I verify that the following error message appeared:
       | Message                                       | Count |
       | Wrong header length.                          | 1     |
       | Footer size does not match body size.         | 1     |
+      | Must have at least 1 valid body record.       | 1     |
     And I verify number of records in MHA no interaction validated table is 0
 
   @set_9
@@ -155,7 +149,6 @@ Feature: Data processing for MHA no interaction list (NIL)
       |000000001|
     And the MHA no interaction file is created
     When MHA sends the MHA_NO_INTERACTION file to Datasource sftp for processing
-    When the MHA no interaction file is ran
     And the Mha no interaction batch job completes running with status FILE_ERROR
     And I verify that the following error message appeared:
       | Message                                       | Count |
@@ -173,11 +166,10 @@ Feature: Data processing for MHA no interaction list (NIL)
       |000000001|
     And the MHA no interaction file is created
     When MHA sends the MHA_NO_INTERACTION file to Datasource sftp for processing
-    When the MHA no interaction file is ran
     And the Mha no interaction batch job completes running with status RAW_DATA_ERROR
     And I verify that the following error message appeared:
       | Message                                                            | Count |
-      | {others=[Extraction Date must be equal/after Cut-off Date.]}       | 1     |
+      | {"Others":["Extraction Date must be equal/after Cut-off Date."]}   | 1     |
     And I verify number of records in MHA no interaction validated table is 1
 
   @set_11
@@ -191,7 +183,6 @@ Feature: Data processing for MHA no interaction list (NIL)
       |000000001|
     And the MHA no interaction file is created
     When MHA sends the MHA_NO_INTERACTION file to Datasource sftp for processing
-    When the MHA no interaction file is ran
     And the Mha no interaction batch job completes running with status BULK_CHECK_VALIDATION_ERROR
     And I verify that the following error message appeared:
       | Message                                                  | Count |
@@ -210,11 +201,11 @@ Feature: Data processing for MHA no interaction list (NIL)
       |000000001|
     And the MHA no interaction file is created
     When MHA sends the MHA_NO_INTERACTION file to Datasource sftp for processing
-    When the MHA no interaction file is ran
     And the Mha no interaction batch job completes running with status FILE_ERROR
     And I verify that the following error message appeared:
       | Message                                       | Count |
       | Wrong body length.                            | 1     |
+      | Must have at least 1 valid body record.       | 1     |
     And I verify number of records in MHA no interaction validated table is 0
 
   @set_13 @note:order-of-error-message-affect-test
@@ -233,12 +224,11 @@ Feature: Data processing for MHA no interaction list (NIL)
       |000000003|
     And the MHA no interaction file is created
     When MHA sends the MHA_NO_INTERACTION file to Datasource sftp for processing
-    When the MHA no interaction file is ran
     And the Mha no interaction batch job completes running with status RAW_DATA_ERROR
     And I verify that the following error message appeared:
-      | Message                                                              | Count |
-      | {nric=[size must be between 9 and 9, NRIC cannot be null/blank.]}    | 1     |
-      | {nric=[Must be valid NRIC in format [S or T]1234567[A-Z]]}           | 1     |
+      | Message                                                                   | Count |
+      | {"nric":["size must be between 9 and 9","NRIC cannot be null/blank."]}    | 1     |
+      | {"nric":["Must be valid NRIC in format [S or T]1234567[A-Z]"]}            | 1     |
     And I verify number of records in MHA no interaction validated table is 1
 
   @set_14
@@ -249,8 +239,10 @@ Feature: Data processing for MHA no interaction list (NIL)
       |000000000|
     And the MHA no interaction file is created
     When MHA sends the MHA_NO_INTERACTION file to Datasource sftp for processing
-    When the MHA no interaction file is ran
-    And the Mha no interaction batch job completes running with status CLEANUP
+    And the Mha no interaction batch job completes running with status FILE_ERROR
+    And I verify that the following error message appeared:
+      | Message                                       | Count |
+      | Must have at least 1 valid body record.       | 1     |
     And I verify number of records in MHA no interaction validated table is 0
     
   @set_15 @defect @GRYFFINDOR-1095
@@ -264,11 +256,11 @@ Feature: Data processing for MHA no interaction list (NIL)
       |000000001|
     And the MHA no interaction file is created
     When MHA sends the MHA_NO_INTERACTION file to Datasource sftp for processing
-    When the MHA no interaction file is ran
     And the Mha no interaction batch job completes running with status FILE_ERROR
     And I verify that the following error message appeared:
       | Message                                       | Count |
       | Wrong body length.                            | 1     |
+      | Must have at least 1 valid body record.       | 1     |
     And I verify number of records in MHA no interaction validated table is 0
 
   @set_16 @defect @GRYFFINDOR-1096
@@ -282,7 +274,6 @@ Feature: Data processing for MHA no interaction list (NIL)
       |000000001|
     And the MHA no interaction file is created
     When MHA sends the MHA_NO_INTERACTION file to Datasource sftp for processing
-    When the MHA no interaction file is ran
     And the Mha no interaction batch job completes running with status VALIDATED_TO_PREPARED_ERROR
     And I verify that the following error message appeared:
       | Message                                       | Count |
@@ -305,7 +296,6 @@ Feature: Data processing for MHA no interaction list (NIL)
       |000000002|
     And the MHA no interaction file is created
     When MHA sends the MHA_NO_INTERACTION file to Datasource sftp for processing
-    When the MHA no interaction file is ran
     And the Mha no interaction batch job completes running with status CLEANUP
     And I verify number of records in MHA no interaction validated table is 2
     And I verify that the person status is updated correctly
@@ -315,7 +305,6 @@ Feature: Data processing for MHA no interaction list (NIL)
   Scenario: Datasource service processes a MHA no interaction list file with no content (i.e totally empty file).
     And the MHA no interaction file is created
     When MHA sends the MHA_NO_INTERACTION file to Datasource sftp for processing
-    When the MHA no interaction file is ran
     And the Mha no interaction batch job completes running with status FILE_ERROR
     And I verify number of records in MHA no interaction validated table is 0
 
