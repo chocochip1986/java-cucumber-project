@@ -27,8 +27,6 @@ public class Hooks extends AbstractSteps {
     @After(order=2)
     public void afterScenario(Scenario scenario) {
         displayScenarioEndMessage(scenario);
-        testContext.flush();
-        batchFileDataWriter.reset();
     }
 
     @After(order=1)
@@ -39,12 +37,14 @@ public class Hooks extends AbstractSteps {
             message += System.lineSeparator()+"Scenario: "+scenario.getName()+ " => Status: "+scenario.getStatus();
             message += System.lineSeparator()+"======================================================";
             takeScreenshot(screenshotNameMaker(scenario));
-            testManager.closeBrowser();
             testManager.sendNotificationToSlack(message);
             if ( testManager.failFastEnabled() ) {
                 testManager.quit();
             }
         }
+        testManager.closeBrowser();
+        testContext.flush();
+        batchFileDataWriter.reset();
     }
 
     @BeforeStep(order=0)

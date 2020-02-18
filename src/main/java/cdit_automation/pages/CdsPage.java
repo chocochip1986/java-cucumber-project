@@ -29,7 +29,7 @@ public class CdsPage extends AbstractPage {
     };
     public final Map<String, String> DATASOURCE_FUNCTIONS = new HashMap<String, String>() {
         {
-            put("Files Dashboard", "//header[@class='header' and text()='Files Dashboard']");
+            put("Files Dashboard", "//div[@class='table-title dark-gray-font' and text()='Files Dashboard']");
             put("Data Enquiry", "//header[@class='header' and text()='Data Enquiry']");
             put("Error Rate", "//header[@class='header' and text()='Error Rate Profile']");
         }
