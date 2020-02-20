@@ -17,6 +17,8 @@ import cdit_automation.data_helpers.factories.PersonFactory;
 import cdit_automation.models.Batch;
 import cdit_automation.page_navigation.PageUtils;
 import cdit_automation.repositories.AnnualValueRepo;
+import cdit_automation.repositories.BatchJobExecutionParamsRepo;
+import cdit_automation.repositories.BatchJobExecutionRepo;
 import cdit_automation.repositories.BatchRepo;
 import cdit_automation.repositories.BulkCitizenValidatedRepo;
 import cdit_automation.repositories.BulkMhaAddressValidatedRepo;
@@ -86,6 +88,8 @@ public class AbstractAutoWired {
 
     //Model Repositories
     @Autowired protected BatchRepo batchRepo;
+    @Autowired protected BatchJobExecutionRepo batchJobExecutionRepo;
+    @Autowired protected BatchJobExecutionParamsRepo batchJobExecutionParamsRepo;
     @Autowired protected FileReceivedRepo fileReceivedRepo;
     @Autowired protected FileDetailRepo fileDetailRepo;
     @Autowired protected IncomingRecordRepo incomingRecordRepo;
