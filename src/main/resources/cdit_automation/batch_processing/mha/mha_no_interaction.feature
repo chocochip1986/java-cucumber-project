@@ -313,4 +313,21 @@ Feature: Data processing for MHA no interaction list (NIL)
 
   @set_20 @defect
   Scenario: Datasource service processes a MHA no interaction list file with duplicate nric in different batch file.
+
+  @set_21 @defect @RVC-76
+  Scenario: Datasource service processes a MHA no interaction list file with footer length exceed expected length.
+    Given the file have the following header details:
+      |2019010120190101|
+    Given the file have the following record details:
+      |nric         |valid_from_date   |valid_till_date   |
+      |valid        |19901001          |20201230          |
+    Given the file have the following footer details:
+      |0000000001   |
+    And the MHA no interaction file is created
+    When MHA sends the MHA_NO_INTERACTION file to Datasource sftp for processing
+    And the Mha no interaction batch job completes running with status FILE_ERROR
+    And I verify that the following error message appeared:
+      | Message                                       | Count |
+      | Footer length exceeded expected length.       | 1     |
+    And I verify number of records in MHA no interaction validated table is 0
     
