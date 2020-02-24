@@ -9,6 +9,7 @@ public enum FileFrequencyEnum {
     DAILY("DAILY"),
     WEEKLY("WEEKLY"),
     MONTHLY("MONTHLY"),
+    THRICE_MONTHLY("THRICE_MONTHLY"),
     YEARLY("YEARLY");
 
     private String value;
