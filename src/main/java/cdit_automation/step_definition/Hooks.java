@@ -107,6 +107,8 @@ public class Hooks extends AbstractSteps {
         incomingRecordRepo.deleteAllInBatch();
         batchRepo.deleteAllInBatch();
         fileReceivedRepo.deleteAllInBatch();
+        batchJobExecutionRepo.deleteAllInBatch();
+        batchJobExecutionParamsRepo.deleteAllInBatch();
         System.out.println("Truncated all Datasource tables...");
     }
 }
