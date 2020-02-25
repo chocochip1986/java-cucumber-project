@@ -91,6 +91,11 @@ public class CdsPage extends AbstractPage {
         testAssert.assertTrue(pageUtils.hasElement(retrieveDatasourceFunction(datasourceSubLink)), datasourceSubLink+" Profile page not displayed!");
     }
 
+    public void logOff() {
+        pageUtils.click_on(LOGOUT_BTN);
+        testAssert.assertTrue(pageUtils.hasElement(LOGIN_BTN_TO_FORM), "Cds Intranet not logged out!" );
+    }
+
     private String retrieveDatasourceFunction(String datasourceSubLink) {
         String cssOrXpath = DATASOURCE_FUNCTIONS.get(datasourceSubLink);
         if ( cssOrXpath == null ) {

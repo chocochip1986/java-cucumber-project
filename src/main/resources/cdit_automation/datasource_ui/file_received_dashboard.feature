@@ -2,6 +2,7 @@
 @datasourceui
 Feature: Datasource UI file received dashboard
 
+  @set_1
   Scenario: CPF officer accesses the file received dashboard
     Given There are 50 files that were previously processed by Datasource
     Given I am a CPF officer
