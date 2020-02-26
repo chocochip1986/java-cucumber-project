@@ -7,7 +7,8 @@ Feature: Data processing for Mha Change in Person Details
   Scenario: Mha sends an empty file for Change in Person details
     Given the mha change in person details file is empty
     When MHA sends the MHA_PERSON_DETAIL_CHANGE file to Datasource sftp for processing
-    And the Mha Change of Personal Details batch job completes running with status CLEANUP
+    And the Mha Change of Personal Details batch job completes running with status FILE_ERROR
+    And the error message contains Must have at least 1 valid body record
 
   @set_2
   Scenario: Mha sends a Change in Person details file for processing

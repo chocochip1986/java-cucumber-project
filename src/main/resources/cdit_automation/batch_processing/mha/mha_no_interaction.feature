@@ -307,6 +307,7 @@ Feature: Data processing for MHA no interaction list (NIL)
     When MHA sends the MHA_NO_INTERACTION file to Datasource sftp for processing
     And the Mha no interaction batch job completes running with status FILE_ERROR
     And I verify number of records in MHA no interaction validated table is 0
+    And the error message contains Must have at least 1 valid body record
 
   @set_19 @defect
   Scenario: Datasource service processes a MHA no interaction list file with duplicate nric in same file.

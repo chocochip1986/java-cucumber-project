@@ -71,4 +71,10 @@ public class MhaBulkSteps extends AbstractSteps {
         PropertyDetail propertyDetail = propertyDetailRepo.findByProperty(property);
         testAssert.assertNotNull(propertyDetail, "No property detail for "+personId.getNaturalId());
     }
+
+    @Given("the mha bulk file is being created with no records")
+    public void theMhaBulkFileIsBeingCreatedWithNoRecords() {
+        batchFileDataWriter.begin(mhaBulkFileDataPrep.generateDoubleHeader(), FileTypeEnum.MHA_BULK_CITIZEN, null);
+        batchFileDataWriter.end();
+    }
 }

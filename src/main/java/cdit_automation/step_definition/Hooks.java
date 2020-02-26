@@ -39,12 +39,11 @@ public class Hooks extends AbstractSteps {
             takeScreenshot(screenshotNameMaker(scenario));
             testManager.sendNotificationToSlack(message);
             if ( testManager.failFastEnabled() ) {
+                reset();
                 testManager.quit();
             }
         }
-        testManager.closeBrowser();
-        testContext.flush();
-        batchFileDataWriter.reset();
+        reset();
     }
 
     @BeforeStep(order=0)
@@ -110,5 +109,11 @@ public class Hooks extends AbstractSteps {
         batchJobExecutionRepo.deleteAllInBatch();
         batchJobExecutionParamsRepo.deleteAllInBatch();
         System.out.println("Truncated all Datasource tables...");
+    }
+
+    private void reset() {
+        testManager.closeBrowser();
+        testContext.flush();
+        batchFileDataWriter.reset();
     }
 }

@@ -17,7 +17,7 @@ Feature: Data processing for MHA bulk citizen file
 #    When the mha bulk file is ran
     And the Mha Bulk batch job completes running with status CLEANUP
 
-  @set_1 @GRYFFINDOR-912
+  @set_2
   Scenario: Datasource service processes a MHA bulk citizen file
     Given the mha bulk file is being created
     Given the mha bulk file has the following details:
@@ -32,3 +32,10 @@ Feature: Data processing for MHA bulk citizen file
     And I verify that person with F8100327X is persisted in Datasource
     And I verify that person with S3450033I is persisted in Datasource
     And I verify that person with S0743815Z is persisted in Datasource
+    
+  Scenario: Datasource service processes an empty MHA bulk citizen file
+    Given the mha bulk file is being created with no records
+    When MHA sends the MHA_BULK_CITIZEN file to Datasource sftp for processing
+    And the Mha Bulk batch job completes running with status CLEANUP
+    And the error message contains Must have at least 1 valid body record
+    
