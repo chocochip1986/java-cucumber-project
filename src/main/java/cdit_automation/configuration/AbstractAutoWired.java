@@ -47,6 +47,7 @@ import cdit_automation.repositories.PersonNameRepo;
 import cdit_automation.repositories.PersonPropertyRepo;
 import cdit_automation.repositories.PersonRepo;
 import cdit_automation.repositories.PersonStatusRepo;
+import cdit_automation.repositories.PropertyDetailRepo;
 import cdit_automation.repositories.PropertyRepo;
 import cdit_automation.repositories.SingleDateHeaderValidatedRepo;
 import cdit_automation.utilities.DateUtils;
@@ -101,7 +102,7 @@ public class AbstractAutoWired {
     @Autowired protected PersonPropertyRepo personPropertyRepo;
     @Autowired protected PropertyRepo propertyRepo;
     @Autowired protected PersonNameRepo personNameRepo;
-    @Autowired protected PersonDetailRepo propertyDetailRepo;
+    @Autowired protected PropertyDetailRepo propertyDetailRepo;
     @Autowired protected PersonStatusRepo personStatusRepo;
     @Autowired protected IncomeRepo incomeRepo;
     @Autowired protected AnnualValueRepo annualValueRepo;

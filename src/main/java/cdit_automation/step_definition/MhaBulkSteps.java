@@ -5,6 +5,9 @@ import cdit_automation.models.Nationality;
 import cdit_automation.models.PersonDetail;
 import cdit_automation.models.PersonId;
 import cdit_automation.models.PersonName;
+import cdit_automation.models.PersonProperty;
+import cdit_automation.models.Property;
+import cdit_automation.models.PropertyDetail;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -58,5 +61,14 @@ public class MhaBulkSteps extends AbstractSteps {
 
         PersonDetail personDetail = personDetailRepo.findByPerson(personId.getPerson());
         testAssert.assertNotNull(personDetail, "No Person Detail record for "+personId.getNaturalId());
+
+        PersonProperty personProperty = personPropertyRepo.findByPerson(personId.getPerson());
+        testAssert.assertNotNull(personProperty, "No Person Property record for "+personId.getNaturalId());
+
+        Property property = propertyRepo.findByPropertyId(personProperty.getIdentifier().getPropertyEntity().getPropertyId());
+        testAssert.assertNotNull(property, "No property record for "+personId.getNaturalId());
+
+        PropertyDetail propertyDetail = propertyDetailRepo.findByProperty(property);
+        testAssert.assertNotNull(propertyDetail, "No property detail for "+personId.getNaturalId());
     }
 }

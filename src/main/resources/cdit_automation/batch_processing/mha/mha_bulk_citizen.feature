@@ -30,3 +30,5 @@ Feature: Data processing for MHA bulk citizen file
 #    When the mha bulk file is ran
     And the Mha Bulk batch job completes running with status CLEANUP
     And I verify that person with F8100327X is persisted in Datasource
+    And I verify that person with S3450033I is persisted in Datasource
+    And I verify that person with S0743815Z is persisted in Datasource
