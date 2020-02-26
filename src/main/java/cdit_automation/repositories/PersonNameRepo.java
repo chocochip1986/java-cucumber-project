@@ -33,4 +33,9 @@ public interface PersonNameRepo extends JpaRepository<PersonName, Long> {
     @Query(value = "SELECT p.* FROM PERSON_NAME AS OF PERIOD FOR validity_period_person_name TRUNC(SYSDATE) p " +
             "WHERE p.entity_key = ?1", nativeQuery = true)
     PersonName findByPerson(Person person);
+
+    @Transactional
+    @Modifying
+    @Query(value = "TRUNCATE TABLE person_name", nativeQuery = true)
+    void truncateTable();
 }

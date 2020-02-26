@@ -59,4 +59,9 @@ public interface PersonDetailRepo extends JpaRepository<PersonDetail, Long> {
           "AND ( pd.biTemporalData.businessTemporalData.validFrom <= ?3 " +
           "AND ( pd.biTemporalData.businessTemporalData.validTill = null OR pd.biTemporalData.businessTemporalData.validTill >= ?3 ) )")
   int updateDeathDateForPerson(LocalDate newDeathDate, Person person, Date now);
+
+  @Transactional
+  @Modifying
+  @Query(value = "TRUNCATE TABLE person_detail", nativeQuery = true)
+  void truncateTable();
 }
