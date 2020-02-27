@@ -8,6 +8,7 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 @Slf4j
 @Component
@@ -74,6 +76,15 @@ public class PageUtils {
         } else {
             return true;
         }
+    }
+
+    public void waitForElementTobeStale(String cssOrXpath) {
+        WebElement webElement = findElement(cssOrXpath);
+        waitForElementTobeStale(webElement);
+    }
+
+    public void waitForElementTobeStale(WebElement webElement) {
+        wait.until(ExpectedConditions.stalenessOf(webElement));
     }
 
     public WebElement findElementWithWait(String cssOrXpath) {
@@ -150,6 +161,17 @@ public class PageUtils {
                 return webElement;
             }
         }, css, LOG_WEB_NAVIGATION_PREFIX+" - Cannot find such element: "+css);
+    }
+
+    public void asyncClickOn(String cssOrXpathButton, WebElement expected) {
+        click_on(cssOrXpathButton);
+        waitForElementTobeStale(expected);
+    }
+
+    public void asyncClickOn(String cssOrXpathButton, String cssOrXpathExpected) {
+        WebElement webElementOfExpected = findElement(cssOrXpathExpected);
+        click_on(cssOrXpathButton);
+        waitForElementTobeStale(cssOrXpathExpected);
     }
 
     public void click_on(String cssOrXpath) {

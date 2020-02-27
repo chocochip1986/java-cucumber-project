@@ -45,7 +45,7 @@ public class CdsPage extends AbstractPage {
         }
         url = "http://"+testManager.getTestEnvironment().getDatasourceUiUrl()+":"+testManager.getTestEnvironment().getDatasourceUiPort()+url;
         log.info("Visiting webpage at: "+url);
-        driverManager.open().get(url);
+        testManager.openBrowser().get(url);
         verifyLoginPage();
     }
 

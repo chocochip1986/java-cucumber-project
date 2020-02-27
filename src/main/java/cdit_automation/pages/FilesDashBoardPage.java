@@ -174,7 +174,7 @@ public class FilesDashBoardPage extends AbstractPage {
                     }
                 }
                 if ( targetFileTrailWebElement == null ) {
-                    traverseToNextFileDashBoardPage();
+                    traverseToNextFileDashBoardPage(rowsOfFiles.get(0));
                 }
             }
         }
@@ -189,8 +189,8 @@ public class FilesDashBoardPage extends AbstractPage {
         pageUtils.click_on(PAGE_BACK_BTN);
     }
 
-    public void traverseToNextFileDashBoardPage() {
-        pageUtils.click_on(PAGE_NEXT_BTN);
+    public void traverseToNextFileDashBoardPage(WebElement staleWebElement) {
+        pageUtils.asyncClickOn(PAGE_NEXT_BTN, staleWebElement);
     }
 
     private void validateFilesExists(List<WebElement> webElements) {

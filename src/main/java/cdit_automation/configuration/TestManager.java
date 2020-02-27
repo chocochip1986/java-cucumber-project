@@ -10,6 +10,7 @@ import io.cucumber.java.Scenario;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -142,10 +143,11 @@ public class TestManager {
         return testEnv.isFailFast();
     }
 
-    public void openBrowser() {
-        driverManager.open();
+    public WebDriver openBrowser() {
+        WebDriver webDriver = driverManager.open();
         driverManager.setImplicitWait(testEnv.getImplicitWait());
         pageUtils.setupExplicitWait();
+        return webDriver;
     }
 
     public void closeBrowser() {

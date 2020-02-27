@@ -178,7 +178,7 @@ public class DatasourceFileDataSteps extends AbstractSteps {
         FileReceived fileReceived = FileReceived.builder()
                 .fileDetail(fileDetail)
                 .filePath("/subdir1/subdir2/subdir3/"+fileDetail.getFileName()+".txt")
-                .receivedTimestamp(dateUtils.beginningOfDayToTimestamp(Phaker.validPastDate()))
+                .receivedTimestamp(dateUtils.beginningOfDayToTimestamp(Phaker.validDate(dateUtils.daysBeforeToday(30), dateUtils.now())))
                 .batches(new ArrayList<Batch>(){{ add(batch); }})
                 .fileSize(Double.valueOf(Phaker.validNumber(6)))
                 .fileStatusEnum(FileStatusEnum.randomValidFileStatusEnum())
