@@ -30,4 +30,22 @@ public class DatasourceFileDashboardSteps extends AbstractSteps {
         log.info("Verifying that there are files displayed on the Files Dashboard...");
         filesDashBoardPage.verifyFilesExistsInTable();
     }
+
+    @Then("^I should see that there are ([0-9]+) rows displayed$")
+    public void iShouldSeeThatThereAreSomeRowsDisplayed(int expectedNumOfRows) {
+        log.info("Verifying that there are correct number of rows generated on the Files Dashboard..");
+        filesDashBoardPage.verifyCorrectNumberOfRowsInTable(expectedNumOfRows);
+    }
+
+    @Then("^I select items per page to be (3|5|10)$")
+    public void iSelectItemsPerPage(int count){
+        filesDashBoardPage.selectItemsPerPage(count);
+    }
+
+    @Then("^The records should be displayed with the correct current status$")
+    public void iShouldSeeTheCorrectCurrentStatusDisplayed() {
+        log.info("Verifying that the correct current status is displayed for each file on Files Dashboard..");
+        filesDashBoardPage.verifyCorrectCurrentStatusGenerated();
+
+    }
 }
