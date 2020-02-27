@@ -1,12 +1,10 @@
 package cdit_automation.data_setup;
 
 import cdit_automation.enums.Gender;
-import cdit_automation.utilities.DateUtils;
 import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.constraints.Positive;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
@@ -18,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Slf4j
