@@ -85,7 +85,7 @@ public class Hooks extends AbstractSteps {
         oldMhaAddressRepo.truncateTable();
         oldNcaAddressRepo.truncateTable();
         incomeRepo.truncateTable();
-//        annualValueRepo.truncateTable();
+        annualValueRepo.truncateTable();
         dualCitizenValidatedRepo.truncateTable();
         doubleDateHeaderValidatedRepo.truncateTable();
         singleDateHeaderValidatedRepo.truncateTable();
@@ -104,6 +104,7 @@ public class Hooks extends AbstractSteps {
         personRepo.truncateTable();
         errorMessageRepo.truncateTable();
         incomingRecordRepo.truncateTable();
+        reasonablenessCheckStatisticViewJpaRepo.deleteAll();
         batchRepo.truncateTable();
         fileReceivedRepo.truncateTable();
         batchJobExecutionRepo.truncateTable();

@@ -50,6 +50,7 @@ import cdit_automation.repositories.PersonStatusRepo;
 import cdit_automation.repositories.PropertyDetailRepo;
 import cdit_automation.repositories.PropertyRepo;
 import cdit_automation.repositories.SingleDateHeaderValidatedRepo;
+import cdit_automation.repositories.view.ReasonablenessCheckStatisticViewJpaRepo;
 import cdit_automation.utilities.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -119,6 +120,7 @@ public class AbstractAutoWired {
     @Autowired protected CeasedCitizenValidatedRepo ceasedCitizenValidatedRepo;
     @Autowired protected NewCitizenValidatedRepo newCitizenValidatedRepo;
     @Autowired protected PersonDetailChangeValidatedRepo personDetailChangeValidatedRepo;
+    @Autowired protected ReasonablenessCheckStatisticViewJpaRepo reasonablenessCheckStatisticViewJpaRepo;
 
     @Autowired protected OldMhaAddressRepo oldMhaAddressRepo;
     @Autowired protected OldNcaAddressRepo oldNcaAddressRepo;
