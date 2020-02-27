@@ -4,15 +4,17 @@ Feature: Datasource UI file received dashboard
 
   @set_1
   Scenario: CPF officer accesses the file received dashboard
-    Given There are 50 files that were previously processed by Datasource
+    Given There are 64 files that were previously processed by Datasource
+    And there is a MHA DEATH DATE file at Load step with Follow-up status processed 40 days ago
     Given I am a CPF officer
     And I login to CDS Intranet as a CPF officer
     And I access Datasource UI Files Dashboard function
     Then I should see that there are files displayed
-    When I click on a file to access it's file trail
-    Then I see the File Trail of the file
+    When I search for the file
+    Then I verify that I see the file trail page
     When I click on the back button
     Then I should see the Files Dashboard
+    Then I logout of CDS Intranet
 
   @set_2
   Scenario: CPF officer should see correct number of files on each page when accessing the file received dashboard

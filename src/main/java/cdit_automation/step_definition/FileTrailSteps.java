@@ -1,5 +1,7 @@
 package cdit_automation.step_definition;
 
+import cdit_automation.models.Batch;
+import cdit_automation.models.FileReceived;
 import cdit_automation.pages.FileTrailPage;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
@@ -13,15 +15,16 @@ public class FileTrailSteps extends AbstractSteps {
     @Autowired
     FileTrailPage fileTrailPage;
 
-    @Then("^I see the File Trail of the file$")
-    public void shouldSeeFileTrailOfFile() {
-        log.info("Verifying file trail page is displayed...");
-        fileTrailPage.verifyFileTrailPage();
-    }
-
     @And("^I click on the back button$")
     public void iClickOnBackButton() {
         log.info("Clicking on Back button...");
         fileTrailPage.clickBack();
+    }
+
+    @Then("I verify that I see the file trail page")
+    public void iVerifyThatISeeTheFileTrailPage() {
+        log.info("Verifying file trail page is displayed...");
+        Batch batch = testContext.get("batch");
+        fileTrailPage.verifyFileTrailPage(batch);
     }
 }

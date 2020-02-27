@@ -1,5 +1,6 @@
 package cdit_automation.step_definition;
 
+import cdit_automation.models.FileReceived;
 import cdit_automation.pages.FilesDashBoardPage;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
@@ -53,5 +54,12 @@ public class DatasourceFileDashboardSteps extends AbstractSteps {
     public void iVerifyThatThereAreNoFilesDisplayed() {
         log.info("Verifying that there are no files displayed on dashboard...");
         filesDashBoardPage.verifyEmptyDashboard();
+    }
+
+    @And("I search for the file")
+    public void iSearchForTheFile() {
+        log.info("Searching for file...");
+        FileReceived fileReceived = testContext.get("selectForFileTrail");
+        filesDashBoardPage.searchForFile(fileReceived);
     }
 }

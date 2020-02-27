@@ -1,5 +1,7 @@
 package cdit_automation.pages;
 
+import cdit_automation.enums.BatchStatusEnum;
+import cdit_automation.models.Batch;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -21,24 +23,69 @@ public class FileTrailPage extends AbstractPage {
         pageUtils.click_on(BACK_BTN);
     }
 
-    public void verifyFileTrailPage() {
+    public void verifyFileTrailPage(Batch batch) {
         testAssert.assertTrue(pageUtils.hasElement(FILE_TRAIL_PAGE), "File Trail page is not displayed!");
-        String[] arrayOfSubheaders = new String[]{FILE_TRAIL_INCOMING_INFO_SUBHEADER,
-                FILE_TRAIL_FORMAT_VALIDATION_INFO_SUBHEADER,
-                FILE_TRAIL_CONTENT_VALIDATION_INFO_SUBHEADER,
-                FILE_TRAIL_REASONABLENESS_SUBHEADER,
-                FILE_TRAIL_LOAD_VALIDATION_INFO_SUBHEADER};
+        verifyIncomingInfoCard();
+        verifyFormatValidationCard();
+        verifyContentValidationCard(batch);
+        verifyReasonablenessCard(batch);
+        verifyLoadCard(batch);
+    }
 
-        for ( String subheader : arrayOfSubheaders ) {
-            boolean isFound = waitUntilCondition(new Supplier<Boolean>() {
-                @Override
-                public Boolean get() {
-                    return pageUtils.hasElement(subheader);
-                }
-            });
-            if (!isFound) {
-                testAssert.assertTrue(isFound, "Unable to find header with css or xpath: "+subheader);
+    private void verifyIncomingInfoCard() {
+        verifyCard(FILE_TRAIL_INCOMING_INFO_SUBHEADER);
+    }
+
+    private void verifyFormatValidationCard() {
+        verifyCard(FILE_TRAIL_FORMAT_VALIDATION_INFO_SUBHEADER);
+    }
+
+    private void verifyContentValidationCard(Batch batch) {
+        if ( batch.getStatus().equals(BatchStatusEnum.RAW_DATA) ||
+                batch.getStatus().equals(BatchStatusEnum.BULK_CHECK_VALIDATED_DATA) ||
+                batch.getStatus().equals(BatchStatusEnum.BULK_CHECK_VALIDATION_ERROR) ||
+                batch.getStatus().equals(BatchStatusEnum.VALIDATED_TO_PREPARED_DATA) || batch.getStatus().equals(BatchStatusEnum.VALIDATED_TO_PREPARED_ERROR) ) {
+            verifyCard(FILE_TRAIL_CONTENT_VALIDATION_INFO_SUBHEADER);
+        }
+    }
+
+    private void verifyReasonablenessCard(Batch batch) {
+        if ( batch.getStatus().equals(BatchStatusEnum.VALIDATED_TO_PREPARED_DATA) ||
+                batch.getStatus().equals(BatchStatusEnum.ERROR_RATE) ||
+                batch.getStatus().equals(BatchStatusEnum.ERROR_RATE_ERROR) ||
+                batch.getStatus().equals(BatchStatusEnum.MAPPED_DATA) ||
+                batch.getStatus().equals(BatchStatusEnum.BULK_MAPPED_DATA_ERROR) ||
+                batch.getStatus().equals(BatchStatusEnum.BULK_MAPPED_DATA) ||
+                batch.getStatus().equals(BatchStatusEnum.BULK_MAPPED_DATA_ERROR) ||
+                batch.getStatus().equals(BatchStatusEnum.CLEANUP) ||
+                batch.getStatus().equals(BatchStatusEnum.CLEANUP_ERROR) ) {
+            verifyCard(FILE_TRAIL_REASONABLENESS_SUBHEADER);
+        }
+    }
+
+    private void verifyLoadCard(Batch batch) {
+        if ( batch.getStatus().equals(BatchStatusEnum.VALIDATED_TO_PREPARED_DATA) ||
+                batch.getStatus().equals(BatchStatusEnum.ERROR_RATE) ||
+                batch.getStatus().equals(BatchStatusEnum.ERROR_RATE_ERROR) ||
+                batch.getStatus().equals(BatchStatusEnum.MAPPED_DATA) ||
+                batch.getStatus().equals(BatchStatusEnum.BULK_MAPPED_DATA_ERROR) ||
+                batch.getStatus().equals(BatchStatusEnum.BULK_MAPPED_DATA) ||
+                batch.getStatus().equals(BatchStatusEnum.BULK_MAPPED_DATA_ERROR) ||
+                batch.getStatus().equals(BatchStatusEnum.CLEANUP) ||
+                batch.getStatus().equals(BatchStatusEnum.CLEANUP_ERROR) ) {
+            verifyCard(FILE_TRAIL_LOAD_VALIDATION_INFO_SUBHEADER);
+        }
+    }
+
+    private void verifyCard(String card) {
+        boolean isFound = waitUntilCondition(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return pageUtils.hasElement(card);
             }
+        });
+        if (!isFound) {
+            testAssert.assertTrue(isFound, "Unable to find header with css or xpath: "+card);
         }
     }
 }

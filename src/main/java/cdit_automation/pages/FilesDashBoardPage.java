@@ -2,8 +2,16 @@ package cdit_automation.pages;
 
 import cdit_automation.enums.BatchStatusEnum;
 import cdit_automation.enums.views.FileStatusSubTextEnum;
+
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import cdit_automation.exceptions.TestFailException;
+import cdit_automation.models.FileReceived;
+import io.cucumber.java.it.Ma;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -24,6 +32,7 @@ public class FilesDashBoardPage extends AbstractPage {
     public final String COLUMN_CURRENTSTATUS_SUBTEXT = "//mat-row[@role='row']/child::mat-cell[contains(@class, 'cdk-column-currentStatus')]//*[@class='traffic-button-cell-subText']";
 
     public final String PAGINATION_SELECTED_PAGE = ".mat-paginator-page-size mat-form-field span.mat-select-value-text span";
+    public final String PAGINATION_SELECTED_PAGE_INNER_SPAN = "//div[contains(@class, 'mat-form-field-infix')]/child::mat-select/child::div/child::div[1]/child::span/child::span";
     public final String PAGE_MAX_SIZE = "//div[@class='mat-paginator-range-actions']/child::div[@class='mat-paginator-range-label']";
 
     public final String ITEM_PER_PAGE_SELECT = "//div[contains(@class, 'mat-form-field-infix')]/child::mat-select";
@@ -141,5 +150,60 @@ public class FilesDashBoardPage extends AbstractPage {
         testAssert.assertTrue(webElement.getText().matches("^0 of 0$"), "Page size displayed in File Dashboard is not correct!");
         testAssert.assertFalse(pageUtils.findElement(PAGE_NEXT_BTN).isEnabled(), "File Dashboard Next Button is clickable!!!");
         testAssert.assertFalse(pageUtils.findElement(PAGE_BACK_BTN).isEnabled(), "File Dashboard Back Button is clickable!!!");
+    }
+
+    public void searchForFile(FileReceived fileReceived) {
+        WebElement itemsPerPageWebElement = pageUtils.findElement(PAGINATION_SELECTED_PAGE_INNER_SPAN);
+        WebElement maxPageWebElement = pageUtils.findElement(PAGE_MAX_SIZE);
+        Pattern pattern = Pattern.compile("^.* of (\\d+)$");
+        Matcher matcher = pattern.matcher(maxPageWebElement.getText());
+        WebElement targetFileTrailWebElement = null;
+        if ( matcher.find() ) {
+            int maxPageTraversalCount = deriveMaxPages(Double.parseDouble(itemsPerPageWebElement.getText()), Double.parseDouble(matcher.group(1)));
+            for (int i = 0 ; i < maxPageTraversalCount ; i++) {
+                List<WebElement> rowsOfFiles = pageUtils.findAllWebElements(BODY);
+                validateFilesExists(rowsOfFiles);
+                for ( WebElement rowWebElement : rowsOfFiles ) {
+                    List<WebElement> cellWebElements = rowWebElement.findElements(By.cssSelector(".mat-cell"));
+                    if ( cellWebElements.get(0).findElement(By.cssSelector("mdt-table-cell mdt-text-cell div")).getText().equals(fileReceived.getFileDetail().getAgency().getValue()) &&
+                            cellWebElements.get(1).findElement(By.cssSelector("mdt-table-cell mdt-text-cell div")).getText().matches("^"+fileReceived.getFileDetail().getFileName()+".*$") &&
+                            cellWebElements.get(4).findElement(By.cssSelector("mdt-table-cell mdt-text-cell div")).getText().equals(fileReceived.getReceivedTimestamp().toLocalDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
+                    ) {
+                        targetFileTrailWebElement = rowWebElement;
+                        break;
+                    }
+                }
+                if ( targetFileTrailWebElement == null ) {
+                    traverseToNextFileDashBoardPage();
+                }
+            }
+        }
+        if ( targetFileTrailWebElement == null ) {
+            throw new TestFailException("Unable to find file: "+fileReceived.getFilePath());
+        }
+        WebElement webElement = targetFileTrailWebElement.findElement(By.tagName("button"));
+        webElement.click();
+    }
+
+    public void traverseToPreviousFileDashBoardPage() {
+        pageUtils.click_on(PAGE_BACK_BTN);
+    }
+
+    public void traverseToNextFileDashBoardPage() {
+        pageUtils.click_on(PAGE_NEXT_BTN);
+    }
+
+    private void validateFilesExists(List<WebElement> webElements) {
+        if (!checkIfFilesExists(webElements)) {
+            throw new TestFailException("There are no files displayed!");
+        }
+    }
+
+    private boolean checkIfFilesExists(List<WebElement> webElements) {
+        return !webElements.isEmpty();
+    }
+
+    private int deriveMaxPages(double itemsPerPage, double numberOfFiles) {
+        return (int)Math.ceil( numberOfFiles / itemsPerPage );
     }
 }
