@@ -48,4 +48,10 @@ public class DatasourceFileDashboardSteps extends AbstractSteps {
         filesDashBoardPage.verifyCorrectCurrentStatusGenerated();
 
     }
+
+    @Then("I verify that there are no files displayed")
+    public void iVerifyThatThereAreNoFilesDisplayed() {
+        log.info("Verifying that there are no files displayed on dashboard...");
+        filesDashBoardPage.verifyEmptyDashboard();
+    }
 }

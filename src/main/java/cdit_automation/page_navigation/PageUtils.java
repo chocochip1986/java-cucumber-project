@@ -46,6 +46,21 @@ public class PageUtils {
                 .ignoring(Exception.class);
     }
 
+    public boolean hasNoElement(String cssOrXpath) {
+        WebElement webElement;
+        try {
+            webElement = findElement(cssOrXpath);
+        } catch (WebDriverException e) {
+            return true;
+        }
+
+        if ( webElement == null ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public boolean hasElement(String cssOrXpath) {
         WebElement webElement;
         try {
