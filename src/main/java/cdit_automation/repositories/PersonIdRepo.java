@@ -50,4 +50,9 @@ public interface PersonIdRepo extends JpaRepository<PersonId, Long> {
             "WHERE pi.person = ?2 " +
             "AND ( pi.biTemporalData.businessTemporalData.validFrom = TRUNC(?3) )")
     int updateValidFrom(Date newValidFrom, Person person, Date oldValidFrom);
+
+    @Transactional
+    @Modifying
+    @Query(value = "TRUNCATE TABLE person_id", nativeQuery = true)
+    void truncateTable();
 }

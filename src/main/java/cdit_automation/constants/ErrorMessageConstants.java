@@ -7,18 +7,20 @@ public class ErrorMessageConstants {
     }
 
     public static final String ERROR_TYPE_ERROR = "ERROR";
-    public static final String ERROR_TYPE_WARNING = "WARNING";
 
     // General spring batch step errors
     public static final String HEADER_LENGTH_ERROR = "Wrong header length.";
     public static final String BODY_LENGTH_ERROR = "Wrong body length.";
-    public static final String FOOTER_FORMAT_ERROR = "Wrong footer format.";
+    public static final String BODY_MUST_HAVE_ONE_VALID = "Must have at least 1 valid body record.";
     public static final String FOOTER_SIZE_ERROR = "Footer size does not match body size.";
     public static final String FOOTER_NOT_NUMERIC = "Footer record count must be numeric.";
-    public static final String HEADER_FORMAT_ERROR = "Wrong header format.";
+    public static final String FOOTER_BLANK = "Footer record count must not be blank.";
+    public static final String FOOTER_LENGTH_EXCEED = "Footer length exceeded expected length.";
+    public static final String FOOTER_MUST_HAVE_ONE = "Must have 1 Footer record.";
     public static final String MAP_TO_PREPARED_DATA_ERROR = "Unable to map to prepared data.";
 
     // Annotation messages
+    public static final String INVALID_ZERO_ONLY_STRING = "This field should only contain zeroes";
     public static final String INVALID_MHA_ADDRESS_TYPE = "Invalid mha address type.";
     public static final String INVALID_NCA_ADDRESS_TYPE = "Invalid nca address type.";
     public static final String INVALID_ADDRESS_INDICATOR = "Invalid address indicator.";
@@ -28,11 +30,15 @@ public class ErrorMessageConstants {
     public static final String MHA_OVERSEAS_INDICATOR_AND_TYPE_ERROR =
             "If MHA address indicator is 'C', the MHA address type must also be 'C'.";
     public static final String INVALID_HOME_TYPE = "Invalid home type.";
+    public static final String NRIC_LENGTH_INVALID = "NRIC Size must be exactly 9";
 
     // Common error messages
     public static final String YEAR_CANNOT_BE_LESS_THAN_1800 = "Year value cannot be less than 1800";
     public static final String NRIC_IS_BLANK = "NRIC cannot be null/blank.";
-    public static final String INVALID_NRIC_FORMAT = "Must be valid NRIC in format [S or T]1234567[A-Z]";
+    public static final String ID_IS_BLANK = "ID cannot be null/blank.";
+    public static final String DATA_ITEM_NEW_VALUE_BLANK = "DATA ITEM NEW VALUE cannot be null/blank";
+    public static final String DATA_ITEM_CHANGED_DATE_BLANK =
+            "DATA ITEM CHANGED DATE cannot be null/blank";
     public static final String DUPLICATE_NRIC_FOUND_IN_FILE = "Duplicate NRIC found in file.";
     public static final String DUPLICATE_FIN_FOUND_IN_FILE = "Duplicate FIN found in file.";
     public static final String MINIMUM_AGE_NOT_MET =
@@ -51,6 +57,7 @@ public class ErrorMessageConstants {
             "Trans date cannot be after File Received date.";
     public static final String INVALID_DATE_FORMAT_DDMMYYYY =
             "Must be in " + Constants.DATE_FORMAT_DDMMYYYY + " date format.";
+    public static final String INVALID_NRIC_SIZE = "NRIC field size be be exactly 9";
 
     // HDB Property
     public static final String INVALID_PROPERTY_TYPE = "Invalid property type.";
@@ -65,8 +72,9 @@ public class ErrorMessageConstants {
     public static final String ACTIVE_PERSON = "NRIC still valid";
     public static final String LATE_CITIZENSHIP_ATTAINMENT =
             "Citizen Attainment more than one month ago";
-    public static final String WRONG_DATE_OF_INDIVIDUAL =
-            "DOB OR DOD cannot be after the cutoff date";
+    public static final String WRONG_BIRTH_DATE_OF_INDIVIDUAL =
+            "DOB cannot be after the cutoff date OR Individual "
+                    + "must be at least 12 years old as of Cutoff year end";
     public static final String ATTAINMENT_AFTER_CUTOFF =
             "Citizenship attainment date must be equal/before Cut-off date.";
     public static final String NEW_ADDRESS_DATE_AFTER_CUTOFF =
@@ -77,6 +85,7 @@ public class ErrorMessageConstants {
             "Found to have active (no renunciation date) Nationality record.";
 
     // MHA bulk citizen
+    public static final String NAME_EMPTY = "Name field cannot be empty";
     public static final String PERSON_EXISTS = "Duplicate NRIC exists in the database";
     public static final String FIN_NOT_FOUND = "FIN not found in prepared database";
     public static final String WRONG_CITIZENSHIP_ATTAINMENT_DATE =
@@ -101,18 +110,18 @@ public class ErrorMessageConstants {
     public static final String PERSON_WITH_MULTIPLE_NATIONALITIES =
             "Person has more than one valid nationalities";
 
-    // MHA address
+    // MHA changed address
     public static final String LATE_ADDRESS_CHANGE = "Date of address change more than one month ago";
     public static final String LATE_ADDRESS_CHANGE_DATE =
             "Address change date cannot be more recent than File Cut-off Date";
-
+    public static final String ADDRESS_CHANGED_DATE_BLANK = "Address Changed Date cannot be blank.";
     // MHA death date
     public static final String DEATH_BEFORE_BIRTH = "Date of death is earlier than Date of birth";
     public static final String LATE_DEATH_DATE = "Date of death change more than one month ago";
 
     // MHA ceased citizen
-    public static final String RENUNCIATION_AFTER_CUTOFF =
-            "Renunciation Date is after File Cut-off Date.";
+    public static final String RENUNCIATION_AFTER_DATE_OF_RUN =
+            "Renunciation Date is after File Date of run.";
     public static final String NRIC_NOT_FOUND_IN_SYSTEM = "NRIC not found in System.";
     public static final String NO_ACTIVE_NATIONALITY = "No active Nationality record.";
     public static final String NOT_SC_DUALCITIZEN = "Not SC or Dual Citizen currently.";
@@ -123,9 +132,8 @@ public class ErrorMessageConstants {
     public static final String INVALID_NAME = "Invalid Name.";
     public static final String INVALID_NATIONALITY = "Invalid Ceased Citizen Nationality.";
     public static final String INVALID_RENUNCIATION_DATE = "Invalid Citizen Renunciation Date.";
-    public static final String INVALID_NRIC_CANCELLED_STATUS = "Invalid NRIC Cancelled Status.";
 
-    // MHA Person Detail Change (ValidPersonDetailChangeValidator)
+    // MHA person detail change (ValidPersonDetailChangeValidator)
     public static final String INVALID_GENDER_MESSAGE =
             "Invalid DataItemNewValue Format - Invalid Gender";
     public static final String INVALID_NAME_MESSAGE =
@@ -137,30 +145,29 @@ public class ErrorMessageConstants {
     public static final String NULL_FIELDS =
             "Data Item Changed and Data Item New Value should not be null";
 
-    // MHA Person Detail Change (PersonDetailChangeCheckService)
+    // MHA person detail change (PersonDetailChangeCheckService)
     public static final String NRIC_NOT_FOUND = "NRIC not found in prepared database";
     public static final String NO_EXISTING_PERSON_DETAIL = "Person Detail not found for this NRIC";
     public static final String NO_EXISTING_PERSON_NAME = "Person Name not found for this NRIC";
     public static final String DATA_ITEM_CHANGED_DATE_AFTER_CUT_OFF =
             "Data item changed date cannot be after cut off date";
-    public static final String DUPLICATED_NRIC_AND_DATA_ITEM_CHANGED =
-            "Duplicated occurrence of NRIC and Data Item Changed";
+    public static final String DATA_ITEM_CHANGED_DATE_INVALID_SIZE =
+            "DATA ITEM CHANGED DATE field size must be exactly 8";
     public static final String DOB_NOT_BEFORE_DOD =
             "Provided date of birth should be before provided date of death";
     public static final String DOB_NOT_BEFORE_EXISTING_DOD =
             "Provided date of birth should be before existing date of death";
     public static final String EXISTING_DOB_NOT_BEFORE_DOD =
             "Provided date of death should be after existing date of birth";
-    public static final String DOB_BELOW_12 =
-            "Date of birth should be at least 12 years old from cut-off date";
-    public static final String DATA_ITEM_NEW_VALUE_ALREADY_IN_DB =
-            "Data Item New Value should be a value not already in CDIT database";
     public static final String DOB_YEAR_IS_EARLIER_THAN_1800 =
             "Year for date of birth cannot be earlier than 1800";
     public static final String DOD_YEAR_IS_EARLIER_THAN_1800 =
             "Year for date of death cannot be earlier than 1800";
+    public static final String DATA_ITEM_CHANGED_INVALID =
+            "Invalid Person Detail Data Item Changed type.";
 
-    // IRAS Assessable Income
+    // IRAS assessable income
+    public static final String ID_NOT_EXIST = "NRIC does not exist in CD database";
     public static final String INVALID_HEADER_RECORD_TYPE =
             "Wrong RecordType for header. Should be 0";
     public static final String INVALID_BODY_RECORD_TYPE = "Wrong RecordType for body. Should be 1";
@@ -169,14 +176,6 @@ public class ErrorMessageConstants {
     public static final String INVALID_RESULT_INDICATOR = "Result indicator provided is invalid.";
     public static final String INVALID_ASSESSABLE_INCOME =
             "Result indicator provided is not 01, AI should be 0 but is not.";
-    public static final String INVALID_ASSESSMENT_YEAR =
-            "Result indicator provided is 06, but Assessment Year is less than current +2 years back.";
-    public static final String ID_NOT_EXISTS = "ID does not exist in IRAS database";
-    public static final String NO_ASSESSMENT_RECORD_FOUND_RETURN_ISSUED =
-            "No assessment record found and Return was issued";
-    public static final String NO_ASSESSMENT_RECORD_FOUND_NO_RETURN_ISSUED =
-            "No assessment record found and NO Return was issued";
-    public static final String INVALID_ID = "INVALID NRIC or FIN provided";
     public static final String YEAR_OF_ASSESSMENT_BEFORE_EXTRACTION_FOR_EXTRACTION_BEFORE_JUN =
             "Year of assessment out of range for Extraction before June; YA >3 BEFORE Extraction Year";
     public static final String YEAR_OF_ASSESSMENT_AFTER_EXTRACTION_FOR_EXTRACTION_BEFORE_JUN =
@@ -194,7 +193,7 @@ public class ErrorMessageConstants {
     public static final String PARTIALLY_DUPLICATE_RECORD_FOUND_ERROR_MESSAGE =
             "Partially Duplicate Record found.";
     public static final String RECORDS_WITH_RESULT_INDICATOR_03_OR_06 =
-            "Record found with resultIndicator 03 or 06 found in return file: ";
+            "Record found with resultIndicator 03 or 06 found in return file.";
 
     // Lorong Buangkok
     public static final String POSTAL_CODE_CANNOT_BE_EMPTY = "Postal code cannot be empty";
@@ -217,10 +216,18 @@ public class ErrorMessageConstants {
     // CPFB Nursing Home
     public static final String NURSING_HOME_COMPLETE_DUPLICATED_RECORD =
             "Duplicated records found with same Postal, Block, Floor, Unit and Home type.";
-
     public static final String NURSING_HOME_DUPLICATED_RECORD_DIFFERENT_HOMETYPE =
             "Duplicated records found with same Postal, Block, Floor and Unit but different Home type.";
-
     public static final String NURSING_HOME_POSTAL_MATCH_BUT_BLOCK_NOT_MATCH_WITH_PROPERTYDETAIL =
             "Block number does not match prepared records given valid Postal Code";
+
+    // File Upload Error Message
+    public static final String FILE_UPLOAD_INTERNAL_SERVER_ERROR =
+            "An Error has occured. Failed to upload file.";
+    public static final String FILE_UPLOAD_NO_FILE = "Please select a file to upload.";
+
+    public static final String FILE_UPLOAD_NO_FILETYPE = "Please select a valid file type to upload.";
+
+    public static final String FILE_UPLOAD_INVALID_FILE_EXTENSION =
+            "Invalid file type uploaded! Please retry.";
 }

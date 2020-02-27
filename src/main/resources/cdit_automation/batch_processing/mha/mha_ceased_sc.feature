@@ -117,7 +117,8 @@ Feature: Data processing for Mha ceased citizenship
       | CeasedCitizen |
       | 0             |
     When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
-    Then the Mha Ceased Citizen batch job completes running with status CLEANUP
+    Then the Mha Ceased Citizen batch job completes running with status FILE_ERROR
+    And the error message contains Must have at least 1 valid body record
 
   @set_10
   Scenario: Mha sends a ceased citizenship with an SG country code

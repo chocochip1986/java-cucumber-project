@@ -7,7 +7,8 @@ Feature: Data processing for MHA death broadcast
   Scenario: MHA sends an empty Death file
     Given the mha death file is empty
     When MHA sends the MHA_DEATH_DATE file to Datasource sftp for processing
-    And the Mha Death batch job completes running with status CLEANUP
+    And the Mha Death batch job completes running with status FILE_ERROR
+    And the error message contains Must have at least 1 valid body record
 
   @set_2
   Scenario: MHA sends a Death file for processing

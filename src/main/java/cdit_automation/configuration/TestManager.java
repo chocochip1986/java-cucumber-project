@@ -8,6 +8,8 @@ import cdit_automation.exceptions.UnsupportedBrowserException;
 import cdit_automation.page_navigation.PageUtils;
 import io.cucumber.java.Scenario;
 import lombok.extern.slf4j.Slf4j;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -78,6 +80,14 @@ public class TestManager {
             testRunStartTime = getLocalDateTimeNow();
             hasStarted = true;
         }
+    }
+
+    public File takeScreenshot() {
+        return ((TakesScreenshot)getDriverManager().getDriver()).getScreenshotAs(OutputType.FILE);
+    }
+
+    public boolean isBrowserOpened() {
+        return getDriverManager().getDriver() != null;
     }
 
     public void addToFailingListOfScenarios(Scenario scenario) {
@@ -173,7 +183,7 @@ public class TestManager {
 
     private void tearDown() {
         log.info("Exiting test suite...");
-        throw new IllegalArgumentException("Exiting test suite...");
+        throw new RuntimeException("Exiting test suite...");
     }
 
     public void sleep() {

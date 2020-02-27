@@ -39,12 +39,11 @@ public class Hooks extends AbstractSteps {
             takeScreenshot(screenshotNameMaker(scenario));
             testManager.sendNotificationToSlack(message);
             if ( testManager.failFastEnabled() ) {
+                reset();
                 testManager.quit();
             }
         }
-        testManager.closeBrowser();
-        testContext.flush();
-        batchFileDataWriter.reset();
+        reset();
     }
 
     @BeforeStep(order=0)
@@ -76,39 +75,45 @@ public class Hooks extends AbstractSteps {
 
     private void truncateAllTables() {
         System.out.println("Truncating all Datasource tables...");
-        bulkCitizenValidatedRepo.deleteAllInBatch();
-        bulkMhaAddressValidatedRepo.deleteAllInBatch();
-        bulkNcaAddressValidatedRepo.deleteAllInBatch();
-        changeAddressValidatedRepo.deleteAllInBatch();
-        newCitizenValidatedRepo.deleteAllInBatch();
-        newMhaAddressRepo.deleteAllInBatch();
-        newNcaAddressRepo.deleteAllInBatch();
-        oldMhaAddressRepo.deleteAllInBatch();
-        oldNcaAddressRepo.deleteAllInBatch();
-        incomeRepo.deleteAllInBatch();
-//        annualValueRepo.deleteAllInBatch();
-        dualCitizenValidatedRepo.deleteAllInBatch();
-        doubleDateHeaderValidatedRepo.deleteAllInBatch();
-        singleDateHeaderValidatedRepo.deleteAllInBatch();
-        deathDateValidatedRepo.deleteAllInBatch();
-        ceasedCitizenValidatedRepo.deleteAllInBatch();
-        noInteractionValidatedRepo.deleteAllInBatch();
-        personDetailChangeValidatedRepo.deleteAllInBatch();
-        nationalityRepo.deleteAllInBatch();
-        personIdRepo.deleteAllInBatch();
-        personStatusRepo.deleteAllInBatch();
-        personPropertyRepo.deleteAllInBatch();
-        personNameRepo.deleteAllInBatch();
-        propertyRepo.deleteAllInBatch();
-        propertyDetailRepo.deleteAllInBatch();
-        personDetailRepo.deleteAllInBatch();
-        personRepo.deleteAllInBatch();
-        errorMessageRepo.deleteAllInBatch();
-        incomingRecordRepo.deleteAllInBatch();
-        batchRepo.deleteAllInBatch();
-        fileReceivedRepo.deleteAllInBatch();
-        batchJobExecutionRepo.deleteAllInBatch();
-        batchJobExecutionParamsRepo.deleteAllInBatch();
+        bulkCitizenValidatedRepo.truncateTable();
+        bulkMhaAddressValidatedRepo.truncateTable();
+        bulkNcaAddressValidatedRepo.truncateTable();
+        changeAddressValidatedRepo.truncateTable();
+        newCitizenValidatedRepo.truncateTable();
+        newMhaAddressRepo.truncateTable();
+        newNcaAddressRepo.truncateTable();
+        oldMhaAddressRepo.truncateTable();
+        oldNcaAddressRepo.truncateTable();
+        incomeRepo.truncateTable();
+//        annualValueRepo.truncateTable();
+        dualCitizenValidatedRepo.truncateTable();
+        doubleDateHeaderValidatedRepo.truncateTable();
+        singleDateHeaderValidatedRepo.truncateTable();
+        deathDateValidatedRepo.truncateTable();
+        ceasedCitizenValidatedRepo.truncateTable();
+        noInteractionValidatedRepo.truncateTable();
+        personDetailChangeValidatedRepo.truncateTable();
+        nationalityRepo.truncateTable();
+        personIdRepo.truncateTable();
+        personStatusRepo.truncateTable();
+        personPropertyRepo.truncateTable();
+        personNameRepo.truncateTable();
+        propertyRepo.truncateTable();
+        propertyDetailRepo.truncateTable();
+        personDetailRepo.truncateTable();
+        personRepo.truncateTable();
+        errorMessageRepo.truncateTable();
+        incomingRecordRepo.truncateTable();
+        batchRepo.truncateTable();
+        fileReceivedRepo.truncateTable();
+        batchJobExecutionRepo.truncateTable();
+        batchJobExecutionParamsRepo.truncateTable();
         System.out.println("Truncated all Datasource tables...");
+    }
+
+    private void reset() {
+        testManager.closeBrowser();
+        testContext.flush();
+        batchFileDataWriter.reset();
     }
 }

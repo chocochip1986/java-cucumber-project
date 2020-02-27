@@ -40,7 +40,8 @@ Feature: Data processing for MHA dual citizenship
   Scenario: MHA sends an empty Dual Citizen file
     Given the mha dual citizen file is empty
     When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
-    And the Mha Dual Citizen batch job completes running with status CLEANUP
+    And the Mha Dual Citizen batch job completes running with status FILE_ERROR
+    And the error message contains Must have at least 1 valid body record
 
   @Set_5
   Scenario: MHA sends a file with a cut-off date after that file recevied date
