@@ -12,6 +12,7 @@ import java.util.function.Supplier;
 public class FileTrailPage extends AbstractPage {
     public final String BACK_BTN = "//button[@class='secondary-button']/child::span[@class='secondary-button-text' and text()='BACK']";
     public final String FILE_TRAIL_PAGE = "//header[@class='header' and text()='File Trail']";
+    public final String REASONABLENESS_TRENDING_PAGE = "//a[text()='Details of trending records']";
 
     public final String FILE_TRAIL_INCOMING_INFO_SUBHEADER = "//div[@class='header-title' and text()='Incoming Information']";
     public final String FILE_TRAIL_FORMAT_VALIDATION_INFO_SUBHEADER = "//div[@class='header-title' and text()='Format Validation Information']";
@@ -21,6 +22,9 @@ public class FileTrailPage extends AbstractPage {
 
     public void clickBack() {
         pageUtils.click_on(BACK_BTN);
+    }
+    public void clickReasonablenessTrending() {
+        pageUtils.click_on(REASONABLENESS_TRENDING_PAGE);
     }
 
     public void verifyFileTrailPage(Batch batch) {

@@ -1,7 +1,6 @@
 package cdit_automation.step_definition;
 
 import cdit_automation.models.Batch;
-import cdit_automation.models.FileReceived;
 import cdit_automation.pages.FileTrailPage;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
@@ -26,5 +25,11 @@ public class FileTrailSteps extends AbstractSteps {
         log.info("Verifying file trail page is displayed...");
         Batch batch = testContext.get("batch");
         fileTrailPage.verifyFileTrailPage(batch);
+    }
+
+    @And("^I click on the reasonableness trending link$")
+    public void iClickOnReasonablenessTrendingLink() {
+        log.info("Clicking on reasonableness trending link...");
+        fileTrailPage.clickReasonablenessTrending();
     }
 }

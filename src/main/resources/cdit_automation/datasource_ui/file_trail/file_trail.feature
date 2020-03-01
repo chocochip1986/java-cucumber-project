@@ -35,4 +35,5 @@ Feature: File Trail
     Then I should see that there are files displayed
     And I search for the file
     Then I verify that I see the file trail page
+    And I click on the reasonableness trending link
     And I logout of CDS Intranet
