@@ -10,8 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface PersonPropertyRepo extends JpaRepository<PersonProperty, Long> {
-    @Query(value = "SELECT pp.* FROM PersonProperty AS OF PERIOD FOR validity_period_person_property TRUNC(sysdate) pp"
-            + "WHERE pp.entity_key = ?1 ", nativeQuery = true)
+    @Query(value = "SELECT pp.* FROM person_property AS OF PERIOD FOR validity_period_person_property TRUNC(sysdate) pp "
+            + " WHERE pp.entity_key = ?1 ", nativeQuery = true)
     PersonProperty findByPerson(Person person);
 
     @Transactional
