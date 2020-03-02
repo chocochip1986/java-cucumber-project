@@ -21,9 +21,9 @@ Feature: Data processing for MHA bulk citizen file
   Scenario: Datasource service processes a MHA bulk citizen file
     Given the mha bulk file is being created
     Given the mha bulk file has the following details:
-      | Singaporean,M,Name:Laksa Boy,Fin:F8100327X,DoD:DeathBeforeBirth,MHAAddress,BuildingName:123113afweaafawe aefa121,UnitNo:12,BlkNo:212,StrtName:faea eae,FlrNo:12,InvalidAddressTag: ,Quantity:1       |
-      | PermanentResident,Nric:S3450033I,DoB:19860901,Name:Mee Siam,F,DoD:DeathBeforeBirth,Overseas,BlkNo:212,StrtName:faea eae,FlrNo:12,BuildingName:123113afweaafawe aefa121,mhaAddrType:A,Quantity:1      |
-      | DualCitizen,Name:Wan Mo Peh,Nric:S0743815Z,M,DoD:DeathBeforeBirth,NCAAddress,BlkNo:212,StrtCode:1h2y3u,LvlNo:131,UnitNo:123ka,Quantity:1                                                             |
+      | Singaporean,M,Name:Laksa Boy,Fin:F8100327X,MHAAddress,BuildingName:123113afweaafawe aefa121,UnitNo:12,BlkNo:212,StrtName:faea eae,FlrNo:12,InvalidAddressTag: ,Quantity:1       |
+      | PermanentResident,Nric:S3450033I,DoB:19860901,Name:Mee Siam,F,Overseas,BlkNo:212,StrtName:faea eae,FlrNo:12,BuildingName:123113afweaafawe aefa121,mhaAddrType:A,Quantity:1      |
+      | DualCitizen,Name:Wan Mo Peh,Nric:S0743815Z,M,NCAAddress,BlkNo:212,StrtCode:1h2y3u,LvlNo:131,UnitNo:123ka,Quantity:1                                                             |
 #    | RandomPeople,Quantity:100000                                                                                                                                                                          |
     And the mha bulk file is created
     When MHA sends the MHA_BULK_CITIZEN file to Datasource sftp for processing
