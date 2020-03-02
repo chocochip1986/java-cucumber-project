@@ -1,5 +1,6 @@
 package cdit_automation.step_definition;
 
+import cdit_automation.data_helpers.factories.BulkCitizenValidatedFactory;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.BatchStatusEnum;
 import cdit_automation.enums.FileStatusEnum;
@@ -83,10 +84,10 @@ public class DatasourceFileDataSteps extends AbstractSteps {
 
     }
 
-    @And("^there is (?:a|an) (erroneous )?(MHA|IRAS|SINGPOST|HDB|CPFB) " +
+    @And("^there is (?:a|an) (MHA|IRAS|SINGPOST|HDB|CPFB) " +
             "(BULK CITIZEN|NEW CITIZEN|DUAL CITIZEN|NO INTERACTION|DUAL CITIZEN|PERSON DETAIL CHANGE|DEATH DATE|CEASED CITIZEN)" +
             " file at (Format|Content|Load) step with (Pending|Urgent Action|Follow-up) status processed ([0-9]+) days ago$")
-    public void thereIsAFileAtFormatStepAtPendingStatus(String hasErrors, String agency, String file, String fileTrailCurrentStep, String fileTrailCurrentStatus, long daysAgo) {
+    public void thereIsAFileAtFormatStepAtPendingStatus(String agency, String file, String fileTrailCurrentStep, String fileTrailCurrentStatus, long daysAgo) {
         String fileType = String.join("_", agency, file.replace(" ", "_"));
         LocalDate processedDate = dateUtils.daysBeforeToday(daysAgo);
         BatchStatusEnum batchStatusEnum = generateBatchStatusBasedOn(fileTrailCurrentStep, fileTrailCurrentStatus);
@@ -124,6 +125,10 @@ public class DatasourceFileDataSteps extends AbstractSteps {
                         .status(SpringJobStatusEnum.COMPLETED)
                         .build();
         batchJobExecutionRepo.save(jobExecution);
+
+        for ( int i = 0 ; i < 10 ; i++ ) {
+            bulkCitizenValidatedFactory.createValidBulkCitizenValidatedRecord(batch);
+        }
 
         testContext.set("selectForFileTrail", fileReceived);
         testContext.set("batch", batch);

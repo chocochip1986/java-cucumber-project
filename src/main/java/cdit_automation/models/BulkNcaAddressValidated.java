@@ -1,5 +1,6 @@
 package cdit_automation.models;
 
+import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.NcaAddressTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -58,4 +59,19 @@ public class BulkNcaAddressValidated extends AbstractEntity {
     @Column(name = "bulk_nca_new_postal_code", length = 6)
     @Size(max = 6)
     private String bulkNcaNewPostalCode;
+
+    public static BulkNcaAddressValidated create() {
+        return build(NcaAddressTypeEnum.pick());
+    }
+
+    private static BulkNcaAddressValidated build(NcaAddressTypeEnum ncaAddressTypeEnum) {
+        return BulkNcaAddressValidated.builder()
+                .bulkNcaAddressType(ncaAddressTypeEnum)
+                .bulkNcaBlockNo(Phaker.validBlockNo())
+                .bulkNcaLevelNo(Phaker.validFloorNo())
+                .bulkNcaUnitNo(Phaker.validUnitNo())
+                .bulkNcaNewPostalCode(Phaker.validPostalCode())
+                .bulkNcaPostalCode(Phaker.validOldPostalCode())
+                .build();
+    }
 }

@@ -1,5 +1,7 @@
 package cdit_automation.enums;
 
+import java.util.Random;
+
 public enum YesNoTypeEnum {
     YES("Y"),
     NO("N");
@@ -27,5 +29,9 @@ public enum YesNoTypeEnum {
             }
         }
         return null;
+    }
+
+    public static YesNoTypeEnum random() {
+        return YesNoTypeEnum.values()[new Random().nextInt(YesNoTypeEnum.values().length)];
     }
 }

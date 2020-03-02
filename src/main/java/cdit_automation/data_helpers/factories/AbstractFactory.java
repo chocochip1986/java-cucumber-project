@@ -1,6 +1,7 @@
 package cdit_automation.data_helpers.factories;
 
 import cdit_automation.repositories.BatchRepo;
+import cdit_automation.repositories.BulkCitizenValidatedRepo;
 import cdit_automation.repositories.ErrorMessageRepo;
 import cdit_automation.repositories.FileDetailRepo;
 import cdit_automation.repositories.FileReceivedRepo;
@@ -27,4 +28,5 @@ public class AbstractFactory {
     @Autowired protected IncomingRecordRepo incomingRecordRepo;
     @Autowired protected ErrorMessageRepo errorMessageRepo;
     @Autowired protected PersonDetailRepo personDetailRepo;
+    @Autowired protected BulkCitizenValidatedRepo bulkCitizenValidatedRepo;
 }
