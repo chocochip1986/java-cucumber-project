@@ -33,7 +33,6 @@ public class BulkCitizenValidatedFactory extends AbstractFactory {
             default:
                 bulkCitizenValidated = createWithMHAAddressZ(batch);
         }
-        bulkCitizenValidatedRepo.save(bulkCitizenValidated);
         return bulkCitizenValidated;
     }
 

@@ -34,16 +34,6 @@ import java.time.LocalDate;
 @SuperBuilder
 @Table(name = "bulk_citizen_validated")
 public class BulkCitizenValidated extends AbstractValidated {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "batch_id")
-    private Batch batch;
-
     @Column(name = "nric", length = 9)
     @Size(min = 9, max = 9)
     private String nric;
