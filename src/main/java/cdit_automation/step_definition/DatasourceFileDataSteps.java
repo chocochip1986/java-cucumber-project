@@ -1,17 +1,25 @@
 package cdit_automation.step_definition;
 
+import cdit_automation.data_helpers.factories.BulkCitizenValidatedFactory;
 import cdit_automation.data_setup.Phaker;
+import cdit_automation.enums.AddressIndicatorEnum;
 import cdit_automation.enums.BatchStatusEnum;
 import cdit_automation.enums.FileStatusEnum;
 import cdit_automation.enums.FileTypeEnum;
+import cdit_automation.enums.NationalityEnum;
+import cdit_automation.enums.ReasonablenessCheckDataItemEnum;
 import cdit_automation.enums.SpringJobStatusEnum;
+import cdit_automation.enums.YesNoTypeEnum;
 import cdit_automation.enums.views.FileStatusSubTextEnum;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.Batch;
+import cdit_automation.models.BulkCitizenValidated;
+import cdit_automation.models.BulkMhaAddressValidated;
 import cdit_automation.models.FileDetail;
 import cdit_automation.models.FileReceived;
 import cdit_automation.models.JobExecution;
 import cdit_automation.models.JobExecutionParams;
+import cdit_automation.models.ReasonablenessCheckStatistic;
 import cdit_automation.utilities.DateUtils;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -19,7 +27,9 @@ import io.cucumber.java.en.Given;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 
 import lombok.extern.slf4j.Slf4j;
@@ -83,10 +93,10 @@ public class DatasourceFileDataSteps extends AbstractSteps {
 
     }
 
-    @And("^there is (?:a|an) (erroneous )?(MHA|IRAS|SINGPOST|HDB|CPFB) " +
+    @And("^there is (?:a|an) (MHA|IRAS|SINGPOST|HDB|CPFB) " +
             "(BULK CITIZEN|NEW CITIZEN|DUAL CITIZEN|NO INTERACTION|DUAL CITIZEN|PERSON DETAIL CHANGE|DEATH DATE|CEASED CITIZEN)" +
             " file at (Format|Content|Load) step with (Pending|Urgent Action|Follow-up) status processed ([0-9]+) days ago$")
-    public void thereIsAFileAtFormatStepAtPendingStatus(String hasErrors, String agency, String file, String fileTrailCurrentStep, String fileTrailCurrentStatus, long daysAgo) {
+    public void thereIsAFileAtFormatStepAtPendingStatus(String agency, String file, String fileTrailCurrentStep, String fileTrailCurrentStatus, long daysAgo) {
         String fileType = String.join("_", agency, file.replace(" ", "_"));
         LocalDate processedDate = dateUtils.daysBeforeToday(daysAgo);
         BatchStatusEnum batchStatusEnum = generateBatchStatusBasedOn(fileTrailCurrentStep, fileTrailCurrentStatus);
@@ -95,18 +105,24 @@ public class DatasourceFileDataSteps extends AbstractSteps {
 
         FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.fromString(fileType));
 
+        Batch finalBatch = batch;
         FileReceived fileReceived = FileReceived.builder()
                 .fileDetail(fileDetail)
                 .filePath("/subdir1/subdir2/subdir3/"+fileDetail.getFileName()+".txt")
                 .receivedTimestamp(dateUtils.beginningOfDayToTimestamp(processedDate))
-                .batches(new ArrayList<Batch>(){{ add(batch); }})
+                .batches(new ArrayList<Batch>(){{ add(finalBatch); }})
                 .fileSize(Double.valueOf(Phaker.validNumber(6)))
                 .fileStatusEnum(FileStatusEnum.OK)
                 .build();
 
         batch.setFileReceived(fileReceived);
         fileReceived = fileReceivedRepo.save(fileReceived);
-        batchRepo.save(batch);
+        batch = batchRepo.save(batch);
+        List<BulkCitizenValidated> bulkCitizenValidatedList = new ArrayList<>();
+        for ( int i = 0 ; i < 10 ; i++ ) {
+            bulkCitizenValidatedList.add(bulkCitizenValidatedFactory.createValidBulkCitizenValidatedRecord(batch));
+        }
+        bulkCitizenValidatedRepo.saveAll(bulkCitizenValidatedList);
 
         // Build and Save JobExecutionParam
         JobExecutionParams jobExecutionParams =
@@ -124,6 +140,9 @@ public class DatasourceFileDataSteps extends AbstractSteps {
                         .status(SpringJobStatusEnum.COMPLETED)
                         .build();
         batchJobExecutionRepo.save(jobExecution);
+
+        ReasonablenessCheckStatistic reasonablenessCheckStatistic = ReasonablenessCheckStatistic.create(ReasonablenessCheckDataItemEnum.NO_OF_NEW_THIRTEEN_YEAR_OLD.getValue(), String.valueOf(bulkCitizenValidatedList.size()), batch);
+        reasonablenessCheckStatisticRepo.save(reasonablenessCheckStatistic);
 
         testContext.set("fileReceived", fileReceived);
         testContext.set("batch", batch);

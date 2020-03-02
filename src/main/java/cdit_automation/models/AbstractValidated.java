@@ -26,7 +26,7 @@ public class AbstractValidated extends AbstractEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "batch_id")
     @NotNull
     private Batch batch;

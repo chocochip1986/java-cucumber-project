@@ -47,4 +47,8 @@ public class ReasonablenessCheckStatistic extends AbstractEntity {
 
     @Column(name = "data_collected_date")
     private Timestamp dataCollectedDate;
+
+    public static ReasonablenessCheckStatistic create(String dataItem, String dataItemValue, Batch batch) {
+        return ReasonablenessCheckStatistic.builder().batch(batch).dataItem(dataItem).dataItemValue(dataItemValue).dataCollectedDate(batch.getCreatedAt()).build();
+    }
 }

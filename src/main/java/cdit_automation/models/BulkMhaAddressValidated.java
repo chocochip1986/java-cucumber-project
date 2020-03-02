@@ -1,6 +1,8 @@
 package cdit_automation.models;
 
+import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.MhaAddressTypeEnum;
+import cdit_automation.utilities.StringUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -62,4 +64,24 @@ public class BulkMhaAddressValidated extends AbstractEntity {
     @Column(name = "bulk_mha_new_postal_code", length = 6)
     @Size(max = 6)
     private String bulkMhaNewPostalCode;
+
+    public static BulkMhaAddressValidated createOverseas() {
+        return build(MhaAddressTypeEnum.OVERSEAS_ADDRESS);
+    }
+
+    public static BulkMhaAddressValidated create() {
+        return build(MhaAddressTypeEnum.pick());
+    }
+
+    private static BulkMhaAddressValidated build(MhaAddressTypeEnum mhaAddressTypeEnum) {
+        return BulkMhaAddressValidated.builder()
+                .bulkMhaAddressType(mhaAddressTypeEnum)
+                .bulkMhaBlockNo(Phaker.validBlockNo())
+                .bulkMhaFloorNo(Phaker.validFloorNo())
+                .bulkMhaStreetName(StringUtils.leftPad(Phaker.validStreetName(), 32))
+                .bulkMhaBuildingName(StringUtils.leftPad(Phaker.validBuildingName(), 30))
+                .bulkMhaPostalCode(Phaker.validOldPostalCode())
+                .bulkMhaNewPostalCode(Phaker.validPostalCode())
+                .build();
+    }
 }
