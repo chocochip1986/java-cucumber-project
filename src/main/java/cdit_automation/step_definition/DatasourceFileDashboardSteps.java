@@ -59,7 +59,7 @@ public class DatasourceFileDashboardSteps extends AbstractSteps {
     @And("I search for the file")
     public void iSearchForTheFile() {
         log.info("Searching for file...");
-        FileReceived fileReceived = testContext.get("selectForFileTrail");
+        FileReceived fileReceived = testContext.get("fileReceived");
         filesDashBoardPage.searchForFile(fileReceived);
     }
 }

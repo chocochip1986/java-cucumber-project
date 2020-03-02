@@ -1,5 +1,6 @@
 package cdit_automation.step_definition;
 
+import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.models.Batch;
 import cdit_automation.pages.FileTrailPage;
 import cdit_automation.pages.datasource.TrendingRecordsPage;
@@ -36,5 +37,14 @@ public class FileTrailSteps extends AbstractSteps {
         log.info("Clicking on reasonableness trending link...");
         fileTrailPage.clickReasonablenessTrending();
         trendingRecordsPage.verifyLoaded();
+    }
+
+    @Then("^I verify that content validation count matches Datasource validated record count$")
+    public void iVerifyThatContentValidationMatchesDatasourceValidatedRecords(){
+        log.info("Verifying content validation count matches data persisted in Datasource validated table...");
+        Batch batch = testContext.get("batch");
+        FileTypeEnum fileTypeEnum = batch.getFileReceived().getFileDetail().getFileEnum();
+        long validatedCount = jpaRepoFactory.countValidatedRecordsBasedOnFileTypeAndBatch(fileTypeEnum, batch);
+        fileTrailPage.verifyTrendingRecordCount(validatedCount);
     }
 }

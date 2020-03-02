@@ -19,6 +19,7 @@ public class FileTrailPage extends AbstractPage {
     public final String FILE_TRAIL_CONTENT_VALIDATION_INFO_SUBHEADER = "//div[@class='header-title' and text()='Content Validation Information']";
     public final String FILE_TRAIL_REASONABLENESS_SUBHEADER = "//div[@class='header-title' and text()='Reasonableness Trending Information']";
     public final String FILE_TRAIL_LOAD_VALIDATION_INFO_SUBHEADER = "//div[@class='header-title' and text()='Load Validation Information']";
+    public final String FILE_TRAIL_REASONABLENESS_TRENDING_COUNT_LABEL = "//span[@class='trending-count']";
 
     public void clickBack() {
         pageUtils.click_on(BACK_BTN);
@@ -34,6 +35,10 @@ public class FileTrailPage extends AbstractPage {
         verifyContentValidationCard(batch);
         verifyReasonablenessCard(batch);
         verifyLoadCard(batch);
+    }
+
+    public void verifyTrendingRecordCount(long count) {
+        testAssert.assertEquals(pageUtils.findElement(FILE_TRAIL_REASONABLENESS_TRENDING_COUNT_LABEL).getText(), Long.toString(count), "Trending record count does not match!");
     }
 
     private void verifyIncomingInfoCard() {
@@ -92,4 +97,6 @@ public class FileTrailPage extends AbstractPage {
             testAssert.assertTrue(isFound, "Unable to find header with css or xpath: "+card);
         }
     }
+
+
 }

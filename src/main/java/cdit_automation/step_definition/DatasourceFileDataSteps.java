@@ -125,7 +125,7 @@ public class DatasourceFileDataSteps extends AbstractSteps {
                         .build();
         batchJobExecutionRepo.save(jobExecution);
 
-        testContext.set("selectForFileTrail", fileReceived);
+        testContext.set("fileReceived", fileReceived);
         testContext.set("batch", batch);
     }
 
