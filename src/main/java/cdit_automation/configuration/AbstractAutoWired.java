@@ -49,6 +49,7 @@ import cdit_automation.repositories.PersonRepo;
 import cdit_automation.repositories.PersonStatusRepo;
 import cdit_automation.repositories.PropertyDetailRepo;
 import cdit_automation.repositories.PropertyRepo;
+import cdit_automation.repositories.ReasonablenessCheckStatisticRepo;
 import cdit_automation.repositories.SingleDateHeaderValidatedRepo;
 import cdit_automation.repositories.view.ReasonablenessCheckStatisticViewJpaRepo;
 import cdit_automation.utilities.DateUtils;
@@ -121,6 +122,7 @@ public class AbstractAutoWired {
     @Autowired protected NewCitizenValidatedRepo newCitizenValidatedRepo;
     @Autowired protected PersonDetailChangeValidatedRepo personDetailChangeValidatedRepo;
     @Autowired protected ReasonablenessCheckStatisticViewJpaRepo reasonablenessCheckStatisticViewJpaRepo;
+    @Autowired protected ReasonablenessCheckStatisticRepo reasonablenessCheckStatisticRepo;
 
     @Autowired protected OldMhaAddressRepo oldMhaAddressRepo;
     @Autowired protected OldNcaAddressRepo oldNcaAddressRepo;
