@@ -35,8 +35,8 @@ public interface NationalityRepo extends JpaRepository<Nationality, Long> {
     @Query("UPDATE Nationality n " +
             "SET n.nationality = ?1 " +
             "WHERE n.person = ?2 " +
-            "AND ( n.biTemporalData.businessTemporalData.validFrom >= TRUNC(SYSDATE) " +
-            "AND ( n.biTemporalData.businessTemporalData.validTill = null OR n.biTemporalData.businessTemporalData.validTill <= TRUNC(SYSDATE) ))")
+            "AND ( n.biTemporalData.businessTemporalData.validFrom <= TRUNC(SYSDATE) " +
+            "AND ( n.biTemporalData.businessTemporalData.validTill = null OR n.biTemporalData.businessTemporalData.validTill >= TRUNC(SYSDATE) ))")
     int updateNationality(NationalityEnum nationalityEnum, Person person);
 
     @Transactional

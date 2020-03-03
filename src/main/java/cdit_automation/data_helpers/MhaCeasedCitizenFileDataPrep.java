@@ -324,7 +324,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
               .nric(Phaker.validNric())
               .name(Phaker.validName())
               .nationality(Phaker.randomNonSGCountryCode())
-              .citizenRenunciationDate(dateUtils.daysBeforeToday(10))
+              .citizenRenunciationDate(dateUtils.daysBeforeToday(4))
               .build();
       batchFileDataWriter.chunkOrWrite(mhaCeasedCitizenFileEntry.toString());
       resultList.add(mhaCeasedCitizenFileEntry);

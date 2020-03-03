@@ -77,7 +77,7 @@ Feature: Data processing for Mha ceased citizenship
     Then the Mha Ceased Citizen batch job completes running with status VALIDATED_TO_PREPARED_ERROR
     And I verify that the following error message appeared:
       | Message                                       | Count |
-      | Renunciation Date is after File Cut-off Date. | 2     |
+      | Renunciation Date is after File Date of run. | 2     |
 
   @set_7
   Scenario: Mha send a ceased citizenship file for processing
@@ -90,9 +90,9 @@ Feature: Data processing for Mha ceased citizenship
     When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
     Then the Mha Ceased Citizen batch job completes running with status CLEANUP
     And I verify the the people listed in the file have nationality of NON_SINGAPORE_CITIZEN
-    And I verify the previous nationality valid till timestamp is the renunciation date at 2359HR
+    And I verify the previous nationality valid till timestamp is the day before renunciation date at 2359HR
     And I verify the supersede nationality valid from timestamp is the day after renunciation date
-    And I verify the previous person detail valid till timestamp is the renunciation date at 2359HR
+    And I verify the previous person detail valid till timestamp is the day before renunciation date at 2359HR
     And I verify the supersede person detail valid from timestamp is the day after renunciation date
 
   @set_8
@@ -137,7 +137,7 @@ Feature: Data processing for Mha ceased citizenship
       | CeasedCitizenWhoIsNonSG |
       | 1                       |
     When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
-    Then the Mha Ceased Citizen batch job completes running with status RAW_DATA_ERROR
+    Then the Mha Ceased Citizen batch job completes running with status VALIDATED_TO_PREPARED_ERROR
     And I verify that the following error message appeared:
       | Message                                 | Count |
       | Not SC or Dual Citizen currently.       | 1     |
