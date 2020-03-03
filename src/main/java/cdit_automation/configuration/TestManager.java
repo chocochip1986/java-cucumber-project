@@ -30,6 +30,7 @@ public class TestManager {
 
     private static final Long DEFAULT_WAIT=10L;
     private final String TEST_SUMMARY_TITLE="==============Test Run Summary==============";
+    private final String FAILURE_TITLE = "==============Failing Scenarios==============";
 
     @Autowired
     private DriverManager driverManager;
@@ -180,6 +181,10 @@ public class TestManager {
         summary += System.lineSeparator()+"Number of tests passed: "+(listOfScenariosRan.size()-listOfFailingScenarios.size());
         summary += System.lineSeparator()+"Number of tests failed: "+listOfFailingScenarios.size();
         summary += System.lineSeparator()+"Test Run Duration: "+getTestRunDuration()+" mins";
+        summary += System.lineSeparator()+FAILURE_TITLE;
+        for ( Scenario scenario : listOfFailingScenarios ) {
+            summary += System.lineSeparator()+scenario.getName();
+        }
         return summary;
     }
 
