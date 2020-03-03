@@ -1,41 +1,34 @@
 package cdit_automation.step_definition;
 
-import cdit_automation.data_helpers.factories.BulkCitizenValidatedFactory;
 import cdit_automation.data_setup.Phaker;
-import cdit_automation.enums.AddressIndicatorEnum;
 import cdit_automation.enums.BatchStatusEnum;
 import cdit_automation.enums.FileStatusEnum;
 import cdit_automation.enums.FileTypeEnum;
-import cdit_automation.enums.NationalityEnum;
 import cdit_automation.enums.ReasonablenessCheckDataItemEnum;
 import cdit_automation.enums.SpringJobStatusEnum;
-import cdit_automation.enums.YesNoTypeEnum;
 import cdit_automation.enums.views.FileStatusSubTextEnum;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.Batch;
 import cdit_automation.models.BulkCitizenValidated;
-import cdit_automation.models.BulkMhaAddressValidated;
 import cdit_automation.models.FileDetail;
 import cdit_automation.models.FileReceived;
 import cdit_automation.models.JobExecution;
 import cdit_automation.models.JobExecutionParams;
 import cdit_automation.models.ReasonablenessCheckStatistic;
-import cdit_automation.utilities.DateUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.Ignore;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Random;
-
-import lombok.extern.slf4j.Slf4j;
-import org.junit.Ignore;
 
 @Slf4j
 @Ignore
@@ -60,6 +53,15 @@ public class DatasourceFileDataSteps extends AbstractSteps {
     private final BatchStatusEnum[] LOAD_PENDING = new BatchStatusEnum[]{BatchStatusEnum.ERROR_RATE, BatchStatusEnum.MAPPED_DATA, BatchStatusEnum.BULK_MAPPED_DATA};
     private final BatchStatusEnum[] LOAD_FOLLOWUP = new BatchStatusEnum[]{BatchStatusEnum.MAPPING_ERROR, BatchStatusEnum.BULK_MAPPED_DATA_ERROR};
     private final BatchStatusEnum[] LOAD_URGENT_ACTION = new BatchStatusEnum[]{BatchStatusEnum.ERROR_RATE_ERROR, BatchStatusEnum.CLEANUP_ERROR};
+    
+    //Reasonableness Statistic Data prep fields
+    private static final String FIELD_FILE_TYPE = "file_type";
+    private static final String FIELD_BATCH_STATUS = "batch_status";
+    private static final String FIELD_DATA_ITEM = "data_item";
+    private static final String FIELD_DATA_ITEM_VALUE = "data_item_value";
+
+    private static final String PLUS = "PLUS";
+    private static final String MINUS = "MINUS";
 
     @Given("^There are ([0-9]+) files that were previously processed by Datasource$")
     public void thereAreMHAFilesThatWerePreviouslyProcessedByDatasource(int count) {
@@ -226,5 +228,62 @@ public class DatasourceFileDataSteps extends AbstractSteps {
                         .status(SpringJobStatusEnum.COMPLETED)
                         .build();
         batchJobExecutionRepo.save(jobExecution);
+    }
+    
+    @And("^the below reasonableness statistics will be inserted with current year (plus|minus) ([0-999])$")
+    public void theBelowReasonablenessStatisticInserted(String operation, int value, DataTable dataTable) {
+        
+        FileTypeEnum fileType;
+        BatchStatusEnum batchStatus;
+        Timestamp batchCreatedAt;
+        String dataItem;
+        String dataItemValue;
+        
+        List<Map<String, String>> dataMap = dataTable.asMaps(String.class, String.class);
+        for (Map<String, String> statistic : dataMap) {
+
+            fileType = FileTypeEnum.valueOf(statistic.get(FIELD_FILE_TYPE));
+            batchStatus = BatchStatusEnum.valueOf(statistic.get(FIELD_BATCH_STATUS));
+            dataItem = statistic.get(FIELD_DATA_ITEM);
+            dataItemValue = statistic.get(FIELD_DATA_ITEM_VALUE);
+            batchCreatedAt = getCreatedAtByOperation(operation, value);
+
+            FileDetail fileDetail = fileDetailRepo.findByFileEnum(fileType);
+            FileReceived fileReceived = FileReceived.builder()
+                    .fileDetail(fileDetail)
+                    .filePath("/subdir1/subdir2/subdir3/"+fileDetail.getFileName()+".txt")
+                    .receivedTimestamp(batchCreatedAt)
+                    .fileSize(Double.valueOf(Phaker.validNumber(6)))
+                    .fileStatusEnum(FileStatusEnum.OK)
+                    .build();
+
+            Batch batch = Batch.create(batchStatus, batchCreatedAt);
+            batch.setFileReceived(fileReceived);
+
+            ReasonablenessCheckStatistic reasonablenessCheckStatistic
+                    = ReasonablenessCheckStatistic.create(dataItem, dataItemValue, batch);
+
+            fileReceivedRepo.save(fileReceived);
+            batchRepo.save(batch);
+            reasonablenessCheckStatisticRepo.save(reasonablenessCheckStatistic);
+        }
+    }
+
+    private Timestamp getCreatedAtByOperation(String operation, int value) {
+        
+        LocalDateTime localDateTime = LocalDateTime.now();
+        Timestamp timestamp;
+
+        switch(operation.toUpperCase()) {
+            case PLUS:
+                timestamp = Timestamp.valueOf(localDateTime.plusYears(value));
+                break;
+            case MINUS:
+                timestamp = Timestamp.valueOf(localDateTime.minusYears(value));
+                break;
+            default:
+                throw new TestFailException("Unsupported option when generating the batch created at timestamp with following option: " + operation);
+        }
+        return timestamp;
     }
 }
