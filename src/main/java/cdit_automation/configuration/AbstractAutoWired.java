@@ -16,7 +16,6 @@ import cdit_automation.data_helpers.MhaNoInteractionFileDataPrep;
 import cdit_automation.data_helpers.factories.JpaRepoFactory;
 import cdit_automation.data_helpers.factories.BulkCitizenValidatedFactory;
 import cdit_automation.data_helpers.factories.PersonFactory;
-import cdit_automation.data_helpers.factories.ReasonablenessCheckStatisticFactory;
 import cdit_automation.models.Batch;
 import cdit_automation.page_navigation.PageUtils;
 import cdit_automation.repositories.AnnualValueRepo;
