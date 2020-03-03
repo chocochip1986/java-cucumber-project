@@ -52,6 +52,24 @@ public class StepDefLevelTestContext {
         return (T)testVariables.get(name);
     }
 
+    public <T> T replace(String name, T newObject) {
+        if ( contains(name) ) {
+            try {
+                testVariables.replace(name, newObject);
+            } catch (RuntimeException e) {
+                String erroMsg = "Unable to replace variable in the TestContext: { key: "+name+", value: "+newObject.getClass().toString();
+                erroMsg+="\n"+e.getMessage();
+                log.error(erroMsg);
+                throw new RuntimeException(erroMsg);
+            }
+        } else {
+            String erroMsg = "Nothing to replace variable in the TestContext: { key: "+name+", value: "+newObject.getClass().toString();
+            log.error(erroMsg);
+            throw new RuntimeException(erroMsg);
+        }
+        return (T)testVariables.get(name);
+    }
+
     public boolean contains(String key) {
         return testVariables.containsKey(key);
     }

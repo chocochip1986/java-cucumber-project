@@ -285,10 +285,9 @@ public class DatasourceFileDataSteps extends AbstractSteps {
             batchForVerificationList.add(batch);
         }
 
-        if ( testContext.get("listOfExpectedBatches") == null ) {
-            testContext.set("listOfExpectedBatches", batchForVerificationList);
+        if ( testContext.contains("listOfExpectedBatches") ) {
+            testContext.replace("listOfExpectedBatches", batchForVerificationList);
         } else {
-            testContext.remove("listOfExpectedBatches");
             testContext.set("listOfExpectedBatches", batchForVerificationList);
         }
     }
