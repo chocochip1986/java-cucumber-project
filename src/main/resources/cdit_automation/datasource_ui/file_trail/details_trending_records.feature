@@ -21,8 +21,9 @@ Feature: Details of Trending Records for files
     Given the mha bulk file is being created
     Given the mha bulk file has the following details:
       | Singaporean,M,Name:Laksa Boy,Fin:F8100327X,ctzIssDate:20190325,MHAAddress,BuildingName:123113afweaafawe aefa121,UnitNo:12,BlkNo:212,StrtName:faea eae,FlrNo:12,InvalidAddressTag: ,Quantity:1       |
-      | PermanentResident,Nric:S3450033I,DoB:19860901,Name:Mee Siam,F,Overseas,BlkNo:212,StrtName:faea eae,FlrNo:12,BuildingName:123113afweaafawe aefa121,mhaAddrType:A,Quantity:1      |
-      | DualCitizen,Name:Wan Mo Peh,Nric:S0743815Z,M,NCAAddress,BlkNo:212,StrtCode:1h2y3u,LvlNo:131,UnitNo:123ka,Quantity:1                                                             |
+      | PermanentResident,Nric:S3450033I,DoB:19860901,Name:Mee Siam,F,Overseas,BlkNo:212,StrtName:faea eae,FlrNo:12,BuildingName:123113afweaafawe aefa121,mhaAddrType:A,Quantity:1                          |
+      | DualCitizen,Name:Wan Mo Peh,Nric:S0743815Z,M,NCAAddress,BlkNo:212,StrtCode:1h2y3u,LvlNo:131,UnitNo:123ka,Quantity:1                                                                                 |
+#      | RandomPeople,Quantity:10                                                                                                                                                                            |
     And the mha bulk file is created
     When MHA sends the MHA_BULK_CITIZEN file to Datasource sftp for processing
     And the Mha Bulk batch job completes running with status CLEANUP
@@ -32,4 +33,6 @@ Feature: Details of Trending Records for files
     And I search for the file
     Then I verify that I see the file trail page
     Then I verify that content validation count matches Datasource validated record count
+    When I click on the reasonableness trending link
+    Then I can see the statistics for MHA BULK CITIZEN
 
