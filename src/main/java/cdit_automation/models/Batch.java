@@ -39,7 +39,6 @@ public class Batch extends AbstractEntity  {
     private Long id;
 
     @Column(name = "created_at")
-//    @CreationTimestamp
     private Timestamp createdAt;
 
     @Enumerated(EnumType.STRING)

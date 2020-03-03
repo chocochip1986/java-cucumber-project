@@ -27,20 +27,19 @@ Feature: File Trail
 
   @set_2
   Scenario: CPF officer accesses file trail page
-    Given There are 1 files that were previously processed by Datasource
-    And the below reasonableness statistics will be inserted with current year minus 1
-      | file_type           | batch_status     | data_item                | data_item_value     |
-      | MHA_BULK_CITIZEN    | CLEANUP          | No of new 13 year old    | 100                 |
-    And the below reasonableness statistics will be inserted with current year minus 2
-      | file_type           | batch_status     | data_item                | data_item_value     |
-      | MHA_BULK_CITIZEN    | CLEANUP          | No of new 13 year old    | 200                 |
-    And the below reasonableness statistics will be inserted with current year minus 3
-      | file_type           | batch_status     | data_item                | data_item_value     |
-      | MHA_BULK_CITIZEN    | CLEANUP          | No of new 13 year old    | 300                 |
-    And the below reasonableness statistics will be inserted with current year plus 4
-      | file_type           | batch_status     | data_item                | data_item_value     |
-      | MHA_BULK_CITIZEN    | FILE_ERROR       | No of new 13 year old    | 400                 |
-    And there is a MHA BULK CITIZEN file at Load step with Pending status processed 40 days ago
+    Given There is a MHA BULK CITIZEN file at Load step with Pending status processed 40 days ago
+    And the below MHA BULK CITIZEN reasonableness statistics with batch status CLEANUP inserted previously with year minus 1
+      | data_item                | data_item_value     |
+      | No of new 13 year old    | 100                 |
+    And the below MHA BULK CITIZEN reasonableness statistics with batch status CLEANUP inserted previously with year minus 2
+      | data_item                | data_item_value     |
+      | No of new 13 year old    | 200                 |
+    And the below MHA BULK CITIZEN reasonableness statistics with batch status CLEANUP inserted previously with year minus 3
+      | data_item                | data_item_value     |
+      | No of new 13 year old    | 300                 |
+    And the below MHA BULK CITIZEN reasonableness statistics with batch status CLEANUP inserted previously with year plus 4
+      | data_item                | data_item_value     |
+      | No of new 13 year old    | 400                 |
     Given I am a CPF officer
     And I login to CDS Intranet as a CPF officer
     And I access Datasource UI Files Dashboard function

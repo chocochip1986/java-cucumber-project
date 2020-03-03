@@ -55,13 +55,13 @@ public class DatasourceFileDataSteps extends AbstractSteps {
     private final BatchStatusEnum[] LOAD_URGENT_ACTION = new BatchStatusEnum[]{BatchStatusEnum.ERROR_RATE_ERROR, BatchStatusEnum.CLEANUP_ERROR};
     
     //Reasonableness Statistic Data prep fields
-    private static final String FIELD_FILE_TYPE = "file_type";
-    private static final String FIELD_BATCH_STATUS = "batch_status";
     private static final String FIELD_DATA_ITEM = "data_item";
     private static final String FIELD_DATA_ITEM_VALUE = "data_item_value";
 
     private static final String PLUS = "PLUS";
     private static final String MINUS = "MINUS";
+    
+    private static List<Batch> batchVerificationList = new ArrayList<>();
 
     @Given("^There are ([0-9]+) files that were previously processed by Datasource$")
     public void thereAreMHAFilesThatWerePreviouslyProcessedByDatasource(int count) {
@@ -97,7 +97,7 @@ public class DatasourceFileDataSteps extends AbstractSteps {
 
     }
 
-    @And("^there is (?:a|an) (MHA|IRAS|SINGPOST|HDB|CPFB) " +
+    @Given("^There is (?:a|an) (MHA|IRAS|SINGPOST|HDB|CPFB) " +
             "(BULK CITIZEN|NEW CITIZEN|DUAL CITIZEN|NO INTERACTION|DUAL CITIZEN|PERSON DETAIL CHANGE|DEATH DATE|CEASED CITIZEN)" +
             " file at (Format|Content|Load) step with (Pending|Urgent Action|Follow-up) status processed ([0-9]+) days ago$")
     public void thereIsAFileAtFormatStepAtPendingStatus(String agency, String file, String fileTrailCurrentStep, String fileTrailCurrentStatus, long daysAgo) {
@@ -230,48 +230,52 @@ public class DatasourceFileDataSteps extends AbstractSteps {
         batchJobExecutionRepo.save(jobExecution);
     }
     
-    @And("^the below reasonableness statistics will be inserted with current year (plus|minus) ([0-999])$")
-    public void theBelowReasonablenessStatisticInserted(String operation, int value, DataTable dataTable) {
-        
-        FileTypeEnum fileType;
-        BatchStatusEnum batchStatus;
-        Timestamp batchCreatedAt;
+    @And("^the below (MHA|IRAS|SINGPOST|HDB|CPFB)" + 
+            " (BULK CITIZEN|NEW CITIZEN|DUAL CITIZEN|NO INTERACTION|DUAL CITIZEN|PERSON DETAIL CHANGE|DEATH DATE|CEASED CITIZEN)" + 
+            " reasonableness statistics with batch status ([a-zA-Z_]+)" +
+            " inserted previously with year (plus|minus) ([0-999])$")
+    public void theBelowReasonablenessStatisticInserted(
+            String agency, String file, String batchStatus, String operation, int value, DataTable dataTable) {
+
+        String fileTypeString = String.join("_", agency, file.replace(" ", "_"));
+        FileTypeEnum fileTypeEnum = FileTypeEnum.valueOf(fileTypeString);
+        BatchStatusEnum batchStatusEnum = BatchStatusEnum.valueOf(batchStatus);
+
+        Batch currentBatch = testContext.get("batch");
+        Timestamp batchCreatedAt = generateCreatedAt(currentBatch.getCreatedAt(), operation, value);
+
+        FileDetail fileDetail = fileDetailRepo.findByFileEnum(fileTypeEnum);
+        FileReceived fileReceived = FileReceived.builder()
+                .fileDetail(fileDetail)
+                .filePath("/subdir1/subdir2/subdir3/"+fileDetail.getFileName()+".txt")
+                .receivedTimestamp(batchCreatedAt)
+                .fileSize(Double.valueOf(Phaker.validNumber(6)))
+                .fileStatusEnum(FileStatusEnum.OK)
+                .build();
+
+        Batch batch = Batch.create(batchStatusEnum, batchCreatedAt);
+        batch.setFileReceived(fileReceived);
+
+        List<ReasonablenessCheckStatistic> list = new ArrayList<>();
         String dataItem;
         String dataItemValue;
         
         List<Map<String, String>> dataMap = dataTable.asMaps(String.class, String.class);
         for (Map<String, String> statistic : dataMap) {
 
-            fileType = FileTypeEnum.valueOf(statistic.get(FIELD_FILE_TYPE));
-            batchStatus = BatchStatusEnum.valueOf(statistic.get(FIELD_BATCH_STATUS));
             dataItem = statistic.get(FIELD_DATA_ITEM);
             dataItemValue = statistic.get(FIELD_DATA_ITEM_VALUE);
-            batchCreatedAt = getCreatedAtByOperation(operation, value);
-
-            FileDetail fileDetail = fileDetailRepo.findByFileEnum(fileType);
-            FileReceived fileReceived = FileReceived.builder()
-                    .fileDetail(fileDetail)
-                    .filePath("/subdir1/subdir2/subdir3/"+fileDetail.getFileName()+".txt")
-                    .receivedTimestamp(batchCreatedAt)
-                    .fileSize(Double.valueOf(Phaker.validNumber(6)))
-                    .fileStatusEnum(FileStatusEnum.OK)
-                    .build();
-
-            Batch batch = Batch.create(batchStatus, batchCreatedAt);
-            batch.setFileReceived(fileReceived);
-
-            ReasonablenessCheckStatistic reasonablenessCheckStatistic
-                    = ReasonablenessCheckStatistic.create(dataItem, dataItemValue, batch);
-
-            fileReceivedRepo.save(fileReceived);
-            batchRepo.save(batch);
-            reasonablenessCheckStatisticRepo.save(reasonablenessCheckStatistic);
+            list.add(ReasonablenessCheckStatistic.create(dataItem, dataItemValue, batch));
         }
+
+        fileReceivedRepo.save(fileReceived);
+        batchRepo.save(batch);
+        reasonablenessCheckStatisticRepo.saveAll(list);
     }
 
-    private Timestamp getCreatedAtByOperation(String operation, int value) {
+    private Timestamp generateCreatedAt(Timestamp createdAt, String operation, int value) {
         
-        LocalDateTime localDateTime = LocalDateTime.now();
+        LocalDateTime localDateTime = createdAt.toLocalDateTime();
         Timestamp timestamp;
 
         switch(operation.toUpperCase()) {
