@@ -19,13 +19,13 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.jni.Local;
 import org.junit.Ignore;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,8 +59,9 @@ public class DatasourceFileDataSteps extends AbstractSteps {
     private static final String FIELD_DATA_ITEM = "data_item";
     private static final String FIELD_DATA_ITEM_VALUE = "data_item_value";
 
-    private static final String PLUS = "PLUS";
-    private static final String MINUS = "MINUS";
+    private static final String PLUS_SIGN = "+";
+    private static final String MINUS_SIGN = "-";
+    private static final String LIST_OF_EXPECTED_BATCHES = "listOfExpectedBatches";
 
     @Given("^There are ([0-9]+) files that were previously processed by Datasource$")
     public void thereAreMHAFilesThatWerePreviouslyProcessedByDatasource(int count) {
@@ -231,81 +232,177 @@ public class DatasourceFileDataSteps extends AbstractSteps {
     
     @And("^the below (MHA|IRAS|SINGPOST|HDB|CPFB)" + 
             " (BULK CITIZEN|NEW CITIZEN|DUAL CITIZEN|NO INTERACTION|DUAL CITIZEN|PERSON DETAIL CHANGE|DEATH DATE|CEASED CITIZEN)" + 
-            " reasonableness statistics with batch status ([a-zA-Z_]+)" +
-            " inserted previously with year (plus|minus) ([0-999])$")
+            " reasonableness statistics with ([a-zA-Z_]+) status" +
+            " inserted previously with year (\\-|\\+) ([0-9][0-9]{0,2}) month (\\-|\\+) ([0-9][0-9]{0,1}) day (\\-|\\+) ([0-9][0-9]{0,1})$")
     public void theBelowReasonablenessStatisticInserted(
-            String agency, String file, String batchStatus, String operation, int value, DataTable dataTable) {
+            String agency, String file, String batchStatus, 
+            String yearOperation, int yearValue, 
+            String monthOperation, int monthValue, 
+            String dayOperation, int dayValue, DataTable dataTable) {
 
+        // Get "main" batch
+        Batch mainBatch = testContext.get("batch");
+        Timestamp mainBatchCreatedAt = mainBatch.getCreatedAt();
+        Timestamp batchCreatedAt = generateCreatedAt(
+                mainBatchCreatedAt, yearOperation, yearValue, monthOperation, monthValue, dayOperation, dayValue);
+
+        // Get File Detail
         String fileTypeString = String.join("_", agency, file.replace(" ", "_"));
         FileTypeEnum fileTypeEnum = FileTypeEnum.valueOf(fileTypeString);
-        BatchStatusEnum batchStatusEnum = BatchStatusEnum.valueOf(batchStatus);
-
-        Batch currentBatch = testContext.get("batch");
-        Timestamp batchCreatedAt = generateCreatedAt(currentBatch.getCreatedAt(), operation, value);
-
         FileDetail fileDetail = fileDetailRepo.findByFileEnum(fileTypeEnum);
+        
+        // Get File Received
         FileReceived fileReceived = FileReceived.builder()
                 .fileDetail(fileDetail)
-                .filePath("/subdir1/subdir2/subdir3/"+fileDetail.getFileName()+".txt")
+                .filePath("/subdir1/subdir2/subdir3/" + fileDetail.getFileName() + ".txt")
                 .receivedTimestamp(batchCreatedAt)
                 .fileSize(Double.valueOf(Phaker.validNumber(6)))
                 .fileStatusEnum(FileStatusEnum.OK)
                 .build();
 
-        Batch batch = Batch.create(batchStatusEnum, batchCreatedAt);
-        batch.setFileReceived(fileReceived);
+        // Get Batch
+        BatchStatusEnum batchStatusEnum = BatchStatusEnum.valueOf(batchStatus);
+        Batch batch = Batch.create(batchStatusEnum, batchCreatedAt, fileReceived);
 
-        List<ReasonablenessCheckStatistic> list = new ArrayList<>();
+        // Get Reasonableness stats
+        List<Map<String, String>> dataMap = dataTable.asMaps(String.class, String.class);
+        List<ReasonablenessCheckStatistic> statisticList = new ArrayList<>();
+        
         String dataItem;
         String dataItemValue;
         
-        List<Map<String, String>> dataMap = dataTable.asMaps(String.class, String.class);
         for (Map<String, String> statistic : dataMap) {
 
             dataItem = statistic.get(FIELD_DATA_ITEM);
             dataItemValue = statistic.get(FIELD_DATA_ITEM_VALUE);
-            list.add(ReasonablenessCheckStatistic.create(dataItem, dataItemValue, batch));
+            statisticList.add(ReasonablenessCheckStatistic.create(dataItem, dataItemValue, batch));
         }
 
+        // Save to repo
         fileReceivedRepo.save(fileReceived);
         batchRepo.save(batch);
-        reasonablenessCheckStatisticRepo.saveAll(list);
+        reasonablenessCheckStatisticRepo.saveAll(statisticList);
 
-        // Insert into list if correct
-        List<Batch> batchForVerificationList = testContext.get("listOfExpectedBatches");
-        if (batchForVerificationList == null) {
-            batchForVerificationList = new ArrayList<>();
-        }
+        // Add to TestContext for verification
+        addExpectedBatchesToTestContext(mainBatchCreatedAt, batch);
+    }
 
-        LocalDateTime createdAtDateTime = currentBatch.getCreatedAt().toLocalDateTime();
-        LocalDateTime previousCreatedAtDateTime = batchCreatedAt.toLocalDateTime();
-        if (createdAtDateTime.minusYears(1).getYear() == previousCreatedAtDateTime.getYear() 
-                || createdAtDateTime.minusYears(2).getYear() == previousCreatedAtDateTime.getYear()) {
+    private void addExpectedBatchesToTestContext(Timestamp mainBatchCreatedAt, Batch batch) {
+        
+        LocalDateTime mainBatchDateTime = mainBatchCreatedAt.toLocalDateTime();
+        LocalDateTime previousBatchDateTime = batch.getCreatedAt().toLocalDateTime();
+        int previousBatchYear = previousBatchDateTime.getYear();
+        
+        if (mainBatchDateTime.minusYears(1).getYear() == previousBatchYear 
+                || mainBatchDateTime.minusYears(2).getYear() == previousBatchYear) {
+
+            // Get list, if exist
+            List<Batch> expectedBatchList = testContext.get(LIST_OF_EXPECTED_BATCHES);
+            if (expectedBatchList == null) {
+                expectedBatchList = new ArrayList<>();
+            }
             
-            batchForVerificationList.add(batch);
-        }
+            if (!isBatchWithSameYearFound(
+                    batch, previousBatchDateTime, previousBatchYear, expectedBatchList)) {
+                expectedBatchList.add(batch);
+            }
 
-        if ( testContext.contains("listOfExpectedBatches") ) {
-            testContext.replace("listOfExpectedBatches", batchForVerificationList);
-        } else {
-            testContext.set("listOfExpectedBatches", batchForVerificationList);
+            // Sort in order (x-1 first, then x-2)
+            Comparator<Batch> compareByCreatedAt = Comparator.comparing(Batch::getCreatedAt);
+            expectedBatchList.sort(compareByCreatedAt.reversed());
+            
+            // Set/Replace list
+            if (testContext.contains(LIST_OF_EXPECTED_BATCHES)) {
+                testContext.replace(LIST_OF_EXPECTED_BATCHES, expectedBatchList);
+            } else {
+                testContext.set(LIST_OF_EXPECTED_BATCHES, expectedBatchList);
+            }
         }
     }
 
-    private Timestamp generateCreatedAt(Timestamp createdAt, String operation, int value) {
+    private boolean isBatchWithSameYearFound(
+            Batch batch, LocalDateTime previousBatchDateTime, int previousBatchYear, List<Batch> expectedBatchList) {
+        
+        boolean batchWithSameYearFound = false;
+        int size = expectedBatchList.size();
+
+        for(int i = 0; i < size; i ++) {
+            
+            Batch batchInList = expectedBatchList.get(i);
+            LocalDateTime batchInListDateTime = batchInList.getCreatedAt().toLocalDateTime();
+            if (batchInListDateTime.getYear() == previousBatchYear) {
+                batchWithSameYearFound = true;
+                if (previousBatchDateTime.isAfter(batchInListDateTime)) {
+                    expectedBatchList.remove(batchInList);
+                    expectedBatchList.add(batch);
+                }
+                break;
+            }
+        }
+        return batchWithSameYearFound;
+    }
+
+    private Timestamp generateCreatedAt(
+            Timestamp createdAt, 
+            String yearOperation, int yearValue,
+            String monthOperation, int monthValue, 
+            String dayOperation, int dayValue) {
+        
+        Timestamp createdAtYear = getCreatedAtBasedOnYear(createdAt, yearOperation, yearValue);
+        Timestamp createdAtYearMonth = getCreatedAtBasedOnMonth(createdAtYear, monthOperation, monthValue);
+        return getCreatedAtBasedOnDay(createdAtYearMonth, dayOperation, dayValue);
+    }
+
+    private Timestamp getCreatedAtBasedOnYear(Timestamp createdAt, String operation, int value) {
         
         LocalDateTime localDateTime = createdAt.toLocalDateTime();
         Timestamp timestamp;
 
         switch(operation.toUpperCase()) {
-            case PLUS:
+            case PLUS_SIGN:
                 timestamp = Timestamp.valueOf(localDateTime.plusYears(value));
                 break;
-            case MINUS:
+            case MINUS_SIGN:
                 timestamp = Timestamp.valueOf(localDateTime.minusYears(value));
                 break;
             default:
-                throw new TestFailException("Unsupported option when generating the batch created at timestamp with following option: " + operation);
+                throw new TestFailException("Unsupported option when generating the batch created at (Year) timestamp with following option: " + operation);
+        }
+        return timestamp;
+    }
+
+    private Timestamp getCreatedAtBasedOnMonth(Timestamp createdAt, String operation, int value) {
+
+        LocalDateTime localDateTime = createdAt.toLocalDateTime();
+        Timestamp timestamp;
+
+        switch(operation.toUpperCase()) {
+            case PLUS_SIGN:
+                timestamp = Timestamp.valueOf(localDateTime.plusMonths(value));
+                break;
+            case MINUS_SIGN:
+                timestamp = Timestamp.valueOf(localDateTime.minusMonths(value));
+                break;
+            default:
+                throw new TestFailException("Unsupported option when generating the batch created at (Month) timestamp with following option: " + operation);
+        }
+        return timestamp;
+    }
+
+    private Timestamp getCreatedAtBasedOnDay(Timestamp createdAt, String operation, int value) {
+
+        LocalDateTime localDateTime = createdAt.toLocalDateTime();
+        Timestamp timestamp;
+
+        switch(operation.toUpperCase()) {
+            case PLUS_SIGN:
+                timestamp = Timestamp.valueOf(localDateTime.plusDays(value));
+                break;
+            case MINUS_SIGN:
+                timestamp = Timestamp.valueOf(localDateTime.minusDays(value));
+                break;
+            default:
+                throw new TestFailException("Unsupported option when generating the batch created at (Day) timestamp with following option: " + operation);
         }
         return timestamp;
     }

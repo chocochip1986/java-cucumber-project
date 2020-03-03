@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -68,6 +67,14 @@ public class Batch extends AbstractEntity  {
         return Batch.builder()
                 .status(batchStatusEnum)
                 .createdAt(createdAt)
+                .build();
+    }
+
+    public static Batch create(BatchStatusEnum batchStatusEnum, Timestamp createdAt, FileReceived fileReceived) {
+        return Batch.builder()
+                .status(batchStatusEnum)
+                .createdAt(createdAt)
+                .fileReceived(fileReceived)
                 .build();
     }
 

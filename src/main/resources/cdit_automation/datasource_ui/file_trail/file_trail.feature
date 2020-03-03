@@ -28,16 +28,16 @@ Feature: File Trail
   @set_2
   Scenario: CPF officer accesses file trail page
     Given There is a MHA BULK CITIZEN file at Load step with Pending status processed 40 days ago
-    And the below MHA BULK CITIZEN reasonableness statistics with batch status CLEANUP inserted previously with year minus 1
+    And the below MHA BULK CITIZEN reasonableness statistics with CLEANUP status inserted previously with year - 1 month + 0 day + 0
       | data_item                | data_item_value     |
       | No of new 13 year old    | 100                 |
-    And the below MHA BULK CITIZEN reasonableness statistics with batch status CLEANUP inserted previously with year minus 2
+    And the below MHA BULK CITIZEN reasonableness statistics with CLEANUP status inserted previously with year - 2 month + 0 day + 0
       | data_item                | data_item_value     |
       | No of new 13 year old    | 200                 |
-    And the below MHA BULK CITIZEN reasonableness statistics with batch status CLEANUP inserted previously with year minus 3
+    And the below MHA BULK CITIZEN reasonableness statistics with CLEANUP status inserted previously with year - 3 month + 0 day + 0
       | data_item                | data_item_value     |
       | No of new 13 year old    | 300                 |
-    And the below MHA BULK CITIZEN reasonableness statistics with batch status CLEANUP inserted previously with year plus 4
+    And the below MHA BULK CITIZEN reasonableness statistics with CLEANUP status inserted previously with year - 4 month + 0 day + 0
       | data_item                | data_item_value     |
       | No of new 13 year old    | 400                 |
     Given I am a CPF officer
