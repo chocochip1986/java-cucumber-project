@@ -19,6 +19,7 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.jni.Local;
 import org.junit.Ignore;
 
 import java.sql.Timestamp;
@@ -60,8 +61,6 @@ public class DatasourceFileDataSteps extends AbstractSteps {
 
     private static final String PLUS = "PLUS";
     private static final String MINUS = "MINUS";
-    
-    private static List<Batch> batchVerificationList = new ArrayList<>();
 
     @Given("^There are ([0-9]+) files that were previously processed by Datasource$")
     public void thereAreMHAFilesThatWerePreviouslyProcessedByDatasource(int count) {
@@ -271,6 +270,22 @@ public class DatasourceFileDataSteps extends AbstractSteps {
         fileReceivedRepo.save(fileReceived);
         batchRepo.save(batch);
         reasonablenessCheckStatisticRepo.saveAll(list);
+
+        // Insert into list if correct
+        List<Batch> batchForVerificationList = testContext.get("listOfExpectedBatches");
+        if (batchForVerificationList == null) {
+            batchForVerificationList = new ArrayList<>();
+        }
+
+        LocalDateTime createdAtDateTime = currentBatch.getCreatedAt().toLocalDateTime();
+        LocalDateTime previousCreatedAtDateTime = batchCreatedAt.toLocalDateTime();
+        if (createdAtDateTime.minusYears(1).getYear() == previousCreatedAtDateTime.getYear() 
+                || createdAtDateTime.minusYears(2).getYear() == previousCreatedAtDateTime.getYear()) {
+            
+            batchForVerificationList.add(batch);
+        }
+
+        testContext.set("listOfExpectedBatches", batchForVerificationList);
     }
 
     private Timestamp generateCreatedAt(Timestamp createdAt, String operation, int value) {
