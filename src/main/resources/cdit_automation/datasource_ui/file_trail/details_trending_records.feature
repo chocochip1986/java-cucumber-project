@@ -33,4 +33,6 @@ Feature: Details of Trending Records for files
     And I search for the file
     Then I verify that I see the file trail page
     Then I verify that content validation count matches Datasource validated record count
+    And I logout of CDS Intranet
+
 
