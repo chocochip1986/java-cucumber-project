@@ -6,7 +6,7 @@ Feature: File Trail
   @set_1
   Scenario Outline: CPF officer accesses file trail page for various files
     Given There are 50 files that were previously processed by Datasource
-    And there is a MHA BULK CITIZEN file at <currentStep> step with <currentStatus> status processed 40 days ago
+    Given There is a MHA BULK CITIZEN file at <currentStep> step with <currentStatus> status processed 40 days ago
     Given I am a CPF officer
     And I login to CDS Intranet as a CPF officer
     And I access Datasource UI Files Dashboard function
