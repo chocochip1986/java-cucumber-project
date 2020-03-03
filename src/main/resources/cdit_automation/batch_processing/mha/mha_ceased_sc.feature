@@ -92,8 +92,6 @@ Feature: Data processing for Mha ceased citizenship
     And I verify the the people listed in the file have nationality of NON_SINGAPORE_CITIZEN
     And I verify the previous nationality valid till timestamp is the day before renunciation date at 2359HR
     And I verify the supersede nationality valid from timestamp is the day after renunciation date
-    And I verify the previous person detail valid till timestamp is the day before renunciation date at 2359HR
-    And I verify the supersede person detail valid from timestamp is the day after renunciation date
 
   @set_8
   Scenario: Mha send a ceased citizenship file with nationality of [SG]
