@@ -78,7 +78,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
         });
   }
 
-  @And("I verify the previous nationality valid till timestamp is the renunciation date at 2359HR")
+  @And("I verify the previous nationality valid till timestamp is the day before renunciation date at 2359HR")
   public void iVerifyThePreviousNationalityValidTillTimestampIsTheRenunciationDateAtHR() {
     List<MhaCeasedCitizenFileEntry> ceasedCitizens = testContext.get("ceasedCitizens");
     ceasedCitizens.forEach(
@@ -86,7 +86,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
           Date recordValidityDate =
               dateUtils.localDateToDate(c.getCitizenRenunciationDate().minusDays(1));
           Timestamp expectedValidTill =
-              dateUtils.endOfDayToTimestamp(c.getCitizenRenunciationDate());
+              dateUtils.endOfDayToTimestamp(c.getCitizenRenunciationDate().minusDays(1));
           PersonId p = personIdRepo.findByNaturalId(c.getNric());
           Nationality n =
               nationalityRepo.findNationalityByPerson(p.getPerson(), recordValidityDate);
@@ -105,63 +105,15 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
 
   @And("I verify the supersede nationality valid from timestamp is the day after renunciation date")
   public void iVerifyTheSupersedeNationalityValidFromTimestampIsTheDayAfterRenunciationDate() {
-    List<CeasedCitizenValidated> ceasedCitizens = testContext.get("ceasedCitizens");
+    List<MhaCeasedCitizenFileEntry> ceasedCitizens = testContext.get("ceasedCitizens");
     ceasedCitizens.forEach(
         c -> {
           Timestamp expectedValidFrom =
-              dateUtils.beginningOfDayToTimestamp(c.getCitizenRenunciationDate().plusDays(1));
+              dateUtils.beginningOfDayToTimestamp(c.getCitizenRenunciationDate());
           PersonId p = personIdRepo.findByNaturalId(c.getNric());
           Nationality n = nationalityRepo.findNationalityByPerson(p.getPerson());
           Timestamp actualValidFrom =
               n.getBiTemporalData().getBusinessTemporalData().getValidFrom();
-            testAssert.assertEquals(
-              expectedValidFrom,
-              actualValidFrom,
-              "Expecting previous nationality valid till date to be : [ "
-                  + expectedValidFrom
-                  + " ] but retrieved : [ "
-                  + actualValidFrom
-                  + " ]");
-        });
-  }
-
-  @And(
-      "I verify the previous person detail valid till timestamp is the renunciation date at 2359HR")
-  public void iVerifyThePreviousPersonDetailValidTillTimestampIsTheRenunciationDateAtHR() {
-    List<CeasedCitizenValidated> ceasedCitizens = testContext.get("ceasedCitizens");
-    ceasedCitizens.forEach(
-        c -> {
-          Date recordValidityDate =
-              dateUtils.localDateToDate(c.getCitizenRenunciationDate().minusDays(1));
-          Timestamp expectedValidTill =
-              dateUtils.endOfDayToTimestamp(c.getCitizenRenunciationDate());
-          PersonId pi = personIdRepo.findByNaturalId(c.getNric());
-          PersonDetail pd = personDetailRepo.findByPerson(pi.getPerson(), recordValidityDate);
-          Timestamp actualValidTill =
-              pd.getBiTemporalData().getBusinessTemporalData().getValidTill();
-            testAssert.assertEquals(
-              expectedValidTill,
-              actualValidTill,
-              "Expecting previous person detail valid till date to be : [ "
-                  + expectedValidTill
-                  + " ] but retrieved : [ "
-                  + actualValidTill
-                  + " ]");
-        });
-  }
-
-  @And(
-      "I verify the supersede person detail valid from timestamp is the day after renunciation date")
-  public void iVerifyTheSupersedePersonDetailValidFromTimestampIsTheDayAfterRenunciationDate() {
-    List<CeasedCitizenValidated> ceasedCitizens = testContext.get("ceasedCitizens");
-    ceasedCitizens.forEach(
-        c -> {
-          Timestamp expectedValidFrom =
-              dateUtils.beginningOfDayToTimestamp(c.getCitizenRenunciationDate().plusDays(1));
-          PersonId pi = personIdRepo.findByNaturalId(c.getNric());
-          PersonDetail pd = personDetailRepo.findByPerson(pi.getPerson());
-          Timestamp actualValidFrom =
-              pd.getBiTemporalData().getBusinessTemporalData().getValidFrom();
             testAssert.assertEquals(
               expectedValidFrom,
               actualValidFrom,

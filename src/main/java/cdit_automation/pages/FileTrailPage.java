@@ -19,7 +19,7 @@ public class FileTrailPage extends AbstractPage {
     public final String FILE_TRAIL_CONTENT_VALIDATION_INFO_SUBHEADER = "//div[@class='header-title' and text()='Content Validation Information']";
     public final String FILE_TRAIL_REASONABLENESS_SUBHEADER = "//div[@class='header-title' and text()='Reasonableness Trending Information']";
     public final String FILE_TRAIL_LOAD_VALIDATION_INFO_SUBHEADER = "//div[@class='header-title' and text()='Load Validation Information']";
-    public final String FILE_TRAIL_REASONABLENESS_TRENDING_COUNT_LABEL = "//span[@class='trending-count']";
+    public final String FILE_TRAIL_REASONABLENESS_TRENDING_COUNT_LABEL = "//span[@id='trending-count']";
 
     public void clickBack() {
         pageUtils.click_on(BACK_BTN);
