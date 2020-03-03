@@ -15,9 +15,8 @@ Feature: Details of Trending Records for files
     And I click on the reasonableness trending link
     And I logout of CDS Intranet
 
-
   @set_2
-  Scenario: CPF officer views reasonableness trending card
+  Scenario: CPF officer views reasonableness trending card after Bulk Citizen file is processed
     Given the mha bulk file is being created
     Given the mha bulk file has the following details:
       | Singaporean,M,Name:Laksa Boy,Fin:F8100327X,ctzIssDate:20190325,MHAAddress,BuildingName:123113afweaafawe aefa121,UnitNo:12,BlkNo:212,StrtName:faea eae,FlrNo:12,InvalidAddressTag: ,Quantity:1       |
@@ -35,11 +34,10 @@ Feature: Details of Trending Records for files
 #    TODO: Uncomment after story to remove header and footer from total validated count is done
 #    Then I verify that content validation count matches Datasource validated record count
     When I click on the reasonableness trending link
-    Then I can see the statistics for MHA BULK CITIZEN
     And I logout of CDS Intranet
 
   @set_3
-  Scenario: CPF officer accesses file trail page
+  Scenario: CPF officer views reasonableness trending card
     Given There is a MHA BULK CITIZEN file at Load step with Pending status processed 40 days ago
     And the below MHA BULK CITIZEN reasonableness statistics with batch status CLEANUP inserted previously with year minus 1
       | data_item                | data_item_value     |
@@ -60,6 +58,7 @@ Feature: Details of Trending Records for files
     And I search for the file
     Then I verify that I see the file trail page
     And I click on the reasonableness trending link
+    Then I can see the statistics for MHA BULK CITIZEN
     And I logout of CDS Intranet
 
 
