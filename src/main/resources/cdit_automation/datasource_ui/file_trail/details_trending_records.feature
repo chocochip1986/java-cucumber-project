@@ -6,7 +6,6 @@ Feature: Details of Trending Records for files
   @set_1
   Scenario: CPF officer accesses file trail page
     Given there is a MHA BULK CITIZEN file at Load step with Pending status processed 5 days ago
-#    And there is reasonableness statistics for the previous run 2019
     Given I am a CPF officer
     And I login to CDS Intranet as a CPF officer
     And I access Datasource UI Files Dashboard function

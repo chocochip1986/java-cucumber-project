@@ -21,9 +21,11 @@ import cdit_automation.models.JobExecution;
 import cdit_automation.models.JobExecutionParams;
 import cdit_automation.models.ReasonablenessCheckStatistic;
 import cdit_automation.utilities.DateUtils;
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -101,7 +103,7 @@ public class DatasourceFileDataSteps extends AbstractSteps {
         LocalDate processedDate = dateUtils.daysBeforeToday(daysAgo);
         BatchStatusEnum batchStatusEnum = generateBatchStatusBasedOn(fileTrailCurrentStep, fileTrailCurrentStatus);
 
-        Batch batch = Batch.create(batchStatusEnum);
+        Batch batch = Batch.create(batchStatusEnum, dateUtils.beginningOfDayToTimestamp(processedDate));
 
         FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.fromString(fileType));
 

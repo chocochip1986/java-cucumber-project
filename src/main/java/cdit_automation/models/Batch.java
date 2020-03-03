@@ -22,6 +22,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -58,7 +59,21 @@ public class Batch extends AbstractEntity  {
     private List<IncomingRecord> incomingRecords;
 
     public static Batch create(BatchStatusEnum batchStatusEnum) {
-        return Batch.builder().status(batchStatusEnum).build();
+        return Batch.builder()
+                .status(batchStatusEnum)
+                .createdAt(Timestamp.valueOf(LocalDateTime.now()))
+                .build();
+    }
+
+    public static Batch create(BatchStatusEnum batchStatusEnum, Timestamp createdAt) {
+        return Batch.builder()
+                .status(batchStatusEnum)
+                .createdAt(createdAt)
+                .build();
+    }
+
+    public static Batch createCompleted(Timestamp createdAt) {
+        return Batch.builder().status(BatchStatusEnum.CLEANUP).createdAt(createdAt).build();
     }
 
     public static Batch createCompleted() {
