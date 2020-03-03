@@ -19,10 +19,8 @@ import java.util.function.Supplier;
 public class TrendingRecordsPage extends AbstractPage {
     private final String PAGE_TITLE = "//div[contains(@class, 'table-title') and text()='Details of Trending Records']";
     private final String TABLE_ROWS = "//tbody[@role='rowgroup']/child::mat-row[@role='row']";
-    private final String ROW_RELATIVE_PATH_TO_DESCRIPTION = "/child::mat-cell/child::mdt-table-cell/child::mdt-text-cell/child::div[text()[contains(., '<Stats Description>')]]";
-    private final String ROW_RELATIVE_PATH_TO_CURRENT_RUN_STATS = "/child::mat-cell[<index>]/child::mdt-table-cell/child::mdt-text-cell/child::div";
-    private final String ROW_RELATIVE_PATH_TO_PREV_RUN_STATS = "/child::mat-cell[<index>]/child::mdt-table-cell/child::mdt-text-cell/child::div";
-    private final String ROW_RELATIVE_PATH_TO_PREV_2_RUN_STATS = "/child::mat-cell[<index>]/child::mdt-table-cell/child::mdt-text-cell/child::div";
+    private final String ROW_RELATIVE_PATH_TO_DESCRIPTION = "//mat-cell/child::mdt-table-cell/child::mdt-text-cell/child::div[text()[contains(., '<Stats Description>')]]";
+    private final String ROW_RELATIVE_PATH_TO_CURRENT_RUN_STATS = "//mat-cell[<index>]/child::mdt-table-cell/child::mdt-text-cell/child::div";
 
     private final String DASH = "-";
 

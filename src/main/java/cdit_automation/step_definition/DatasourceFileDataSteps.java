@@ -285,7 +285,12 @@ public class DatasourceFileDataSteps extends AbstractSteps {
             batchForVerificationList.add(batch);
         }
 
-        testContext.set("listOfExpectedBatches", batchForVerificationList);
+        if ( testContext.get("listOfExpectedBatches") == null ) {
+            testContext.set("listOfExpectedBatches", batchForVerificationList);
+        } else {
+            testContext.remove("listOfExpectedBatches");
+            testContext.set("listOfExpectedBatches", batchForVerificationList);
+        }
     }
 
     private Timestamp generateCreatedAt(Timestamp createdAt, String operation, int value) {
