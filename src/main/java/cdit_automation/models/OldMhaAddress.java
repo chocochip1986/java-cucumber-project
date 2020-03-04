@@ -1,5 +1,6 @@
 package cdit_automation.models;
 
+import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.MhaAddressTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -56,4 +57,17 @@ public class OldMhaAddress extends AbstractValidated {
     @Column(name = "old_mha_new_postal_code", length = 6)
     @Size(max = 6)
     private String oldMhaNewPostalCode;
+
+    public static OldMhaAddress create() {
+        return OldMhaAddress.builder()
+                .oldMhaAddressType(MhaAddressTypeEnum.pick())
+                .oldMhaBlockNo(Phaker.validBlockNo())
+                .oldMhaStreetName(Phaker.validStreetName())
+                .oldMhaFloorNo(Phaker.validFloorNo())
+                .oldMhaUnitNo(Phaker.validUnitNo())
+                .oldMhaBuildingName(Phaker.validBuildingName())
+                .oldMhaPostalCode(Phaker.validOldPostalCode())
+                .oldMhaNewPostalCode(Phaker.validPostalCode())
+                .build();
+    }
 }

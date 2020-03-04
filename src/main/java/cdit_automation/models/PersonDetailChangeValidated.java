@@ -42,4 +42,38 @@ public class PersonDetailChangeValidated extends AbstractValidated {
 
     @Column(name = "data_item_changed_date")
     private LocalDate dataItemChangedDate;
+
+    public static PersonDetailChangeValidated createGender(Batch batch, String nric, String dataItemNewValue, LocalDate dataItemChangedDate) {
+        return build(batch, nric, PersonDetailDataItemChangedEnum.GENDER, dataItemNewValue, dataItemChangedDate);
+    }
+
+    public static PersonDetailChangeValidated createBoD(Batch batch, String nric, String dataItemNewValue, LocalDate dataItemChangedDate) {
+        return build(batch, nric, PersonDetailDataItemChangedEnum.DATE_OF_BIRTH, dataItemNewValue, dataItemChangedDate);
+    }
+
+    public static PersonDetailChangeValidated createName(Batch batch, String nric, String dataItemNewValue, LocalDate dataItemChangedDate) {
+        return build(batch, nric, PersonDetailDataItemChangedEnum.NAME, dataItemNewValue, dataItemChangedDate);
+    }
+
+    public static PersonDetailChangeValidated create(Batch batch,
+                                                     String nric,
+                                                     PersonDetailDataItemChangedEnum personDetailDataItemChangedEnum,
+                                                     String dataItemNewValue,
+                                                     LocalDate dataItemChangedDate) {
+        return build(batch, nric, personDetailDataItemChangedEnum, dataItemNewValue, dataItemChangedDate);
+    }
+
+    private static PersonDetailChangeValidated build(Batch batch,
+                                                     String nric,
+                                                     PersonDetailDataItemChangedEnum personDetailDataItemChangedEnum,
+                                                     String dataItemNewValue,
+                                                     LocalDate dataItemChangedDate) {
+        return PersonDetailChangeValidated.builder()
+                .batch(batch)
+                .nric(nric)
+                .dataItemChanged(personDetailDataItemChangedEnum)
+                .dataItemNewValue(dataItemNewValue)
+                .dataItemChangedDate(dataItemChangedDate)
+                .build();
+    }
 }

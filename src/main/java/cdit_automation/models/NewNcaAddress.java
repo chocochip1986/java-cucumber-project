@@ -1,5 +1,6 @@
 package cdit_automation.models;
 
+import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.NcaAddressTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -51,4 +52,16 @@ public class NewNcaAddress extends AbstractValidated {
     @Column(name = "new_nca_new_postal_code", length = 6)
     @Size(max = 6)
     private String newNcaNewPostalCode;
+
+    public static NewNcaAddress create(){
+        return NewNcaAddress.builder()
+                .newNcaAddressType(NcaAddressTypeEnum.RESIDENTIAL)
+                .newNcaBlockNo(Phaker.validBlockNo())
+                .newNcaStreetCode(Phaker.validPostalCode())
+                .newNcaLevelNo(Phaker.validFloorNo())
+                .newNcaUnitNo(Phaker.validUnitNo())
+                .newNcaPostalCode(Phaker.validOldPostalCode())
+                .newNcaNewPostalCode(Phaker.validPostalCode())
+                .build();
+    }
 }

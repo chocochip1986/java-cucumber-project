@@ -1,5 +1,6 @@
 package cdit_automation.models;
 
+import cdit_automation.data_setup.Phaker;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,4 +25,12 @@ public class DeathDateValidated extends AbstractValidated {
 
     @Column(name = "death_date")
     private LocalDate deathDate;
+
+    public static DeathDateValidated create(Batch batch) {
+        return build(batch, Phaker.validNric(), Phaker.validPastDate());
+    }
+
+    private static DeathDateValidated build(Batch batch, String nric, LocalDate deathDate) {
+        return DeathDateValidated.builder().batch(batch).nric(nric).deathDate(deathDate).build();
+    }
 }

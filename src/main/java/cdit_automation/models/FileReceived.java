@@ -1,5 +1,6 @@
 package cdit_automation.models;
 
+import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.FileStatusEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -57,4 +58,19 @@ public class FileReceived extends AbstractEntity  {
     @JsonIgnore
     @OneToMany(mappedBy = "fileReceived", cascade = CascadeType.ALL)
     private List<Batch> batches;
+
+    public static FileReceived createOk(FileDetail fileDetail, String filePath, Timestamp receivedTimestamp, List<Batch> batches) {
+        return build(fileDetail, filePath, Double.valueOf(Phaker.validNumber(4)), receivedTimestamp, FileStatusEnum.OK, batches);
+    }
+
+    private static FileReceived build(FileDetail fileDetail, String filePath, Double fileSize, Timestamp receivedTimestamp, FileStatusEnum fileStatusEnum, List<Batch> batches) {
+        return FileReceived.builder()
+                .fileDetail(fileDetail)
+                .filePath(filePath)
+                .fileSize(fileSize)
+                .receivedTimestamp(receivedTimestamp)
+                .fileStatusEnum(fileStatusEnum)
+                .batches(batches)
+                .build();
+    }
 }

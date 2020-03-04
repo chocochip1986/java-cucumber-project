@@ -1,10 +1,11 @@
 package cdit_automation.enums;
 
+import java.util.Random;
+
 public enum PersonDetailDataItemChangedEnum {
     GENDER("S"),
     NAME("N"),
-    DATE_OF_BIRTH("B"),
-    DATE_OF_DEATH("D");
+    DATE_OF_BIRTH("B");
 
     private String value;
 
@@ -28,5 +29,9 @@ public enum PersonDetailDataItemChangedEnum {
             }
         }
         return null;
+    }
+
+    public static PersonDetailDataItemChangedEnum pick() {
+        return PersonDetailDataItemChangedEnum.values()[new Random().nextInt(PersonDetailDataItemChangedEnum.values().length)];
     }
 }

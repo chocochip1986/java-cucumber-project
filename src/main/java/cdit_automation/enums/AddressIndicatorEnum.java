@@ -2,6 +2,7 @@ package cdit_automation.enums;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public enum AddressIndicatorEnum {
     NCA(" "),
@@ -37,5 +38,9 @@ public enum AddressIndicatorEnum {
 
     public static String unsupportedValue() {
         return "A";
+    }
+
+    public static AddressIndicatorEnum pick() {
+        return AddressIndicatorEnum.values()[new Random().nextInt(AddressIndicatorEnum.values().length)];
     }
 }

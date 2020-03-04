@@ -14,7 +14,17 @@ import cdit_automation.data_helpers.MhaDeathDateFileDataPrep;
 import cdit_automation.data_helpers.MhaDualCitizenFileDataPrep;
 import cdit_automation.data_helpers.MhaNoInteractionFileDataPrep;
 import cdit_automation.data_helpers.factories.BulkCitizenValidatedFactory;
+import cdit_automation.data_helpers.factories.CeasedCitizenValidatedFactory;
+import cdit_automation.data_helpers.factories.ChangeAddressValidatedFactory;
+import cdit_automation.data_helpers.factories.DeathDateValidatedFactory;
+import cdit_automation.data_helpers.factories.DualCitizenValidatedFactory;
+import cdit_automation.data_helpers.factories.FileDataProcessingFactory;
 import cdit_automation.data_helpers.factories.JpaRepoFactory;
+import cdit_automation.data_helpers.factories.NewMhaAddressFactory;
+import cdit_automation.data_helpers.factories.NewNcaAddressFactory;
+import cdit_automation.data_helpers.factories.OldMhaAddressFactory;
+import cdit_automation.data_helpers.factories.OldNcaAddressFactory;
+import cdit_automation.data_helpers.factories.PersonDetailChangeValidatedFactory;
 import cdit_automation.data_helpers.factories.PersonFactory;
 import cdit_automation.models.Batch;
 import cdit_automation.page_navigation.PageUtils;
@@ -83,6 +93,16 @@ public class AbstractAutoWired {
     @Autowired protected PersonFactory personFactory;
     @Autowired protected JpaRepoFactory jpaRepoFactory;
     @Autowired protected BulkCitizenValidatedFactory bulkCitizenValidatedFactory;
+    @Autowired protected DualCitizenValidatedFactory dualCitizenValidatedFactory;
+    @Autowired protected PersonDetailChangeValidatedFactory personDetailChangeValidatedFactory;
+    @Autowired protected CeasedCitizenValidatedFactory ceasedCitizenValidatedFactory;
+    @Autowired protected DeathDateValidatedFactory deathDateValidatedFactory;
+    @Autowired protected ChangeAddressValidatedFactory changeAddressValidatedFactory;
+    @Autowired protected OldNcaAddressFactory oldNcaAddressFactory;
+    @Autowired protected NewNcaAddressFactory newNcaAddressFactory;
+    @Autowired protected OldMhaAddressFactory oldMhaAddressFactory;
+    @Autowired protected NewMhaAddressFactory newMhaAddressFactory;
+    @Autowired protected FileDataProcessingFactory fileDataProcessingFactory;
 
     //Batch File Data Helpers
     @Autowired protected MhaDualCitizenFileDataPrep mhaDualCitizenFileDataPrep;

@@ -1,5 +1,6 @@
 package cdit_automation.models;
 
+import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.BatchStatusEnum;
 import cdit_automation.enums.FileContentCodeEnum;
 import lombok.AllArgsConstructor;
@@ -66,4 +67,38 @@ public class IncomingRecord extends AbstractEntity {
     @NotNull
     @Column(name = "entered")
     private LocalDateTime entered;
+
+    public static IncomingRecord createFooterRAWError(Batch batch, String recordDetails) {
+        return build(batch, recordDetails, BatchStatusEnum.RAW_DATA_ERROR, FileContentCodeEnum.FOOTER, Integer.valueOf(Phaker.validNumber(2)));
+    }
+
+    public static IncomingRecord createHeaderRAWError(Batch batch, String recordDetails) {
+        return build(batch, recordDetails, BatchStatusEnum.RAW_DATA_ERROR, FileContentCodeEnum.HEADER, Integer.valueOf(Phaker.validNumber(2)));
+    }
+
+    public static IncomingRecord createBodyRAWError(Batch batch, String recordDetails) {
+        return build(batch, recordDetails, BatchStatusEnum.RAW_DATA_ERROR, FileContentCodeEnum.BODY, Integer.valueOf(Phaker.validNumber(2)));
+    }
+
+    public static IncomingRecord createFooterRAW(Batch batch, String recordDetails) {
+        return build(batch, recordDetails, BatchStatusEnum.RAW_DATA, FileContentCodeEnum.FOOTER, Integer.valueOf(Phaker.validNumber(2)));
+    }
+
+    public static IncomingRecord createHeaderRAW(Batch batch, String recordDetails) {
+        return build(batch, recordDetails, BatchStatusEnum.RAW_DATA, FileContentCodeEnum.HEADER, Integer.valueOf(Phaker.validNumber(2)));
+    }
+
+    public static IncomingRecord createBodyRAW(Batch batch, String recordDetails) {
+        return build(batch, recordDetails, BatchStatusEnum.RAW_DATA, FileContentCodeEnum.BODY, Integer.valueOf(Phaker.validNumber(2)));
+    }
+
+    private static IncomingRecord build(Batch batch, String recordDetails, BatchStatusEnum batchStatusEnum, FileContentCodeEnum fileContentCodeEnum, int seqNo) {
+        return IncomingRecord.builder()
+                .batch(batch)
+                .recordDetails(recordDetails)
+                .status(batchStatusEnum)
+                .fileContentCode(fileContentCodeEnum)
+                .seqNo(seqNo)
+                .build();
+    }
 }

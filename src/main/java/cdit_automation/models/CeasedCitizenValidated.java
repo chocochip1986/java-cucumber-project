@@ -32,14 +32,12 @@ public class CeasedCitizenValidated extends AbstractValidated {
 
   @Column(name = "name", length = 66)
   @Size(max = 66)
-  @NotBlank(message = ErrorMessageConstants.INVALID_NAME)
   private String name;
 
   @Column(name = "nationality")
   private String nationality;
 
   @Column(name = "citizen_renunciation_date")
-  @NotNull(message = ErrorMessageConstants.INVALID_RENUNCIATION_DATE)
   private LocalDate citizenRenunciationDate;
 
   @Override
@@ -48,6 +46,10 @@ public class CeasedCitizenValidated extends AbstractValidated {
             + StringUtils.rightPad(this.name, 66)
             + StringUtils.rightPad(this.nationality, 2)
             + StringUtils.rightPad(this.citizenRenunciationDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")), 8);
+  }
+
+  public static CeasedCitizenValidated create(@NotNull Batch batch) {
+    return build(batch, Phaker.validNric(), Phaker.validName(), Phaker.randomNonSGCountryCode(), Phaker.validPastDate());
   }
 
   public static CeasedCitizenValidated create(@NotNull Batch batch, @NotNull LocalDate citizenRenunciationDate) {

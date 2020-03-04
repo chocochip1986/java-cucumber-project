@@ -24,4 +24,12 @@ public class DoubleDateHeaderValidated extends AbstractValidated {
 
     @Column(name = "cut_off_date")
     private LocalDate cutOffDate;
+
+    public static DoubleDateHeaderValidated create(LocalDate extractionDate, LocalDate cutOffDate) {
+        return build(extractionDate, cutOffDate);
+    }
+
+    private static DoubleDateHeaderValidated build(LocalDate extractionDate, LocalDate cutOffDate) {
+        return DoubleDateHeaderValidated.builder().extractionDate(extractionDate).cutOffDate(cutOffDate).build();
+    }
 }

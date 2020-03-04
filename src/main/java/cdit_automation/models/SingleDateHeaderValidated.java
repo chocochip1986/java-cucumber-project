@@ -21,4 +21,12 @@ import java.time.LocalDate;
 public class SingleDateHeaderValidated extends AbstractValidated {
     @Column(name = "extraction_date")
     private LocalDate extractionDate;
+
+    public static SingleDateHeaderValidated create(LocalDate extractionDate) {
+        return build(extractionDate);
+    }
+
+    private static SingleDateHeaderValidated build(LocalDate extractionDate) {
+        return SingleDateHeaderValidated.builder().extractionDate(extractionDate).build();
+    }
 }

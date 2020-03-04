@@ -1,5 +1,6 @@
 package cdit_automation.models;
 
+import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.AddressIndicatorEnum;
 import cdit_automation.enums.InvalidAddressTagEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -73,4 +74,80 @@ public class ChangeAddressValidated extends AbstractValidated {
 
     @Column(name = "duplicate_record_marker")
     private int duplicateRecordMarker;
+
+    public static ChangeAddressValidated createOldNcaNewNca(Batch batch, OldNcaAddress oldNcaAddress, NewNcaAddress newNcaAddress) {
+        return build(batch,
+                Phaker.validNric(),
+                AddressIndicatorEnum.NCA,
+                AddressIndicatorEnum.NCA,
+                InvalidAddressTagEnum.pick(),
+                oldNcaAddress,
+                newNcaAddress,
+                null,
+                null,
+                Phaker.validPastDate());
+    }
+
+    public static ChangeAddressValidated createOldNcaNewMha(Batch batch, OldNcaAddress oldNcaAddress, NewMhaAddress newMhaAddress) {
+        return build(batch,
+                Phaker.validNric(),
+                AddressIndicatorEnum.NCA,
+                AddressIndicatorEnum.MHA_Z,
+                InvalidAddressTagEnum.pick(),
+                oldNcaAddress,
+                null,
+                null,
+                newMhaAddress,
+                Phaker.validPastDate());
+    }
+
+    public static ChangeAddressValidated createOldMhaNewNca(Batch batch, OldMhaAddress oldMhaAddress, NewNcaAddress newNcaAddress) {
+        return build(batch,
+                Phaker.validNric(),
+                AddressIndicatorEnum.MHA_Z,
+                AddressIndicatorEnum.NCA,
+                InvalidAddressTagEnum.pick(),
+                null,
+                newNcaAddress,
+                oldMhaAddress,
+                null,
+                Phaker.validPastDate());
+    }
+
+    public static ChangeAddressValidated createOldMhaNewMha(Batch batch, OldMhaAddress oldMhaAddress, NewMhaAddress newMhaAddress) {
+        return build(batch,
+                Phaker.validNric(),
+                AddressIndicatorEnum.MHA_Z,
+                AddressIndicatorEnum.MHA_Z,
+                InvalidAddressTagEnum.pick(),
+                null,
+                null,
+                oldMhaAddress,
+                newMhaAddress,
+                Phaker.validPastDate());
+    }
+
+    private static ChangeAddressValidated build(Batch batch,
+                                                String nric,
+                                                AddressIndicatorEnum oldAddressIndicatorEnum,
+                                                AddressIndicatorEnum newAddressIndicatorEnum,
+                                                InvalidAddressTagEnum invalidAddressTagEnum,
+                                                OldNcaAddress oldNcaAddress,
+                                                NewNcaAddress newNcaAddress,
+                                                OldMhaAddress oldMhaAddress,
+                                                NewMhaAddress newMhaAddress,
+                                                LocalDate addressChangedDate) {
+        return ChangeAddressValidated.builder()
+                .batch(batch)
+                .nric(nric)
+                .oldAddressIndicator(oldAddressIndicatorEnum)
+                .oldMhaAddress(oldMhaAddress)
+                .oldNcaAddress(oldNcaAddress)
+                .newAddressIndicator(newAddressIndicatorEnum)
+                .newMhaAddress(newMhaAddress)
+                .newNcaAddress(newNcaAddress)
+                .newInvalidAddressTag(invalidAddressTagEnum)
+                .addressChangedDate(addressChangedDate)
+                .build();
+    }
 }
