@@ -41,13 +41,15 @@ Feature: Details of Trending Records for files
     Given There is a MHA BULK CITIZEN file at Load step with Pending status processed 40 days ago
     And the below MHA BULK CITIZEN reasonableness statistics with CLEANUP status inserted previously with year - 1 month + 0 day + 0
       | data_item                | data_item_value     |
-      | No of new 13 year old    | 100                 |
+      | No of new 13 year old    | 1234                |
+      | No of new 14 year old    | 124                 |
     And the below MHA BULK CITIZEN reasonableness statistics with CLEANUP status inserted previously with year - 1 month + 2 day + 0
       | data_item                | data_item_value     |
       | No of new 13 year old    | 200                 |
     And the below MHA BULK CITIZEN reasonableness statistics with CLEANUP status inserted previously with year - 2 month + 0 day + 2
       | data_item                | data_item_value     |
       | No of new 13 year old    | 300                 |
+      | No of new 14 year old    | 500                 |
     And the below MHA BULK CITIZEN reasonableness statistics with CLEANUP status inserted previously with year - 2 month + 0 day + 1
       | data_item                | data_item_value     |
       | No of new 13 year old    | 400                 |

@@ -2,7 +2,7 @@ package cdit_automation.data_setup;
 
 import java.util.Random;
 
-public class PhakeAddress {
+public class PhakAddress {
     /*
     Postal district         | Postal sector (1st 2 digits of 6-digit postal codes) | General location
     01                      | 01, 02, 03, 04, 05, 06                               | Raffles Place, Cecil, Marina, People's Park

@@ -229,11 +229,11 @@ public class DatasourceFileDataSteps extends AbstractSteps {
                         .build();
         batchJobExecutionRepo.save(jobExecution);
     }
-    
-    @And("^the below (MHA|IRAS|SINGPOST|HDB|CPFB)" + 
-            " (BULK CITIZEN|NEW CITIZEN|DUAL CITIZEN|NO INTERACTION|DUAL CITIZEN|PERSON DETAIL CHANGE|DEATH DATE|CEASED CITIZEN)" + 
-            " reasonableness statistics with ([a-zA-Z_]+) status" +
-            " inserted previously with year (\\-|\\+) ([0-9][0-9]{0,2}) month (\\-|\\+) ([0-9][0-9]{0,1}) day (\\-|\\+) ([0-9][0-9]{0,1})$")
+
+    @And("^the below (MHA|IRAS|SINGPOST|HDB|CPFB)" +
+            " (BULK CITIZEN|NEW CITIZEN|DUAL CITIZEN|NO INTERACTION|DUAL CITIZEN|PERSON DETAIL CHANGE|DEATH DATE|CEASED CITIZEN)" +
+            " reasonableness statistics with ([a-zA-Z_]+)" +
+            " status inserted previously with year (\\-|\\+) (\\d+) month (\\-|\\+) (\\d+) day (\\-|\\+) ([0-9][0-9]{0,1})$")
     public void theBelowReasonablenessStatisticInserted(
             String agency, String file, String batchStatus, 
             String yearOperation, int yearValue, 
