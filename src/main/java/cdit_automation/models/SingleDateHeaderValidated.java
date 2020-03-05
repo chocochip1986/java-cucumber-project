@@ -22,11 +22,14 @@ public class SingleDateHeaderValidated extends AbstractValidated {
     @Column(name = "extraction_date")
     private LocalDate extractionDate;
 
-    public static SingleDateHeaderValidated create(LocalDate extractionDate) {
-        return build(extractionDate);
+    public static SingleDateHeaderValidated create(LocalDate extractionDate, Batch batch) {
+        return build(extractionDate, batch);
     }
 
-    private static SingleDateHeaderValidated build(LocalDate extractionDate) {
-        return SingleDateHeaderValidated.builder().extractionDate(extractionDate).build();
+    private static SingleDateHeaderValidated build(LocalDate extractionDate, Batch batch) {
+        return SingleDateHeaderValidated.builder()
+                .extractionDate(extractionDate)
+                .batch(batch)
+                .build();
     }
 }

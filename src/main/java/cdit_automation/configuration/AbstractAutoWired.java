@@ -20,6 +20,7 @@ import cdit_automation.data_helpers.factories.DeathDateValidatedFactory;
 import cdit_automation.data_helpers.factories.DualCitizenValidatedFactory;
 import cdit_automation.data_helpers.factories.FileDataProcessingFactory;
 import cdit_automation.data_helpers.factories.JpaRepoFactory;
+import cdit_automation.data_helpers.factories.NewCitizenValidatedFactory;
 import cdit_automation.data_helpers.factories.NewMhaAddressFactory;
 import cdit_automation.data_helpers.factories.NewNcaAddressFactory;
 import cdit_automation.data_helpers.factories.OldMhaAddressFactory;
@@ -93,6 +94,7 @@ public class AbstractAutoWired {
     @Autowired protected PersonFactory personFactory;
     @Autowired protected JpaRepoFactory jpaRepoFactory;
     @Autowired protected BulkCitizenValidatedFactory bulkCitizenValidatedFactory;
+    @Autowired protected NewCitizenValidatedFactory newCitizenValidatedFactory;
     @Autowired protected DualCitizenValidatedFactory dualCitizenValidatedFactory;
     @Autowired protected PersonDetailChangeValidatedFactory personDetailChangeValidatedFactory;
     @Autowired protected CeasedCitizenValidatedFactory ceasedCitizenValidatedFactory;

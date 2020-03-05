@@ -39,28 +39,30 @@ Feature: Details of Trending Records for files
   @set_3
   Scenario: CPF officer views reasonableness trending card
     Given There is a MHA BULK CITIZEN file at Load step with Pending status processed 40 days ago
-    And the below MHA BULK CITIZEN reasonableness statistics with CLEANUP status inserted previously with year - 1 month + 0 day + 0
-      | data_item                | data_item_value     |
-      | No of new 13 year old    | 1234                |
-      | No of new 14 year old    | 124                 |
-    And the below MHA BULK CITIZEN reasonableness statistics with CLEANUP status inserted previously with year - 1 month + 2 day + 0
-      | data_item                | data_item_value     |
-      | No of new 13 year old    | 200                 |
-    And the below MHA BULK CITIZEN reasonableness statistics with CLEANUP status inserted previously with year - 2 month + 0 day + 2
-      | data_item                | data_item_value     |
-      | No of new 13 year old    | 300                 |
-      | No of new 14 year old    | 500                 |
-    And the below MHA BULK CITIZEN reasonableness statistics with CLEANUP status inserted previously with year - 2 month + 0 day + 1
-      | data_item                | data_item_value     |
-      | No of new 13 year old    | 400                 |
-    Given I am a CPF officer
-    And I login to CDS Intranet as a CPF officer
-    And I access Datasource UI Files Dashboard function
-    Then I should see that there are files displayed
-    And I search for the file
-    Then I verify that I see the file trail page
-    And I click on the reasonableness trending link
-    Then I can see the statistics for MHA BULK CITIZEN
-    And I logout of CDS Intranet
+#    And the below MHA BULK CITIZEN reasonableness statistics with CLEANUP status inserted previously with year - 1 month + 0 day + 0
+#      | data_item                | data_item_value     |
+#      | No of new 13 year old    | 1234                |
+#      | No of new 14 year old    | 124                 |
+#    And the below MHA BULK CITIZEN reasonableness statistics with CLEANUP status inserted previously with year - 1 month + 2 day + 0
+#      | data_item                | data_item_value     |
+#      | No of new 13 year old    | 200                 |
+#    And the below MHA BULK CITIZEN reasonableness statistics with CLEANUP status inserted previously with year - 2 month + 0 day + 2
+#      | data_item                | data_item_value     |
+#      | No of new 13 year old    | 300                 |
+#      | No of new 14 year old    | 500                 |
+#    And the below MHA BULK CITIZEN reasonableness statistics with CLEANUP status inserted previously with year - 2 month + 0 day + 1
+#      | data_item                | data_item_value     |
+#      | No of new 13 year old    | 400                 |
+#    Given I am a CPF officer
+#    And I login to CDS Intranet as a CPF officer
+#    And I access Datasource UI Files Dashboard function
+#    Then I should see that there are files displayed
+#    And I search for the file
+#    Then I verify that I see the file trail page
+#    And I click on the reasonableness trending link
+#    Then I can see the statistics for MHA BULK CITIZEN
+#    And I logout of CDS Intranet
 
-
+    @set_4
+    Scenario: CPF officer views reasonableness trending card for a file
+      Given There is a MHA BULK CITIZEN file at Load step with Pending status processed 40 days ago

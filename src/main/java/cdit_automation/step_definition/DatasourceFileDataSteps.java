@@ -102,53 +102,19 @@ public class DatasourceFileDataSteps extends AbstractSteps {
             " file at (Format|Content|Load) step with (Pending|Urgent Action|Follow-up) status processed ([0-9]+) days ago$")
     public void thereIsAFileAtFormatStepAtPendingStatus(String agency, String file, String fileTrailCurrentStep, String fileTrailCurrentStatus, long daysAgo) {
         String fileType = String.join("_", agency, file.replace(" ", "_"));
-        LocalDate processedDate = dateUtils.daysBeforeToday(daysAgo);
         BatchStatusEnum batchStatusEnum = generateBatchStatusBasedOn(fileTrailCurrentStep, fileTrailCurrentStatus);
-
-        Batch batch = Batch.create(batchStatusEnum, dateUtils.beginningOfDayToTimestamp(processedDate));
-
         FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.fromString(fileType));
 
-        Batch finalBatch = batch;
-        FileReceived fileReceived = FileReceived.builder()
-                .fileDetail(fileDetail)
-                .filePath("/subdir1/subdir2/subdir3/"+fileDetail.getFileName()+".txt")
-                .receivedTimestamp(dateUtils.beginningOfDayToTimestamp(processedDate))
-                .batches(new ArrayList<Batch>(){{ add(finalBatch); }})
-                .fileSize(Double.valueOf(Phaker.validNumber(6)))
-                .fileStatusEnum(FileStatusEnum.OK)
-                .build();
-
-        batch.setFileReceived(fileReceived);
-        fileReceived = fileReceivedRepo.save(fileReceived);
-        batch = batchRepo.save(batch);
-        List<BulkCitizenValidated> bulkCitizenValidatedList = new ArrayList<>();
-        for ( int i = 0 ; i < 10 ; i++ ) {
-            bulkCitizenValidatedList.add(bulkCitizenValidatedFactory.createValidBulkCitizenValidatedRecord(batch));
-        }
-        bulkCitizenValidatedRepo.saveAll(bulkCitizenValidatedList);
+        Batch batch = fileDataProcessingFactory.generateRecordsBasedOn(batchStatusEnum, fileDetail.getFileEnum(), 100, dateUtils.daysBeforeToday(daysAgo));
+//        List<BulkCitizenValidated> bulkCitizenValidatedList = new ArrayList<>();
+//        for ( int i = 0 ; i < 10 ; i++ ) {
+//            bulkCitizenValidatedList.add(bulkCitizenValidatedFactory.createValidBulkCitizenValidatedRecord(batch));
+//        }
+//        bulkCitizenValidatedRepo.saveAll(bulkCitizenValidatedList);
 
         // Build and Save JobExecutionParam
-        JobExecutionParams jobExecutionParams =
-                JobExecutionParams.builder()
-                        .keyName("fileReceivedId")
-                        .id(fileReceived.getId())
-                        .longVal(fileReceived.getId())
-                        .build();
-        jobExecutionParams = batchJobExecutionParamsRepo.save(jobExecutionParams);
 
-        // Build and Save JobExecution
-        JobExecution jobExecution =
-                JobExecution.builder()
-                        .id(jobExecutionParams.getId())
-                        .status(SpringJobStatusEnum.COMPLETED)
-                        .build();
-        batchJobExecutionRepo.save(jobExecution);
-
-        ReasonablenessCheckStatistic reasonablenessCheckStatistic = ReasonablenessCheckStatistic.create(ReasonablenessCheckDataItemEnum.NO_OF_NEW_THIRTEEN_YEAR_OLD.getValue(), String.valueOf(bulkCitizenValidatedList.size()), batch);
-        reasonablenessCheckStatisticRepo.save(reasonablenessCheckStatistic);
-
-        testContext.set("fileReceived", fileReceived);
+        testContext.set("fileReceived", batch.getFileReceived());
         testContext.set("batch", batch);
     }
 

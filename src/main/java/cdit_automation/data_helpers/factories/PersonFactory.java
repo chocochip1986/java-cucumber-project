@@ -151,7 +151,7 @@ public class PersonFactory extends AbstractFactory {
 
     public void updateBirthdate(Person person, LocalDate birthDate, LocalDate oldValidFrom) {
         personDetailRepo.updateBirthDateForPerson(birthDate, person);
-        personIdrepo.updateValidFrom(dateUtils.localDateToDate(birthDate), person, dateUtils.localDateToDate(oldValidFrom));
+        personIdRepo.updateValidFrom(dateUtils.localDateToDate(birthDate), person, dateUtils.localDateToDate(oldValidFrom));
         personNameRepo.updateValidFrom(dateUtils.localDateToDate(birthDate), person, dateUtils.localDateToDate(oldValidFrom));
         nationalityRepo.updateValidFrom(dateUtils.localDateToDate(birthDate), person, dateUtils.localDateToDate(oldValidFrom));
     }
@@ -189,7 +189,7 @@ public class PersonFactory extends AbstractFactory {
         personRepo.save(person);
         personDetailRepo.save(personDetail);
         nationalityRepo.save(nationality);
-        personIdrepo.save(personId);
+        personIdRepo.save(personId);
         personNameRepo.save(personName);
 
         return personId;

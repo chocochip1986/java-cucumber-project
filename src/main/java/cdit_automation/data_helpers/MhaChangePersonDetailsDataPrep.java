@@ -136,9 +136,6 @@ public class MhaChangePersonDetailsDataPrep extends BatchFileDataPrep {
                 case DATE_OF_BIRTH:
                     dataItemChangeFieldValue = createDateOfBirthOption(origValue, dataItemChangeValue);
                     break;
-                case DATE_OF_DEATH:
-                    dataItemChangeFieldValue = createDateOfDeathOption(origValue, dataItemChangeValue);
-                    break;
                 default:
                     throw new TestFailException("Unsupported Person Detail Data Item Change Enum");
             }

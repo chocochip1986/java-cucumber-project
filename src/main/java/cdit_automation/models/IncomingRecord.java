@@ -99,6 +99,7 @@ public class IncomingRecord extends AbstractEntity {
                 .status(batchStatusEnum)
                 .fileContentCode(fileContentCodeEnum)
                 .seqNo(seqNo)
+                .entered(batch.getCreatedAt().toLocalDateTime())
                 .build();
     }
 }
