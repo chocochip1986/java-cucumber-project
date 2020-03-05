@@ -106,13 +106,6 @@ public class DatasourceFileDataSteps extends AbstractSteps {
         FileDetail fileDetail = fileDetailRepo.findByFileEnum(FileTypeEnum.fromString(fileType));
 
         Batch batch = fileDataProcessingFactory.generateRecordsBasedOn(batchStatusEnum, fileDetail.getFileEnum(), 100, dateUtils.daysBeforeToday(daysAgo));
-//        List<BulkCitizenValidated> bulkCitizenValidatedList = new ArrayList<>();
-//        for ( int i = 0 ; i < 10 ; i++ ) {
-//            bulkCitizenValidatedList.add(bulkCitizenValidatedFactory.createValidBulkCitizenValidatedRecord(batch));
-//        }
-//        bulkCitizenValidatedRepo.saveAll(bulkCitizenValidatedList);
-
-        // Build and Save JobExecutionParam
 
         testContext.set("fileReceived", batch.getFileReceived());
         testContext.set("batch", batch);
