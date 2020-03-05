@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 @Component
 public class FileDataProcessingFactory extends AbstractFactory {
@@ -143,66 +144,31 @@ public class FileDataProcessingFactory extends AbstractFactory {
             case MHA_BULK_CITIZEN:
                 List<BulkCitizenValidated> bulkCitizenValidateds = new ArrayList<>();
                 return createRecordsFor(bulkCitizenValidateds, totalRecordCount, bulkCitizenValidatedRepo, batch,
-                        new Function<Batch, BulkCitizenValidated>() {
-                            @Override
-                            public BulkCitizenValidated apply(Batch batch) {
-                                return bulkCitizenValidatedFactory.createValidBulkCitizenValidatedRecord(batch);
-                            }
-                });
+                        () -> bulkCitizenValidatedFactory.createValidBulkCitizenValidatedRecord(batch));
             case MHA_DUAL_CITIZEN:
                 List<DualCitizenValidated> dualCitizenValidateds = new ArrayList<>();
                 return createRecordsFor(dualCitizenValidateds, totalRecordCount, dualCitizenValidatedRepo, batch,
-                        new Function<Batch, DualCitizenValidated>() {
-                            @Override
-                            public DualCitizenValidated apply(Batch batch) {
-                                return dualCitizenValidatedFactory.create(batch);
-                            }
-                        });
+                        () -> dualCitizenValidatedFactory.create(batch));
             case MHA_PERSON_DETAIL_CHANGE:
                 List<PersonDetailChangeValidated> personDetailChangeValidateds = new ArrayList<>();
                 return createRecordsFor(personDetailChangeValidateds, totalRecordCount, personDetailChangeValidatedRepo, batch,
-                        new Function<Batch, PersonDetailChangeValidated>() {
-                            @Override
-                            public PersonDetailChangeValidated apply(Batch batch) {
-                                return personDetailChangeValidatedFactory.create(batch);
-                            }
-                        });
+                        () -> personDetailChangeValidatedFactory.create(batch));
             case MHA_CEASED_CITIZEN:
                 List<CeasedCitizenValidated> ceasedCitizenValidateds = new ArrayList<>();
                 return createRecordsFor(ceasedCitizenValidateds, totalRecordCount, ceasedCitizenValidatedRepo, batch,
-                        new Function<Batch, CeasedCitizenValidated>() {
-                            @Override
-                            public CeasedCitizenValidated apply(Batch batch) {
-                                return ceasedCitizenValidatedFactory.create(batch);
-                            }
-                        });
+                        () -> ceasedCitizenValidatedFactory.create(batch));
             case MHA_DEATH_DATE:
                 List<DeathDateValidated> deathDateValidateds = new ArrayList<>();
                 return createRecordsFor(deathDateValidateds, totalRecordCount, deathDateValidatedRepo, batch,
-                        new Function<Batch, DeathDateValidated>() {
-                            @Override
-                            public DeathDateValidated apply(Batch batch) {
-                                return deathDateValidatedFactory.create(batch);
-                            }
-                        });
+                        () -> deathDateValidatedFactory.create(batch));
             case MHA_CHANGE_ADDRESS:
                 List<ChangeAddressValidated> changeAddressValidateds = new ArrayList<>();
                 return createRecordsFor(changeAddressValidateds, totalRecordCount, changeAddressValidatedRepo, batch,
-                        new Function<Batch, ChangeAddressValidated>() {
-                            @Override
-                            public ChangeAddressValidated apply(Batch batch) {
-                                return changeAddressValidatedFactory.create(batch);
-                            }
-                        });
+                        () -> changeAddressValidatedFactory.create(batch));
             case MHA_NEW_CITIZEN:
                 List<NewCitizenValidated> newCitizenValidateds = new ArrayList<>();
                 return createRecordsFor(newCitizenValidateds, totalRecordCount, newCitizenValidatedRepo, batch,
-                        new Function<Batch, NewCitizenValidated>() {
-                            @Override
-                            public NewCitizenValidated apply(Batch batch) {
-                                return newCitizenValidatedFactory.createValidNewCitizenValidatedRecord(batch);
-                            }
-                        });
+                        () -> newCitizenValidatedFactory.createValidNewCitizenValidatedRecord(batch));
             default:
                 throw new TestFailException("Unsupported batch status '"+fileTypeEnum.getValue()+" for data creation");
         }
@@ -226,9 +192,9 @@ public class FileDataProcessingFactory extends AbstractFactory {
         }
     }
 
-    public <T> int createRecordsFor(List<T> validatedList, int totalRecordCount, JpaRepository repo, Batch batch, Function<Batch, T> function) {
+    public <T> int createRecordsFor(List<T> validatedList, int totalRecordCount, JpaRepository repo, Batch batch, Supplier<T> function) {
         for ( int i = 0 ; i < totalRecordCount ; i++ ) {
-            validatedList.add(function.apply(batch));
+            validatedList.add(function.get());
         }
         return repo.saveAll(validatedList).size();
     }
