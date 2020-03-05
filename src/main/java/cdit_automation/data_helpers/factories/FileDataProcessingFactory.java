@@ -5,7 +5,6 @@ import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.enums.ReasonablenessCheckDataItemEnum;
 import cdit_automation.enums.SpringJobStatusEnum;
 import cdit_automation.exceptions.TestFailException;
-import cdit_automation.models.AbstractValidated;
 import cdit_automation.models.Batch;
 import cdit_automation.models.BulkCitizenValidated;
 import cdit_automation.models.CeasedCitizenValidated;
