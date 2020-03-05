@@ -1,5 +1,10 @@
 package cdit_automation.data_setup;
 
+import cdit_automation.data_setup.data_setup_address.PhakAbstractAddress;
+import cdit_automation.data_setup.data_setup_address.PhakIslandAddress;
+import cdit_automation.enums.PropertyTypeEnum;
+import cdit_automation.exceptions.TestFailException;
+
 import java.util.Random;
 
 public class PhakAddress {
@@ -34,13 +39,6 @@ public class PhakAddress {
     27                      | 75, 76                                               | Yishun, Sembawang
     28                      | 79, 80                                               | Seletar
      */
-    public enum HOUSING {
-        LANDED_PROPERTY,
-        CONDO,
-        HDB,
-        CHALET,
-        LORONG_BUANGKOK
-    }
 
     public static final String[] POSTAL_SECTOR = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10",
             "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
@@ -53,5 +51,27 @@ public class PhakAddress {
 
     public String validPostalCode() {
         return POSTAL_SECTOR[new Random().nextInt(POSTAL_SECTOR.length)]+Phaker.validNumber(4);
+    }
+
+    public static PhakAbstractAddress suggestAnAddress(PropertyTypeEnum propertyTypeEnum) {
+        switch (propertyTypeEnum) {
+            case HDB:
+            case CONDO:
+            case CHALET:
+            case ISLAND:
+                return PhakIslandAddress.fakeItTillYouMakeIt();
+            case LANDED:
+            case PRISON:
+            case KAMPONG:
+            case NURSING:
+            case BUSINESS:
+            case HOSPITAL:
+            case EDUCATION:
+            case ORPHANAGE:
+            case INDUSTRIAL:
+            case EXECUTIVE_CONDO:
+            default:
+                throw new TestFailException("Unsupport address type to create a fake address");
+        }
     }
 }
