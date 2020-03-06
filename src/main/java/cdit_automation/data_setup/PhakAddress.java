@@ -2,8 +2,10 @@ package cdit_automation.data_setup;
 
 import cdit_automation.data_setup.data_setup_address.PhakAbstractAddress;
 import cdit_automation.data_setup.data_setup_address.PhakCondoAddress;
+import cdit_automation.data_setup.data_setup_address.PhakExecCondoAddress;
 import cdit_automation.data_setup.data_setup_address.PhakHdbAddress;
 import cdit_automation.data_setup.data_setup_address.PhakIslandAddress;
+import cdit_automation.data_setup.data_setup_address.PhakKampongAddress;
 import cdit_automation.data_setup.data_setup_address.PhakOrphanageAddress;
 import cdit_automation.data_setup.data_setup_address.PhakPrisonAddress;
 import cdit_automation.enums.PropertyTypeEnum;
@@ -70,6 +72,7 @@ public class PhakAddress {
             case PRISON:
                 return PhakPrisonAddress.fakeItTillYouMakeIt();
             case KAMPONG:
+                return PhakKampongAddress.fakeItTillYouMakeIt();
             case NURSING:
             case BUSINESS:
             case HOSPITAL:
@@ -78,6 +81,7 @@ public class PhakAddress {
                 return PhakOrphanageAddress.fakeItTillYouMakeIt();
             case INDUSTRIAL:
             case EXECUTIVE_CONDO:
+                return PhakExecCondoAddress.fakeItTillYouMakeIt();
             default:
                 throw new TestFailException("Unsupport address type to create a fake address");
         }
