@@ -1,6 +1,8 @@
 package cdit_automation.data_setup;
 
 import cdit_automation.data_setup.data_setup_address.PhakAbstractAddress;
+import cdit_automation.data_setup.data_setup_address.PhakCondoAddress;
+import cdit_automation.data_setup.data_setup_address.PhakHdbAddress;
 import cdit_automation.data_setup.data_setup_address.PhakIslandAddress;
 import cdit_automation.enums.PropertyTypeEnum;
 import cdit_automation.exceptions.TestFailException;
@@ -56,7 +58,9 @@ public class PhakAddress {
     public static PhakAbstractAddress suggestAnAddress(PropertyTypeEnum propertyTypeEnum) {
         switch (propertyTypeEnum) {
             case HDB:
+                return PhakHdbAddress.fakeItTillYouMakeIt();
             case CONDO:
+                return PhakCondoAddress.fakeItTillYouMakeIt();
             case CHALET:
             case ISLAND:
                 return PhakIslandAddress.fakeItTillYouMakeIt();
