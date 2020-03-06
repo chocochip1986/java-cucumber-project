@@ -3,8 +3,10 @@ package cdit_automation.pages;
 import cdit_automation.enums.BatchStatusEnum;
 import cdit_automation.models.Batch;
 import lombok.extern.slf4j.Slf4j;
+import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 @Slf4j
@@ -20,6 +22,11 @@ public class FileTrailPage extends AbstractPage {
     public final String FILE_TRAIL_REASONABLENESS_SUBHEADER = "//div[@class='header-title' and text()='Reasonableness Trending Information']";
     public final String FILE_TRAIL_LOAD_VALIDATION_INFO_SUBHEADER = "//div[@class='header-title' and text()='Load Validation Information']";
     public final String FILE_TRAIL_REASONABLENESS_TRENDING_COUNT_LABEL = "//span[@id='trending-count']";
+
+    public final String FILE_TRAIL_FORMAT_VALIDATION_PASSED_COUNT = "//span[@id='format-pass-count']";
+    public final String FILE_TRAIL_FORMAT_VALIDATION_FAILED_COUNT = "//span[@id='format-fail-count']";
+    public final String FILE_TRAIL_CONTENT_VALIDATION_PASSED_COUNT = "//span[@id='content-pass-count']";
+    public final String FILE_TRAIL_CONTENT_VALIDATION_FAILED_COUNT = "//span[@id='content-fail-count']";
 
     public void clickBack() {
         pageUtils.click_on(BACK_BTN);
@@ -98,5 +105,62 @@ public class FileTrailPage extends AbstractPage {
         }
     }
 
+    public boolean isFormatPassedCountSpanExist() {
+        return waitUntilCondition(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return pageUtils.hasElement(FILE_TRAIL_FORMAT_VALIDATION_PASSED_COUNT);
+            }
+        });
+    }
+
+    public String getFormatPassedCount() {
+        return getCount(FILE_TRAIL_FORMAT_VALIDATION_PASSED_COUNT);
+    }
+
+    public boolean isFormatFailedCountSpanExist() {
+        return waitUntilCondition(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return pageUtils.hasElement(FILE_TRAIL_FORMAT_VALIDATION_FAILED_COUNT);
+            }
+        });
+    }
+
+    public String getFormatFailedCount() {
+        return getCount(FILE_TRAIL_FORMAT_VALIDATION_FAILED_COUNT);
+    }
+
+    public boolean isContentPassedCountSpanExist() {
+        return waitUntilCondition(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return pageUtils.hasElement(FILE_TRAIL_CONTENT_VALIDATION_PASSED_COUNT);
+            }
+        });
+    }
+
+    public String getContentPassedCount() {
+        return getCount(FILE_TRAIL_CONTENT_VALIDATION_PASSED_COUNT);
+    }
+
+    public boolean isContentFailedCountSpanExist() {
+        return waitUntilCondition(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return pageUtils.hasElement(FILE_TRAIL_CONTENT_VALIDATION_FAILED_COUNT);
+            }
+        });
+    }
+
+    public String getContentFailedCount() {
+        return getCount(FILE_TRAIL_CONTENT_VALIDATION_FAILED_COUNT);
+    }
+
+    private String getCount(String xpath) {
+        pageUtils.waitForElementToHaveNumericalDigit(xpath);
+        Optional<WebElement> targetOpt = Optional.ofNullable(pageUtils.findElement(xpath));
+        return targetOpt.isPresent() ? targetOpt.get().getText() : "";
+    }
 
 }

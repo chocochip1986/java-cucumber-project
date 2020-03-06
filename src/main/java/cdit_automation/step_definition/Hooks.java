@@ -75,6 +75,7 @@ public class Hooks extends AbstractSteps {
 
     private void truncateAllTables() {
         System.out.println("Truncating all Datasource tables...");
+        newCitizenValidatedRepo.truncateTable();
         bulkCitizenValidatedRepo.truncateTable();
         bulkMhaAddressValidatedRepo.truncateTable();
         ceasedCitizenValidatedRepo.truncateTable();
@@ -85,7 +86,6 @@ public class Hooks extends AbstractSteps {
         newNcaAddressRepo.truncateTable();
         oldMhaAddressRepo.truncateTable();
         oldNcaAddressRepo.truncateTable();
-        newCitizenValidatedRepo.truncateTable();
         incomeRepo.truncateTable();
         annualValueRepo.truncateTable();
         dualCitizenValidatedRepo.truncateTable();

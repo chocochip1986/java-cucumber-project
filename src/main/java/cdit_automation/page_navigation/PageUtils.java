@@ -19,7 +19,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 @Slf4j
 @Component
@@ -85,6 +85,11 @@ public class PageUtils {
 
     public void waitForElementTobeStale(WebElement webElement) {
         wait.until(ExpectedConditions.stalenessOf(webElement));
+    }
+
+    public void waitForElementToHaveNumericalDigit(String xpath) {
+        Pattern pattern = Pattern.compile("^(\\d+)$");
+        wait.until(ExpectedConditions.textMatches(By.xpath(xpath), pattern));
     }
 
     public WebElement findElementWithWait(String cssOrXpath) {
