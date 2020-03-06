@@ -4,12 +4,31 @@ import cdit_automation.exceptions.TestFailException;
 
 import javax.validation.constraints.NotNull;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.util.List;
 
 public class FileUtils {
+    public static void replaceLineInFile(String absolutePathToFile, String newLine, long lineNumber) {
+        replaceLineInFile(new File(absolutePathToFile), newLine, lineNumber);
+    }
+
+    public static void replaceLineInFile(File targetFile, String newLine, long lineNumber) {
+        try {
+            RandomAccessFile file = new RandomAccessFile(targetFile, "rw");
+            file.seek(lineNumber);
+            file.write((newLine+System.lineSeparator()).getBytes());
+            file.close();
+        } catch (IOException e) {
+            String errorMsg = "Issues replacing line at "+lineNumber+" of file: "+targetFile.getAbsolutePath();
+            errorMsg += System.lineSeparator()+e.getStackTrace();
+            throw new TestFailException(errorMsg);
+        }
+    }
+
     public static File findOrCreate(String absolutePathToFile) {
         File file = new File(absolutePathToFile);
         try {

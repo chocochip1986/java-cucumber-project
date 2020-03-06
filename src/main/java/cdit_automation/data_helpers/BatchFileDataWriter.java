@@ -82,14 +82,7 @@ public class BatchFileDataWriter {
             throw new TestFailException("No file to write stuff into!");
         }
         writeAndResetChunk();
-        if ( fileDetail.getFooter() ) {
-            String footerLine = "";
-            footerLine = constructFooter();
-            if ( fileDetail.getHasFooterFiller() ) {
-                footerLine = StringUtils.leftPad(footerLine, fileDetail.getFooterFillerSize());
-            }
-            FileUtils.writeToFile(destionationFile, footerLine);
-        }
+        updateFooterIfExists();
     }
 
     public void reset(){
@@ -99,6 +92,20 @@ public class BatchFileDataWriter {
         chunkSize = 0;
         filename = null;
         destionationFile = null;
+    }
+
+    public void specialHandlingForSpecificFiles() {
+    }
+
+    private void updateFooterIfExists() {
+        if ( fileDetail.getFooter() ) {
+            String footerLine = "";
+            footerLine = constructFooter();
+            if ( fileDetail.getHasFooterFiller() ) {
+                footerLine = StringUtils.leftPad(footerLine, fileDetail.getFooterFillerSize());
+            }
+            FileUtils.writeToFile(destionationFile, footerLine);
+        }
     }
 
     private void writeAndResetChunk() {

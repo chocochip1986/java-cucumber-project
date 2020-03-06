@@ -87,7 +87,7 @@ public class PhakAddress {
             case EXECUTIVE_CONDO:
                 return PhakExecCondoAddress.fakeItTillYouMakeIt();
             default:
-                throw new TestFailException("Unsupport address type to create a fake address");
+                throw new TestFailException("Unsupported address type to create a fake address: "+propertyTypeEnum.name());
         }
     }
 }

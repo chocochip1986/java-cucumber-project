@@ -1,5 +1,7 @@
 package cdit_automation.enums;
 
+import java.util.Random;
+
 public enum PersonPropertyTypeEnum {
     RESIDENCE("RESIDENCE"),
     OWNERSHIP("OWNERSHIP");
@@ -13,5 +15,9 @@ public enum PersonPropertyTypeEnum {
     @Override
     public String toString() {
         return this.value;
+    }
+
+    public static PersonPropertyTypeEnum pick() {
+        return PersonPropertyTypeEnum.values()[new Random().nextInt(PersonPropertyTypeEnum.values().length)];
     }
 }

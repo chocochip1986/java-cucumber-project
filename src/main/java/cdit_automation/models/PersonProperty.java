@@ -48,4 +48,25 @@ public class PersonProperty extends AbstractEntity {
     @JsonIgnore
     @Embedded
     private BiTemporalData biTemporalData;
+
+    public static PersonProperty createResidingProperty(Batch batch, PersonPropertyId personPropertyId, BiTemporalData biTemporalData) {
+        return build(batch, personPropertyId, PersonPropertyTypeEnum.RESIDENCE, biTemporalData);
+    }
+
+    public static PersonProperty createOwnedProperty(Batch batch, PersonPropertyId personPropertyId, BiTemporalData biTemporalData) {
+        return build(batch, personPropertyId, PersonPropertyTypeEnum.OWNERSHIP, biTemporalData);
+    }
+
+    public static PersonProperty create(Batch batch, PersonPropertyId personPropertyId, PersonPropertyTypeEnum personPropertyTypeEnum, BiTemporalData biTemporalData) {
+        return build(batch, personPropertyId, personPropertyTypeEnum, biTemporalData);
+    }
+
+    private static PersonProperty build(Batch batch, PersonPropertyId personPropertyId, PersonPropertyTypeEnum personPropertyTypeEnum, BiTemporalData biTemporalData) {
+        return PersonProperty.builder()
+                .batch(batch)
+                .biTemporalData(biTemporalData)
+                .identifier(personPropertyId)
+                .type(personPropertyTypeEnum)
+                .build();
+    }
 }

@@ -9,6 +9,7 @@ import cdit_automation.data_helpers.BatchFileDataWriter;
 import cdit_automation.data_helpers.IrasTriMonthlyEgressDataPrep;
 import cdit_automation.data_helpers.MhaBulkFileDataPrep;
 import cdit_automation.data_helpers.MhaCeasedCitizenFileDataPrep;
+import cdit_automation.data_helpers.MhaChangeAddressDataPrep;
 import cdit_automation.data_helpers.MhaChangePersonDetailsDataPrep;
 import cdit_automation.data_helpers.MhaDeathDateFileDataPrep;
 import cdit_automation.data_helpers.MhaDualCitizenFileDataPrep;
@@ -114,6 +115,7 @@ public class AbstractAutoWired {
     @Autowired protected MhaCeasedCitizenFileDataPrep mhaCeasedCitizenFileDataPrep;
     @Autowired protected MhaBulkFileDataPrep mhaBulkFileDataPrep;
     @Autowired protected MhaNoInteractionFileDataPrep mhaNoInteractionFileDataPrep;
+    @Autowired protected MhaChangeAddressDataPrep mhaChangeAddressDataPrep;
     @Autowired protected IrasTriMonthlyEgressDataPrep irasTriMonthlyEgressDataPrep;
     @Autowired protected MhaNewCitizenFileDataPrep mhaNewCitizenFileDataPrep;
 
