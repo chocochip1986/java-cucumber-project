@@ -101,7 +101,7 @@ public class PropertyDetail extends AbstractEntity {
         return build(batch, unitNo, blockNo, floorNo, buildingName, null, streetCode, oldPostalCode, postalCode, PropertyType.NON_HDB, FormatType.NCA, property, biTemporalData);
     }
 
-    public static PropertyDetail createNcaPreware(Batch batch, String unitNo, String blockNo, String floorNo,
+    public static PropertyDetail createNcaPrewar(Batch batch, String unitNo, String blockNo, String floorNo,
                                                  String buildingName, String streetCode, String oldPostalCode, String postalCode,
                                                  Property property, BiTemporalData biTemporalData) {
         return build(batch, unitNo, blockNo, floorNo, buildingName, null, streetCode, oldPostalCode, postalCode, PropertyType.PREWAR_SIT_PSA, FormatType.NCA, property, biTemporalData);

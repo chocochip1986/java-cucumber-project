@@ -1,5 +1,9 @@
 package cdit_automation.enums;
 
+import cdit_automation.models.Property;
+
+import java.util.Random;
+
 public enum PropertyType {
     HDB("H"),
     NON_HDB("N"),
@@ -25,5 +29,9 @@ public enum PropertyType {
             }
         }
         return null;
+    }
+
+    public static PropertyType pick() {
+        return PropertyType.values()[new Random().nextInt(PropertyType.values().length)];
     }
 }
