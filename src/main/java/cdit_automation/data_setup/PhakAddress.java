@@ -5,6 +5,7 @@ import cdit_automation.data_setup.data_setup_address.PhakCondoAddress;
 import cdit_automation.data_setup.data_setup_address.PhakHdbAddress;
 import cdit_automation.data_setup.data_setup_address.PhakIslandAddress;
 import cdit_automation.data_setup.data_setup_address.PhakOrphanageAddress;
+import cdit_automation.data_setup.data_setup_address.PhakPrisonAddress;
 import cdit_automation.enums.PropertyTypeEnum;
 import cdit_automation.exceptions.TestFailException;
 
@@ -67,6 +68,7 @@ public class PhakAddress {
                 return PhakIslandAddress.fakeItTillYouMakeIt();
             case LANDED:
             case PRISON:
+                return PhakPrisonAddress.fakeItTillYouMakeIt();
             case KAMPONG:
             case NURSING:
             case BUSINESS:
