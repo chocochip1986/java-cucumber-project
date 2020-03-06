@@ -60,7 +60,7 @@ public class PhakCondoAddress {
     }
 
     private static String recommendABuildingName() {
-        return null;
+        return BUILDING_NAMES[new Random().nextInt(BUILDING_NAMES.length)];
     }
 
     private static String recommendAPostalCode() {
