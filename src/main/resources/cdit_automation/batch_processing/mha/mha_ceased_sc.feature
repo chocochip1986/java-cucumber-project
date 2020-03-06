@@ -1,5 +1,5 @@
 @development
-@ceased-citizen
+@ceased_citizen
 @mha
 Feature: Data processing for Mha ceased citizenship
 

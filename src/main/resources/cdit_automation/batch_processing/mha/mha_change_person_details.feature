@@ -1,5 +1,5 @@
 @development
-@change-person-details
+@change_person_details
 @mha
 Feature: Data processing for Mha Change in Person Details
 
