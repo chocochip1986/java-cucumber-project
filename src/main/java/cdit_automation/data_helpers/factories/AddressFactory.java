@@ -48,7 +48,7 @@ public class AddressFactory extends AbstractFactory {
         }
     }
 
-    private PropertyDetail createPropertyFor(Person person, PersonPropertyTypeEnum ownershipEnum, PropertyTypeEnum propertyTypeEnum, PhakAbstractAddress phakAbstractAddress ) {
+    public PropertyDetail createPropertyFor(Person person, PersonPropertyTypeEnum ownershipEnum, PropertyTypeEnum propertyTypeEnum, PhakAbstractAddress phakAbstractAddress ) {
         AddressOptions addressOptions = new AddressOptions(propertyTypeEnum, ownershipEnum, phakAbstractAddress);
         Batch batch = Batch.createCompleted();
         BiTemporalData biTemporalData = new BiTemporalData()
@@ -65,7 +65,7 @@ public class AddressFactory extends AbstractFactory {
         return propertyDetail;
     }
 
-    private PropertyDetail createPropertyFor(Person person, PersonPropertyTypeEnum ownershipEnum, PropertyTypeEnum propertyTypeEnum) {
+    public PropertyDetail createPropertyFor(Person person, PersonPropertyTypeEnum ownershipEnum, PropertyTypeEnum propertyTypeEnum) {
         AddressOptions addressOptions = new AddressOptions(propertyTypeEnum, ownershipEnum);
         Batch batch = Batch.createCompleted();
         BiTemporalData biTemporalData = new BiTemporalData()

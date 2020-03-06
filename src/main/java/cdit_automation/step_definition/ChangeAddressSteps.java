@@ -1,11 +1,12 @@
 package cdit_automation.step_definition;
 
 import cdit_automation.enums.FileTypeEnum;
+import cdit_automation.enums.PersonPropertyTypeEnum;
 import cdit_automation.enums.PropertyTypeEnum;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.PersonId;
 import io.cucumber.datatable.DataTable;
-import io.cucumber.java.en.But;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
@@ -25,7 +26,8 @@ public class ChangeAddressSteps extends AbstractSteps{
 
     @Given("^(?:An|A) (singaporean|foreign) person ([A-Za-z]+) (owns|resides (?:in)) a ([A-Z]+) property$")
     public void personAOwnsAProperty(String residentialStatus, String person, String residency, String propertyType) {
-        if (PropertyTypeEnum.fromString(propertyType) == null ) {
+        PropertyTypeEnum propertyTypeEnum = PropertyTypeEnum.fromString(propertyType);
+        if ( propertyTypeEnum == null ) {
             throw new TestFailException("Unsupported property type in PropertyTypeEnum");
         }
 
@@ -36,11 +38,26 @@ public class ChangeAddressSteps extends AbstractSteps{
             personId = personFactory.createNewFRPersonId();
         }
 
+        addressFactory.createPropertyFor(personId.getPerson(), getOwnershipType(residency), propertyTypeEnum);
         testContext.set(person, personId);
-
     }
 
-    @But("^resides in another ([A-Z]+) property$")
-    public void residesInAnotherProperty() {
+    @And("^([A-Za-z]+) (owns|resides (?:in)) ([A-Z]+) property$")
+    public void residesInAnotherProperty(String person, String residency, String propertyType) {
+        PropertyTypeEnum propertyTypeEnum = PropertyTypeEnum.fromString(propertyType);
+        if ( propertyTypeEnum == null ) {
+            throw new TestFailException("Unsupported property type in PropertyTypeEnum");
+        }
+
+        PersonId personId = testContext.get(person);
+        addressFactory.createPropertyFor(personId.getPerson(), getOwnershipType(residency), propertyTypeEnum);
+    }
+
+    private PersonPropertyTypeEnum getOwnershipType(String ownershipType) {
+        if (ownershipType.equals("owns")) {
+            return PersonPropertyTypeEnum.OWNERSHIP;
+        } else {
+            return PersonPropertyTypeEnum.RESIDENCE;
+        }
     }
 }
