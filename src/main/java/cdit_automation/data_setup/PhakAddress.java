@@ -4,6 +4,7 @@ import cdit_automation.data_setup.data_setup_address.PhakAbstractAddress;
 import cdit_automation.data_setup.data_setup_address.PhakCondoAddress;
 import cdit_automation.data_setup.data_setup_address.PhakExecCondoAddress;
 import cdit_automation.data_setup.data_setup_address.PhakHdbAddress;
+import cdit_automation.data_setup.data_setup_address.PhakHospitalAddress;
 import cdit_automation.data_setup.data_setup_address.PhakIslandAddress;
 import cdit_automation.data_setup.data_setup_address.PhakKampongAddress;
 import cdit_automation.data_setup.data_setup_address.PhakNursingAddress;
@@ -78,6 +79,7 @@ public class PhakAddress {
                 return PhakNursingAddress.fakeItTillYouMakeIt();
             case BUSINESS:
             case HOSPITAL:
+                return PhakHospitalAddress.fakeItTillYouMakeIt();
             case EDUCATION:
             case ORPHANAGE:
                 return PhakOrphanageAddress.fakeItTillYouMakeIt();
