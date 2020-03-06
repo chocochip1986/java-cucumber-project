@@ -12,6 +12,7 @@ import cdit_automation.data_helpers.MhaCeasedCitizenFileDataPrep;
 import cdit_automation.data_helpers.MhaChangePersonDetailsDataPrep;
 import cdit_automation.data_helpers.MhaDeathDateFileDataPrep;
 import cdit_automation.data_helpers.MhaDualCitizenFileDataPrep;
+import cdit_automation.data_helpers.MhaNewCitizenFileDataPrep;
 import cdit_automation.data_helpers.MhaNoInteractionFileDataPrep;
 import cdit_automation.data_helpers.factories.BulkCitizenValidatedFactory;
 import cdit_automation.data_helpers.factories.CeasedCitizenValidatedFactory;
@@ -114,6 +115,7 @@ public class AbstractAutoWired {
     @Autowired protected MhaBulkFileDataPrep mhaBulkFileDataPrep;
     @Autowired protected MhaNoInteractionFileDataPrep mhaNoInteractionFileDataPrep;
     @Autowired protected IrasTriMonthlyEgressDataPrep irasTriMonthlyEgressDataPrep;
+    @Autowired protected MhaNewCitizenFileDataPrep mhaNewCitizenFileDataPrep;
 
     //Model Repositories
     @Autowired protected BatchRepo batchRepo;

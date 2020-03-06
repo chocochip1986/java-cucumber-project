@@ -47,4 +47,36 @@ public class FileTrailSteps extends AbstractSteps {
         long validatedCount = jpaRepoFactory.countValidatedRecordsBasedOnFileTypeAndBatch(fileTypeEnum, batch);
         fileTrailPage.verifyTrendingRecordCount(validatedCount);
     }
+
+    @Then("I verify {int} records passed format validation")
+    public void iVerifyRecordsPassedFormatValidation(int count) {
+        testAssert.assertTrue(
+                fileTrailPage.isFormatPassedCountSpanExist(), "Format passed count span should exist");
+        testAssert.assertEquals(
+                String.valueOf(count), fileTrailPage.getFormatPassedCount(), "Unexpected format passed count");
+    }
+
+    @Then("I verify {int} records passed content validation")
+    public void iVerifyRecordsPassedContentValidation(int count) {
+        testAssert.assertTrue(
+                fileTrailPage.isContentPassedCountSpanExist(), "Content passed count span should exist");
+        testAssert.assertEquals(
+                String.valueOf(count), fileTrailPage.getContentPassedCount(), "Unexpected content passed count");
+    }
+
+    @Then("I verify {int} records failed format validation")
+    public void iVerifyRecordsFailedFormatValidation(int count) {
+        testAssert.assertTrue(
+                fileTrailPage.isFormatFailedCountSpanExist(), "Format failed count span should exist");
+        testAssert.assertEquals(
+                String.valueOf(count), fileTrailPage.getFormatFailedCount(), "Unexpected content passed count");
+    }
+
+    @Then("I verify {int} records failed content validation")
+    public void iVerifyRecordsFailedContentValidation(int count) {
+        testAssert.assertTrue(
+                fileTrailPage.isContentFailedCountSpanExist(), "Content failed count span should exist");
+        testAssert.assertEquals(
+                String.valueOf(count), fileTrailPage.getContentFailedCount(), "Unexpected content passed count");
+    }
 }
