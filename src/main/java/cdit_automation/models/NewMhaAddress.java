@@ -1,10 +1,7 @@
 package cdit_automation.models;
 
-import cdit_automation.data_setup.PhakAddress;
 import cdit_automation.data_setup.Phaker;
-import cdit_automation.data_setup.data_setup_address.PhakAbstractAddress;
 import cdit_automation.enums.MhaAddressTypeEnum;
-import cdit_automation.enums.PropertyTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

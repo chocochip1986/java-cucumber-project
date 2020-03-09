@@ -12,7 +12,9 @@ Feature: MHA Change address
 
   @set_2
   Scenario: CDS successfully processes a MHA change address file
-    Given A singaporean person john owns a LANDED property
-    But john owns CONDO property
+    Given A singaporean person john owns in a landed property
+    And john resides in a condo property
+    And the mha change address file contains the following details:
+    | person | previous_address | current_address | address_change_dte |
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
     And the Mha Dual Citizen batch job completes running with status CLEANUP

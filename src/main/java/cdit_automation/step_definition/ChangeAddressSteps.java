@@ -1,8 +1,8 @@
 package cdit_automation.step_definition;
 
 import cdit_automation.enums.FileTypeEnum;
-import cdit_automation.enums.PersonPropertyTypeEnum;
-import cdit_automation.enums.PropertyTypeEnum;
+import cdit_automation.enums.automation.PropertyTypeEnum;
+import cdit_automation.enums.automation.ResidencyEnum;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.PersonId;
 import io.cucumber.datatable.DataTable;
@@ -20,44 +20,43 @@ public class ChangeAddressSteps extends AbstractSteps{
         batchFileDataWriter.end();
     }
 
-    @Given("the mha change address file has the following details:")
+    @Given("the mha change address file contains the following details:")
     public void theMhaChangeAddressFileHasTheFollowingDetails(DataTable dataTable) {
+        //TODO
     }
 
-    @Given("^(?:An|A) (singaporean|foreign) person ([A-Za-z]+) (owns|resides (?:in)) a ([A-Z]+) property$")
+    @Given("^(?:An|A) (singaporean|foreign) person ([A-Za-z]+) (owns|resides|owns and resides)(?: in)? a ([a-z]+) property$")
     public void personAOwnsAProperty(String residentialStatus, String person, String residency, String propertyType) {
-        PropertyTypeEnum propertyTypeEnum = PropertyTypeEnum.fromString(propertyType);
-        if ( propertyTypeEnum == null ) {
-            throw new TestFailException("Unsupported property type in PropertyTypeEnum");
-        }
+        PropertyTypeEnum propertyTypeEnum = retrievePropertyOrError(propertyType);
 
-        PersonId personId;
-        if ( residentialStatus.equals("singaporean") ) {
-            personId = personFactory.createNewSCPersonId();
-        } else {
-            personId = personFactory.createNewFRPersonId();
-        }
+        PersonId personId = residentialStatus.equals("singaporean") ? personFactory.createNewSCPersonId() : personFactory.createNewFRPersonId();
 
         addressFactory.createPropertyFor(personId.getPerson(), getOwnershipType(residency), propertyTypeEnum);
         testContext.set(person, personId);
     }
 
-    @And("^([A-Za-z]+) (owns|resides (?:in)) ([A-Z]+) property$")
+    @And("^([A-Za-z]+) (owns|resides)(?: in)? a ([a-z]+) property$")
     public void residesInAnotherProperty(String person, String residency, String propertyType) {
-        PropertyTypeEnum propertyTypeEnum = PropertyTypeEnum.fromString(propertyType);
-        if ( propertyTypeEnum == null ) {
-            throw new TestFailException("Unsupported property type in PropertyTypeEnum");
-        }
+        PropertyTypeEnum propertyTypeEnum = retrievePropertyOrError(propertyType);
 
         PersonId personId = testContext.get(person);
         addressFactory.createPropertyFor(personId.getPerson(), getOwnershipType(residency), propertyTypeEnum);
     }
 
-    private PersonPropertyTypeEnum getOwnershipType(String ownershipType) {
-        if (ownershipType.equals("owns")) {
-            return PersonPropertyTypeEnum.OWNERSHIP;
+    private PropertyTypeEnum retrievePropertyOrError(String propertyType) {
+        if ( PropertyTypeEnum.fromString(propertyType) == null ) {
+            throw new TestFailException("Unsupported property type in PropertyTypeEnum");
+        }
+        return PropertyTypeEnum.fromString(propertyType);
+    }
+
+    private ResidencyEnum getOwnershipType(String ownershipType) {
+        if ( ownershipType.equals("owns and resides") ) {
+            return ResidencyEnum.BOTH;
+        } else if ( ownershipType.equals("owns") ) {
+            return ResidencyEnum.OWNERSHIP;
         } else {
-            return PersonPropertyTypeEnum.RESIDENCE;
+            return ResidencyEnum.RESIDENCE;
         }
     }
 }

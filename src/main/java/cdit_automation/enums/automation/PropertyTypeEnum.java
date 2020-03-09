@@ -1,4 +1,4 @@
-package cdit_automation.enums;
+package cdit_automation.enums.automation;
 
 import java.util.Random;
 

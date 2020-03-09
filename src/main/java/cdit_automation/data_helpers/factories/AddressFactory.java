@@ -5,7 +5,8 @@ import cdit_automation.data_setup.data_setup_address.PhakAbstractAddress;
 import cdit_automation.enums.FormatType;
 import cdit_automation.enums.PersonPropertyTypeEnum;
 import cdit_automation.enums.PropertyType;
-import cdit_automation.enums.PropertyTypeEnum;
+import cdit_automation.enums.automation.PropertyTypeEnum;
+import cdit_automation.enums.automation.ResidencyEnum;
 import cdit_automation.models.Batch;
 import cdit_automation.models.Person;
 import cdit_automation.models.PersonDetail;
@@ -26,64 +27,66 @@ public class AddressFactory extends AbstractFactory {
     @Setter
     private class AddressOptions {
         private PropertyTypeEnum propertyTypeEnum;
-        private PersonPropertyTypeEnum ownershipEnum;
+        private ResidencyEnum ownershipEnum;
         private PhakAbstractAddress phakAbstractAddress;
 
         public AddressOptions() {
             this.propertyTypeEnum = PropertyTypeEnum.pick();
-            this.ownershipEnum = PersonPropertyTypeEnum.pick();
+            this.ownershipEnum = ResidencyEnum.pick();
             this.phakAbstractAddress = PhakAddress.suggestAnAddress(this.propertyTypeEnum);
         }
 
-        public AddressOptions(PropertyTypeEnum propertyTypeEnum, PersonPropertyTypeEnum ownershipEnum) {
+        public AddressOptions(PropertyTypeEnum propertyTypeEnum, ResidencyEnum ownershipEnum) {
             this.propertyTypeEnum = propertyTypeEnum;
             this.ownershipEnum = ownershipEnum;
             this.phakAbstractAddress = PhakAddress.suggestAnAddress(this.propertyTypeEnum);
         }
 
-        public AddressOptions(PropertyTypeEnum propertyTypeEnum, PersonPropertyTypeEnum ownershipEnum, PhakAbstractAddress phakAbstractAddress) {
+        public AddressOptions(PropertyTypeEnum propertyTypeEnum, ResidencyEnum ownershipEnum, PhakAbstractAddress phakAbstractAddress) {
             this.propertyTypeEnum = propertyTypeEnum;
             this.ownershipEnum = ownershipEnum;
             this.phakAbstractAddress = phakAbstractAddress;
         }
     }
 
-    public PropertyDetail createPropertyFor(Person person, PersonPropertyTypeEnum ownershipEnum, PropertyTypeEnum propertyTypeEnum, PhakAbstractAddress phakAbstractAddress ) {
+    public PropertyDetail createPropertyFor(Person person, ResidencyEnum ownershipEnum, PropertyTypeEnum propertyTypeEnum, PhakAbstractAddress phakAbstractAddress ) {
         AddressOptions addressOptions = new AddressOptions(propertyTypeEnum, ownershipEnum, phakAbstractAddress);
-        Batch batch = Batch.createCompleted();
-        BiTemporalData biTemporalData = new BiTemporalData()
-                .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(retrieveBirthDate(person)));
-        PropertyDetail propertyDetail = createPropertyData(addressOptions, batch, biTemporalData);
-
-        PersonPropertyId personPropertyId = PersonPropertyId.builder().personEntity(person).propertyEntity(propertyDetail.getProperty()).build();
-        PersonProperty personProperty = PersonProperty.create(batch, personPropertyId, addressOptions.ownershipEnum, biTemporalData);
-
-        batchRepo.save(batch);
-        propertyDetailRepo.save(propertyDetail);
-        personPropertyRepo.save(personProperty);
-
-        return propertyDetail;
+        return createProperty(person, addressOptions);
     }
 
-    public PropertyDetail createPropertyFor(Person person, PersonPropertyTypeEnum ownershipEnum, PropertyTypeEnum propertyTypeEnum) {
+    public PropertyDetail createPropertyFor(Person person, ResidencyEnum ownershipEnum, PropertyTypeEnum propertyTypeEnum) {
         AddressOptions addressOptions = new AddressOptions(propertyTypeEnum, ownershipEnum);
+        return createProperty(person, addressOptions);
+    }
+
+    private PropertyDetail createProperty(Person person, AddressOptions addressOptions) {
         Batch batch = Batch.createCompleted();
         BiTemporalData biTemporalData = new BiTemporalData()
                 .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(retrieveBirthDate(person)));
-        PropertyDetail propertyDetail = createPropertyData(addressOptions, batch, biTemporalData);
+        Property property = Property.builder().build();
+        PropertyDetail propertyDetail = createPropertyData(addressOptions, batch, property, biTemporalData);
 
         PersonPropertyId personPropertyId = PersonPropertyId.builder().personEntity(person).propertyEntity(propertyDetail.getProperty()).build();
-        PersonProperty personProperty = PersonProperty.create(batch, personPropertyId, addressOptions.ownershipEnum, biTemporalData);
 
         batchRepo.save(batch);
+        propertyRepo.save(property);
         propertyDetailRepo.save(propertyDetail);
-        personPropertyRepo.save(personProperty);
+
+        if ( addressOptions.ownershipEnum.equals(ResidencyEnum.BOTH) ) {
+            personPropertyRepo.save(PersonProperty.create(batch, personPropertyId, PersonPropertyTypeEnum.RESIDENCE, biTemporalData));
+            personPropertyRepo.save(PersonProperty.create(batch, personPropertyId, PersonPropertyTypeEnum.OWNERSHIP, biTemporalData));
+        } else {
+            if ( addressOptions.ownershipEnum.equals(ResidencyEnum.OWNERSHIP) ) {
+                personPropertyRepo.save(PersonProperty.create(batch, personPropertyId, PersonPropertyTypeEnum.OWNERSHIP, biTemporalData));
+            } else {
+                personPropertyRepo.save(PersonProperty.create(batch, personPropertyId, PersonPropertyTypeEnum.RESIDENCE, biTemporalData));
+            }
+        }
 
         return propertyDetail;
     }
 
-    private PropertyDetail createPropertyData(AddressOptions addressOptions, Batch batch, BiTemporalData biTemporalData) {
-        Property property = Property.builder().build();
+    private PropertyDetail createPropertyData(AddressOptions addressOptions, Batch batch, Property property, BiTemporalData biTemporalData) {
         PropertyDetail propertyDetail = PropertyDetail.create(batch, addressOptions.getPhakAbstractAddress().getUnitNo(), addressOptions.getPhakAbstractAddress().getBlockNo(), addressOptions.getPhakAbstractAddress().getFloorNo(),
                 addressOptions.getPhakAbstractAddress().getBuildingName(), addressOptions.getPhakAbstractAddress().getStreetName(), null, addressOptions.getPhakAbstractAddress().getOldPostalCode(),
                 addressOptions.getPhakAbstractAddress().getPostalCode(), PropertyType.pick(), FormatType.MHA, property, biTemporalData);
