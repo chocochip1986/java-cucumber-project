@@ -7,6 +7,7 @@ import cdit_automation.data_setup.data_setup_address.PhakHdbAddress;
 import cdit_automation.data_setup.data_setup_address.PhakHospitalAddress;
 import cdit_automation.data_setup.data_setup_address.PhakIslandAddress;
 import cdit_automation.data_setup.data_setup_address.PhakKampongAddress;
+import cdit_automation.data_setup.data_setup_address.PhakLandedAddress;
 import cdit_automation.data_setup.data_setup_address.PhakNursingAddress;
 import cdit_automation.data_setup.data_setup_address.PhakOrphanageAddress;
 import cdit_automation.data_setup.data_setup_address.PhakPrisonAddress;
@@ -71,6 +72,7 @@ public class PhakAddress {
             case ISLAND:
                 return PhakIslandAddress.fakeItTillYouMakeIt();
             case LANDED:
+                return PhakLandedAddress.fakeItTillYouMakeIt();
             case PRISON:
                 return PhakPrisonAddress.fakeItTillYouMakeIt();
             case KAMPONG:
