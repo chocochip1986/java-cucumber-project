@@ -6,8 +6,11 @@ import cdit_automation.data_helpers.batch_entities.MhaAddressFileEntry;
 import cdit_automation.data_helpers.batch_entities.MhaChangeAddressFileEntry;
 import cdit_automation.data_helpers.batch_entities.MhaOverseasFileEntry;
 import cdit_automation.data_helpers.batch_entities.NcaAddressFileEntry;
+import cdit_automation.data_setup.PhakAddress;
 import cdit_automation.data_setup.Phaker;
+import cdit_automation.data_setup.data_setup_address.PhakAbstractAddress;
 import cdit_automation.enums.AddressIndicatorEnum;
+import cdit_automation.enums.automation.PropertyTypeEnum;
 import cdit_automation.models.PersonId;
 import cdit_automation.models.PropertyDetail;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +39,44 @@ public class MhaChangeAddressFileDataPrep extends BatchFileDataPrep {
         batchFileDataWriter.chunkOrWrite(mhaChangeAddressFileEntry.toString());
     }
 
+    public void createLineInBodyWithNewCurAddress(PersonId personId, AddressIndicatorEnum prevIndType, PropertyDetail prevPropertyDetail, AddressIndicatorEnum curIndType, PropertyTypeEnum propertyTypeEnum, LocalDate addressChangeDate) {
+        PhakAbstractAddress phakAddress = PhakAddress.suggestAnAddress(propertyTypeEnum);
+        MhaChangeAddressFileEntry mhaChangeAddressFileEntry = new MhaChangeAddressFileEntry(personId.getNaturalId(),
+                prevIndType,
+                getAddressFileEntryFrom(prevIndType, prevPropertyDetail),
+                curIndType,
+                getAddressFileEntryFrom(curIndType, phakAddress),
+                addressChangeDate.format(Phaker.DATETIME_FORMATTER_YYYYMMDD));
+        batchFileDataWriter.chunkOrWrite(mhaChangeAddressFileEntry.toString());
+    }
+
+    private AddressFileEntry getAddressFileEntryFrom(AddressIndicatorEnum addressIndicatorEnum, PhakAbstractAddress phakAbstractAddress) {
+        if ( addressIndicatorEnum.equals(AddressIndicatorEnum.NCA) ) {
+            return new NcaAddressFileEntry(phakAbstractAddress.getUnitNo(),
+                    phakAbstractAddress.getFloorNo(),
+                    phakAbstractAddress.getBlockNo(),
+                    Phaker.validNumber(6),
+                    phakAbstractAddress.getOldPostalCode(),
+                    phakAbstractAddress.getPostalCode());
+        } else if ( addressIndicatorEnum.equals(AddressIndicatorEnum.MHA_C) ) {
+            return new MhaOverseasFileEntry(phakAbstractAddress.getUnitNo(),
+                    phakAbstractAddress.getFloorNo(),
+                    phakAbstractAddress.getBlockNo(),
+                    phakAbstractAddress.getStreetName(),
+                    phakAbstractAddress.getBuildingName(),
+                    phakAbstractAddress.getOldPostalCode(),
+                    phakAbstractAddress.getPostalCode());
+        } else {
+            return new MhaAddressFileEntry(phakAbstractAddress.getUnitNo(),
+                    phakAbstractAddress.getFloorNo(),
+                    phakAbstractAddress.getBlockNo(),
+                    phakAbstractAddress.getStreetName(),
+                    phakAbstractAddress.getBuildingName(),
+                    phakAbstractAddress.getOldPostalCode(),
+                    phakAbstractAddress.getPostalCode());
+        }
+    }
+
     private AddressFileEntry getAddressFileEntryFrom(AddressIndicatorEnum addressIndicatorEnum, PropertyDetail propertyDetail) {
         if ( addressIndicatorEnum.equals(AddressIndicatorEnum.NCA) ) {
             return new NcaAddressFileEntry(propertyDetail.getUnit(),
@@ -44,7 +85,7 @@ public class MhaChangeAddressFileDataPrep extends BatchFileDataPrep {
                     propertyDetail.getStreetCode(),
                     propertyDetail.getPostalCode(),
                     propertyDetail.getNewPostalCode());
-        } else if ( addressIndicatorEnum.equals(AddressIndicatorEnum.MHA_C ) ) {
+        } else if ( addressIndicatorEnum.equals(AddressIndicatorEnum.MHA_C) ) {
             return new MhaOverseasFileEntry(propertyDetail.getUnit(),
                     propertyDetail.getFloor(),
                     propertyDetail.getBlockNumber(),

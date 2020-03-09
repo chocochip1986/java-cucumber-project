@@ -127,4 +127,22 @@ public class CommonSteps extends AbstractSteps {
 
         testAssert.assertEquals(Collections.emptyList(), errorMessages, "Unexpected error message found!");
     }
+
+    @And("there are no error messages")
+    public void thereAreNoErrorMessages() {
+        log.info("Verifying that are no error messages...");
+        FileReceived fileReceived = testContext.get("fileReceived");
+        if ( fileReceived == null ) {
+            throw new TestFailException("No file received record!");
+        }
+
+        Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
+        if ( batch == null ) {
+            throw new TestFailException("No batch record created for fileReceived record: "+fileReceived.getId());
+        }
+
+        List<ErrorMessage> errorMessages = errorMessageRepo.findByBatch(batch);
+
+        testAssert.assertTrue(errorMessages.isEmpty(), "There are error messages for batch: "+batch.getId());
+    }
 }
