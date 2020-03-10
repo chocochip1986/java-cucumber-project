@@ -5,7 +5,7 @@ import java.util.Random;
 public enum PropertyTypeEnum {
     LANDED("landed"),
     CONDO("condo"),
-    HDB("landed"),
+    HDB("hdb"),
     EXECUTIVE_CONDO("executive_condo"),
     CHALET("chalet"),
     KAMPONG("kampong"),

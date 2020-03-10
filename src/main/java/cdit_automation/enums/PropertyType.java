@@ -1,7 +1,5 @@
 package cdit_automation.enums;
 
-import cdit_automation.models.Property;
-
 import java.util.Random;
 
 public enum PropertyType {
@@ -13,7 +11,7 @@ public enum PropertyType {
 
     private String value;
 
-    private PropertyType(String value) {
+    PropertyType(String value) {
         this.value = value;
     }
 

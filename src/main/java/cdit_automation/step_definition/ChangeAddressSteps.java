@@ -57,7 +57,7 @@ public class ChangeAddressSteps extends AbstractSteps{
 
     private PropertyTypeEnum retrievePropertyOrError(String propertyType) {
         if ( PropertyTypeEnum.fromString(propertyType) == null ) {
-            throw new TestFailException("Unsupported property type in PropertyTypeEnum");
+            throw new TestFailException("Unsupported property type in PropertyTypeEnum: "+propertyType);
         }
         return PropertyTypeEnum.fromString(propertyType);
     }
@@ -101,6 +101,7 @@ public class ChangeAddressSteps extends AbstractSteps{
                 testContext.get(prevPropertyName),
                 addressIndicatorEnumFrom(curIndicatorType),
                 propertyTypeEnum, dateUtils.daysBeforeToday(daysAgo));
+        batchFileDataWriter.end();
     }
 
     private AddressIndicatorEnum addressIndicatorEnumFrom(String indType){
