@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -124,6 +125,9 @@ public class ChangeAddressSteps extends AbstractSteps{
         PersonProperty personProperty = personPropertyRepo.findByPersonAndPropertyAndType(personId.getPerson(), propertyDetail.getProperty(), PersonPropertyTypeEnum.RESIDENCE);
 
         testAssert.assertNotNull(personProperty, "no person property record indicating that "+personName+" of "+personId.getNaturalId()+" resides in "+propertyName);
+        testAssert.assertEquals(dateUtils.beginningOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo)),
+                personProperty.getBiTemporalData().getBusinessTemporalData().getValidFrom(),
+                personName+" ("+personId.getNaturalId()+") does not reside in the address ("+propertyDetail.toString()+") from the address change date!");
     }
 
     private void checkIfPersonExistsInTestContext(String personName) {
@@ -136,5 +140,19 @@ public class ChangeAddressSteps extends AbstractSteps{
         if ( testContext.doNotContain(propertyName) ) {
             throw new TestFailException("No such property registered in testContext: "+propertyName+". Please create property in another step definition.");
         }
+    }
+
+    @Then("^([A-Za-z]+) does not reside in ([a-z0-9]+) since (\\d+) days ago$")
+    public void johnDoesNotResideInAbeSinceDaysAgo(String personName, String propertyName, int daysAgo) {
+        checkIfPersonExistsInTestContext(personName);
+        checkIfPropertyExistsInTestContext(propertyName);
+
+        PersonId personId = testContext.get(personName);
+        PropertyDetail propertyDetail = testContext.get(propertyName);
+        Date date = dateUtils.localDateToDate(dateUtils.daysBeforeToday(daysAgo));
+        PersonProperty personProperty = personPropertyRepo.findByPersonAndType(personId.getPerson(), PersonPropertyTypeEnum.RESIDENCE);
+        PropertyDetail actualPropertyDetail = propertyDetailRepo.findByProperty(personProperty.getIdentifier().getPropertyEntity());
+
+        testAssert.assertNotEquals(propertyDetail.getId(), actualPropertyDetail.getId(), personName+" ("+personId.getNaturalId()+") is still living in property"+propertyName+" => "+propertyDetail.toString());
     }
 }

@@ -23,14 +23,26 @@ Feature: MHA Change address
     And the Mha Dual Citizen batch job completes running with status CLEANUP
 
   @set_3
-  Scenario: CDS successfully updates address information to a non existent address
+  Scenario Outline: CDS successfully updates address information to a non existent address
     Given A singaporean person john owns a landed property abc
     And john owns a landed property abd
     And john resides in a condo property abe
-    And the mha change address file contains information that john changed from (nca)abe to a new (mha_z)hdb property 5 days ago
+    And the mha change address file contains information that john changed from (<prev_address_indicator>)abe to a new (<cur_address_indicator>)hdb property 5 days ago
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
     And the Mha Dual Citizen batch job completes running with status CLEANUP
     And there are no error messages
+    Then john does not reside in abe since 6 days ago
+  Examples:
+    | prev_address_indicator | cur_address_indicator |
+    | mha_z                  | mha_z                 |
+    | mha_Z                  | mha_c                 |
+    | mha_z                  | nca                   |
+    | mha_c                  | mha_z                 |
+    | mha_c                  | mha_c                 |
+    | mha_c                  | nca                   |
+    | nca                    | mha_z                 |
+    | nca                    | mha_c                 |
+    | nca                    | nca                   |
 
   @set_4
   Scenario Outline: CDS successfully updates address information to an existing address
