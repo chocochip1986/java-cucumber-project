@@ -105,6 +105,39 @@ public class ChangeAddressSteps extends AbstractSteps{
         batchFileDataWriter.end();
     }
 
+    @And("^the mha change address file contains information that ([A-Za-z]+) changed from a new \\((mha_z|mha_c|nca)\\)([a-z0-9]+) property to \\((mha_z|mha_c|nca)\\)([a-z_]+) " +
+            "(\\d) days ago$")
+    public void theMhaChangeAddressFileContainsInfoThat3(String personName, String prevIndicatorType, String prevPropertyType, String curIndicatorType, String curPropertyName, int daysAgo) {
+        checkIfPersonExistsInTestContext(personName);
+        checkIfPropertyExistsInTestContext(prevPropertyType);
+        PropertyTypeEnum propertyTypeEnum = retrievePropertyOrError(curPropertyName);
+
+        batchFileDataWriter.begin(mhaChangeAddressDataPrep.generateSingleDateNoOfRecordsHeader(1), FileTypeEnum.MHA_CHANGE_ADDRESS, null);
+        mhaChangeAddressFileDataPrep.createLineInBodyWithNewPrevAddress(testContext.get(personName),
+                addressIndicatorEnumFrom(prevIndicatorType),
+                propertyTypeEnum,
+                addressIndicatorEnumFrom(curIndicatorType),
+                testContext.get(curPropertyName), dateUtils.daysBeforeToday(daysAgo));
+        batchFileDataWriter.end();
+    }
+
+    @And("^the mha change address file contains information that ([A-Za-z]+) changed from a new \\((mha_z|mha_c|nca)\\)([a-z0-9]+) property to a new \\((mha_z|mha_c|nca)\\)([a-z_]+) property " +
+            "(\\d) days ago$")
+    public void theMhaChangeAddressFileContainsInfoThat4(String personName, String prevIndicatorType, String prevPropertyName, String curIndicatorType, String curPropertyName, int daysAgo) {
+        checkIfPersonExistsInTestContext(personName);
+        PropertyTypeEnum prevPropertyTypeEnum = retrievePropertyOrError(curPropertyName);
+        PropertyTypeEnum curPropertyTypeEnum = retrievePropertyOrError(curPropertyName);
+
+        batchFileDataWriter.begin(mhaChangeAddressDataPrep.generateSingleDateNoOfRecordsHeader(1), FileTypeEnum.MHA_CHANGE_ADDRESS, null);
+        mhaChangeAddressFileDataPrep.createLineInBodyWithNewPrevAndCurAddress(testContext.get(personName),
+                addressIndicatorEnumFrom(prevIndicatorType),
+                prevPropertyTypeEnum,
+                addressIndicatorEnumFrom(curIndicatorType),
+                curPropertyTypeEnum,
+                dateUtils.daysBeforeToday(daysAgo));
+        batchFileDataWriter.end();
+    }
+
     private AddressIndicatorEnum addressIndicatorEnumFrom(String indType){
         if ( indType.equals("mha_z") ) {
             return AddressIndicatorEnum.MHA_Z;

@@ -67,15 +67,48 @@ Feature: MHA Change address
     | nca                    | nca                   |
 
   @set_5
-  Scenario: CDS is unable to map a person's previous address if it does not exist in the system
+  Scenario Outline: CDS is unable to map a person's previous address if it does not exist in the system
     Given A singaporean person john owns a landed property abc
     And john owns a landed property abd
     And john resides in a condo property abe
-    And the mha change address file contains information that john changed from (nca)abc to a new (nca)landed property 5 days ago
+    And the mha change address file contains information that john changed from a new (<prev_address_indicator>)abc property to (<cur_address_indicator>)landed 5 days ago
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
     And the Mha Dual Citizen batch job completes running with status CLEANUP
+    And the error message contains <any>
+    Examples:
+      | prev_address_indicator | cur_address_indicator |
+      | mha_z                  | mha_z                 |
+      | mha_Z                  | mha_c                 |
+      | mha_z                  | nca                   |
+      | mha_c                  | mha_z                 |
+      | mha_c                  | mha_c                 |
+      | mha_c                  | nca                   |
+      | nca                    | mha_z                 |
+      | nca                    | mha_c                 |
+      | nca                    | nca                   |
 
-  @set_5
+  @set_6
+  Scenario Outline: CDS is unable to map a persons' addresses when both are non-existent
+    Given A singaporean person john owns a landed property abc
+    And john owns a landed property abd
+    And john resides in a condo property abe
+    And the mha change address file contains information that john changed from a new (<prev_address_indicator>)abc property to a new (<cur_address_indicator>)landed property 5 days ago
+    When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
+    And the Mha Dual Citizen batch job completes running with status CLEANUP
+    And the error message contains <any>
+    Examples:
+      | prev_address_indicator | cur_address_indicator |
+      | mha_z                  | mha_z                 |
+      | mha_Z                  | mha_c                 |
+      | mha_z                  | nca                   |
+      | mha_c                  | mha_z                 |
+      | mha_c                  | mha_c                 |
+      | mha_c                  | nca                   |
+      | nca                    | mha_z                 |
+      | nca                    | mha_c                 |
+      | nca                    | nca                   |
+
+  @set_6
   Scenario: Change address file states a previous address that a person once lived in
     Given A singaporean person john owns a landed property abc
     And john owns a landed property abd

@@ -50,6 +50,29 @@ public class MhaChangeAddressFileDataPrep extends BatchFileDataPrep {
         batchFileDataWriter.chunkOrWrite(mhaChangeAddressFileEntry.toString());
     }
 
+    public void createLineInBodyWithNewPrevAddress(PersonId personId, AddressIndicatorEnum prevIndType, PropertyTypeEnum prevPropertyTypeEnum, AddressIndicatorEnum curIndType, PropertyDetail propertyDetail, LocalDate addressChangeDate) {
+        PhakAbstractAddress phakAddress = PhakAddress.suggestAnAddress(prevPropertyTypeEnum);
+        MhaChangeAddressFileEntry mhaChangeAddressFileEntry = new MhaChangeAddressFileEntry(personId.getNaturalId(),
+                prevIndType,
+                getAddressFileEntryFrom(curIndType, phakAddress),
+                curIndType,
+                getAddressFileEntryFrom(prevIndType, propertyDetail),
+                addressChangeDate.format(Phaker.DATETIME_FORMATTER_YYYYMMDD));
+        batchFileDataWriter.chunkOrWrite(mhaChangeAddressFileEntry.toString());
+    }
+
+    public void createLineInBodyWithNewPrevAndCurAddress(PersonId personId, AddressIndicatorEnum prevIndType, PropertyTypeEnum prevPropertyTypeEnum, AddressIndicatorEnum curIndType, PropertyTypeEnum curPropertyTypeEnum, LocalDate addressChangeDate) {
+        PhakAbstractAddress prevPhakAddress = PhakAddress.suggestAnAddress(prevPropertyTypeEnum);
+        PhakAbstractAddress curPhakAddress = PhakAddress.suggestAnAddress(curPropertyTypeEnum);
+        MhaChangeAddressFileEntry mhaChangeAddressFileEntry = new MhaChangeAddressFileEntry(personId.getNaturalId(),
+                prevIndType,
+                getAddressFileEntryFrom(curIndType, prevPhakAddress),
+                curIndType,
+                getAddressFileEntryFrom(prevIndType, curPhakAddress),
+                addressChangeDate.format(Phaker.DATETIME_FORMATTER_YYYYMMDD));
+        batchFileDataWriter.chunkOrWrite(mhaChangeAddressFileEntry.toString());
+    }
+
     private AddressFileEntry getAddressFileEntryFrom(AddressIndicatorEnum addressIndicatorEnum, PhakAbstractAddress phakAbstractAddress) {
         if ( addressIndicatorEnum.equals(AddressIndicatorEnum.NCA) ) {
             return new NcaAddressFileEntry(phakAbstractAddress.getUnitNo(),
