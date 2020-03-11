@@ -3,7 +3,7 @@
 @mha
 Feature: Data processing for MHA dual citizenship
 
-  @Set_1 @GRYFFINDOR-877 @defect
+  @Set_1
   Scenario: Dual Citizen batch job processing runs successfully
     Given the mha dual citizen file has the following details:
     | NewDualCitizensInFile | ExistingDualCitizensInFile | ExpiredDualCitizens |
@@ -46,6 +46,8 @@ Feature: Data processing for MHA dual citizenship
   @Set_5
   Scenario: MHA sends a file with a cut-off date after that file recevied date
     Given the mha dual citizen file has a cut-off date in the future
+      | NewDualCitizensInFile |
+      | 1                     |
     When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
     And the Mha Dual Citizen batch job completes running with status BULK_CHECK_VALIDATION_ERROR
-    And the error message is Cut-off date cannot be after File Received date.
+    And the error message contains Extraction date cannot be after File Received date
