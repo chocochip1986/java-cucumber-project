@@ -12,6 +12,8 @@ import cdit_automation.models.PersonDetail;
 import cdit_automation.models.PersonId;
 import cdit_automation.models.PersonName;
 import cdit_automation.models.embeddables.BiTemporalData;
+import cdit_automation.models.embeddables.BusinessTemporalData;
+import cdit_automation.models.embeddables.DbTemporalData;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
@@ -99,6 +101,26 @@ public class PersonFactory extends AbstractFactory {
             default:
                 return createNewSCPersonId();
         }
+    }
+
+    public PersonId createDualCitzenTurnSC(LocalDate ceasedDualCitizenDate) {
+        PersonId personId = createDualCitizen();
+        Nationality nationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
+        BusinessTemporalData businessTemporalData = nationality.getBiTemporalData().getBusinessTemporalData();
+        nationality.getBiTemporalData().setBusinessTemporalData(businessTemporalData.newValidTill(dateUtils.endOfDayToTimestamp(ceasedDualCitizenDate.minusDays(1))));
+
+        Batch batch = Batch.createCompleted();
+        BiTemporalData biTemporalData = new BiTemporalData().generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(ceasedDualCitizenDate));
+        Nationality newNationality = Nationality.builder()
+                .nationality(NationalityEnum.SINGAPORE_CITIZEN)
+                .biTemporalData(biTemporalData)
+                .person(personId.getPerson())
+                .batch(batch)
+                .build();
+        batchRepo.save(batch);
+        nationalityRepo.save(nationality);
+        nationalityRepo.save(newNationality);
+        return personId;
     }
 
     public PersonId createNewPPPersonId() {

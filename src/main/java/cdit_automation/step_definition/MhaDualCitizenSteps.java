@@ -175,7 +175,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         batchFileDataWriter.end();
     }
 
-    @Given("the mha dual citizen file has a cut-off date in the future")
+    @Given("the mha dual citizen file has a run date in the future")
     public void theMhaDualCitizenFileHasACutOffDateInTheFuture(DataTable dataTable) throws IOException {
         List<Map<String, String>> body = dataTable.asMaps(String.class, String.class);
 

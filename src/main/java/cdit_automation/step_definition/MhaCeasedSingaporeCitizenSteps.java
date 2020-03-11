@@ -8,6 +8,7 @@ import cdit_automation.models.CeasedCitizenValidated;
 import cdit_automation.models.Nationality;
 import cdit_automation.models.PersonDetail;
 import cdit_automation.models.PersonId;
+import cdit_automation.models.PersonName;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -34,8 +35,6 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
 
   @Given("the file has the following details:")
   public void theFileHasTheFollowingDetails(DataTable dataTable) throws IOException {
-    List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();
-
     batchFileDataWriter.begin(mhaBulkFileDataPrep.generateSingleHeader(), FileTypeEnum.MHA_CEASED_CITIZEN, null);
 
     mhaCeasedCitizenFileDataPrep.createBodyOfTestScenarios(
@@ -124,4 +123,44 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
                   + " ]");
         });
   }
+
+    @Given("^that ([a-z_]+) was convert from a dual citizen to a singaporean (\\d+) days ago$")
+    public void thatPersonWasConvertFromADualCitizenToASCDaysAgo(String personName, int daysAgo) {
+      PersonId personId = personFactory.createDualCitzenTurnSC(dateUtils.daysBeforeToday(daysAgo));
+      testContext.set(personName, personId);
+    }
+
+    @And("^([a-z_]+)'s citizenship ceased (\\d+) days ago$")
+    public void hisCitizenshipCeasedDaysAgo(String personName, int daysAgo) {
+        batchFileDataWriter.begin(mhaCeasedCitizenFileDataPrep.generateSingleHeader(), FileTypeEnum.MHA_CEASED_CITIZEN, null);
+        PersonId personId = testContext.get(personName);
+        PersonName personName1 = personNameRepo.findByPerson(personId.getPerson());
+        MhaCeasedCitizenFileEntry mhaCeasedCitizenFileEntry = MhaCeasedCitizenFileEntry.builder()
+                .nric(personId.getNaturalId())
+                .name(personName1.getName())
+                .nationality(NationalityEnum.US.getValue())
+                .citizenRenunciationDate(dateUtils.daysBeforeToday(daysAgo))
+                .build();
+        batchFileDataWriter.chunkOrWrite(mhaCeasedCitizenFileEntry.toString());
+        batchFileDataWriter.end();
+    }
+
+    @And("^I verify that ([a-z_]+) is not a citizen (\\d+) days ago$")
+    public void iVerifyThatPersonIsNotACitizenDaysAgo(String personName, int daysAgo) {
+      PersonId personId = testContext.get(personName);
+      Nationality curNationality = nationalityRepo.findNationalityByPerson(personId.getPerson(),
+              dateUtils.localDateToDate(dateUtils.daysBeforeToday(daysAgo)));
+      Nationality prevNationality = nationalityRepo.findNationalityByPerson(personId.getPerson(),
+              dateUtils.localDateToDate(dateUtils.daysBeforeToday(daysAgo).minusDays(1)));
+
+      testAssert.assertNotNull(curNationality, "No current nationality for "+personName+" ("+personId.getNaturalId()+")");
+      testAssert.assertNotEquals(curNationality.getNationality(), NationalityEnum.SINGAPORE_CITIZEN.getValue(), personName+" ("+personId.getNaturalId()+") still has a singaporean nationality!");
+      testAssert.assertEquals(dateUtils.beginningOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo)),
+              curNationality.getBiTemporalData().getBusinessTemporalData().getValidFrom(), personName+" ("+personId.getNaturalId()+") did not start from "+dateUtils.beginningOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo)));
+      testAssert.assertNotNull(prevNationality, "No previous nationality for "+personName+" ("+personId.getNaturalId()+")");
+      testAssert.assertEquals(prevNationality.getNationality().getValue(), NationalityEnum.SINGAPORE_CITIZEN.getValue(), personName+" ("+personId.getNaturalId()+") was not singaporean!");
+      testAssert.assertEquals(dateUtils.endOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo).minusDays(1)),
+              prevNationality.getBiTemporalData().getBusinessTemporalData().getValidTill(),
+              personName+" ("+personId.getNaturalId()+") did not end his/her singaporean nationality on "+dateUtils.endOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo).minusDays(1)));
+    }
 }

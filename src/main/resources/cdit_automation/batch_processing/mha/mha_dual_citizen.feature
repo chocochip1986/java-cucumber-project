@@ -45,7 +45,7 @@ Feature: Data processing for MHA dual citizenship
 
   @Set_5
   Scenario: MHA sends a file with a cut-off date after that file recevied date
-    Given the mha dual citizen file has a cut-off date in the future
+    Given the mha dual citizen file has a run date in the future
       | NewDualCitizensInFile |
       | 1                     |
     When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
