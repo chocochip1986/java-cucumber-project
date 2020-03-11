@@ -1,5 +1,6 @@
 package cdit_automation.step_definition;
 
+import cdit_automation.data_helpers.batch_entities.MhaDualCitizenFileEntry;
 import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.enums.NationalityEnum;
 import cdit_automation.exceptions.TestDataSetupErrorException;
@@ -8,6 +9,8 @@ import cdit_automation.models.ErrorMessage;
 import cdit_automation.models.FileReceived;
 import cdit_automation.models.Nationality;
 import cdit_automation.models.PersonId;
+import cdit_automation.models.embeddables.BiTemporalData;
+import cdit_automation.models.embeddables.BusinessTemporalData;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -182,5 +185,41 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         batchFileDataWriter.begin(mhaDualCitizenFileDataPrep.generateSingleHeader(dateUtils.daysAfterToday(1)), FileTypeEnum.MHA_DUAL_CITIZEN, null);
         mhaDualCitizenFileDataPrep.bodyCreator(body, testContext);
         batchFileDataWriter.end();
+    }
+
+    @Given("^([a-z_]+) was a dual citizen (\\d+) days ago$")
+    public void personWasADualCitizenDaysAgo(String personName, int daysAgo) {
+        PersonId personId = personFactory.createDualCitzenTurnSC(dateUtils.daysBeforeToday(daysAgo));
+        testContext.set(personName, personId);
+    }
+
+    @And("^([a-z_]+) became a dual citizen (\\d+) days ago$")
+    public void personBecameADualCitizenDaysAgo(String personName, int daysAgo) {
+        batchFileDataWriter.begin(mhaDualCitizenFileDataPrep.generateSingleHeader(dateUtils.daysBeforeToday(daysAgo)), FileTypeEnum.MHA_DUAL_CITIZEN, null);
+        PersonId personId = testContext.get(personName);
+        MhaDualCitizenFileEntry mhaDualCitizenFileEntry = MhaDualCitizenFileEntry.builder().identiifer(personId.getNaturalId()).build();
+        batchFileDataWriter.chunkOrWrite(mhaDualCitizenFileEntry.toString());
+        batchFileDataWriter.end();
+    }
+
+    @And("^I verify that ([a-z_]+) is a dual citizen (\\d+) days ago$")
+    public void iVerifyThatPersonIsADualCitizenDaysAgo(String personName, int daysAgo) {
+        PersonId personId = testContext.get(personName);
+        Nationality curNationality = nationalityRepo.findNationalityByPerson(personId.getPerson(),
+                dateUtils.localDateToDate(dateUtils.daysBeforeToday(daysAgo)));
+        Nationality prevNationality = nationalityRepo.findNationalityByPerson(personId.getPerson(),
+                dateUtils.localDateToDate(dateUtils.daysBeforeToday(daysAgo).minusDays(1)));
+
+        testAssert.assertNotNull(curNationality, personName+" ("+personId.getNaturalId()+") does not have a current nationality!");
+        testAssert.assertEquals(NationalityEnum.DUAL_CITIZENSHIP, curNationality.getNationality(), personName+" ("+personId.getNaturalId()+") is currently NOT a dual citizen!");
+        testAssert.assertEquals(dateUtils.beginningOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo)),
+                curNationality.getBiTemporalData().getBusinessTemporalData().getValidFrom(),
+                personName+" ("+personId.getNaturalId()+") did not start being dual citizen on "+dateUtils.beginningOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo)));
+        testAssert.assertNotNull(prevNationality, personName+" ("+personId.getNaturalId()+") does not have a previous nationality!");
+        testAssert.assertEquals(NationalityEnum.SINGAPORE_CITIZEN, prevNationality.getNationality(), personName+" ("+personId.getNaturalId()+") was previously NOT a singaporean!");
+        testAssert.assertEquals(dateUtils.endOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo)),
+                prevNationality.getBiTemporalData().getBusinessTemporalData().getValidTill(),
+                personName+" ("+personId.getNaturalId()+") did not end his/her singaporean nationality on "+dateUtils.endOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo)));
+
     }
 }
