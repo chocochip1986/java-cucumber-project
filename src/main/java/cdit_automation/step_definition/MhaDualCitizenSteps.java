@@ -59,7 +59,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
 
     @Given("the mha dual citizen file has the following details:")
     public void thatTheMhaDualCitizenFileHasTheFollowingDetails(DataTable table) throws IOException {
-        batchFileDataWriter.begin(mhaChangePersonDetailsDataPrep.generateDoubleHeader(), FileTypeEnum.MHA_DUAL_CITIZEN, null);
+        batchFileDataWriter.begin(mhaDualCitizenFileDataPrep.generateSingleHeader(), FileTypeEnum.MHA_DUAL_CITIZEN, null);
         List<Map<String, String>> list = table.asMaps(String.class, String.class);
         List<String> body = mhaDualCitizenFileDataPrep.bodyCreator(list, testContext);
 
@@ -129,7 +129,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         List<String> body = new ArrayList<>();
         body.add(invalidNric);
 
-        listOfIdentifiersToWriteToFile.add(0, mhaDualCitizenFileDataPrep.generateDoubleHeader());
+        listOfIdentifiersToWriteToFile.add(0, mhaDualCitizenFileDataPrep.generateSingleHeader());
         listOfIdentifiersToWriteToFile.addAll(body);
         listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
 
@@ -171,19 +171,16 @@ public class MhaDualCitizenSteps extends AbstractSteps {
 
     @Given("the mha dual citizen file is empty")
     public void theMhaDualCitizenFileIsEmpty() throws IOException {
-        batchFileDataWriter.begin(mhaChangePersonDetailsDataPrep.generateDoubleHeader(), FileTypeEnum.MHA_DUAL_CITIZEN, null);
+        batchFileDataWriter.begin(mhaDualCitizenFileDataPrep.generateSingleHeader(), FileTypeEnum.MHA_DUAL_CITIZEN, null);
         batchFileDataWriter.end();
     }
 
     @Given("the mha dual citizen file has a cut-off date in the future")
-    public void theMhaDualCitizenFileHasACutOffDateInTheFuture() throws IOException {
-        List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();;
-        List<String> body = Lists.emptyList();
+    public void theMhaDualCitizenFileHasACutOffDateInTheFuture(DataTable dataTable) throws IOException {
+        List<Map<String, String>> body = dataTable.asMaps(String.class, String.class);
 
-        listOfIdentifiersToWriteToFile.add(mhaDualCitizenFileDataPrep.generateDoubleHeader(dateUtils.daysAfterToday(1), dateUtils.daysAfterToday(1)));
-        listOfIdentifiersToWriteToFile.addAll(body);
-        listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
-
-        batchFileCreator.writeToFile(FileTypeEnum.MHA_DUAL_CITIZEN.getValue().toLowerCase(), listOfIdentifiersToWriteToFile);
+        batchFileDataWriter.begin(mhaDualCitizenFileDataPrep.generateSingleHeader(dateUtils.daysAfterToday(1)), FileTypeEnum.MHA_DUAL_CITIZEN, null);
+        mhaDualCitizenFileDataPrep.bodyCreator(body, testContext);
+        batchFileDataWriter.end();
     }
 }

@@ -113,6 +113,6 @@ Feature: MHA Change address
     Given A singaporean person john owns a landed property abc
     And john owns a landed property abd
     And john resides in a condo property abe
-#    And the mha change address file contains information that john changed from abc to a new executive_condo property
+    And john previously resided in a hdb
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
     And the Mha Dual Citizen batch job completes running with status CLEANUP

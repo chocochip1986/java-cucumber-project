@@ -91,6 +91,7 @@ public class Hooks extends AbstractSteps {
         dualCitizenValidatedRepo.truncateTable();
         doubleDateHeaderValidatedRepo.truncateTable();
         singleDateHeaderValidatedRepo.truncateTable();
+        singleDateNoOfRecordsHeaderValidatedRepo.truncateTable();
         noInteractionValidatedRepo.truncateTable();
         personDetailChangeValidatedRepo.truncateTable();
         nationalityRepo.truncateTable();

@@ -68,6 +68,7 @@ import cdit_automation.repositories.PropertyDetailRepo;
 import cdit_automation.repositories.PropertyRepo;
 import cdit_automation.repositories.ReasonablenessCheckStatisticRepo;
 import cdit_automation.repositories.SingleDateHeaderValidatedRepo;
+import cdit_automation.repositories.SingleDateNoOfRecordsHeaderValidatedRepo;
 import cdit_automation.repositories.view.ReasonablenessCheckStatisticViewJpaRepo;
 import cdit_automation.utilities.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -152,6 +153,7 @@ public class AbstractAutoWired {
     @Autowired protected DualCitizenValidatedRepo dualCitizenValidatedRepo;
     @Autowired protected DoubleDateHeaderValidatedRepo doubleDateHeaderValidatedRepo;
     @Autowired protected SingleDateHeaderValidatedRepo singleDateHeaderValidatedRepo;
+    @Autowired protected SingleDateNoOfRecordsHeaderValidatedRepo singleDateNoOfRecordsHeaderValidatedRepo;
     @Autowired protected CeasedCitizenValidatedRepo ceasedCitizenValidatedRepo;
     @Autowired protected NewCitizenValidatedRepo newCitizenValidatedRepo;
     @Autowired protected PersonDetailChangeValidatedRepo personDetailChangeValidatedRepo;
