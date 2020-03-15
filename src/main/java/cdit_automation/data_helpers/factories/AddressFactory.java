@@ -4,6 +4,7 @@ import cdit_automation.data_setup.PhakAddress;
 import cdit_automation.data_setup.data_setup_address.PhakAbstractAddress;
 import cdit_automation.enums.FormatType;
 import cdit_automation.enums.PersonPropertyTypeEnum;
+import cdit_automation.enums.PreparedPropertyTypeEnum;
 import cdit_automation.enums.PropertyType;
 import cdit_automation.enums.automation.PropertyTypeEnum;
 import cdit_automation.enums.automation.ResidencyEnum;
@@ -20,6 +21,7 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Component
 public class AddressFactory extends AbstractFactory {
@@ -59,6 +61,14 @@ public class AddressFactory extends AbstractFactory {
         return createProperty(person, addressOptions);
     }
 
+    public PropertyDetail createPropertyFor(Person person, ResidencyEnum ownershipEnum, PropertyTypeEnum propertyTypeEnum, LocalDate validTill) {
+        AddressOptions addressOptions = new AddressOptions(propertyTypeEnum, ownershipEnum);
+        Batch batch = Batch.createCompleted();
+        Property property = Property.builder().build();
+
+        return PropertyDetail.builder().build();
+    }
+
     private PropertyDetail createProperty(Person person, AddressOptions addressOptions) {
         Batch batch = Batch.createCompleted();
         BiTemporalData biTemporalData = new BiTemporalData()
@@ -86,10 +96,29 @@ public class AddressFactory extends AbstractFactory {
         return propertyDetail;
     }
 
+    private PropertyDetail findOrCreatePropertyData(AddressOptions addressOptions, Batch batch, Property property, BiTemporalData biTemporalData) {
+        //TODO NEED TO ADD IN STREETCODE INTO THE QUERY INPUT
+        List<PropertyDetail> propertyDetailList = propertyDetailRepo.findByAddress(addressOptions.phakAbstractAddress.getUnitNo(),
+                addressOptions.getPhakAbstractAddress().getBlockNo(),
+                addressOptions.getPhakAbstractAddress().getFloorNo(),
+                addressOptions.getPhakAbstractAddress().getBuildingName(),
+                addressOptions.getPhakAbstractAddress().getStreetName(),
+                addressOptions.getPhakAbstractAddress().getPostalCode(),
+                addressOptions.getPhakAbstractAddress().getOldPostalCode(),
+                addressOptions.getPhakAbstractAddress().getPostalCode());
+
+        if (propertyDetailList.isEmpty()) {
+            //TODO CREATE NEW PROPERTY DETAIL
+        } else {
+            //TODO USE EXISTING ONE
+        }
+        return propertyDetailList.get(0);
+    }
+
     private PropertyDetail createPropertyData(AddressOptions addressOptions, Batch batch, Property property, BiTemporalData biTemporalData) {
         PropertyDetail propertyDetail = PropertyDetail.create(batch, addressOptions.getPhakAbstractAddress().getUnitNo(), addressOptions.getPhakAbstractAddress().getBlockNo(), addressOptions.getPhakAbstractAddress().getFloorNo(),
                 addressOptions.getPhakAbstractAddress().getBuildingName(), addressOptions.getPhakAbstractAddress().getStreetName(), null, addressOptions.getPhakAbstractAddress().getOldPostalCode(),
-                addressOptions.getPhakAbstractAddress().getPostalCode(), PropertyType.pick(), FormatType.MHA, property, biTemporalData);
+                addressOptions.getPhakAbstractAddress().getPostalCode(), PreparedPropertyTypeEnum.pick(), FormatType.MHA, property, biTemporalData);
 
         return propertyDetail;
     }

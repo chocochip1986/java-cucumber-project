@@ -30,10 +30,10 @@ public class MhaChangeAddressFileEntry {
 
     public String toString() {
         return StringUtils.leftPad(idNumber, 9)+
-                StringUtils.leftPad(oldAddressIndicator.getValue(), 1)+
-                oldAddressFileEntry.toString()+
-                addressChangedDate+
                 StringUtils.leftPad(newAddressIndicator.getValue(), 1)+
-                newAddressFileEntry.toString()+" ";
+                newAddressFileEntry.toString()+
+                addressChangedDate+
+                StringUtils.leftPad(oldAddressIndicator.getValue(), 1)+
+                oldAddressFileEntry.toString()+" ";
     }
 }

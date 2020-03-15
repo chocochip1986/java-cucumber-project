@@ -24,18 +24,18 @@ Feature: MHA Change address
 
   @set_3
   Scenario Outline: CDS successfully updates address information to a non existent address
-    Given A singaporean person john owns a landed property abc
+    Given A 60 year old singaporean person john owns a landed property abc
     And john owns a landed property abd
     And john resides in a condo property abe
     And the mha change address file contains information that john changed from (<prev_address_indicator>)abe to a new (<cur_address_indicator>)hdb property 5 days ago
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
-    And the Mha Dual Citizen batch job completes running with status CLEANUP
+    And the Mha Change Address batch job completes running with status CLEANUP
     And there are no error messages
     Then john does not reside in abe since 6 days ago
   Examples:
     | prev_address_indicator | cur_address_indicator |
     | mha_z                  | mha_z                 |
-    | mha_Z                  | mha_c                 |
+    | mha_z                  | mha_c                 |
     | mha_z                  | nca                   |
     | mha_c                  | mha_z                 |
     | mha_c                  | mha_c                 |
@@ -57,7 +57,7 @@ Feature: MHA Change address
   Examples:
     | prev_address_indicator | cur_address_indicator |
     | mha_z                  | mha_z                 |
-    | mha_Z                  | mha_c                 |
+    | mha_z                  | mha_c                 |
     | mha_z                  | nca                   |
     | mha_c                  | mha_z                 |
     | mha_c                  | mha_c                 |
@@ -71,14 +71,14 @@ Feature: MHA Change address
     Given A singaporean person john owns a landed property abc
     And john owns a landed property abd
     And john resides in a condo property abe
-    And the mha change address file contains information that john changed from a new (<prev_address_indicator>)abc property to (<cur_address_indicator>)landed 5 days ago
+    And the mha change address file contains information that john changed from a new (<prev_address_indicator>)hdb property to (<cur_address_indicator>)abc 5 days ago
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
     And the Mha Dual Citizen batch job completes running with status CLEANUP
     And the error message contains <any>
     Examples:
       | prev_address_indicator | cur_address_indicator |
       | mha_z                  | mha_z                 |
-      | mha_Z                  | mha_c                 |
+      | mha_z                  | mha_c                 |
       | mha_z                  | nca                   |
       | mha_c                  | mha_z                 |
       | mha_c                  | mha_c                 |
@@ -99,7 +99,7 @@ Feature: MHA Change address
     Examples:
       | prev_address_indicator | cur_address_indicator |
       | mha_z                  | mha_z                 |
-      | mha_Z                  | mha_c                 |
+      | mha_z                  | mha_c                 |
       | mha_z                  | nca                   |
       | mha_c                  | mha_z                 |
       | mha_c                  | mha_c                 |
@@ -110,9 +110,20 @@ Feature: MHA Change address
 
   @set_6
   Scenario: Change address file states a previous address that a person once lived in
-    Given A singaporean person john owns a landed property abc
+    Given A 60 year old singaporean person john owns a landed property abc
     And john owns a landed property abd
     And john resides in a condo property abe
-    And john previously resided in a hdb
+    And john resided in a hdb property xyz 100 days ago
+    And the mha change address file contains information that john changed from (mha_z)xyz to (mha_z)abd 5 days ago
+    When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
+    And the Mha Dual Citizen batch job completes running with status CLEANUP
+
+  @set_7
+  Scenario: A person changes address every day
+    Given A 60 year old singaporean person john owns a landed property abc
+    And john owns a landed property abd
+    And john resides in a condo property abe
+    And mha change address file states that john moved from abe to abd 5 days ago
+    And the mha change address file contains information that john changed from (mha_z)abd to (mha_z)abc 4 days ago
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
     And the Mha Dual Citizen batch job completes running with status CLEANUP

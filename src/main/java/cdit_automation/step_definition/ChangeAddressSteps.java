@@ -1,14 +1,20 @@
 package cdit_automation.step_definition;
 
+import cdit_automation.constants.Constants;
 import cdit_automation.enums.AddressIndicatorEnum;
 import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.enums.PersonPropertyTypeEnum;
 import cdit_automation.enums.automation.PropertyTypeEnum;
 import cdit_automation.enums.automation.ResidencyEnum;
 import cdit_automation.exceptions.TestFailException;
+import cdit_automation.models.Batch;
 import cdit_automation.models.PersonId;
 import cdit_automation.models.PersonProperty;
 import cdit_automation.models.PropertyDetail;
+import cdit_automation.models.embeddables.BiTemporalData;
+import cdit_automation.models.embeddables.BusinessTemporalData;
+import cdit_automation.models.embeddables.DbTemporalData;
+import cdit_automation.models.embeddables.PersonPropertyId;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -16,6 +22,7 @@ import io.cucumber.java.en.Then;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -38,11 +45,12 @@ public class ChangeAddressSteps extends AbstractSteps{
         //TODO
     }
 
-    @Given("^(?:An|A) (singaporean|foreign) person ([A-Za-z]+) (owns|resides|owns and resides)(?: in)? a ([a-z_]+) property ([a-z0-9]+)$")
-    public void personAOwnsAProperty(String residentialStatus, String person, String residency, String propertyType, String propertyName) {
+    @Given("^(?:An|A)(?: (\\d+) year old)? (singaporean|foreign) person ([A-Za-z]+) (owns|resides|owns and resides)(?: in)? a ([a-z_]+) property ([a-z0-9]+)$")
+    public void personAOwnsAProperty(Integer age, String residentialStatus, String person, String residency, String propertyType, String propertyName) {
         PropertyTypeEnum propertyTypeEnum = retrievePropertyOrError(propertyType);
+        LocalDate birthDate = age == null ? dateUtils.yearsBeforeToday(40) : dateUtils.yearsBeforeToday(age);
 
-        PersonId personId = residentialStatus.equals("singaporean") ? personFactory.createNewSCPersonId() : personFactory.createNewFRPersonId();
+        PersonId personId = residentialStatus.equals("singaporean") ? personFactory.createNewSCPersonId(birthDate) : personFactory.createNewFRPersonId(birthDate);
 
         testContext.set(propertyName, addressFactory.createPropertyFor(personId.getPerson(), getOwnershipType(residency), propertyTypeEnum));
         testContext.set(person, personId);
@@ -109,8 +117,8 @@ public class ChangeAddressSteps extends AbstractSteps{
             "(\\d) days ago$")
     public void theMhaChangeAddressFileContainsInfoThat3(String personName, String prevIndicatorType, String prevPropertyType, String curIndicatorType, String curPropertyName, int daysAgo) {
         checkIfPersonExistsInTestContext(personName);
-        checkIfPropertyExistsInTestContext(prevPropertyType);
-        PropertyTypeEnum propertyTypeEnum = retrievePropertyOrError(curPropertyName);
+        checkIfPropertyExistsInTestContext(curPropertyName);
+        PropertyTypeEnum propertyTypeEnum = retrievePropertyOrError(prevPropertyType);
 
         batchFileDataWriter.begin(mhaChangeAddressDataPrep.generateSingleDateNoOfRecordsHeader(1), FileTypeEnum.MHA_CHANGE_ADDRESS, null);
         mhaChangeAddressFileDataPrep.createLineInBodyWithNewPrevAddress(testContext.get(personName),
@@ -155,7 +163,7 @@ public class ChangeAddressSteps extends AbstractSteps{
 
         PersonId personId = testContext.get(personName);
         PropertyDetail propertyDetail = testContext.get(propertyName);
-        PersonProperty personProperty = personPropertyRepo.findByPersonAndPropertyAndType(personId.getPerson(), propertyDetail.getProperty(), PersonPropertyTypeEnum.RESIDENCE);
+        PersonProperty personProperty = personPropertyRepo.findByPersonAndPropertyAndType(personId.getPerson(), propertyDetail.getProperty(), PersonPropertyTypeEnum.RESIDENCE.name());
 
         testAssert.assertNotNull(personProperty, "no person property record indicating that "+personName+" of "+personId.getNaturalId()+" resides in "+propertyName);
         testAssert.assertEquals(dateUtils.beginningOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo)),
@@ -183,9 +191,59 @@ public class ChangeAddressSteps extends AbstractSteps{
         PersonId personId = testContext.get(personName);
         PropertyDetail propertyDetail = testContext.get(propertyName);
         Date date = dateUtils.localDateToDate(dateUtils.daysBeforeToday(daysAgo));
-        PersonProperty personProperty = personPropertyRepo.findByPersonAndType(personId.getPerson(), PersonPropertyTypeEnum.RESIDENCE);
+        PersonProperty personProperty = personPropertyRepo.findByPersonAndType(personId.getPerson(), PersonPropertyTypeEnum.RESIDENCE.name(), date);
         PropertyDetail actualPropertyDetail = propertyDetailRepo.findByProperty(personProperty.getIdentifier().getPropertyEntity());
 
-        testAssert.assertNotEquals(propertyDetail.getId(), actualPropertyDetail.getId(), personName+" ("+personId.getNaturalId()+") is still living in property"+propertyName+" => "+propertyDetail.toString());
+        testAssert.assertEquals(propertyDetail.getId(), actualPropertyDetail.getId(), personName+" ("+personId.getNaturalId()+") is still living in property"+propertyName+" => "+propertyDetail.toString());
+    }
+
+    @And("^([A-Za-z]+) resided in a ([a-z_]+) property ([a-z0-9]+) (\\d+) days ago$")
+    public void personResidedNAHdbPropertyXyzDaysAgo(String personName, String propertyType, String propertyName, int daysAgo) {
+        checkIfPersonExistsInTestContext(personName);
+        PropertyTypeEnum propertyTypeEnum = retrievePropertyOrError(propertyType);
+
+        PersonId personId = testContext.get(personName);
+        testContext.set(propertyName, addressFactory.createPropertyFor(personId.getPerson(), ResidencyEnum.RESIDENCE, propertyTypeEnum));
+    }
+
+    @And("^mha change address file states that ([A-Za-z]+) moved from ([a-z_]+) to ([a-z_]+) (\\d+) days ago$")
+    public void mhaChangeAddressFileStatesThatPersonMovedFromPropertyToPropertyDaysAgo(String personName, String prevProperty, String curProperty, int daysAgo) {
+        checkIfPersonExistsInTestContext(personName);
+        checkIfPropertyExistsInTestContext(prevProperty);
+        checkIfPropertyExistsInTestContext(curProperty);
+
+        PersonId personId = testContext.get(personName);
+        LocalDate addressChangeDate = dateUtils.daysBeforeToday(daysAgo);
+
+        PropertyDetail prevPropertyDetail = testContext.get(prevProperty);
+        PersonProperty prevPersonProperty = personPropertyRepo.findByPersonAndPropertyAndType(personId.getPerson(),
+                prevPropertyDetail.getProperty(),
+                PersonPropertyTypeEnum.RESIDENCE.name());
+        PropertyDetail curPropertyDetail = testContext.get(curProperty);
+        PersonProperty curPersonProperty = personPropertyRepo.findByPersonAndPropertyAndType(personId.getPerson(),
+                curPropertyDetail.getProperty(),
+                PersonPropertyTypeEnum.RESIDENCE.name());
+        personPropertyRepo.updateValidTIll(prevPersonProperty.getIdentifier().getPersonEntity(),
+                prevPersonProperty.getIdentifier().getPropertyEntity(), dateUtils.endOfDayToTimestamp(addressChangeDate.minusDays(1)));
+
+
+        if ( curPersonProperty == null ) {
+            Batch batch = batchRepo.save(Batch.createCompleted());
+            PersonPropertyId personPropertyId = PersonPropertyId.builder()
+                    .personEntity(personId.getPerson())
+                    .propertyEntity(curPropertyDetail.getProperty())
+                    .build();
+            BiTemporalData biTemporalData = BiTemporalData.builder()
+                    .businessTemporalData(
+                            new BusinessTemporalData(dateUtils.beginningOfDayToTimestamp(addressChangeDate), Timestamp.valueOf(Constants.INFINITE_LOCAL_DATE_TIME)))
+                    .dbTemporalData(new DbTemporalData())
+                    .build();
+            personPropertyRepo.save(PersonProperty.createResidingProperty(batch, personPropertyId, biTemporalData));
+        } else {
+            personPropertyRepo.updateValidFrom(curPersonProperty.getIdentifier().getPersonEntity(),
+                    curPersonProperty.getIdentifier().getPropertyEntity(),
+                    dateUtils.beginningOfDayToTimestamp(addressChangeDate));
+        }
+
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 @Repository
 public interface PersonPropertyRepo extends JpaRepository<PersonProperty, Long> {
@@ -20,15 +21,32 @@ public interface PersonPropertyRepo extends JpaRepository<PersonProperty, Long> 
 
     @Query(value = "SELECT pp.* FROM person_property AS OF PERIOD FOR validity_period_person_property TRUNC(sysdate) pp "
             + " WHERE pp.entity_key = ?1 AND pp.type = ?2", nativeQuery = true)
-    PersonProperty findByPersonAndType(Person person, PersonPropertyTypeEnum type);
+    PersonProperty findByPersonAndType(Person person, String type);
+
+    @Query(value = "SELECT pp.* FROM person_property AS OF PERIOD FOR validity_period_person_property ?3 pp "
+            + " WHERE pp.entity_key = ?1 AND pp.type = ?2", nativeQuery = true)
+    PersonProperty findByPersonAndType(Person person, String type, Date date);
 
     @Query(value = "SELECT p.* FROM PERSON_PROPERTY AS OF PERIOD FOR validity_period_person_property TRUNC(SYSDATE) p " +
             "WHERE p.entity_key = ?1 AND p.property_entity_key = ?2 AND p.type = ?3", nativeQuery = true)
-    PersonProperty findByPersonAndPropertyAndType(Person person, Property property, PersonPropertyTypeEnum type);
+    PersonProperty findByPersonAndPropertyAndType(Person person, Property property, String type);
 
     @Query(value = "SELECT p.* FROM PERSON_PROPERTY AS OF PERIOD FOR validity_period_person_property ?4 p " +
             "WHERE p.entity_key = ?1 AND p.property_entity_key = ?2 AND p.type = ?3", nativeQuery = true)
-    PersonProperty findByPersonAndPropertyAndType(Person person, Property property, PersonPropertyTypeEnum type, Date date);
+    PersonProperty findByPersonAndPropertyAndType(Person person, Property property, String type, Date date);
+
+    @Query(value = "SELECT p.* FROM PERSON_PROPERTY WHERE p.entity_key = ?1 AND p.type = RESIDENCE", nativeQuery = true)
+    List<PersonProperty> findAllResidencesByPerson(Person person);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE PersonProperty pp SET pp.biTemporalData.businessTemporalData.validTill = ?3 WHERE pp.identifier.personEntity = ?1 AND pp.identifier.propertyEntity = ?2")
+    int updateValidTIll(Person person, Property property, Date date);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE PersonProperty pp SET pp.biTemporalData.businessTemporalData.validFrom = ?3 WHERE pp.identifier.personEntity = ?1 AND pp.identifier.propertyEntity = ?2")
+    int updateValidFrom(Person person, Property property, Date date);
 
     @Transactional
     @Modifying

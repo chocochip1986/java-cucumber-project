@@ -1,6 +1,7 @@
 package cdit_automation.models;
 
 import cdit_automation.enums.FormatType;
+import cdit_automation.enums.PreparedPropertyTypeEnum;
 import cdit_automation.enums.PropertyType;
 import cdit_automation.models.AbstractEntity;
 import cdit_automation.models.embeddables.BiTemporalData;
@@ -73,7 +74,7 @@ public class PropertyDetail extends AbstractEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "property_type")
-    private PropertyType propertyType;
+    private PreparedPropertyTypeEnum propertyType;
 
     // TODO: To confirm nullable or NonNull requirements in future.
     @Enumerated(EnumType.STRING)
@@ -92,73 +93,73 @@ public class PropertyDetail extends AbstractEntity {
     public static PropertyDetail createNcaHdb(Batch batch, String unitNo, String blockNo, String floorNo,
                                               String buildingName, String streetCode, String oldPostalCode, String postalCode,
                                               Property property, BiTemporalData biTemporalData) {
-        return build(batch, unitNo, blockNo, floorNo, buildingName, null, streetCode, oldPostalCode, postalCode, PropertyType.HDB, FormatType.NCA, property, biTemporalData);
+        return build(batch, unitNo, blockNo, floorNo, buildingName, null, streetCode, oldPostalCode, postalCode, PreparedPropertyTypeEnum.FIVE_ROOM_HDB, FormatType.NCA, property, biTemporalData);
     }
 
     public static PropertyDetail createNcaNonHdb(Batch batch, String unitNo, String blockNo, String floorNo,
                                               String buildingName, String streetCode, String oldPostalCode, String postalCode,
                                               Property property, BiTemporalData biTemporalData) {
-        return build(batch, unitNo, blockNo, floorNo, buildingName, null, streetCode, oldPostalCode, postalCode, PropertyType.NON_HDB, FormatType.NCA, property, biTemporalData);
+        return build(batch, unitNo, blockNo, floorNo, buildingName, null, streetCode, oldPostalCode, postalCode, PreparedPropertyTypeEnum.PRIVATE_PROPERTY, FormatType.NCA, property, biTemporalData);
     }
 
     public static PropertyDetail createNcaPrewar(Batch batch, String unitNo, String blockNo, String floorNo,
                                                  String buildingName, String streetCode, String oldPostalCode, String postalCode,
                                                  Property property, BiTemporalData biTemporalData) {
-        return build(batch, unitNo, blockNo, floorNo, buildingName, null, streetCode, oldPostalCode, postalCode, PropertyType.PREWAR_SIT_PSA, FormatType.NCA, property, biTemporalData);
+        return build(batch, unitNo, blockNo, floorNo, buildingName, null, streetCode, oldPostalCode, postalCode, PreparedPropertyTypeEnum.PRIVATE_PROPERTY, FormatType.NCA, property, biTemporalData);
     }
 
     public static PropertyDetail createNcaIsland(Batch batch, String unitNo, String blockNo, String floorNo,
                                                  String buildingName, String streetCode, String oldPostalCode, String postalCode,
                                                  Property property, BiTemporalData biTemporalData) {
-        return build(batch, unitNo, blockNo, floorNo, buildingName, null, streetCode, oldPostalCode, postalCode, PropertyType.ISLAND_ADDRESS, FormatType.NCA, property, biTemporalData);
+        return build(batch, unitNo, blockNo, floorNo, buildingName, null, streetCode, oldPostalCode, postalCode, PreparedPropertyTypeEnum.PRIVATE_PROPERTY, FormatType.NCA, property, biTemporalData);
     }
 
     public static PropertyDetail createNcaKampong(Batch batch, String unitNo, String blockNo, String floorNo,
                                                  String buildingName, String streetCode, String oldPostalCode, String postalCode,
                                                  Property property, BiTemporalData biTemporalData) {
-        return build(batch, unitNo, blockNo, floorNo, buildingName, null, streetCode, oldPostalCode, postalCode, PropertyType.ISLAND_ADDRESS, FormatType.NCA, property, biTemporalData);
+        return build(batch, unitNo, blockNo, floorNo, buildingName, null, streetCode, oldPostalCode, postalCode, PreparedPropertyTypeEnum.PRIVATE_PROPERTY, FormatType.NCA, property, biTemporalData);
     }
 
     public static PropertyDetail createMhaHdb(Batch batch, String unitNo, String blockNo, String floorNo,
                                               String buildingName, String streetName, String oldPostalCode, String postalCode,
                                               Property property, BiTemporalData biTemporalData) {
-        return build(batch, unitNo, blockNo, floorNo, buildingName, streetName, null, oldPostalCode, postalCode, PropertyType.HDB, FormatType.MHA, property, biTemporalData);
+        return build(batch, unitNo, blockNo, floorNo, buildingName, streetName, null, oldPostalCode, postalCode, PreparedPropertyTypeEnum.PRIVATE_PROPERTY, FormatType.MHA, property, biTemporalData);
     }
 
     public static PropertyDetail createMhaNonHdb(Batch batch, String unitNo, String blockNo, String floorNo,
                                                  String buildingName, String streetName, String oldPostalCode, String postalCode,
                                                  Property property, BiTemporalData biTemporalData) {
-        return build(batch, unitNo, blockNo, floorNo, buildingName, streetName, null, oldPostalCode, postalCode, PropertyType.NON_HDB, FormatType.MHA, property, biTemporalData);
+        return build(batch, unitNo, blockNo, floorNo, buildingName, streetName, null, oldPostalCode, postalCode, PreparedPropertyTypeEnum.PRIVATE_PROPERTY, FormatType.MHA, property, biTemporalData);
     }
 
     public static PropertyDetail createMhaPrewar(Batch batch, String unitNo, String blockNo, String floorNo,
                                                  String buildingName, String streetName, String oldPostalCode, String postalCode,
                                                  Property property, BiTemporalData biTemporalData) {
-        return build(batch, unitNo, blockNo, floorNo, buildingName, streetName, null, oldPostalCode, postalCode, PropertyType.PREWAR_SIT_PSA, FormatType.MHA, property, biTemporalData);
+        return build(batch, unitNo, blockNo, floorNo, buildingName, streetName, null, oldPostalCode, postalCode, PreparedPropertyTypeEnum.PRIVATE_PROPERTY, FormatType.MHA, property, biTemporalData);
     }
 
     public static PropertyDetail createMhaIsland(Batch batch, String unitNo, String blockNo, String floorNo,
                                                  String buildingName, String streetName, String oldPostalCode, String postalCode,
                                                  Property property, BiTemporalData biTemporalData) {
-        return build(batch, unitNo, blockNo, floorNo, buildingName, streetName, null, oldPostalCode, postalCode, PropertyType.ISLAND_ADDRESS, FormatType.MHA, property, biTemporalData);
+        return build(batch, unitNo, blockNo, floorNo, buildingName, streetName, null, oldPostalCode, postalCode, PreparedPropertyTypeEnum.PRIVATE_PROPERTY, FormatType.MHA, property, biTemporalData);
     }
 
     public static PropertyDetail createMhaKampong(Batch batch, String unitNo, String blockNo, String floorNo,
                                                  String buildingName, String streetName, String oldPostalCode, String postalCode,
                                                  Property property, BiTemporalData biTemporalData) {
-        return build(batch, unitNo, blockNo, floorNo, buildingName, streetName, null, oldPostalCode, postalCode, PropertyType.LORONG_BUANGKOK_ADDRESS, FormatType.MHA, property, biTemporalData);
+        return build(batch, unitNo, blockNo, floorNo, buildingName, streetName, null, oldPostalCode, postalCode, PreparedPropertyTypeEnum.PRIVATE_PROPERTY, FormatType.MHA, property, biTemporalData);
     }
 
     public static PropertyDetail create(Batch batch, String unitNo, String blockNo, String floorNo,
                                         String buildingName, String streetName, String streetCode,
-                                        String oldPostalCode, String postalCode, PropertyType propertyType,
+                                        String oldPostalCode, String postalCode, PreparedPropertyTypeEnum propertyType,
                                         FormatType formatType, Property property, BiTemporalData biTemporalData) {
         return build(batch, unitNo, blockNo, floorNo, buildingName, streetName, streetCode, oldPostalCode, postalCode, propertyType, formatType, property, biTemporalData);
     }
 
     private static PropertyDetail build(Batch batch, String unitNo, String blockNo, String floorNo,
                                         String buildingName, String streetName, String streetCode,
-                                        String oldPostalCode, String postalCode, PropertyType propertyType,
+                                        String oldPostalCode, String postalCode, PreparedPropertyTypeEnum propertyType,
                                         FormatType formatType, Property property, BiTemporalData biTemporalData) {
         return PropertyDetail.builder().batch(batch).unit(unitNo).blockNumber(blockNo).floor(floorNo)
                 .buildingName(buildingName).streetName(streetName).streetCode(streetCode).postalCode(oldPostalCode).newPostalCode(postalCode)
