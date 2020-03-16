@@ -18,6 +18,7 @@ public class PhakAbstractAddress {
     protected String postalCode;
 
     protected Class klass;
+    protected boolean isSpecialProperty;
 
     public PhakAbstractAddress(String unitNo, String blockNo, String floorNo, String streetName, String buildingName, String oldPostalCode, String postalCode, Class klass) {
         this.unitNo = unitNo;
@@ -28,5 +29,6 @@ public class PhakAbstractAddress {
         this.oldPostalCode = oldPostalCode;
         this.postalCode = postalCode;
         this.klass = klass;
+        isSpecialProperty = false;
     }
 }

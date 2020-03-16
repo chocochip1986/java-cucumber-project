@@ -1,6 +1,8 @@
 package cdit_automation.step_definition;
 
 import cdit_automation.constants.Constants;
+import cdit_automation.data_setup.PhakAddress;
+import cdit_automation.data_setup.data_setup_address.PhakAbstractAddress;
 import cdit_automation.enums.AddressIndicatorEnum;
 import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.enums.PersonPropertyTypeEnum;
@@ -8,9 +10,11 @@ import cdit_automation.enums.automation.PropertyTypeEnum;
 import cdit_automation.enums.automation.ResidencyEnum;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.Batch;
+import cdit_automation.models.PersonDetail;
 import cdit_automation.models.PersonId;
 import cdit_automation.models.PersonProperty;
 import cdit_automation.models.PropertyDetail;
+import cdit_automation.models.SpecialProperty;
 import cdit_automation.models.embeddables.BiTemporalData;
 import cdit_automation.models.embeddables.BusinessTemporalData;
 import cdit_automation.models.embeddables.DbTemporalData;
@@ -105,13 +109,17 @@ public class ChangeAddressSteps extends AbstractSteps{
         checkIfPropertyExistsInTestContext(prevPropertyName);
         PropertyTypeEnum propertyTypeEnum = retrievePropertyOrError(propertyType);
 
+        PhakAbstractAddress phakAddress = PhakAddress.suggestAnAddress(propertyTypeEnum);
+
         batchFileDataWriter.begin(mhaChangeAddressDataPrep.generateSingleDateNoOfRecordsHeader(1), FileTypeEnum.MHA_CHANGE_ADDRESS, null);
         mhaChangeAddressFileDataPrep.createLineInBodyWithNewCurAddress(testContext.get(personName),
                 addressIndicatorEnumFrom(prevIndicatorType),
                 testContext.get(prevPropertyName),
                 addressIndicatorEnumFrom(curIndicatorType),
-                propertyTypeEnum, dateUtils.daysBeforeToday(daysAgo));
+                phakAddress, dateUtils.daysBeforeToday(daysAgo));
         batchFileDataWriter.end();
+
+        testContext.set("expectedNewAddress", phakAddress);
     }
 
     @And("^the mha change address file contains information that ([A-Za-z]+) changed from a new \\((mha_z|mha_c|nca)\\)([a-z0-9]+) property to \\((mha_z|mha_c|nca)\\)([a-z_]+) " +
@@ -274,5 +282,22 @@ public class ChangeAddressSteps extends AbstractSteps{
                 PersonPropertyTypeEnum.RESIDENCE.name(),
                 dateUtils.beginningOfDayToTimestamp(validFrom));
         personPropertyTimelineReconstruction.reconstructResidenceTimelineFor(personId.getPerson(), originalPersonProperties, personProperty);
+    }
+
+    @And("^([A-Za-z]+) resides in the (island|nursing) special property$")
+    public void personResidesInTheSpecialProperty(String personName, String propertyType) {
+        checkIfPersonExistsInTestContext(personName);
+
+        PersonId personId = testContext.get(personName);
+        PhakAbstractAddress phakAbstractAddress = testContext.get("expectedNewAddress");
+
+        PropertyDetail propertyDetail = propertyDetailRepo.findByAddress(phakAbstractAddress.getUnitNo(), phakAbstractAddress.getBlockNo(), phakAbstractAddress.getFloorNo(), phakAbstractAddress.getBuildingName(), phakAbstractAddress.getStreetName(), null, phakAbstractAddress.getOldPostalCode(), phakAbstractAddress.getPostalCode());
+        testAssert.assertNotNull(propertyDetail, "No property details created for new address!");
+
+        PersonProperty personProperty = personPropertyRepo.findByPersonAndPropertyAndType(personId.getPerson(), propertyDetail.getProperty(), PersonPropertyTypeEnum.RESIDENCE.name());
+        testAssert.assertNotNull(personProperty, "No person property record created for "+personName+" ("+personId.getNaturalId()+"). This means said person does not live there!");
+
+        SpecialProperty specialProperty = specialPropertyRepo.findByProperty(propertyDetail.getProperty());
+        testAssert.assertNotNull(specialProperty, "New property for "+personName+" ("+personId.getNaturalId()+") is not tagged as a special property!");
     }
 }

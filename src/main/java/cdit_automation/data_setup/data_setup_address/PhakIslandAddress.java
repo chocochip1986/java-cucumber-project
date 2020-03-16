@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class PhakIslandAddress {
     private static final String STREET_NAMES[] = new String[]{
-            "Jalan Noordin", "Jalan Batu Ubin", "Jalan Sam Heng", "Jalan Jelutong", "224J Jalan Endut Senin"};
+            "ISLAND", "PULAU", "P.", "SERAYA"};
 
     private static final String BUILDING_NAMES[] = new String[]{
             "Wei Tuo Fa Gong Temple",

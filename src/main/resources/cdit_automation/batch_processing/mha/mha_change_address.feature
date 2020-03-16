@@ -165,3 +165,13 @@ Feature: MHA Change address
     And the Mha Change Address batch job completes running with status CLEANUP
     And there are no error messages
     Then john does not reside in abc since 6 days ago
+
+  @set_12
+  Scenario: John moves to an island special property address
+    Given A 60 year old singaporean person john resides a hdb property abc
+    And the mha change address file contains information that john changed from (mha_z)abc to a new (mha_z)island property 5 days ago
+    When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
+    And the Mha Change Address batch job completes running with status CLEANUP
+    And there are no error messages
+    Then john does not reside in abc since 6 days ago
+    And john resides in the island special property

@@ -98,7 +98,7 @@ public class AddressFactory extends AbstractFactory {
 
     private PropertyDetail findOrCreatePropertyData(AddressOptions addressOptions, Batch batch, Property property, BiTemporalData biTemporalData) {
         //TODO NEED TO ADD IN STREETCODE INTO THE QUERY INPUT
-        List<PropertyDetail> propertyDetailList = propertyDetailRepo.findByAddress(addressOptions.phakAbstractAddress.getUnitNo(),
+        List<PropertyDetail> propertyDetailList = propertyDetailRepo.findAllByAddress(addressOptions.phakAbstractAddress.getUnitNo(),
                 addressOptions.getPhakAbstractAddress().getBlockNo(),
                 addressOptions.getPhakAbstractAddress().getFloorNo(),
                 addressOptions.getPhakAbstractAddress().getBuildingName(),

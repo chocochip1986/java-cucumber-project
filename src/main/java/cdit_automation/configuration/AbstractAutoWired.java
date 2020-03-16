@@ -69,6 +69,8 @@ import cdit_automation.repositories.PropertyRepo;
 import cdit_automation.repositories.ReasonablenessCheckStatisticRepo;
 import cdit_automation.repositories.SingleDateHeaderValidatedRepo;
 import cdit_automation.repositories.SingleDateNoOfRecordsHeaderValidatedRepo;
+import cdit_automation.repositories.SpecialMappingRepo;
+import cdit_automation.repositories.SpecialPropertyRepo;
 import cdit_automation.repositories.view.ReasonablenessCheckStatisticViewJpaRepo;
 import cdit_automation.utilities.DateUtils;
 import cdit_automation.utilities.PersonPropertyTimelineReconstruction;
@@ -144,6 +146,8 @@ public class AbstractAutoWired {
     @Autowired protected PersonStatusRepo personStatusRepo;
     @Autowired protected IncomeRepo incomeRepo;
     @Autowired protected AnnualValueRepo annualValueRepo;
+    @Autowired protected SpecialPropertyRepo specialPropertyRepo;
+    @Autowired protected SpecialMappingRepo specialMappingRepo;
 
     @Autowired protected DeathDateValidatedRepo deathDateValidatedRepo;
     @Autowired protected NoInteractionValidatedRepo noInteractionValidatedRepo;

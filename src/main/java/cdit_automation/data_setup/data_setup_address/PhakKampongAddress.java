@@ -13,7 +13,9 @@ public class PhakKampongAddress {
     };
 
     public static PhakAbstractAddress fakeItTillYouMakeIt() {
-        return new PhakAbstractAddress(recommendAUnitNo(), recommendABlockNo(), recommendAFloorNo(), recommendAStreetName(), recommendABuildingName(), null, recommendAPostalCode(), PhakKampongAddress.class);
+        PhakAbstractAddress phakAbstractAddress = new PhakAbstractAddress(recommendAUnitNo(), recommendABlockNo(), recommendAFloorNo(), recommendAStreetName(), recommendABuildingName(), null, recommendAPostalCode(), PhakKampongAddress.class);
+        phakAbstractAddress.setSpecialProperty(true);
+        return phakAbstractAddress;
     }
 
     private static String recommendAUnitNo() {

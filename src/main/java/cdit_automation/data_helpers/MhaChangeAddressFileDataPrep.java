@@ -39,13 +39,12 @@ public class MhaChangeAddressFileDataPrep extends BatchFileDataPrep {
         batchFileDataWriter.chunkOrWrite(mhaChangeAddressFileEntry.toString());
     }
 
-    public void createLineInBodyWithNewCurAddress(PersonId personId, AddressIndicatorEnum prevIndType, PropertyDetail prevPropertyDetail, AddressIndicatorEnum curIndType, PropertyTypeEnum propertyTypeEnum, LocalDate addressChangeDate) {
-        PhakAbstractAddress phakAddress = PhakAddress.suggestAnAddress(propertyTypeEnum);
+    public void createLineInBodyWithNewCurAddress(PersonId personId, AddressIndicatorEnum prevIndType, PropertyDetail prevPropertyDetail, AddressIndicatorEnum curIndType, PhakAbstractAddress phakAbstractAddress, LocalDate addressChangeDate) {
         MhaChangeAddressFileEntry mhaChangeAddressFileEntry = new MhaChangeAddressFileEntry(personId.getNaturalId(),
                 prevIndType,
                 getAddressFileEntryFrom(prevIndType, prevPropertyDetail),
                 curIndType,
-                getAddressFileEntryFrom(curIndType, phakAddress),
+                getAddressFileEntryFrom(curIndType, phakAbstractAddress),
                 addressChangeDate.format(Phaker.DATETIME_FORMATTER_YYYYMMDD));
         batchFileDataWriter.chunkOrWrite(mhaChangeAddressFileEntry.toString());
     }
