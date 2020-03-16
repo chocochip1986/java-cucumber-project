@@ -118,7 +118,7 @@ Feature: MHA Change address
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
     And the Mha Dual Citizen batch job completes running with status CLEANUP
 
-  @set_9
+  @set_8
   Scenario: A person changes address every day
     Given A 60 year old singaporean person john owns a landed property abc
     And john owns a landed property abd
@@ -128,4 +128,5 @@ Feature: MHA Change address
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
     And the Mha Dual Citizen batch job completes running with status CLEANUP
     And there are no error messages
+    Then john does not reside in abd since 6 days ago
     And john resides in abc from 5 days ago
