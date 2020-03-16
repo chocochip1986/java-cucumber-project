@@ -71,6 +71,7 @@ import cdit_automation.repositories.SingleDateHeaderValidatedRepo;
 import cdit_automation.repositories.SingleDateNoOfRecordsHeaderValidatedRepo;
 import cdit_automation.repositories.view.ReasonablenessCheckStatisticViewJpaRepo;
 import cdit_automation.utilities.DateUtils;
+import cdit_automation.utilities.PersonPropertyTimelineReconstruction;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.function.Predicate;
@@ -167,6 +168,7 @@ public class AbstractAutoWired {
 
     @Autowired protected AddressJacksonObjectMapper addressJacksonObjectMapper;
 
+    @Autowired protected PersonPropertyTimelineReconstruction personPropertyTimelineReconstruction;
 
     protected int parseStringSize(String size) {
         try {

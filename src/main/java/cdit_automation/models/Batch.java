@@ -2,6 +2,7 @@ package cdit_automation.models;
 
 import cdit_automation.enums.BatchStatusEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.cucumber.java.Before;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

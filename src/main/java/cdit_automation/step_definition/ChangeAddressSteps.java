@@ -24,6 +24,7 @@ import org.junit.Ignore;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +51,7 @@ public class ChangeAddressSteps extends AbstractSteps{
         PropertyTypeEnum propertyTypeEnum = retrievePropertyOrError(propertyType);
         LocalDate birthDate = age == null ? dateUtils.yearsBeforeToday(40) : dateUtils.yearsBeforeToday(age);
 
-        PersonId personId = residentialStatus.equals("singaporean") ? personFactory.createNewSCPersonId(birthDate) : personFactory.createNewFRPersonId(birthDate);
+        PersonId personId = residentialStatus.equals("singaporean") ? personFactory.createNewSCPersonId(birthDate, person) : personFactory.createNewFRPersonId(birthDate, person);
 
         testContext.set(propertyName, addressFactory.createPropertyFor(personId.getPerson(), getOwnershipType(residency), propertyTypeEnum));
         testContext.set(person, personId);
@@ -245,5 +246,33 @@ public class ChangeAddressSteps extends AbstractSteps{
                     dateUtils.beginningOfDayToTimestamp(addressChangeDate));
         }
 
+    }
+
+    @And("^([A-Za-z]+) had lived in a ([a-z_]+) property ([a-z_]+) from ([0-9]+\\s(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\\s[0-9]{4}) to ([0-9]+\\s(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\\s[0-9]{4})$")
+    public void personHadLivedInAPropertyFromYearsAgoToYearsAgo(String personName, String propertyType, String propertyName, String validFromString, String validTillString) {
+        checkIfPersonExistsInTestContext(personName);
+        PropertyTypeEnum propertyTypeEnum = retrievePropertyOrError(propertyType);
+
+        PersonId personId = testContext.get(personName);
+
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd MMM uuuu");
+        LocalDate validFrom = LocalDate.parse(validFromString, format);
+        LocalDate validTill = LocalDate.parse(validTillString, format);
+
+        List<PersonProperty> originalPersonProperties = personPropertyRepo.findAllResidencesByPersonOrderByValidFromDesc(personId.getPerson());
+
+        testContext.set(propertyName, addressFactory.createPropertyFor(personId.getPerson(), ResidencyEnum.RESIDENCE, propertyTypeEnum));
+        PropertyDetail propertyDetail = testContext.get(propertyName);
+
+        personPropertyRepo.updateValidFromAndValidTill(personId.getPerson(),
+                propertyDetail.getProperty(),
+                dateUtils.beginningOfDayToTimestamp(validFrom),
+                dateUtils.endOfDayToTimestamp(validTill));
+        PersonProperty personProperty = personPropertyRepo.findByPersonAndPropertyAndType(
+                personId.getPerson(),
+                propertyDetail.getProperty(),
+                PersonPropertyTypeEnum.RESIDENCE.name(),
+                dateUtils.beginningOfDayToTimestamp(validFrom));
+        personPropertyTimelineReconstruction.reconstructResidenceTimelineFor(personId.getPerson(), originalPersonProperties, personProperty);
     }
 }

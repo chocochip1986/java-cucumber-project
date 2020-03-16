@@ -28,6 +28,15 @@ test-env:
   explicit-wait: 10
   wait: 10
   fail-fast: true
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
 aws:
   sns:
     topicArn: ""
