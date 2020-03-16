@@ -16,6 +16,7 @@ public enum PropertyTypeEnum {
     ORPHANAGE("orphanage"),
     NURSING("nursing"),
     BUSINESS("business"),
+    LORONG_BUANGKOK("lorong_buangkok"),
     EDUCATION("education");
 
     private String name;

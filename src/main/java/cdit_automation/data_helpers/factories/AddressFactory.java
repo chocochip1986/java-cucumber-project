@@ -14,6 +14,7 @@ import cdit_automation.models.PersonDetail;
 import cdit_automation.models.PersonProperty;
 import cdit_automation.models.Property;
 import cdit_automation.models.PropertyDetail;
+import cdit_automation.models.SpecialProperty;
 import cdit_automation.models.embeddables.BiTemporalData;
 import cdit_automation.models.embeddables.PersonPropertyId;
 import lombok.Getter;
@@ -68,6 +69,10 @@ public class AddressFactory extends AbstractFactory {
         batchRepo.save(batch);
         propertyRepo.save(property);
         propertyDetailRepo.save(propertyDetail);
+
+        if ( addressOptions.getPhakAbstractAddress().isSpecialProperty() ) {
+            specialPropertyRepo.save(SpecialProperty.create(batch, property, addressOptions.getPhakAbstractAddress().getSpecialMappingEnum(), addressOptions.getPhakAbstractAddress().getHomeTypeEnum(), biTemporalData));
+        }
 
         if ( addressOptions.ownershipEnum.equals(ResidencyEnum.BOTH) ) {
             personPropertyRepo.save(PersonProperty.create(batch, personPropertyId, PersonPropertyTypeEnum.RESIDENCE, biTemporalData));

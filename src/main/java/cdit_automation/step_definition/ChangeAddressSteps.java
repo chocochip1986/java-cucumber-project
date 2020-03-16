@@ -299,5 +299,6 @@ public class ChangeAddressSteps extends AbstractSteps{
 
         SpecialProperty specialProperty = specialPropertyRepo.findByProperty(propertyDetail.getProperty());
         testAssert.assertNotNull(specialProperty, "New property for "+personName+" ("+personId.getNaturalId()+") is not tagged as a special property!");
+        testAssert.assertEquals(phakAbstractAddress.getSpecialMappingEnum(), specialProperty.getMainType(), "Special Property type is incorrect!");
     }
 }

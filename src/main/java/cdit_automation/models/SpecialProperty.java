@@ -60,4 +60,12 @@ public class SpecialProperty extends AbstractEntity {
     @JsonIgnore
     @Embedded
     private BiTemporalData biTemporalData;
+
+    public static SpecialProperty create(Batch batch, Property property, SpecialMappingEnum specialMappingEnum, HomeTypeEnum homeTypeEnum, BiTemporalData biTemporalData) {
+        return build(batch, property, specialMappingEnum, homeTypeEnum, biTemporalData);
+    }
+
+    private static SpecialProperty build(Batch batch, Property property, SpecialMappingEnum specialMappingEnum, HomeTypeEnum homeTypeEnum, BiTemporalData biTemporalData) {
+        return SpecialProperty.builder().batch(batch).property(property).mainType(specialMappingEnum).subType(homeTypeEnum).biTemporalData(biTemporalData).build();
+    }
 }

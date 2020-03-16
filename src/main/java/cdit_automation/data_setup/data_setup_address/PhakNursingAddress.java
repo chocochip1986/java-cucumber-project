@@ -1,6 +1,8 @@
 package cdit_automation.data_setup.data_setup_address;
 
 import cdit_automation.data_setup.Phaker;
+import cdit_automation.enums.HomeTypeEnum;
+import cdit_automation.enums.SpecialMappingEnum;
 
 import java.util.Random;
 
@@ -20,6 +22,8 @@ public class PhakNursingAddress {
     public static PhakAbstractAddress fakeItTillYouMakeIt() {
         PhakAbstractAddress phakAbstractAddress = new PhakAbstractAddress(recommendAUnitNo(), recommendABlockNo(), recommendAFloorNo(), recommendAStreetName(), recommendABuildingName(), null, recommendAPostalCode(), PhakNursingAddress.class);
         phakAbstractAddress.setSpecialProperty(true);
+        phakAbstractAddress.setSpecialMappingEnum(SpecialMappingEnum.NURSING_HOMES);
+        phakAbstractAddress.setHomeTypeEnum(HomeTypeEnum.pick());
         return phakAbstractAddress;
     }
 

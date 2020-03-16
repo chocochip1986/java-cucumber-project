@@ -1,6 +1,8 @@
 package cdit_automation.data_setup.data_setup_address;
 
 
+import cdit_automation.enums.HomeTypeEnum;
+import cdit_automation.enums.SpecialMappingEnum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +21,8 @@ public class PhakAbstractAddress {
 
     protected Class klass;
     protected boolean isSpecialProperty;
+    protected SpecialMappingEnum specialMappingEnum;
+    protected HomeTypeEnum homeTypeEnum;
 
     public PhakAbstractAddress(String unitNo, String blockNo, String floorNo, String streetName, String buildingName, String oldPostalCode, String postalCode, Class klass) {
         this.unitNo = unitNo;
@@ -30,5 +34,7 @@ public class PhakAbstractAddress {
         this.postalCode = postalCode;
         this.klass = klass;
         isSpecialProperty = false;
+        specialMappingEnum = null;
+        homeTypeEnum = null;
     }
 }

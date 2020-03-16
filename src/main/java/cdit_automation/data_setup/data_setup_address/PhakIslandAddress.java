@@ -1,6 +1,7 @@
 package cdit_automation.data_setup.data_setup_address;
 
 import cdit_automation.data_setup.Phaker;
+import cdit_automation.enums.SpecialMappingEnum;
 
 import java.util.Random;
 
@@ -19,6 +20,9 @@ public class PhakIslandAddress {
     };
 
     public static PhakAbstractAddress fakeItTillYouMakeIt() {
+        PhakAbstractAddress phakAbstractAddress = new PhakAbstractAddress(null, null, null, recommendAStreetName(), recommendABuildingName(), null, recommendAPostalCode(), PhakIslandAddress.class);
+        phakAbstractAddress.setSpecialProperty(true);
+        phakAbstractAddress.setSpecialMappingEnum(SpecialMappingEnum.SPECIAL_ISLAND_STREET_NAME);
         return new PhakAbstractAddress(null, null, null, recommendAStreetName(), recommendABuildingName(), null, recommendAPostalCode(), PhakIslandAddress.class);
     }
 

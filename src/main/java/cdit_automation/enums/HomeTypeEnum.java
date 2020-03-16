@@ -1,5 +1,7 @@
 package cdit_automation.enums;
 
+import java.util.Random;
+
 public enum HomeTypeEnum {
     COMMUNITY_GROUP_HOME("0"),
     COMMUNITY_HOSPITAL("1"),
@@ -35,5 +37,9 @@ public enum HomeTypeEnum {
             }
         }
         return null;
+    }
+
+    public static HomeTypeEnum pick() {
+        return HomeTypeEnum.values()[new Random().nextInt(HomeTypeEnum.values().length)];
     }
 }
