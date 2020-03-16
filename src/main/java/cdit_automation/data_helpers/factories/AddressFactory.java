@@ -51,22 +51,9 @@ public class AddressFactory extends AbstractFactory {
         }
     }
 
-    public PropertyDetail createPropertyFor(Person person, ResidencyEnum ownershipEnum, PropertyTypeEnum propertyTypeEnum, PhakAbstractAddress phakAbstractAddress ) {
-        AddressOptions addressOptions = new AddressOptions(propertyTypeEnum, ownershipEnum, phakAbstractAddress);
-        return createProperty(person, addressOptions);
-    }
-
     public PropertyDetail createPropertyFor(Person person, ResidencyEnum ownershipEnum, PropertyTypeEnum propertyTypeEnum) {
         AddressOptions addressOptions = new AddressOptions(propertyTypeEnum, ownershipEnum);
         return createProperty(person, addressOptions);
-    }
-
-    public PropertyDetail createPropertyFor(Person person, ResidencyEnum ownershipEnum, PropertyTypeEnum propertyTypeEnum, LocalDate validTill) {
-        AddressOptions addressOptions = new AddressOptions(propertyTypeEnum, ownershipEnum);
-        Batch batch = Batch.createCompleted();
-        Property property = Property.builder().build();
-
-        return PropertyDetail.builder().build();
     }
 
     private PropertyDetail createProperty(Person person, AddressOptions addressOptions) {
@@ -94,25 +81,6 @@ public class AddressFactory extends AbstractFactory {
         }
 
         return propertyDetail;
-    }
-
-    private PropertyDetail findOrCreatePropertyData(AddressOptions addressOptions, Batch batch, Property property, BiTemporalData biTemporalData) {
-        //TODO NEED TO ADD IN STREETCODE INTO THE QUERY INPUT
-        List<PropertyDetail> propertyDetailList = propertyDetailRepo.findAllByAddress(addressOptions.phakAbstractAddress.getUnitNo(),
-                addressOptions.getPhakAbstractAddress().getBlockNo(),
-                addressOptions.getPhakAbstractAddress().getFloorNo(),
-                addressOptions.getPhakAbstractAddress().getBuildingName(),
-                addressOptions.getPhakAbstractAddress().getStreetName(),
-                addressOptions.getPhakAbstractAddress().getPostalCode(),
-                addressOptions.getPhakAbstractAddress().getOldPostalCode(),
-                addressOptions.getPhakAbstractAddress().getPostalCode());
-
-        if (propertyDetailList.isEmpty()) {
-            //TODO CREATE NEW PROPERTY DETAIL
-        } else {
-            //TODO USE EXISTING ONE
-        }
-        return propertyDetailList.get(0);
     }
 
     private PropertyDetail createPropertyData(AddressOptions addressOptions, Batch batch, Property property, BiTemporalData biTemporalData) {
