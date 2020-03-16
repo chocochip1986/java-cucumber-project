@@ -108,7 +108,7 @@ Feature: MHA Change address
       | nca                    | mha_c                 |
       | nca                    | nca                   |
 
-  @set_6
+  @set_7
   Scenario: Change address file states a previous address that a person once lived in
     Given A 60 year old singaporean person john owns a landed property abc
     And john owns a landed property abd
@@ -118,12 +118,14 @@ Feature: MHA Change address
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
     And the Mha Dual Citizen batch job completes running with status CLEANUP
 
-  @set_7
+  @set_9
   Scenario: A person changes address every day
     Given A 60 year old singaporean person john owns a landed property abc
     And john owns a landed property abd
     And john resides in a condo property abe
-    And mha change address file states that john moved from abe to abd 5 days ago
-    And the mha change address file contains information that john changed from (mha_z)abd to (mha_z)abc 4 days ago
+    And mha change address file states that john moved from abe to abd 6 days ago
+    And the mha change address file contains information that john changed from (mha_z)abd to (mha_z)abc 5 days ago
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
     And the Mha Dual Citizen batch job completes running with status CLEANUP
+    And there are no error messages
+    And john resides in abc from 5 days ago
