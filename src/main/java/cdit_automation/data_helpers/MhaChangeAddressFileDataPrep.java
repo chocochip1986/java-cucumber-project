@@ -202,9 +202,9 @@ public class MhaChangeAddressFileDataPrep extends BatchFileDataPrep {
         PhakAbstractAddress phakAddress = PhakAddress.suggestAnAddress(prevPropertyTypeEnum);
         MhaChangeAddressFileEntry mhaChangeAddressFileEntry = new MhaChangeAddressFileEntry(personId.getNaturalId(),
                 prevIndType,
-                getAddressFileEntryFrom(curIndType, phakAddress),
+                getAddressFileEntryFrom(prevIndType, phakAddress),
                 curIndType,
-                getAddressFileEntryFrom(prevIndType, propertyDetail),
+                getAddressFileEntryFrom(curIndType, propertyDetail),
                 addressChangeDate.format(Phaker.DATETIME_FORMATTER_YYYYMMDD));
         batchFileDataWriter.chunkOrWrite(mhaChangeAddressFileEntry.toString());
     }
@@ -214,9 +214,9 @@ public class MhaChangeAddressFileDataPrep extends BatchFileDataPrep {
         PhakAbstractAddress curPhakAddress = PhakAddress.suggestAnAddress(curPropertyTypeEnum);
         MhaChangeAddressFileEntry mhaChangeAddressFileEntry = new MhaChangeAddressFileEntry(personId.getNaturalId(),
                 prevIndType,
-                getAddressFileEntryFrom(curIndType, prevPhakAddress),
+                getAddressFileEntryFrom(prevIndType, prevPhakAddress),
                 curIndType,
-                getAddressFileEntryFrom(prevIndType, curPhakAddress),
+                getAddressFileEntryFrom(curIndType, curPhakAddress),
                 addressChangeDate.format(Phaker.DATETIME_FORMATTER_YYYYMMDD));
         batchFileDataWriter.chunkOrWrite(mhaChangeAddressFileEntry.toString());
     }

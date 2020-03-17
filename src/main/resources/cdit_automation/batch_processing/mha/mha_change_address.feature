@@ -28,7 +28,7 @@ Feature: MHA Change address
     Given A 60 year old singaporean person john owns a landed property abc
     And john owns a landed property abd
     And john resides in a condo property abe
-    And the mha change address file contains information that john changed from (<prev_address_indicator>)abe to a new (<cur_address_indicator>)hdb property 5 days ago
+    And the mha change address file contains information that john changed from (<prev_address_indicator>)abe to a new (<cur_address_indicator>)condo property 5 days ago
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
     And the Mha Change Address batch job completes running with status CLEANUP
     And there are no error messages
@@ -74,7 +74,7 @@ Feature: MHA Change address
     And john resides in a condo property abe
     And the mha change address file contains information that john changed from a new (<prev_address_indicator>)hdb property to (<cur_address_indicator>)abc 5 days ago
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
-    And the Mha Change Address batch job completes running with status CLEANUP
+    And the Mha Change Address batch job completes running with status VALIDATED_TO_PREPARED_ERROR
     And the error message contains Invalid validity of old address
     Examples:
       | prev_address_indicator | cur_address_indicator |
@@ -95,8 +95,8 @@ Feature: MHA Change address
     And john resides in a condo property abe
     And the mha change address file contains information that john changed from a new (<prev_address_indicator>)abc property to a new (<cur_address_indicator>)landed property 5 days ago
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
-    And the Mha Change Address batch job completes running with status CLEANUP
-    And the error message contains <any>
+    And the Mha Change Address batch job completes running with status VALIDATED_TO_PREPARED_ERROR
+    And the error message contains Invalid validity of old address
     Examples:
       | prev_address_indicator | cur_address_indicator |
       | mha_z                  | mha_z                 |
@@ -176,9 +176,9 @@ Feature: MHA Change address
     And the Mha Change Address batch job completes running with status CLEANUP
     And there are no error messages
     Then john does not reside in abc since 6 days ago
-    And john resides in the island special property
+    And john resides in the lorong buangkok special property
 
-  @set_13
+  @set_13 @defect
   Scenario Outline: John moves to a new special property address
     Given A 60 year old singaporean person john resides a hdb property abc
     And the mha change address file contains information that john changed from (<prev_address_indicator>)abc to a new (<cur_address_indicator>)lorong_buangkok property 5 days ago
@@ -186,7 +186,7 @@ Feature: MHA Change address
     And the Mha Change Address batch job completes running with status CLEANUP
     And there are no error messages
     Then john does not reside in abc since 6 days ago
-    And john resides in the island special property
+    And john resides in the new lorong buangkok special property
     Examples:
       | prev_address_indicator | cur_address_indicator |
       | mha_z                  | mha_z                 |

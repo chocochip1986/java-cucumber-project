@@ -6,11 +6,11 @@ import cdit_automation.data_setup.data_setup_address.PhakAbstractAddress;
 import cdit_automation.enums.AddressIndicatorEnum;
 import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.enums.PersonPropertyTypeEnum;
+import cdit_automation.enums.SpecialMappingEnum;
 import cdit_automation.enums.automation.PropertyTypeEnum;
 import cdit_automation.enums.automation.ResidencyEnum;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.Batch;
-import cdit_automation.models.PersonDetail;
 import cdit_automation.models.PersonId;
 import cdit_automation.models.PersonProperty;
 import cdit_automation.models.PropertyDetail;
@@ -103,6 +103,8 @@ public class ChangeAddressSteps extends AbstractSteps {
                 addressIndicatorEnumFrom(curIndicatorType),
                 testContext.get(curPropertyName), dateUtils.daysBeforeToday(daysAgo));
         batchFileDataWriter.end();
+
+        testContext.set("expectedNewAddress", testContext.get(curPropertyName));
     }
 
     @And("^the mha change address file contains information that ([A-Za-z]+) changed from \\((mha_z|mha_c|nca)\\)([a-z0-9]+) to a new \\((mha_z|mha_c|nca)\\)([a-z_]+) property " +
@@ -287,8 +289,25 @@ public class ChangeAddressSteps extends AbstractSteps {
         personPropertyTimelineReconstruction.reconstructResidenceTimelineFor(personId.getPerson(), originalPersonProperties, personProperty);
     }
 
-    @And("^([A-Za-z]+) resides in the (island|nursing) special property$")
-    public void personResidesInTheSpecialProperty(String personName, String propertyType) {
+    @And("^([A-Za-z]+) resides in the lorong buangkok special property$")
+    public void personResidesInTheSpecialProperty(String personName) {
+        checkIfPersonExistsInTestContext(personName);
+
+        PersonId personId = testContext.get(personName);
+
+        PropertyDetail propertyDetail = testContext.get("expectedNewAddress");
+        testAssert.assertNotNull(propertyDetail, "No property details created for new address!");
+
+        PersonProperty personProperty = personPropertyRepo.findByPersonAndPropertyAndType(personId.getPerson(), propertyDetail.getProperty(), PersonPropertyTypeEnum.RESIDENCE.name());
+        testAssert.assertNotNull(personProperty, "No person property record created for "+personName+" ("+personId.getNaturalId()+"). This means said person does not live there!");
+
+        SpecialProperty specialProperty = specialPropertyRepo.findByProperty(propertyDetail.getProperty());
+        testAssert.assertNotNull(specialProperty, "New property for "+personName+" ("+personId.getNaturalId()+") is not tagged as a special property!");
+        testAssert.assertEquals(SpecialMappingEnum.LORONG_BUANGKOK, specialProperty.getMainType(), "Special Property type is incorrect!");
+    }
+
+    @And("^([A-Za-z]+) resides in the new lorong buangkok special property$")
+    public void personResidesInTheNewSpecialProperty(String personName) {
         checkIfPersonExistsInTestContext(personName);
 
         PersonId personId = testContext.get(personName);
