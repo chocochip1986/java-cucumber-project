@@ -67,7 +67,7 @@ public class MhaChangeAddressFileDataPrep extends BatchFileDataPrep {
 
             LocalDate addressChangeDate;
             if(addressChangeDateString != null && !addressChangeDateString.isEmpty()) {
-                addressChangeDate = new DateUtils().parse(addressChangeDateString);
+                addressChangeDate = dateUtils.parse(addressChangeDateString);
             } else {
                 addressChangeDate = TestConstants.DEFAULT_EXTRACTION_DATE;
             }
