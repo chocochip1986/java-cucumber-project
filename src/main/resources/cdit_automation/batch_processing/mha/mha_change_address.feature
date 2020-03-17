@@ -11,19 +11,42 @@ Feature: MHA Change address
     And the error message contains Must have at least 1 valid body record
 
   @set_2
-  Scenario: CDS successfully processes a MHA change address file
-    Given A singaporean person john owns a landed property abc
-    And john owns a landed property abd
-    And john resides in a condo property abe
+  Scenario: CDS fails to processes a MHA change address file with partial duplicated records of same NRIC but different current address
+    Given A singaporean person john resides in a landed property abc
     And the mha change address file contains the following details:
-    | person | previous_address                                                                                           | current_address                                                                                            | address_change_dte |
-    | john   | Existing:abd,AddrType:C                                                                                    | IndType:Z,AddrType:C,Block:12B,Street:16 Sheraton Street,Unit:13,Floor:12,Building:The Clive,Postal:232902 | 20190909           |
-    | john   | Existing:abc,AddrType:C                                                                                    | IndType:Z,AddrType:C,Block:12B,Street:16 Sheraton Street,Unit:13,Floor:12,Building:The Clive,Postal:232902 | 20190909           |
+    | person | previous_address        | current_address                                                                                            | address_change_dte |
+    | john   | Existing:abc,AddrType:C | IndType:Z,AddrType:C,Block:12B,Street:16 Sheraton Street,Unit:13,Floor:12,Building:The Clive,Postal:232902 | 20190909           |
+    | john   | Existing:abc,AddrType:C | IndType:Z,AddrType:C,Block:14B,Street:22 Jalan Besar,Unit:14,Floor:40,Building:City View,Postal:232902     | 20190909           |
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
-    And the Mha Change Address batch job completes running with status CLEANUP
-    And the error message contains Must have at least 1 valid body record
+    And the Mha Change Address batch job completes running with status BULK_CHECK_VALIDATION_ERROR
+    And the error message contains Partially Duplicate Record found.
 
   @set_3
+  Scenario: CDS processes a MHA change address file with full duplicated records of same NRIC and current address
+    Given A singaporean person john resides in a landed property abc
+    And A singaporean person jane resides in a condo property efg
+    And the mha change address file contains the following details:
+      | person | previous_address        | current_address                                                                                            | address_change_dte |
+      | jane   | Existing:efg,AddrType:C | IndType:Z,AddrType:C,Block:13C,Street:22 Hilton Street,Unit:22,Floor:32,Building:The Sail,Postal:232903    | 20190909           |
+      | john   | Existing:abc,AddrType:C | IndType:Z,AddrType:C,Block:12B,Street:16 Sheraton Street,Unit:13,Floor:12,Building:The Clive,Postal:232902 | 20190909           |
+      | john   | Existing:abc,AddrType:C | IndType:Z,AddrType:C,Block:12B,Street:16 Sheraton Street,Unit:13,Floor:12,Building:The Clive,Postal:232902 | 20190909           |
+    When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
+    And the Mha Change Address batch job completes running with status CLEANUP
+    And the error message contains Completely Duplicate Record found.
+
+  @set_4
+  Scenario: CDS fails to processes a MHA change address file with both full and partial duplicated records for same NRIC
+    Given A singaporean person john resides in a landed property abc
+    And the mha change address file contains the following details:
+      | person | previous_address        | current_address                                                                                            | address_change_dte |
+      | john   | Existing:abc,AddrType:C | IndType:Z,AddrType:C,Block:12B,Street:16 Sheraton Street,Unit:13,Floor:12,Building:The Clive,Postal:232902 | 20190909           |
+      | john   | Existing:abc,AddrType:C | IndType:Z,AddrType:C,Block:12B,Street:16 Sheraton Street,Unit:13,Floor:12,Building:The Clive,Postal:232902 | 20190909           |
+      | john   | Existing:abc,AddrType:C | IndType:Z,AddrType:C,Block:14B,Street:22 Jalan Besar,Unit:14,Floor:40,Building:City View,Postal:232902     | 20190909           |
+    When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
+    And the Mha Change Address batch job completes running with status BULK_CHECK_VALIDATION_ERROR
+    And the error message contains Partially Duplicate Record found.
+
+  @set_5
   Scenario Outline: CDS successfully updates address information to a non existent address
     Given A 60 year old singaporean person john owns a landed property abc
     And john owns a landed property abd
@@ -35,17 +58,17 @@ Feature: MHA Change address
     Then john does not reside in abe since 6 days ago
   Examples:
     | prev_address_indicator | cur_address_indicator |
-#    | mha_z                  | mha_z                 |
-#    | mha_z                  | mha_c                 |
-#    | mha_z                  | nca                   |
-#    | mha_c                  | mha_z                 |
-#    | mha_c                  | mha_c                 |
-#    | mha_c                  | nca                   |
-#    | nca                    | mha_z                 |
-#    | nca                    | mha_c                 |
+    | mha_z                  | mha_z                 |
+    | mha_z                  | mha_c                 |
+    | mha_z                  | nca                   |
+    | mha_c                  | mha_z                 |
+    | mha_c                  | mha_c                 |
+    | mha_c                  | nca                   |
+    | nca                    | mha_z                 |
+    | nca                    | mha_c                 |
     | nca                    | nca                   |
 
-  @set_4
+  @set_6
   Scenario Outline: CDS successfully updates address information to an existing address
     Given A singaporean person john owns a landed property abc
     And john owns a landed property abd
@@ -67,7 +90,7 @@ Feature: MHA Change address
     | nca                    | mha_c                 |
     | nca                    | nca                   |
 
-  @set_5
+  @set_7
   Scenario Outline: CDS is unable to map a person's previous address if it does not exist in the system
     Given A singaporean person john owns a landed property abc
     And john owns a landed property abd
@@ -88,7 +111,7 @@ Feature: MHA Change address
       | nca                    | mha_c                 |
       | nca                    | nca                   |
 
-  @set_6
+  @set_8
   Scenario Outline: CDS is unable to map a persons' addresses when both are non-existent
     Given A singaporean person john owns a landed property abc
     And john owns a landed property abd
@@ -109,7 +132,7 @@ Feature: MHA Change address
       | nca                    | mha_c                 |
       | nca                    | nca                   |
 
-  @set_7
+  @set_9
   Scenario: Change address file states a previous address that a person once lived in
     Given A 60 year old singaporean person john owns a landed property abc
     And john owns a landed property abd
@@ -119,7 +142,7 @@ Feature: MHA Change address
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
     And the Mha Change Address batch job completes running with status CLEANUP
 
-  @set_8
+  @set_10
   Scenario: A person changes address every day
     Given A 60 year old singaporean person john owns a landed property abc
     And john owns a landed property abd
@@ -132,7 +155,7 @@ Feature: MHA Change address
     Then john does not reside in abd since 6 days ago
     And john resides in abc from 5 days ago
 
-  @set_9
+  @set_11
   Scenario: John moves to an existing address that Jane is living in
     Given A 30 year old singaporean person john owns a landed property abc
     And john resides in a hdb property abd
@@ -144,7 +167,7 @@ Feature: MHA Change address
     Then john does not reside in abd since 6 days ago
     And john resides in abe from 5 days ago
 
-  @set_10
+  @set_12
   Scenario: John moves back to the same address
     Given A 60 year old singaporean person john owns a hdb property abc
     And john resides in a condo property abd
@@ -156,7 +179,7 @@ Feature: MHA Change address
     Then john does not reside in abc since 6 days ago
     And john resides in abd from 5 days ago
 
-  @set_11
+  @set_13
   Scenario: Person has changed his address many times in the past and mha tells us that he change address again
     Given A 30 year old singaporean person john resides a hdb property abc
     And john had lived in a hdb property abd from 12 Jan 2000 to 12 Jan 2015
@@ -167,7 +190,7 @@ Feature: MHA Change address
     And there are no error messages
     Then john does not reside in abc since 6 days ago
 
-  @set_12
+  @set_14
   Scenario: John moves to an existing special property address
     Given A 60 year old singaporean person john resides a hdb property abc
     And A 40 year old singaporean person jane resides in a lorong_buangkok property abe
@@ -178,7 +201,7 @@ Feature: MHA Change address
     Then john does not reside in abc since 6 days ago
     And john resides in the lorong buangkok special property
 
-  @set_13 @defect
+  @set_15 @defect
   Scenario Outline: John moves to a new special property address
     Given A 60 year old singaporean person john resides a hdb property abc
     And the mha change address file contains information that john changed from (<prev_address_indicator>)abc to a new (<cur_address_indicator>)lorong_buangkok property 5 days ago

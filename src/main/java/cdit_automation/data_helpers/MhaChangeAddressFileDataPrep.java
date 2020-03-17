@@ -1,6 +1,7 @@
 package cdit_automation.data_helpers;
 
 import cdit_automation.configuration.StepDefLevelTestContext;
+import cdit_automation.constants.TestConstants;
 import cdit_automation.data_helpers.batch_entities.AddressFileEntry;
 import cdit_automation.data_helpers.batch_entities.MhaAddressFileEntry;
 import cdit_automation.data_helpers.batch_entities.MhaChangeAddressFileEntry;
@@ -63,7 +64,13 @@ public class MhaChangeAddressFileDataPrep extends BatchFileDataPrep {
 
             // Retrieve personId & changeAddressDate
             PersonId personId = testContext.get(personKey);
-            LocalDate addressChangeDate = new DateUtils().parse(addressChangeDateString);
+
+            LocalDate addressChangeDate;
+            if(addressChangeDateString != null && !addressChangeDateString.isEmpty()) {
+                addressChangeDate = new DateUtils().parse(addressChangeDateString);
+            } else {
+                addressChangeDate = TestConstants.DEFAULT_EXTRACTION_DATE;
+            }
             
             // Retrieve previous address information
             Pair<AddressIndicatorEnum, PropertyDetail> prevPropertyDetailPair = processAddressString(previousAddressString, testContext);
