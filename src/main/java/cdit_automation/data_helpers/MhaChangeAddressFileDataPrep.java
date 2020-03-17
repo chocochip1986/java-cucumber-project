@@ -16,8 +16,8 @@ import cdit_automation.exceptions.TestDataSetupErrorException;
 import cdit_automation.models.PersonId;
 import cdit_automation.models.PropertyDetail;
 import cdit_automation.utilities.DateUtils;
-import javafx.util.Pair;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -35,14 +35,15 @@ public class MhaChangeAddressFileDataPrep extends BatchFileDataPrep {
     private static final String CURRENT_ADDRESS = "current_address";
     private static final String ADDRESS_CHANGE_DATE = "address_change_dte";
     
-    private static final int NO_OF_IDENTIFIERS_FOR_EXISTING_ADDR = 1;
-    private static final int NO_OF_IDENTIFIERS_FOR_NEW_ADDR = 7;
+    private static final int NO_OF_IDENTIFIERS_FOR_EXISTING_ADDR = 2;
+    private static final int NO_OF_IDENTIFIERS_FOR_NEW_ADDR = 8;
     private static final String IDENTIFIER_DELIMITER = ",";
     private static final String KEY_VALUE_DELIMITER = ":";
     
     // Address identifiers
     private static final String EXISTING = "Existing";
     private static final String INDICATOR_TYPE = "IndType";
+    private static final String ADDRESS_TYPE = "AddrType";
     private static final String BLOCK = "Block";
     private static final String STREET = "Street";
     private static final String UNIT = "Unit";
@@ -54,107 +55,128 @@ public class MhaChangeAddressFileDataPrep extends BatchFileDataPrep {
         
         for (Map<String, String> changeAddress : changeAddressList) {
             
+            // Retrieve the inputs
             String personKey = changeAddress.get(PERSON);
             String previousAddressString = changeAddress.get(PREVIOUS_ADDRESS);
             String currentAddressString = changeAddress.get(CURRENT_ADDRESS);
             String addressChangeDateString = changeAddress.get(ADDRESS_CHANGE_DATE);
 
+            // Retrieve personId & changeAddressDate
             PersonId personId = testContext.get(personKey);
-            
-            Pair<AddressIndicatorEnum, PropertyDetail> prevPropertyDetailPair = processAddressString(previousAddressString, testContext);
-            Pair<AddressIndicatorEnum, PropertyDetail> curPropertyDetailPair = processAddressString(currentAddressString, testContext);
-            
-            AddressIndicatorEnum prevIndType = prevPropertyDetailPair.getKey();
-            PropertyDetail prevPropertyDetail = prevPropertyDetailPair.getValue();
-
-            AddressIndicatorEnum curIndType = curPropertyDetailPair.getKey();
-            PropertyDetail curPropertyDetail = curPropertyDetailPair.getValue();
-            
             LocalDate addressChangeDate = new DateUtils().parse(addressChangeDateString);
             
+            // Retrieve previous address information
+            Pair<AddressIndicatorEnum, PropertyDetail> prevPropertyDetailPair = processAddressString(previousAddressString, testContext);
+            AddressIndicatorEnum prevIndType = prevPropertyDetailPair.getKey();
+            PropertyDetail prevPropertyDetail = prevPropertyDetailPair.getValue();
+            
+            // Retrieve current address information
+            Pair<AddressIndicatorEnum, PropertyDetail> curPropertyDetailPair = processAddressString(currentAddressString, testContext);
+            AddressIndicatorEnum curIndType = curPropertyDetailPair.getKey();
+            PropertyDetail curPropertyDetail = curPropertyDetailPair.getValue();
+
+            // Generate the body string
             createLineInBody(personId, prevIndType, prevPropertyDetail, curIndType, curPropertyDetail, addressChangeDate);
         }
     }
     
     private Pair<AddressIndicatorEnum, PropertyDetail> processAddressString(String addressString, StepDefLevelTestContext testContext) {
 
-        List<String> optionsList = 
-                Arrays.stream(addressString.split(IDENTIFIER_DELIMITER)).collect(Collectors.toList());
-        
+        List<String> optionsList = Arrays.stream(addressString.split(IDENTIFIER_DELIMITER)).collect(Collectors.toList());
         int size = optionsList.size();
         
         if (NO_OF_IDENTIFIERS_FOR_EXISTING_ADDR == size) {
+            // Retrieve existing address
+            return getAddrIndicatorPropertyDetailOfExistingAddress(testContext, optionsList);
             
-            String[] keyValue = optionsList.get(0).split(KEY_VALUE_DELIMITER);
-
-            if (!EXISTING.equals(keyValue[0])) {
-                throw new TestDataSetupErrorException("'" + EXISTING + "' must always be the parameter name when retrieving current address.");
-            }
-
-            PropertyDetail propertyDetail = testContext.get(keyValue[1]);
-            AddressIndicatorEnum addressIndicator = (FormatType.NCA.equals(propertyDetail.getFormatType())) ? AddressIndicatorEnum.NCA : AddressIndicatorEnum.MHA_Z;
-            
-            return new Pair<>(addressIndicator, propertyDetail);
-           
         } else if (NO_OF_IDENTIFIERS_FOR_NEW_ADDR == size) {
-            
-            String[] keyValue = optionsList.get(0).split(KEY_VALUE_DELIMITER);
-            
-            if (!INDICATOR_TYPE.equals(keyValue[0])) {
-                throw new TestDataSetupErrorException("'" + INDICATOR_TYPE + "' must always be the first parameter.");
-            }
-            
-            AddressIndicatorEnum addressIndicatorEnum = AddressIndicatorEnum.fromString(keyValue[1]);
-            PropertyDetail propertyDetail = new PropertyDetail();
-            
-            String option;
-            String key;
-            String value;
-            
-            for (int i = 1; i < size; i ++) {
-                
-                option = optionsList.get(i);
-                keyValue = option.split(KEY_VALUE_DELIMITER);
-                
-                key = keyValue[0].trim();
-                value = keyValue[1].trim();
-
-                switch (key) {
-                    case BLOCK:
-                        propertyDetail.setBlockNumber(value);
-                        break;
-                    case STREET:
-                        if (AddressIndicatorEnum.NCA.equals(addressIndicatorEnum)) {
-                            propertyDetail.setStreetCode(value);
-                            propertyDetail.setFormatType(FormatType.NCA);
-                        } else {
-                            propertyDetail.setStreetName(value);
-                            propertyDetail.setFormatType(FormatType.MHA);
-                        }
-                        break;
-                    case UNIT:
-                        propertyDetail.setUnit(value);
-                        break;
-                    case FLOOR:
-                        propertyDetail.setFloor(value);
-                        break;
-                    case BUILDING:
-                        propertyDetail.setBuildingName(value);
-                        break;
-                    case POSTAL:
-                        propertyDetail.setNewPostalCode(value);
-                        break;
-                    default:
-                        throw new TestDataSetupErrorException("Error in creating new address in test data file.");
-                }
-            }
-            
-            return new Pair<>(addressIndicatorEnum, propertyDetail);
+            // Generate based on input
+            return getAddrIndicatorPropertyDetailOfUserInputAddress(optionsList, size);
             
         } else {
             throw new TestDataSetupErrorException("Incorrect number of address parameters.");
         }
-    }    
+    }
+
+    private Pair<AddressIndicatorEnum, PropertyDetail> getAddrIndicatorPropertyDetailOfExistingAddress(StepDefLevelTestContext testContext, List<String> optionsList) {
+        // Retrieve first key - 'Existing'
+        String[] firstKeyValue = optionsList.get(0).split(KEY_VALUE_DELIMITER);
+        if (!EXISTING.equals(firstKeyValue[0])) {
+            throw new TestDataSetupErrorException("'" + EXISTING + "' must always be the first parameter when address is based on existing address.");
+        }
+
+        // Retrieve second key - 'AddrType'
+        String[] secondKeyValue = optionsList.get(1).split(KEY_VALUE_DELIMITER);
+        if (!ADDRESS_TYPE.equals(secondKeyValue[0])) {
+            throw new TestDataSetupErrorException("'" + ADDRESS_TYPE + "' must always be the second parameter when address is based on existing address.");
+        }
+
+        // Retrieve PropertyDetail from testContext
+        PropertyDetail propertyDetail = testContext.get(firstKeyValue[1]);
+        propertyDetail.setAddressType(secondKeyValue[1]);
+        AddressIndicatorEnum addressIndicator = (FormatType.NCA.equals(propertyDetail.getFormatType())) ? AddressIndicatorEnum.NCA : AddressIndicatorEnum.MHA_Z;
+
+        return Pair.of(addressIndicator, propertyDetail);
+    }
+    
+    private Pair<AddressIndicatorEnum, PropertyDetail> getAddrIndicatorPropertyDetailOfUserInputAddress(List<String> optionsList, int size) {
+        // Retrieve first key - "IndType"
+        String[] keyValue = optionsList.get(0).split(KEY_VALUE_DELIMITER);
+        if (!INDICATOR_TYPE.equals(keyValue[0])) {
+            throw new TestDataSetupErrorException("'" + INDICATOR_TYPE + "' must always be the first parameter when address is based on user input.");
+        }
+
+        AddressIndicatorEnum addressIndicatorEnum = AddressIndicatorEnum.fromString(keyValue[1]);
+        PropertyDetail propertyDetail = new PropertyDetail();
+
+        String option;
+        String key;
+        String value;
+
+        for (int i = 1; i < size; i ++) {
+            
+            option = optionsList.get(i);
+            keyValue = option.split(KEY_VALUE_DELIMITER);
+            
+            key = keyValue[0].trim();
+            value = keyValue[1].trim();
+
+            // Retrieve & process the remaining keys
+            switch (key) {
+                case ADDRESS_TYPE:
+                    propertyDetail.setAddressType(value);
+                    break;
+                case BLOCK:
+                    propertyDetail.setBlockNumber(value);
+                    break;
+                case STREET:
+                    if (AddressIndicatorEnum.NCA.equals(addressIndicatorEnum)) {
+                        propertyDetail.setStreetCode(value);
+                        propertyDetail.setFormatType(FormatType.NCA);
+                    } else {
+                        propertyDetail.setStreetName(value);
+                        propertyDetail.setFormatType(FormatType.MHA);
+                    }
+                    break;
+                case UNIT:
+                    propertyDetail.setUnit(value);
+                    break;
+                case FLOOR:
+                    propertyDetail.setFloor(value);
+                    break;
+                case BUILDING:
+                    propertyDetail.setBuildingName(value);
+                    break;
+                case POSTAL:
+                    propertyDetail.setNewPostalCode(value);
+                    break;
+                default:
+                    throw new TestDataSetupErrorException("Error in creating new address in test data file.");
+            }
+        }
+
+        return Pair.of(addressIndicatorEnum, propertyDetail);
+    }
 
     public void createLineInBody(PersonId personId, AddressIndicatorEnum prevIndType, PropertyDetail prevPropertyDetail, AddressIndicatorEnum curIndType, PropertyDetail curPropertyDetail, LocalDate addressChangeDate) {
         MhaChangeAddressFileEntry mhaChangeAddressFileEntry = new MhaChangeAddressFileEntry(personId.getNaturalId(),
@@ -233,7 +255,8 @@ public class MhaChangeAddressFileDataPrep extends BatchFileDataPrep {
                     propertyDetail.getBlockNumber(),
                     propertyDetail.getStreetCode(),
                     propertyDetail.getPostalCode(),
-                    propertyDetail.getNewPostalCode());
+                    propertyDetail.getNewPostalCode(),
+                    propertyDetail.getAddressType());
         } else if ( addressIndicatorEnum.equals(AddressIndicatorEnum.MHA_C) ) {
             return new MhaOverseasFileEntry(propertyDetail.getUnit(),
                     propertyDetail.getFloor(),
@@ -241,7 +264,8 @@ public class MhaChangeAddressFileDataPrep extends BatchFileDataPrep {
                     propertyDetail.getStreetName(),
                     propertyDetail.getBuildingName(),
                     propertyDetail.getPostalCode(),
-                    propertyDetail.getNewPostalCode());
+                    propertyDetail.getNewPostalCode(),
+                    propertyDetail.getAddressType());
         } else {
             return new MhaAddressFileEntry(propertyDetail.getUnit(),
                     propertyDetail.getFloor(),
@@ -249,7 +273,8 @@ public class MhaChangeAddressFileDataPrep extends BatchFileDataPrep {
                     propertyDetail.getStreetName(),
                     propertyDetail.getBuildingName(),
                     propertyDetail.getPostalCode(),
-                    propertyDetail.getNewPostalCode());
+                    propertyDetail.getNewPostalCode(),
+                    propertyDetail.getAddressType());
         }
     }
 }

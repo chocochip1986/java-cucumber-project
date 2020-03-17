@@ -16,9 +16,9 @@ Feature: MHA Change address
     And john owns a landed property abd
     And john resides in a condo property abe
     And the mha change address file contains the following details:
-    | person | previous_address                                                                                | current_address                                                                                 | address_change_dte |
-    | john   | Existing:abc                                                                                    | IndType:Z,Block:12B,Street:16 Sheraton Street,Unit:13,Floor:12,Building:The Clive,Postal:232902 | 20190909           |
-    | john   | Existing:abc                                                                                    | IndType:Z,Block:12B,Street:16 Sheraton Street,Unit:13,Floor:12,Building:The Clive,Postal:232902 | 20190909           |
+    | person | previous_address                                                                                           | current_address                                                                                            | address_change_dte |
+    | john   | Existing:abd,AddrType:C                                                                                    | IndType:Z,AddrType:C,Block:12B,Street:16 Sheraton Street,Unit:13,Floor:12,Building:The Clive,Postal:232902 | 20190909           |
+    | john   | Existing:abc,AddrType:C                                                                                    | IndType:Z,AddrType:C,Block:12B,Street:16 Sheraton Street,Unit:13,Floor:12,Building:The Clive,Postal:232902 | 20190909           |
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
     And the Mha Change Address batch job completes running with status CLEANUP
     And the error message contains Must have at least 1 valid body record

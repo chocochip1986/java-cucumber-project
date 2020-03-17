@@ -2,12 +2,9 @@ package cdit_automation.models;
 
 import cdit_automation.enums.FormatType;
 import cdit_automation.enums.PreparedPropertyTypeEnum;
-import cdit_automation.enums.PropertyType;
-import cdit_automation.models.AbstractEntity;
 import cdit_automation.models.embeddables.BiTemporalData;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +23,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -89,6 +87,10 @@ public class PropertyDetail extends AbstractEntity {
     @JsonIgnore
     @Embedded
     private BiTemporalData biTemporalData;
+
+    // Attribute is for Automation use only. Will not be persisted.
+    @Transient
+    private String addressType;
 
     public static PropertyDetail createNcaHdb(Batch batch, String unitNo, String blockNo, String floorNo,
                                               String buildingName, String streetCode, String oldPostalCode, String postalCode,
