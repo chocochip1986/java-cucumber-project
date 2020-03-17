@@ -179,11 +179,22 @@ Feature: MHA Change address
     And john resides in the island special property
 
   @set_13
-  Scenario: John moves to a new special property address
+  Scenario Outline: John moves to a new special property address
     Given A 60 year old singaporean person john resides a hdb property abc
-    And the mha change address file contains information that john changed from (mha_z)abc to a new (mha_z)lorong_buangkok property 5 days ago
+    And the mha change address file contains information that john changed from (<prev_address_indicator>)abc to a new (<cur_address_indicator>)lorong_buangkok property 5 days ago
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
     And the Mha Change Address batch job completes running with status CLEANUP
     And there are no error messages
     Then john does not reside in abc since 6 days ago
     And john resides in the island special property
+    Examples:
+      | prev_address_indicator | cur_address_indicator |
+      | mha_z                  | mha_z                 |
+      | mha_z                  | mha_c                 |
+      | mha_z                  | nca                   |
+      | mha_c                  | mha_z                 |
+      | mha_c                  | mha_c                 |
+      | mha_c                  | nca                   |
+      | nca                    | mha_z                 |
+      | nca                    | mha_c                 |
+      | nca                    | nca                   |
