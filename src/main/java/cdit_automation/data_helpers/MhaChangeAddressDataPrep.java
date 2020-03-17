@@ -15,7 +15,7 @@ public class MhaChangeAddressDataPrep extends BatchFileDataPrep {
         if ( dateOfRun == null ) {
             dateOfRun = TestConstants.DEFAULT_EXTRACTION_DATE;
         }
-        return StringUtils.rightPad(dateOfRun.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD)+StringUtils.leftPad(String.valueOf(recordCount), 4, "0"), 12);
+        return StringUtils.rightPad(dateOfRun.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD)+StringUtils.leftPad(String.valueOf(recordCount), 4, "0"), 200);
     }
 
     public String generateSingleDateNoOfRecordsHeader(int recordCount) {

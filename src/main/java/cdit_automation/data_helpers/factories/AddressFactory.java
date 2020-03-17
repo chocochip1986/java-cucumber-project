@@ -6,6 +6,7 @@ import cdit_automation.enums.FormatType;
 import cdit_automation.enums.PersonPropertyTypeEnum;
 import cdit_automation.enums.PreparedPropertyTypeEnum;
 import cdit_automation.enums.PropertyType;
+import cdit_automation.enums.SpecialMappingEnum;
 import cdit_automation.enums.automation.PropertyTypeEnum;
 import cdit_automation.enums.automation.ResidencyEnum;
 import cdit_automation.models.Batch;
@@ -14,6 +15,7 @@ import cdit_automation.models.PersonDetail;
 import cdit_automation.models.PersonProperty;
 import cdit_automation.models.Property;
 import cdit_automation.models.PropertyDetail;
+import cdit_automation.models.SpecialMapping;
 import cdit_automation.models.SpecialProperty;
 import cdit_automation.models.embeddables.BiTemporalData;
 import cdit_automation.models.embeddables.PersonPropertyId;
@@ -72,6 +74,10 @@ public class AddressFactory extends AbstractFactory {
 
         if ( addressOptions.getPhakAbstractAddress().isSpecialProperty() ) {
             specialPropertyRepo.save(SpecialProperty.create(batch, property, addressOptions.getPhakAbstractAddress().getSpecialMappingEnum(), addressOptions.getPhakAbstractAddress().getHomeTypeEnum(), biTemporalData));
+        }
+
+        if ( addressOptions.getPhakAbstractAddress().getSpecialMappingEnum().equals(SpecialMappingEnum.LORONG_BUANGKOK) ) {
+            specialMappingRepo.save(SpecialMapping.createLorongBuangkok(addressOptions.getPhakAbstractAddress().getPostalCode(), biTemporalData));
         }
 
         if ( addressOptions.ownershipEnum.equals(ResidencyEnum.BOTH) ) {

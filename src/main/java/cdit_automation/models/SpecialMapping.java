@@ -49,4 +49,21 @@ public class SpecialMapping extends AbstractEntity {
     @JsonIgnore
     @Embedded
     private BiTemporalData biTemporalData;
+
+    public static SpecialMapping createLorongBuangkok(String postalCode, BiTemporalData biTemporalData) {
+        return createLorongBuangkok(postalCode, null, biTemporalData);
+    }
+
+    public static SpecialMapping createLorongBuangkok(String postalCode, String description, BiTemporalData biTemporalData) {
+        return build(SpecialMappingEnum.LORONG_BUANGKOK, postalCode, description, biTemporalData);
+    }
+
+    private static SpecialMapping build(SpecialMappingEnum specialMappingEnum, String value, String description, BiTemporalData biTemporalData) {
+        return SpecialMapping.builder()
+                .type(specialMappingEnum)
+                .value(value)
+                .description(description)
+                .biTemporalData(biTemporalData)
+                .build();
+    }
 }
