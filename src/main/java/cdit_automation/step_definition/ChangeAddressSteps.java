@@ -313,7 +313,7 @@ public class ChangeAddressSteps extends AbstractSteps {
         PersonId personId = testContext.get(personName);
         PhakAbstractAddress phakAbstractAddress = testContext.get("expectedNewAddress");
 
-        PropertyDetail propertyDetail = propertyDetailRepo.findByAddress(phakAbstractAddress.getUnitNo(), phakAbstractAddress.getBlockNo(), phakAbstractAddress.getFloorNo(), phakAbstractAddress.getBuildingName(), phakAbstractAddress.getStreetName(), null, phakAbstractAddress.getOldPostalCode(), phakAbstractAddress.getPostalCode());
+        PropertyDetail propertyDetail = propertyDetailRepo.findByAddress(phakAbstractAddress.getUnitNo(), phakAbstractAddress.getBlockNo(), phakAbstractAddress.getFloorNo(), null, phakAbstractAddress.getStreetName(), null, phakAbstractAddress.getOldPostalCode(), phakAbstractAddress.getPostalCode());
         testAssert.assertNotNull(propertyDetail, "No property details created for new address!");
 
         PersonProperty personProperty = personPropertyRepo.findByPersonAndPropertyAndType(personId.getPerson(), propertyDetail.getProperty(), PersonPropertyTypeEnum.RESIDENCE.name());

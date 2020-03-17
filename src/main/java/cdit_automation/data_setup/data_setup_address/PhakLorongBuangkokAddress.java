@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class PhakLorongBuangkokAddress {
     private static final String STREET_NAMES[] = new String[]{
-            "ISLAND", "PULAU", "P.", "SERAYA"};
+            "abc"};
 
     private static final String BUILDING_NAMES[] = new String[]{
             "Wei Tuo Fa Gong Temple",
@@ -22,6 +22,10 @@ public class PhakLorongBuangkokAddress {
             "547596", "547597"
     };
 
+    private static final String STREET_CODES[] = new String[]{
+            "123456"
+    };
+
     public static PhakAbstractAddress fakeItTillYouMakeIt() {
         PhakAbstractAddress phakLorongBuangkokAddress = new PhakAbstractAddress(null, null, null, recommendAStreetName(), recommendABuildingName(), recommendAnOldPostalCode(), recommendAPostalCode(), recommendAStreetCode(), PhakLorongBuangkokAddress.class);
         phakLorongBuangkokAddress.setSpecialProperty(true);
@@ -30,7 +34,7 @@ public class PhakLorongBuangkokAddress {
     }
 
     private static String recommendAStreetCode() {
-        return Phaker.validNumber(4);
+        return STREET_CODES[new Random().nextInt(STREET_CODES.length)];
     }
 
     private static String recommendAStreetName() {
@@ -42,7 +46,7 @@ public class PhakLorongBuangkokAddress {
     }
 
     private static String recommendAPostalCode() {
-        return recommandAPostalCodeSector()+ Phaker.validNumber(4);
+        return recommandAPostalCodeSector();
     }
 
     private static String recommandAPostalCodeSector() {

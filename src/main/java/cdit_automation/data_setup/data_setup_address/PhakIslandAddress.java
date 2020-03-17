@@ -19,6 +19,10 @@ public class PhakIslandAddress {
             "50"
     };
 
+    private static final String STREET_CODES[] = new String[]{
+            "PUB10D", "PUB11A", "PUB14R"
+    };
+
     public static PhakAbstractAddress fakeItTillYouMakeIt() {
         PhakAbstractAddress phakAbstractAddress = new PhakAbstractAddress(null, null, null, recommendAStreetName(), recommendABuildingName(), recommendAnOldPostalCode(), recommendAPostalCode(), recommendAStreetCode(), PhakIslandAddress.class);
         phakAbstractAddress.setSpecialProperty(true);
@@ -27,7 +31,7 @@ public class PhakIslandAddress {
     }
 
     private static String recommendAStreetCode() {
-        return Phaker.validNumber(4);
+        return STREET_CODES[new Random().nextInt(STREET_CODES.length)];
     }
 
     private static String recommendAStreetName() {

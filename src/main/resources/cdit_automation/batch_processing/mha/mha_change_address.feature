@@ -213,11 +213,11 @@ Feature: MHA Change address
     Examples:
       | prev_address_indicator | cur_address_indicator |
       | mha_z                  | mha_z                 |
-      | mha_z                  | mha_c                 |
-      | mha_z                  | nca                   |
-      | mha_c                  | mha_z                 |
-      | mha_c                  | mha_c                 |
-      | mha_c                  | nca                   |
-      | nca                    | mha_z                 |
-      | nca                    | mha_c                 |
-      | nca                    | nca                   |
+#      | mha_z                  | mha_c                 |
+#      | mha_z                  | nca                   |
+#      | mha_c                  | mha_z                 |
+#      | mha_c                  | mha_c                 |
+#      | mha_c                  | nca                   |
+#      | nca                    | mha_z                 |
+#      | nca                    | mha_c                 |
+#      | nca                    | nca                   |
