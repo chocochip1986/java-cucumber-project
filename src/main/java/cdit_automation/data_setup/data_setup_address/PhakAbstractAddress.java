@@ -18,13 +18,14 @@ public class PhakAbstractAddress {
     protected String buildingName;
     protected String oldPostalCode;
     protected String postalCode;
+    protected String streetCode;
 
     protected Class klass;
     protected boolean isSpecialProperty;
     protected SpecialMappingEnum specialMappingEnum;
     protected HomeTypeEnum homeTypeEnum;
 
-    public PhakAbstractAddress(String unitNo, String blockNo, String floorNo, String streetName, String buildingName, String oldPostalCode, String postalCode, Class klass) {
+    public PhakAbstractAddress(String unitNo, String blockNo, String floorNo, String streetName, String buildingName, String oldPostalCode, String postalCode, String streetCode, Class klass) {
         this.unitNo = unitNo;
         this.blockNo = blockNo;
         this.floorNo = floorNo;
@@ -32,6 +33,7 @@ public class PhakAbstractAddress {
         this.buildingName = buildingName;
         this.oldPostalCode = oldPostalCode;
         this.postalCode = postalCode;
+        this.streetCode = streetCode;
         this.klass = klass;
         isSpecialProperty = false;
         specialMappingEnum = null;

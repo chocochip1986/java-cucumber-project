@@ -23,10 +23,14 @@ public class PhakLorongBuangkokAddress {
     };
 
     public static PhakAbstractAddress fakeItTillYouMakeIt() {
-        PhakAbstractAddress phakLorongBuangkokAddress = new PhakAbstractAddress(null, null, null, recommendAStreetName(), recommendABuildingName(), null, recommendAPostalCode(), PhakLorongBuangkokAddress.class);
+        PhakAbstractAddress phakLorongBuangkokAddress = new PhakAbstractAddress(null, null, null, recommendAStreetName(), recommendABuildingName(), recommendAnOldPostalCode(), recommendAPostalCode(), recommendAStreetCode(), PhakLorongBuangkokAddress.class);
         phakLorongBuangkokAddress.setSpecialProperty(true);
         phakLorongBuangkokAddress.setSpecialMappingEnum(SpecialMappingEnum.LORONG_BUANGKOK);
         return phakLorongBuangkokAddress;
+    }
+
+    private static String recommendAStreetCode() {
+        return Phaker.validNumber(4);
     }
 
     private static String recommendAStreetName() {
@@ -43,5 +47,9 @@ public class PhakLorongBuangkokAddress {
 
     private static String recommandAPostalCodeSector() {
         return POSTAL_CODES[new Random().nextInt(POSTAL_CODES.length)];
+    }
+
+    private static String recommendAnOldPostalCode() {
+        return Phaker.validNumber(4);
     }
 }

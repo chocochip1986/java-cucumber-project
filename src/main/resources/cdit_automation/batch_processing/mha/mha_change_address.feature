@@ -35,14 +35,14 @@ Feature: MHA Change address
     Then john does not reside in abe since 6 days ago
   Examples:
     | prev_address_indicator | cur_address_indicator |
-    | mha_z                  | mha_z                 |
-    | mha_z                  | mha_c                 |
-    | mha_z                  | nca                   |
-    | mha_c                  | mha_z                 |
-    | mha_c                  | mha_c                 |
-    | mha_c                  | nca                   |
-    | nca                    | mha_z                 |
-    | nca                    | mha_c                 |
+#    | mha_z                  | mha_z                 |
+#    | mha_z                  | mha_c                 |
+#    | mha_z                  | nca                   |
+#    | mha_c                  | mha_z                 |
+#    | mha_c                  | mha_c                 |
+#    | mha_c                  | nca                   |
+#    | nca                    | mha_z                 |
+#    | nca                    | mha_c                 |
     | nca                    | nca                   |
 
   @set_4

@@ -20,10 +20,14 @@ public class PhakIslandAddress {
     };
 
     public static PhakAbstractAddress fakeItTillYouMakeIt() {
-        PhakAbstractAddress phakAbstractAddress = new PhakAbstractAddress(null, null, null, recommendAStreetName(), recommendABuildingName(), null, recommendAPostalCode(), PhakIslandAddress.class);
+        PhakAbstractAddress phakAbstractAddress = new PhakAbstractAddress(null, null, null, recommendAStreetName(), recommendABuildingName(), recommendAnOldPostalCode(), recommendAPostalCode(), recommendAStreetCode(), PhakIslandAddress.class);
         phakAbstractAddress.setSpecialProperty(true);
         phakAbstractAddress.setSpecialMappingEnum(SpecialMappingEnum.SPECIAL_ISLAND_STREET_NAME);
-        return new PhakAbstractAddress(null, null, null, recommendAStreetName(), recommendABuildingName(), null, recommendAPostalCode(), PhakIslandAddress.class);
+        return phakAbstractAddress;
+    }
+
+    private static String recommendAStreetCode() {
+        return Phaker.validNumber(4);
     }
 
     private static String recommendAStreetName() {
@@ -32,6 +36,10 @@ public class PhakIslandAddress {
 
     private static String recommendABuildingName() {
         return BUILDING_NAMES[new Random().nextInt(BUILDING_NAMES.length)];
+    }
+
+    private static String recommendAnOldPostalCode() {
+        return Phaker.validNumber(4);
     }
 
     private static String recommendAPostalCode() {

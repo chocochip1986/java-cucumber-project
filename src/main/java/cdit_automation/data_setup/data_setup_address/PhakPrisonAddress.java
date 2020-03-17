@@ -18,7 +18,11 @@ public class PhakPrisonAddress {
     };
 
     public static PhakAbstractAddress fakeItTillYouMakeIt() {
-        return new PhakAbstractAddress(recommendAUnitNo(), recommendABlockNo(), recommendAFloorNo(), recommendAStreetName(), recommendABuildingName(), null, recommendAPostalCode(), PhakPrisonAddress.class);
+        return new PhakAbstractAddress(recommendAUnitNo(), recommendABlockNo(), recommendAFloorNo(), recommendAStreetName(), recommendABuildingName(), recommendAnOldPostalCode(), recommendAPostalCode(), recommendAStreetCode(), PhakPrisonAddress.class);
+    }
+
+    private static String recommendAStreetCode() {
+        return Phaker.validNumber(4);
     }
 
     private static String recommendAUnitNo() {
@@ -47,5 +51,9 @@ public class PhakPrisonAddress {
 
     private static String recommandAPostalCodeSector() {
         return POSTAL_CODE_SECTORS[new Random().nextInt(POSTAL_CODE_SECTORS.length)];
+    }
+
+    private static String recommendAnOldPostalCode() {
+        return Phaker.validNumber(4);
     }
 }
