@@ -35,7 +35,8 @@ import java.util.Map;
 
 @Slf4j
 @Ignore
-public class ChangeAddressSteps extends AbstractSteps{
+public class ChangeAddressSteps extends AbstractSteps {
+
     @Given("^the mha change address file is empty$")
     public void theMhaChangeAddressFileIsEmpty() {
         batchFileDataWriter.begin(mhaChangeAddressDataPrep.generateSingleDateNoOfRecordsHeader(0), FileTypeEnum.MHA_CHANGE_ADDRESS, null);
@@ -45,9 +46,11 @@ public class ChangeAddressSteps extends AbstractSteps{
     @Given("the mha change address file contains the following details:")
     public void theMhaChangeAddressFileHasTheFollowingDetails(DataTable dataTable) {
         List<Map<String, String>> listOfChangeAddresses = dataTable.asMaps(String.class, String.class);
+        int noOfRecords = listOfChangeAddresses.size();
 
+        batchFileDataWriter.begin(mhaChangeAddressDataPrep.generateSingleDateNoOfRecordsHeader(noOfRecords), FileTypeEnum.MHA_CHANGE_ADDRESS, null);
         mhaChangeAddressFileDataPrep.createBodyOfTestScenarios(listOfChangeAddresses, testContext);
-        //TODO
+        batchFileDataWriter.end();
     }
 
     @Given("^(?:An|A)(?: (\\d+) year old)? (singaporean|foreign) person ([A-Za-z]+) (owns|resides|owns and resides)(?: in)? a ([a-z_]+) property ([a-z0-9]+)$")
