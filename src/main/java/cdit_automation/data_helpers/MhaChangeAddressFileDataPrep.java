@@ -16,7 +16,7 @@ import cdit_automation.enums.automation.PropertyTypeEnum;
 import cdit_automation.exceptions.TestDataSetupErrorException;
 import cdit_automation.models.PersonId;
 import cdit_automation.models.PropertyDetail;
-import cdit_automation.utilities.DateUtils;
+import cdit_automation.utilities.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
@@ -119,8 +119,12 @@ public class MhaChangeAddressFileDataPrep extends BatchFileDataPrep {
         }
 
         // Retrieve PropertyDetail from testContext
-        PropertyDetail propertyDetail = testContext.get(firstKeyValue[1]);
-        propertyDetail.setAddressType(secondKeyValue[1]);
+        PropertyDetail propertyDetail = testContext.get(StringUtils.getValueFromKeyValueArray(firstKeyValue));
+        if (propertyDetail == null) {
+            throw new TestDataSetupErrorException("Unable to find existing address in test context.");    
+        }
+        
+        propertyDetail.setAddressType(StringUtils.getValueFromKeyValueArray(secondKeyValue));
         AddressIndicatorEnum addressIndicator = (FormatType.NCA.equals(propertyDetail.getFormatType())) ? AddressIndicatorEnum.NCA : AddressIndicatorEnum.MHA_Z;
 
         return Pair.of(addressIndicator, propertyDetail);
@@ -133,7 +137,7 @@ public class MhaChangeAddressFileDataPrep extends BatchFileDataPrep {
             throw new TestDataSetupErrorException("'" + INDICATOR_TYPE + "' must always be the first parameter when address is based on user input.");
         }
 
-        AddressIndicatorEnum addressIndicatorEnum = AddressIndicatorEnum.fromString(keyValue[1]);
+        AddressIndicatorEnum addressIndicatorEnum = AddressIndicatorEnum.fromString(StringUtils.getValueFromKeyValueArray(keyValue));
         PropertyDetail propertyDetail = new PropertyDetail();
 
         String option;
@@ -146,7 +150,7 @@ public class MhaChangeAddressFileDataPrep extends BatchFileDataPrep {
             keyValue = option.split(KEY_VALUE_DELIMITER);
             
             key = keyValue[0].trim();
-            value = keyValue[1].trim();
+            value = StringUtils.getValueFromKeyValueArray(keyValue);
 
             // Retrieve & process the remaining keys
             switch (key) {

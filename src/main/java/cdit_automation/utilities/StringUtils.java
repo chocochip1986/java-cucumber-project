@@ -47,4 +47,13 @@ public class StringUtils {
             return str;
         }
     }
+
+    public static String getValueFromKeyValueArray(String[] keyValue) {
+
+        if (keyValue.length == 1) {
+            return StringUtils.SPACE;
+        }
+
+        return keyValue[1];
+    }
 }
