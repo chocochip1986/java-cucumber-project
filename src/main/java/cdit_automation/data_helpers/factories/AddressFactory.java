@@ -74,10 +74,9 @@ public class AddressFactory extends AbstractFactory {
 
         if ( addressOptions.getPhakAbstractAddress().isSpecialProperty() ) {
             specialPropertyRepo.save(SpecialProperty.create(batch, property, addressOptions.getPhakAbstractAddress().getSpecialMappingEnum(), addressOptions.getPhakAbstractAddress().getHomeTypeEnum(), biTemporalData));
-        }
-
-        if ( addressOptions.getPhakAbstractAddress().getSpecialMappingEnum().equals(SpecialMappingEnum.LORONG_BUANGKOK) ) {
-            specialMappingRepo.save(SpecialMapping.createLorongBuangkok(addressOptions.getPhakAbstractAddress().getPostalCode(), biTemporalData));
+            if ( addressOptions.getPhakAbstractAddress().getSpecialMappingEnum().equals(SpecialMappingEnum.LORONG_BUANGKOK) ) {
+                specialMappingRepo.save(SpecialMapping.createLorongBuangkok(addressOptions.getPhakAbstractAddress().getPostalCode(), biTemporalData));
+            }
         }
 
         if ( addressOptions.ownershipEnum.equals(ResidencyEnum.BOTH) ) {

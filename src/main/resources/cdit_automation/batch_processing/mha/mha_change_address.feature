@@ -75,7 +75,7 @@ Feature: MHA Change address
     And the mha change address file contains information that john changed from a new (<prev_address_indicator>)hdb property to (<cur_address_indicator>)abc 5 days ago
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
     And the Mha Change Address batch job completes running with status CLEANUP
-    And the error message contains <any>
+    And the error message contains Invalid validity of old address
     Examples:
       | prev_address_indicator | cur_address_indicator |
       | mha_z                  | mha_z                 |
