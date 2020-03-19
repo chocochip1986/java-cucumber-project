@@ -1,14 +1,13 @@
 package cdit_automation.data_helpers.batch_entities;
 
 import cdit_automation.utilities.StringUtils;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter

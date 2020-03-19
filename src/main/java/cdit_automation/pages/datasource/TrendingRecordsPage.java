@@ -2,17 +2,15 @@ package cdit_automation.pages.datasource;
 
 import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.enums.ReasonablenessCheckDataItemEnum;
-import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.Batch;
 import cdit_automation.models.ReasonablenessCheckStatistic;
 import cdit_automation.pages.AbstractPage;
+import java.util.List;
+import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.function.Supplier;
 
 @Slf4j
 @Component

@@ -9,16 +9,10 @@ import cdit_automation.models.ErrorMessage;
 import cdit_automation.models.FileReceived;
 import cdit_automation.models.Nationality;
 import cdit_automation.models.PersonId;
-import cdit_automation.models.embeddables.BiTemporalData;
-import cdit_automation.models.embeddables.BusinessTemporalData;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
-import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.util.Lists;
-import org.junit.Ignore;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +20,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.Ignore;
 
 @Slf4j
 @Ignore

@@ -9,11 +9,10 @@ import cdit_automation.models.Person;
 import cdit_automation.models.PersonId;
 import cdit_automation.models.embeddables.BiTemporalData;
 import cdit_automation.utilities.StringUtils;
-import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.springframework.stereotype.Component;
 
 @Component
 public class MhaNoInteractionFileDataPrep extends BatchFileDataPrep {

@@ -2,23 +2,19 @@ package cdit_automation.pages;
 
 import cdit_automation.enums.BatchStatusEnum;
 import cdit_automation.enums.views.FileStatusSubTextEnum;
-
+import cdit_automation.exceptions.TestFailException;
+import cdit_automation.models.FileReceived;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import cdit_automation.exceptions.TestFailException;
-import cdit_automation.models.FileReceived;
-import io.cucumber.java.it.Ma;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.function.Supplier;
 
 @Slf4j
 @Component

@@ -1,7 +1,6 @@
 package cdit_automation.data_setup.data_setup_address;
 
 import cdit_automation.data_setup.Phaker;
-
 import java.util.Random;
 
 public class PhakOrphanageAddress {

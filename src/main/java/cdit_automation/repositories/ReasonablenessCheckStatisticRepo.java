@@ -2,13 +2,12 @@ package cdit_automation.repositories;
 
 import cdit_automation.models.Batch;
 import cdit_automation.models.ReasonablenessCheckStatistic;
+import java.sql.Timestamp;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.sql.Timestamp;
 
 @Repository
 public interface ReasonablenessCheckStatisticRepo extends JpaRepository<ReasonablenessCheckStatistic, Long> {

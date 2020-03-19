@@ -2,8 +2,8 @@ package cdit_automation.pages;
 
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Component;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @Component
 public class GooglePage extends AbstractPage{

@@ -2,20 +2,28 @@ package cdit_automation.data_helpers;
 
 import cdit_automation.configuration.StepDefLevelTestContext;
 import cdit_automation.data_helpers.batch_entities.MhaCeasedCitizenFileEntry;
-import cdit_automation.data_helpers.factories.PersonFactory;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.NationalityEnum;
-import cdit_automation.models.*;
+import cdit_automation.models.Batch;
+import cdit_automation.models.CeasedCitizenValidated;
+import cdit_automation.models.Nationality;
+import cdit_automation.models.PersonDetail;
+import cdit_automation.models.PersonId;
+import cdit_automation.models.PersonName;
 import cdit_automation.models.embeddables.BiTemporalData;
 import cdit_automation.models.embeddables.BusinessTemporalData;
 import cdit_automation.models.embeddables.DbTemporalData;
-import org.springframework.stereotype.Component;
-
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.springframework.stereotype.Component;
 
 @Component
 public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {

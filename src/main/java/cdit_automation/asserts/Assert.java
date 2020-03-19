@@ -3,15 +3,14 @@ package cdit_automation.asserts;
 import cdit_automation.configuration.TestManager;
 import cdit_automation.driver_management.DriverManager;
 import cdit_automation.exceptions.TestFailException;
+import java.io.File;
+import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.io.File;
-import java.io.IOException;
 
 @Slf4j
 @Component

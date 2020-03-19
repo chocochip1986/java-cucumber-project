@@ -4,12 +4,11 @@ import cdit_automation.data_setup.Phaker;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.PersonId;
 import io.cucumber.java.en.Given;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.Ignore;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.Ignore;
 
 @Slf4j
 @Ignore

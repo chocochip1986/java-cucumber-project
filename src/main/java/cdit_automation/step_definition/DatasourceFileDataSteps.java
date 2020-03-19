@@ -4,12 +4,10 @@ import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.BatchStatusEnum;
 import cdit_automation.enums.FileStatusEnum;
 import cdit_automation.enums.FileTypeEnum;
-import cdit_automation.enums.ReasonablenessCheckDataItemEnum;
 import cdit_automation.enums.SpringJobStatusEnum;
 import cdit_automation.enums.views.FileStatusSubTextEnum;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.Batch;
-import cdit_automation.models.BulkCitizenValidated;
 import cdit_automation.models.FileDetail;
 import cdit_automation.models.FileReceived;
 import cdit_automation.models.JobExecution;
@@ -18,11 +16,7 @@ import cdit_automation.models.ReasonablenessCheckStatistic;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.Ignore;
-
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -30,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.Ignore;
 
 @Slf4j
 @Ignore

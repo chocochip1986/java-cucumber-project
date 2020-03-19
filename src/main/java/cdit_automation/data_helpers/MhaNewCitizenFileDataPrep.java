@@ -3,11 +3,10 @@ package cdit_automation.data_helpers;
 import cdit_automation.data_helpers.batch_entities.MhaNewCitizenFileEntry;
 import cdit_automation.enums.FileTypeEnum;
 import io.cucumber.datatable.DataTable;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Component;
 
 @Component
 public class MhaNewCitizenFileDataPrep extends BatchFileDataPrep {

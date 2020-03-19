@@ -2,7 +2,6 @@ package cdit_automation.utilities;
 
 import cdit_automation.configuration.AbstractAutoWired;
 import cdit_automation.enums.PersonPropertyTypeEnum;
-import cdit_automation.enums.automation.PropertyTypeEnum;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.Person;
 import cdit_automation.models.PersonProperty;
@@ -10,11 +9,10 @@ import cdit_automation.models.embeddables.BiTemporalData;
 import cdit_automation.models.embeddables.BusinessTemporalData;
 import cdit_automation.models.embeddables.DbTemporalData;
 import cdit_automation.models.embeddables.PersonPropertyId;
-import org.springframework.stereotype.Component;
-
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
 /*
 Only allow this kind of scenario

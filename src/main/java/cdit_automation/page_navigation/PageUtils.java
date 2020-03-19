@@ -1,6 +1,12 @@
 package cdit_automation.page_navigation;
 
 import cdit_automation.driver_management.DriverManager;
+import java.io.File;
+import java.time.Duration;
+import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
@@ -13,13 +19,6 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.io.File;
-import java.time.Duration;
-import java.util.List;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.regex.Pattern;
 
 @Slf4j
 @Component

@@ -11,15 +11,11 @@ import cdit_automation.repositories.PersonDetailRepo;
 import cdit_automation.repositories.PersonIdRepo;
 import cdit_automation.repositories.PersonNameRepo;
 import cdit_automation.utilities.DateUtils;
-import org.apache.tomcat.jni.Local;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.annotation.Nullable;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import javax.annotation.Nullable;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class BatchFileDataPrep {
 

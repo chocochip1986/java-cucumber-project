@@ -9,13 +9,12 @@ import cdit_automation.models.FileReceived;
 import io.cucumber.java.ParameterType;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.Ignore;
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.function.Supplier;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.Ignore;
 
 @Slf4j
 @Ignore

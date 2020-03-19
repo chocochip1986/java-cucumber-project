@@ -2,13 +2,12 @@ package cdit_automation.repositories;
 
 import cdit_automation.models.Person;
 import cdit_automation.models.PersonName;
+import java.util.Date;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
 
 @Repository
 public interface PersonNameRepo extends JpaRepository<PersonName, Long> {

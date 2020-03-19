@@ -1,6 +1,5 @@
 package cdit_automation.step_definition;
 
-import cdit_automation.asserts.Assert;
 import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.enums.PersonStatusTypeEnum;
 import cdit_automation.exceptions.TestFailException;
@@ -12,13 +11,12 @@ import cdit_automation.models.PersonStatus;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.Ignore;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.Ignore;
 
 @Slf4j
 @Ignore

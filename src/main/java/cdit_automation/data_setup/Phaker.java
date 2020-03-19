@@ -2,9 +2,6 @@ package cdit_automation.data_setup;
 
 import cdit_automation.enums.GenderEnum;
 import com.github.javafaker.Faker;
-import lombok.extern.slf4j.Slf4j;
-
-import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
@@ -17,6 +14,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.regex.Pattern;
+import javax.validation.constraints.Positive;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class Phaker {

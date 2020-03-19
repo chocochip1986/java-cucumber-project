@@ -5,10 +5,9 @@ import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.exceptions.TestFailException;
 import io.cucumber.java.ParameterType;
 import io.cucumber.java.Scenario;
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.IOException;
+import org.apache.commons.io.FileUtils;
 
 public class AbstractSteps extends AbstractAutoWired {
     @ParameterType("DUAL CITIZEN|NEW CITIZEN|BULK CITIZEN|CHANGE ADDRESS")

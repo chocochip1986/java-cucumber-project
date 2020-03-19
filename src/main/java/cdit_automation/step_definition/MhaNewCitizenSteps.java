@@ -3,7 +3,6 @@ package cdit_automation.step_definition;
 import cdit_automation.enums.FileTypeEnum;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
-
 import java.util.List;
 
 public class MhaNewCitizenSteps extends AbstractSteps {

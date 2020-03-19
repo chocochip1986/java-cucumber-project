@@ -3,6 +3,13 @@ package cdit_automation.api_helpers;
 import cdit_automation.data_helpers.FileReceivedDataDto;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.models.FileReceived;
+import java.io.File;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,14 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
-import java.io.File;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @Component

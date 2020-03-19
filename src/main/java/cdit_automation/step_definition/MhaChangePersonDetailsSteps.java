@@ -3,12 +3,11 @@ package cdit_automation.step_definition;
 import cdit_automation.enums.FileTypeEnum;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.Ignore;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.Ignore;
 
 @Slf4j
 @Ignore

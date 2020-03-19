@@ -4,17 +4,6 @@ import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.FileStatusEnum;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.FileDetail;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -22,6 +11,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import javax.validation.constraints.NotNull;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 @Getter
 @Setter

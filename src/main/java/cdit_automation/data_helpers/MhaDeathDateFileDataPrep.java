@@ -4,9 +4,6 @@ import cdit_automation.configuration.StepDefLevelTestContext;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.models.PersonDetail;
 import cdit_automation.models.PersonId;
-import org.springframework.stereotype.Component;
-
-import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -16,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.validation.constraints.NotNull;
+import org.springframework.stereotype.Component;
 
 @Component
 public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {

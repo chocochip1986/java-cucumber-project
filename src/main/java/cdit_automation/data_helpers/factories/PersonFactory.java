@@ -14,11 +14,10 @@ import cdit_automation.models.PersonId;
 import cdit_automation.models.PersonName;
 import cdit_automation.models.embeddables.BiTemporalData;
 import cdit_automation.models.embeddables.BusinessTemporalData;
+import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
 
 @Component
 public class PersonFactory extends AbstractFactory {

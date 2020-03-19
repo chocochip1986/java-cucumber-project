@@ -4,9 +4,8 @@ import cdit_automation.api_helpers.ApiHelper;
 import cdit_automation.configuration.TestManager;
 import cdit_automation.repositories.FileDetailRepo;
 import cdit_automation.repositories.FileReceivedRepo;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.function.Supplier;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class AbstractFileCreator extends AbstractService {
 

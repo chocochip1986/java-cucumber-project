@@ -1,18 +1,16 @@
 package cdit_automation.repositories;
 
-import cdit_automation.enums.PersonPropertyTypeEnum;
 import cdit_automation.models.Person;
 import cdit_automation.models.PersonProperty;
 import cdit_automation.models.Property;
+import java.util.Date;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
-import java.util.List;
 
 @Repository
 public interface PersonPropertyRepo extends JpaRepository<PersonProperty, Long> {

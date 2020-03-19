@@ -75,10 +75,9 @@ import cdit_automation.repositories.SpecialPropertyRepo;
 import cdit_automation.repositories.view.ReasonablenessCheckStatisticViewJpaRepo;
 import cdit_automation.utilities.DateUtils;
 import cdit_automation.utilities.PersonPropertyTimelineReconstruction;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class AbstractAutoWired {
     //Test suite related helpers

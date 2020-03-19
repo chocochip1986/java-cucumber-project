@@ -3,7 +3,6 @@ package cdit_automation.data_setup.data_setup_address;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.HomeTypeEnum;
 import cdit_automation.enums.SpecialMappingEnum;
-
 import java.util.Random;
 
 public class PhakNursingAddress {

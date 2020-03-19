@@ -10,10 +10,6 @@ import cdit_automation.enums.NationalityEnum;
 import cdit_automation.enums.NcaAddressTypeEnum;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.utilities.StringUtils;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -23,6 +19,9 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
 @Component
 public class MhaBulkFileDataPrep extends BatchFileDataPrep {

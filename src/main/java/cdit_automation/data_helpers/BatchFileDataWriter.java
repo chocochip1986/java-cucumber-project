@@ -7,17 +7,16 @@ import cdit_automation.models.FileDetail;
 import cdit_automation.repositories.FileDetailRepo;
 import cdit_automation.utilities.FileUtils;
 import cdit_automation.utilities.StringUtils;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Getter
 @Slf4j

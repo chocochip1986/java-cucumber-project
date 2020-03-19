@@ -4,6 +4,9 @@ import cdit_automation.models.PersonId;
 import cdit_automation.models.PersonName;
 import cdit_automation.repositories.PersonNameRepo;
 import cdit_automation.utilities.StringUtils;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,10 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.util.ArrayList;
 
 @Slf4j
 @Setter

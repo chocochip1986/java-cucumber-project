@@ -3,14 +3,13 @@ package cdit_automation.step_definition;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.PersonId;
 import io.cucumber.java.en.Then;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.Ignore;
-
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.Supplier;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.Ignore;
 
 @Slf4j
 @Ignore

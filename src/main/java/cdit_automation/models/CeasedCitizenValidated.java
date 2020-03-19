@@ -1,21 +1,19 @@
 package cdit_automation.models;
 
-import cdit_automation.constants.ErrorMessageConstants;
 import cdit_automation.data_setup.Phaker;
-import cdit_automation.enums.CeasedCitizenNationalityEnum;
-import cdit_automation.enums.CeasedCitizenNricCancelledStatusEnum;
-import cdit_automation.utilities.DateUtils;
 import cdit_automation.utilities.StringUtils;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
-import org.apache.tomcat.jni.Local;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter

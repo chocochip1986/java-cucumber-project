@@ -1,9 +1,8 @@
 package cdit_automation.models;
 
-import lombok.experimental.SuperBuilder;
-
-import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
+import javax.persistence.MappedSuperclass;
+import lombok.experimental.SuperBuilder;
 
 @MappedSuperclass
 @SuperBuilder

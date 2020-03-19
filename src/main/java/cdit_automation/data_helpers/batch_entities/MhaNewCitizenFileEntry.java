@@ -1,7 +1,6 @@
 package cdit_automation.data_helpers.batch_entities;
 
 import cdit_automation.utilities.StringUtils;
-
 import java.util.Map;
 
 public class MhaNewCitizenFileEntry {

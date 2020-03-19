@@ -1,11 +1,10 @@
 package cdit_automation.models.embeddables;
 
+import cdit_automation.constants.Constants;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-
-import cdit_automation.constants.Constants;
 import lombok.Builder;
 import lombok.Getter;
 

@@ -13,10 +13,9 @@ import cdit_automation.models.PersonDetail;
 import cdit_automation.models.PersonId;
 import cdit_automation.models.PersonName;
 import cdit_automation.models.embeddables.BiTemporalData;
-import org.springframework.stereotype.Service;
-
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
+import org.springframework.stereotype.Service;
 
 @Service
 @Deprecated

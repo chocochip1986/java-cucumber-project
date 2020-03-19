@@ -21,14 +21,13 @@ import cdit_automation.models.NewCitizenValidated;
 import cdit_automation.models.PersonDetailChangeValidated;
 import cdit_automation.models.ReasonablenessCheckStatistic;
 import cdit_automation.models.SingleDateHeaderValidated;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
 
 @Component
 public class FileDataProcessingFactory extends AbstractFactory {

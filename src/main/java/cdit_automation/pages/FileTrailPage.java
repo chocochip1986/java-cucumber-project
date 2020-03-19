@@ -2,12 +2,11 @@ package cdit_automation.pages;
 
 import cdit_automation.enums.BatchStatusEnum;
 import cdit_automation.models.Batch;
+import java.util.Optional;
+import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
-import java.util.function.Supplier;
 
 @Slf4j
 @Component

@@ -2,11 +2,10 @@ package cdit_automation.data_helpers;
 
 import cdit_automation.constants.TestConstants;
 import cdit_automation.utilities.StringUtils;
+import java.time.LocalDate;
+import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Nullable;
-import java.time.LocalDate;
 
 @Slf4j
 @Component

@@ -3,10 +3,6 @@ package cdit_automation.data_helpers;
 import cdit_automation.configuration.StepDefLevelTestContext;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.models.PersonId;
-import com.github.javafaker.Faker;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import javax.validation.constraints.Positive;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -14,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.validation.constraints.Positive;
+import org.springframework.stereotype.Component;
 
 @Component
 public class MhaDualCitizenFileDataPrep extends BatchFileDataPrep {

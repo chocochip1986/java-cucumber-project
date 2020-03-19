@@ -1,26 +1,21 @@
 package cdit_automation.step_definition;
 
-import cdit_automation.asserts.Assert;
 import cdit_automation.data_helpers.batch_entities.MhaCeasedCitizenFileEntry;
 import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.enums.NationalityEnum;
-import cdit_automation.models.CeasedCitizenValidated;
 import cdit_automation.models.Nationality;
-import cdit_automation.models.PersonDetail;
 import cdit_automation.models.PersonId;
 import cdit_automation.models.PersonName;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.Ignore;
-
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.Ignore;
 
 @Slf4j
 @Ignore

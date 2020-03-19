@@ -9,10 +9,9 @@ import cdit_automation.models.Batch;
 import cdit_automation.models.BulkCitizenValidated;
 import cdit_automation.models.BulkMhaAddressValidated;
 import cdit_automation.models.BulkNcaAddressValidated;
-import org.springframework.stereotype.Component;
-
 import java.time.LocalDate;
 import java.util.Random;
+import org.springframework.stereotype.Component;
 
 @Component
 public class BulkCitizenValidatedFactory extends AbstractFactory {

@@ -2,13 +2,7 @@ package cdit_automation.models;
 
 import cdit_automation.enums.AnnualValueStatus;
 import cdit_automation.models.embeddables.BiTemporalData;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
+import java.math.BigDecimal;
 import javax.annotation.Nullable;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -22,7 +16,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter

@@ -1,15 +1,13 @@
 package cdit_automation.utilities;
 
 import cdit_automation.exceptions.TestFailException;
-
-import javax.validation.constraints.NotNull;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.util.List;
+import javax.validation.constraints.NotNull;
 
 public class FileUtils {
     public static void replaceLineInFile(String absolutePathToFile, String newLine, long lineNumber) {

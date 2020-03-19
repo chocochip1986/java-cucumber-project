@@ -11,16 +11,15 @@ import cdit_automation.enums.GenderEnum;
 import cdit_automation.enums.PersonDetailDataItemChangedEnum;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.PersonId;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.stereotype.Component;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component

@@ -5,12 +5,11 @@ import cdit_automation.pages.GooglePage;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
 
 @Slf4j
 @Ignore

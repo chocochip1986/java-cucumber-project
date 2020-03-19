@@ -3,10 +3,9 @@ package cdit_automation.aws.modules;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import java.io.File;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import java.io.File;
 
 @Slf4j
 @Component

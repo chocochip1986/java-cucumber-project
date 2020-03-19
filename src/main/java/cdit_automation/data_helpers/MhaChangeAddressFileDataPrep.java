@@ -17,15 +17,14 @@ import cdit_automation.exceptions.TestDataSetupErrorException;
 import cdit_automation.models.PersonId;
 import cdit_automation.models.PropertyDetail;
 import cdit_automation.utilities.StringUtils;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.stereotype.Component;
-
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component

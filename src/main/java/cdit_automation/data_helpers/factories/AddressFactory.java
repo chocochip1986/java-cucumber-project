@@ -5,7 +5,6 @@ import cdit_automation.data_setup.data_setup_address.PhakAbstractAddress;
 import cdit_automation.enums.FormatType;
 import cdit_automation.enums.PersonPropertyTypeEnum;
 import cdit_automation.enums.PreparedPropertyTypeEnum;
-import cdit_automation.enums.PropertyType;
 import cdit_automation.enums.SpecialMappingEnum;
 import cdit_automation.enums.automation.PropertyTypeEnum;
 import cdit_automation.enums.automation.ResidencyEnum;
@@ -19,12 +18,10 @@ import cdit_automation.models.SpecialMapping;
 import cdit_automation.models.SpecialProperty;
 import cdit_automation.models.embeddables.BiTemporalData;
 import cdit_automation.models.embeddables.PersonPropertyId;
+import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
-import java.util.List;
 
 @Component
 public class AddressFactory extends AbstractFactory {

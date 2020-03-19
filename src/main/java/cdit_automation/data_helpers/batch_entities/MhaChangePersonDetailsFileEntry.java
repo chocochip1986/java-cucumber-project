@@ -6,6 +6,10 @@ import cdit_automation.models.PersonDetail;
 import cdit_automation.models.PersonId;
 import cdit_automation.repositories.PersonDetailRepo;
 import cdit_automation.utilities.DateUtils;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,11 +17,6 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter

@@ -14,7 +14,6 @@ import cdit_automation.data_setup.data_setup_address.PhakOrphanageAddress;
 import cdit_automation.data_setup.data_setup_address.PhakPrisonAddress;
 import cdit_automation.enums.automation.PropertyTypeEnum;
 import cdit_automation.exceptions.TestFailException;
-
 import java.util.Random;
 
 public class PhakAddress {

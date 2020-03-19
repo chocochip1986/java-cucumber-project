@@ -3,6 +3,9 @@ package cdit_automation.api_helpers;
 import cdit_automation.configuration.TestEnv;
 import cdit_automation.configuration.TestManager;
 import cdit_automation.exceptions.TestFailException;
+import java.util.Map;
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,10 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
-import java.util.Map;
 
 @Slf4j
 public class AbstractApiHelper {

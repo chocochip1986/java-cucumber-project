@@ -4,18 +4,23 @@ import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.AssessableIncomeStatus;
 import cdit_automation.enums.NationalityEnum;
 import cdit_automation.enums.PersonIdTypeEnum;
-import cdit_automation.models.*;
+import cdit_automation.models.Batch;
+import cdit_automation.models.Income;
+import cdit_automation.models.Nationality;
+import cdit_automation.models.Person;
+import cdit_automation.models.PersonDetail;
+import cdit_automation.models.PersonId;
+import cdit_automation.models.PersonName;
 import cdit_automation.models.embeddables.BiTemporalData;
-import cdit_automation.repositories.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
+import cdit_automation.repositories.BatchRepo;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 public class IrasTriMonthlyEgressDataPrep extends BatchFileDataPrep {

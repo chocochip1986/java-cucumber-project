@@ -5,11 +5,10 @@ import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.Batch;
 import cdit_automation.pages.datasource.TrendingRecordsPage;
 import io.cucumber.java.en.Then;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
 
 @Slf4j
 @Ignore

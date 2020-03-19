@@ -11,10 +11,9 @@ import cdit_automation.models.PropertyDetail;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
-
-import java.util.List;
 
 @Slf4j
 @Ignore

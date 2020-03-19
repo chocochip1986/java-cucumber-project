@@ -1,7 +1,6 @@
 package cdit_automation.repositories;
 
 import cdit_automation.enums.FileStatusEnum;
-import cdit_automation.models.FileDetail;
 import cdit_automation.models.FileReceived;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
