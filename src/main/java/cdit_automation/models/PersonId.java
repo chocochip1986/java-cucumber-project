@@ -42,6 +42,11 @@ public class PersonId extends AbstractEntity {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "batch_id")
+    @NotNull
+    private Batch batch;
+
+    @ManyToOne
     @JoinColumn(name = "entity_key")
     @NotNull
     private Person person;
@@ -59,7 +64,7 @@ public class PersonId extends AbstractEntity {
     @Embedded
     private BiTemporalData biTemporalData;
 
-    public static PersonId create(@NotNull PersonIdTypeEnum personIdTypeEnum, @NotNull Person person, @NotNull BiTemporalData biTemporalData) {
+    public static PersonId create(@NotNull Batch batch, @NotNull PersonIdTypeEnum personIdTypeEnum, @NotNull Person person, @NotNull BiTemporalData biTemporalData) {
         String naturalId = "";
         switch(personIdTypeEnum) {
             case FIN:
@@ -70,10 +75,10 @@ public class PersonId extends AbstractEntity {
             default:
                 naturalId = Phaker.validNric();
         }
-        return build(personIdTypeEnum, person, naturalId, biTemporalData);
+        return build(batch, personIdTypeEnum, person, naturalId, biTemporalData);
     }
 
-    public static PersonId create(@NotNull PersonIdTypeEnum personIdTypeEnum, @NotNull Person person, @Nullable String naturalId, @NotNull BiTemporalData biTemporalData) {
+    public static PersonId create(@NotNull Batch batch, @NotNull PersonIdTypeEnum personIdTypeEnum, @NotNull Person person, @Nullable String naturalId, @NotNull BiTemporalData biTemporalData) {
         if ( naturalId == null || naturalId.isEmpty() ) {
             switch(personIdTypeEnum) {
                 case FIN:
@@ -85,11 +90,12 @@ public class PersonId extends AbstractEntity {
                     naturalId = Phaker.validNric();
             }
         }
-        return build(personIdTypeEnum, person, naturalId, biTemporalData);
+        return build(batch, personIdTypeEnum, person, naturalId, biTemporalData);
     }
 
-    private static PersonId build(@NotNull PersonIdTypeEnum personIdTypeEnum, @NotNull Person person, @Nullable String naturalId, @NotNull BiTemporalData biTemporalData) {
+    private static PersonId build(@NotNull Batch batch, @NotNull PersonIdTypeEnum personIdTypeEnum, @NotNull Person person, @Nullable String naturalId, @NotNull BiTemporalData biTemporalData) {
         return PersonId.builder()
+                .batch(batch)
                 .personIdType(personIdTypeEnum)
                 .person(person)
                 .naturalId(naturalId)

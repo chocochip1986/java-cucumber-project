@@ -138,6 +138,7 @@ public class AbstractAutoWired {
     @Autowired protected NationalityRepo nationalityRepo;
     @Autowired protected ErrorMessageRepo errorMessageRepo;
     @Autowired protected PersonRepo personRepo;
+    @Autowired protected GenderRepo genderRepo;
     @Autowired protected PersonIdRepo personIdRepo;
     @Autowired protected PersonDetailRepo personDetailRepo;
     @Autowired protected PersonPropertyRepo personPropertyRepo;
@@ -149,7 +150,6 @@ public class AbstractAutoWired {
     @Autowired protected AnnualValueRepo annualValueRepo;
     @Autowired protected SpecialPropertyRepo specialPropertyRepo;
     @Autowired protected SpecialMappingRepo specialMappingRepo;
-    @Autowired protected GenderRepo genderRepo;
 
     @Autowired protected DeathDateValidatedRepo deathDateValidatedRepo;
     @Autowired protected NoInteractionValidatedRepo noInteractionValidatedRepo;

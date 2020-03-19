@@ -4,6 +4,7 @@ import cdit_automation.repositories.BatchRepo;
 import cdit_automation.repositories.ErrorMessageRepo;
 import cdit_automation.repositories.FileDetailRepo;
 import cdit_automation.repositories.FileReceivedRepo;
+import cdit_automation.repositories.GenderRepo;
 import cdit_automation.repositories.IncomingRecordRepo;
 import cdit_automation.repositories.NationalityRepo;
 import cdit_automation.repositories.PersonDetailRepo;
@@ -26,4 +27,5 @@ public class AbstractService {
     @Autowired protected IncomingRecordRepo incomingRecordRepo;
     @Autowired protected ErrorMessageRepo errorMessageRepo;
     @Autowired protected PersonDetailRepo personDetailRepo;
+    @Autowired protected GenderRepo genderRepo;
 }

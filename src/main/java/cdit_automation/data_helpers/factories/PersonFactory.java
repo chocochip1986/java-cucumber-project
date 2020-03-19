@@ -218,7 +218,12 @@ public class PersonFactory extends AbstractFactory {
         Person person = Person.create();
         BiTemporalData biTemporalData = new BiTemporalData()
                 .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(personOptions.getBirthDate()));
-        PersonId personId = PersonId.create(mapNationalityToPersonIdType(personOptions.getNationality()), person, personOptions.getIdentifier(), biTemporalData);
+        PersonId personId = PersonId.create(
+                batch,
+                mapNationalityToPersonIdType(personOptions.getNationality()),
+                person,
+                personOptions.getIdentifier(),
+                biTemporalData);
         PersonDetail personDetail = PersonDetail.create(batch, person, personOptions.getBirthDate(), personOptions.getDeathDate(), biTemporalData);
         Gender gender = Gender.create(personOptions.gender, person, batch, biTemporalData);
         PersonName personName = PersonName.create(batch, person, personOptions.getName(), biTemporalData);

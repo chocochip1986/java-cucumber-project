@@ -1,9 +1,9 @@
 package cdit_automation.data_helpers;
 
 import cdit_automation.data_setup.Phaker;
+import cdit_automation.enums.GenderEnum;
 import cdit_automation.enums.NationalityEnum;
 import cdit_automation.enums.PersonIdTypeEnum;
-import cdit_automation.enums.RestrictedEnum;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.Batch;
 import cdit_automation.models.Gender;
@@ -41,7 +41,7 @@ public class PersonIdService extends AbstractService {
     public PersonId createNewPPPersonId() {
         Batch batch = Batch.builder().build();
         Person person = Person.create();
-        PersonId personId = createPersonId(person, PersonIdTypeEnum.PP);
+        PersonId personId = createPersonId(batch, person, PersonIdTypeEnum.PP);
         PersonDetail personDetail = createPersonDetail(batch, person);
         PersonName personName = createPersonName(batch, person);
         Nationality nationality = createNationality(batch, person, NationalityEnum.PERMANENT_RESIDENT);
@@ -59,7 +59,7 @@ public class PersonIdService extends AbstractService {
     public PersonId createNewFRPersonId() {
         Batch batch = Batch.builder().build();
         Person person = Person.create();
-        PersonId personId = createPersonId(person, PersonIdTypeEnum.FIN);
+        PersonId personId = createPersonId(batch, person, PersonIdTypeEnum.FIN);
         PersonDetail personDetail = createPersonDetail(batch, person);
         PersonName personName = createPersonName(batch, person);
         Nationality nationality = createNationality(batch, person, NationalityEnum.NON_SINGAPORE_CITIZEN);
@@ -77,10 +77,11 @@ public class PersonIdService extends AbstractService {
     public PersonId createNewSCPersonId() {
         Batch batch = Batch.builder().build();
         Person person = Person.create();
-        PersonId personId = createPersonId(person, PersonIdTypeEnum.NRIC );
+        PersonId personId = createPersonId(batch, person, PersonIdTypeEnum.NRIC);
         PersonDetail personDetail = createPersonDetail(batch, person);
         PersonName personName = createPersonName(batch, person);
         Nationality nationality = createNationality(batch, person, NationalityEnum.SINGAPORE_CITIZEN);
+        Gender gender = createGender(Phaker.validGender(), batch, person);
 
         batchRepo.save(batch);
         personRepo.save(person);
@@ -88,6 +89,7 @@ public class PersonIdService extends AbstractService {
         nationalityRepo.save(nationality);
         personIdrepo.save(personId);
         personNameRepo.save(personName);
+        genderRepo.save(gender);
 
         return personId;
     }
@@ -98,7 +100,8 @@ public class PersonIdService extends AbstractService {
         Nationality nationality = createNationality(batch, person, NationalityEnum.DUAL_CITIZENSHIP);
         PersonDetail personDetail = createPersonDetail(batch, person);
         PersonName personName = createPersonName(batch, person);
-        PersonId personId = createPersonId(person, PersonIdTypeEnum.NRIC);
+        PersonId personId = createPersonId(batch, person, PersonIdTypeEnum.NRIC);
+        Gender gender = createGender(Phaker.validGender(), batch, person);
 
         batchRepo.save(batch);
         personRepo.save(person);
@@ -106,6 +109,7 @@ public class PersonIdService extends AbstractService {
         nationalityRepo.save(nationality);
         personIdrepo.save(personId);
         personNameRepo.save(personName);
+        genderRepo.save(gender);
 
         return personId;
     }
@@ -121,9 +125,9 @@ public class PersonIdService extends AbstractService {
                 .build();
     }
 
-    private PersonId createPersonId(@NotNull Person person, @NotNull PersonIdTypeEnum identifierType) {
-
+    private PersonId createPersonId(@NotNull Batch batch, @NotNull Person person, @NotNull PersonIdTypeEnum identifierType) {
         PersonId personId = PersonId.builder()
+                .batch(batch)
                 .person(person)
                 .personIdType(PersonIdTypeEnum.NRIC)
                 .biTemporalData(new BiTemporalData()
@@ -156,6 +160,16 @@ public class PersonIdService extends AbstractService {
                 .biTemporalData(new BiTemporalData()
                         .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1))))
                 .build();
+    }
+
+    private Gender createGender(@NotNull GenderEnum genderEnum, @NotNull Batch batch, @NotNull Person person) {
+        return Gender.create(
+                genderEnum,
+                person,
+                batch,
+                new BiTemporalData()
+                        .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(dateUtils.yearsBeforeToday(1)))
+        );
     }
 
     private PersonName createPersonName(Batch batch, Person person) {

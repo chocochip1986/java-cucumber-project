@@ -106,6 +106,7 @@ public class Hooks extends AbstractSteps {
         propertyRepo.truncateTable();
         personDetailRepo.truncateTable();
         personRepo.truncateTable();
+        genderRepo.truncateTable();
         errorMessageRepo.truncateTable();
         incomingRecordRepo.truncateTable();
         reasonablenessCheckStatisticViewJpaRepo.deleteAll();

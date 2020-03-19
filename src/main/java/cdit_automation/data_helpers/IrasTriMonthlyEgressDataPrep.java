@@ -160,6 +160,7 @@ public class IrasTriMonthlyEgressDataPrep extends BatchFileDataPrep {
   public PersonId getPersonId(Map<String, String> m, Person person) {
     PersonId result =
         PersonId.create(
+            batch,
             PersonIdTypeEnum.valueOf(m.get(ColumnHeaders.TYPE.getValue())),
             person,
             m.get(ColumnHeaders.NATURAL_ID.getValue()),

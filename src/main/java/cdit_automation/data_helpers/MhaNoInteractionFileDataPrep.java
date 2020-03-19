@@ -4,6 +4,7 @@ import cdit_automation.data_helpers.batch_entities.MhaNoInteractionFileEntry;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.PersonIdTypeEnum;
 import cdit_automation.exceptions.TestFailException;
+import cdit_automation.models.Batch;
 import cdit_automation.models.Person;
 import cdit_automation.models.PersonId;
 import cdit_automation.models.embeddables.BiTemporalData;
@@ -54,6 +55,7 @@ public class MhaNoInteractionFileDataPrep extends BatchFileDataPrep {
     public PersonId getPersonId(Map<String, String> map, Person person) {
 
         return PersonId.create(
+                Batch.builder().build(),
                 PersonIdTypeEnum.valueOf(map.get(FIELD_ID_TYPE)),
                 person,
                 map.get(FIELD_NRIC),
