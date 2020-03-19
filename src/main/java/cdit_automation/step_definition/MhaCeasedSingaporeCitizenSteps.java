@@ -60,23 +60,6 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
         });
   }
 
-  @And("I verify the the people listed in the file have nric cancelled status of {int}")
-  public void iVerifyTheThePeopleListedInTheFileHaveNRIC_CANCELLED_STATUSOf(int status) {
-    List<CeasedCitizenValidated> ceasedCitizens = testContext.get("ceasedCitizens");
-    ceasedCitizens.forEach(
-        c -> {
-          PersonId pi = personIdRepo.findByNaturalId(c.getNric());
-          PersonDetail pd = personDetailRepo.findByPerson(pi.getPerson());
-            testAssert.assertEquals(
-              status == 1,
-              pd.getIsNricCancelled(),
-              "Expecting person with nric : ["
-                  + pi.getNaturalId()
-                  + "] to have NRIC_CANCELLED_STATUS of "
-                  + status);
-        });
-  }
-
   @And("I verify the previous nationality valid till timestamp is the day before renunciation date at 2359HR")
   public void iVerifyThePreviousNationalityValidTillTimestampIsTheRenunciationDateAtHR() {
     List<MhaCeasedCitizenFileEntry> ceasedCitizens = testContext.get("ceasedCitizens");

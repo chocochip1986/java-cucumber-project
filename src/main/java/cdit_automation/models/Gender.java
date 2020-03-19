@@ -55,4 +55,12 @@ public class Gender extends AbstractEntity {
     @JsonIgnore
     @Embedded
     private BiTemporalData biTemporalData;
+
+    public static Gender create(GenderEnum genderEnum, Person person, Batch batch, BiTemporalData biTemporalData) {
+        return build(genderEnum, person, batch, biTemporalData);
+    }
+
+    private static Gender build(GenderEnum genderEnum, Person person, Batch batch, BiTemporalData biTemporalData) {
+        return Gender.builder().genderEnum(genderEnum).person(person).batch(batch).biTemporalData(biTemporalData).build();
+    }
 }

@@ -6,6 +6,7 @@ import cdit_automation.enums.GenderEnum;
 import cdit_automation.enums.NationalityEnum;
 import cdit_automation.enums.PersonIdTypeEnum;
 import cdit_automation.models.Batch;
+import cdit_automation.models.Gender;
 import cdit_automation.models.Nationality;
 import cdit_automation.models.Person;
 import cdit_automation.models.PersonDetail;
@@ -218,12 +219,14 @@ public class PersonFactory extends AbstractFactory {
         BiTemporalData biTemporalData = new BiTemporalData()
                 .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(personOptions.getBirthDate()));
         PersonId personId = PersonId.create(mapNationalityToPersonIdType(personOptions.getNationality()), person, personOptions.getIdentifier(), biTemporalData);
-        PersonDetail personDetail = PersonDetail.create(batch, person, personOptions.getBirthDate(), personOptions.getDeathDate(), personOptions.getGender(), false, biTemporalData);
+        PersonDetail personDetail = PersonDetail.create(batch, person, personOptions.getBirthDate(), personOptions.getDeathDate(), biTemporalData);
+        Gender gender = Gender.create(personOptions.gender, person, batch, biTemporalData);
         PersonName personName = PersonName.create(batch, person, personOptions.getName(), biTemporalData);
         Nationality nationality = Nationality.create(batch, person, personOptions.getNationality(), biTemporalData, dateUtils.beginningOfDayToTimestamp(personOptions.getBirthDate()));
 
         batchRepo.save(batch);
         personRepo.save(person);
+        genderRepo.save(gender);
         personDetailRepo.save(personDetail);
         nationalityRepo.save(nationality);
         personIdRepo.save(personId);

@@ -57,30 +57,20 @@ public class PersonDetail {
     @Column(name = "date_of_death")
     private LocalDate dateOfDeath;
 
-    @Column(name = "gender")
-    @Enumerated(EnumType.STRING)
-    private GenderEnum gender;
-
-    @NotNull
-    @Column(name = "nric_cancelled_status")
-    private Boolean isNricCancelled;
-
     @JsonIgnore
     @Embedded
     private BiTemporalData biTemporalData;
 
     public static PersonDetail create(@NotNull Batch batch, @NotNull Person person, BiTemporalData biTemporalData) {
-        return create(batch, person, Phaker.validPastDate(), null, Phaker.validGender(), false, biTemporalData);
+        return create(batch, person, Phaker.validPastDate(), null, biTemporalData);
     }
 
-    public static PersonDetail create(Batch batch, Person person, LocalDate birthDate, LocalDate deathDate, GenderEnum gender, Boolean isNricCancelled, BiTemporalData biTemporalData) {
+    public static PersonDetail create(Batch batch, Person person, LocalDate birthDate, LocalDate deathDate, BiTemporalData biTemporalData) {
         return PersonDetail.builder()
                 .batch(batch)
                 .person(person)
                 .dateOfBirth(birthDate)
                 .dateOfDeath(deathDate)
-                .gender(gender)
-                .isNricCancelled(isNricCancelled)
                 .biTemporalData(biTemporalData)
                 .build();
     }

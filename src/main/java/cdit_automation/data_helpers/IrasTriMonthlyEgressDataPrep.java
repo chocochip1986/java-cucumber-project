@@ -146,7 +146,6 @@ public class IrasTriMonthlyEgressDataPrep extends BatchFileDataPrep {
         m.get(ColumnHeaders.CITIZENSHIP_RENUNCIATION_DATE.getValue());
     boolean hasCitizenshipCeased = isValid(citizenshipRenunciationDateStr);
     if (hasCitizenshipCeased) {
-      result.setIsNricCancelled(true);
       result.setBiTemporalData(
           new BiTemporalData()
               .generateNewBiTemporalData(

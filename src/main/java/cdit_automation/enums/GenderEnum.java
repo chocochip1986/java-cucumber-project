@@ -1,5 +1,7 @@
 package cdit_automation.enums;
 
+import java.util.Random;
+
 public enum GenderEnum {
     MALE("M"),
     FEMALE("F"),
@@ -27,6 +29,10 @@ public enum GenderEnum {
             }
         }
         return null;
+    }
+
+    public static GenderEnum pick() {
+        return GenderEnum.values()[new Random().nextInt(GenderEnum.values().length)];
     }
 
     public static String invalidGender() {

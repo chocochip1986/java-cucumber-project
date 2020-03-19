@@ -180,7 +180,6 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
             .person(currentPersonDetail.getPerson())
             .dateOfBirth(currentPersonDetail.getDateOfBirth())
             .dateOfDeath(currentPersonDetail.getDateOfDeath())
-            .gender(currentPersonDetail.getGender())
             .biTemporalData(newBiTemporalData)
             .build();
     personDetailRepo.save(newPersonDetail);

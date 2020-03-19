@@ -6,6 +6,7 @@ import cdit_automation.enums.PersonIdTypeEnum;
 import cdit_automation.enums.RestrictedEnum;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.Batch;
+import cdit_automation.models.Gender;
 import cdit_automation.models.Nationality;
 import cdit_automation.models.Person;
 import cdit_automation.models.PersonDetail;
@@ -18,6 +19,7 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 @Service
+@Deprecated
 public class PersonIdService extends AbstractService {
 
     private final String NRIC_PATTERN = "^[S|T][0-9]{7}[A-Z]$";
@@ -148,8 +150,6 @@ public class PersonIdService extends AbstractService {
     private PersonDetail createPersonDetail(@NotNull Batch batch, @NotNull Person person) {
         return PersonDetail.builder()
                 .batch(batch)
-                .gender(Phaker.validGender())
-                .isNricCancelled(false)
                 .dateOfBirth(Phaker.validPastDate())
                 .dateOfDeath(null)
                 .person(person)
