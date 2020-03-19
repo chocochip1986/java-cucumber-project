@@ -3,7 +3,7 @@ package cdit_automation.data_helpers;
 import cdit_automation.configuration.StepDefLevelTestContext;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.AddressIndicatorEnum;
-import cdit_automation.enums.Gender;
+import cdit_automation.enums.GenderEnum;
 import cdit_automation.enums.InvalidAddressTagEnum;
 import cdit_automation.enums.MhaAddressTypeEnum;
 import cdit_automation.enums.NationalityEnum;
@@ -402,12 +402,12 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
                         optionsList.remove(option);
                         return "A";
                     } else {
-                        Gender gender = Gender.fromString(option);
+                        GenderEnum gender = GenderEnum.fromString(option);
                         optionsList.remove(option);
                         return gender.getValue();
                     }
                 })
-                .orElse(Gender.MALE.getValue());
+                .orElse(GenderEnum.MALE.getValue());
     }
 
     private String createDeathDate(List<String> optionsList, String dob) {

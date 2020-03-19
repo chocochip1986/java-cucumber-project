@@ -1,6 +1,6 @@
 package cdit_automation.repositories;
 
-import cdit_automation.enums.Gender;
+import cdit_automation.enums.GenderEnum;
 import cdit_automation.models.Person;
 import cdit_automation.models.PersonDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -40,7 +40,7 @@ public interface PersonDetailRepo extends JpaRepository<PersonDetail, Long> {
           "WHERE pd.person = ?2 " +
           "AND ( pd.biTemporalData.businessTemporalData.validFrom <= TRUNC(SYSDATE) " +
           "AND ( pd.biTemporalData.businessTemporalData.validTill = null OR pd.biTemporalData.businessTemporalData.validTill >= TRUNC(SYSDATE) ) )")
-    int updateGenderForPerson(Gender gender, Person person);
+    int updateGenderForPerson(GenderEnum gender, Person person);
 
     @Transactional
     @Modifying(clearAutomatically = true)

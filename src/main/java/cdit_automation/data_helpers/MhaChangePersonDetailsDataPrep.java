@@ -7,7 +7,7 @@ import cdit_automation.data_helpers.batch_entities.MhaChangePersonDetailsFileEnt
 import cdit_automation.data_helpers.batch_entities.MhaChangePersonDetailsFileEntryCatName;
 import cdit_automation.data_helpers.batch_entities.MhaChangePersonDetailsFileEntryCatUnsupported;
 import cdit_automation.data_setup.Phaker;
-import cdit_automation.enums.Gender;
+import cdit_automation.enums.GenderEnum;
 import cdit_automation.enums.PersonDetailDataItemChangedEnum;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.PersonId;
@@ -50,7 +50,7 @@ public class MhaChangePersonDetailsDataPrep extends BatchFileDataPrep {
         PersonId personId;
         switch (itemChangeCat) {
             case 'S':
-                Gender originalGender = Gender.fromString(scenario.get("data_item_orig_value"));
+                GenderEnum originalGender = GenderEnum.fromString(scenario.get("data_item_orig_value"));
                 personId = personFactory.createNewSCPersonId(birthDate, null, null, originalGender, nric);
                 mhaChangePersonDetailsFileEntry = new MhaChangePersonDetailsFileEntryCatGender(
                         nric,
@@ -198,14 +198,14 @@ public class MhaChangePersonDetailsDataPrep extends BatchFileDataPrep {
     }
 
     private String createGenderChangeOption(String origValue, String option) {
-        if ( Gender.fromString(origValue) == null ) {
+        if ( GenderEnum.fromString(origValue) == null ) {
             throw new TestFailException("Unsupported gender option: "+origValue);
         }
         String fieldOption = "";
         switch(option.toUpperCase()) {
             case "VALID":
-                fieldOption = Arrays.stream(Gender.values())
-                        .filter(gender -> !gender.equals(Gender.fromString(origValue)))
+                fieldOption = Arrays.stream(GenderEnum.values())
+                        .filter(gender -> !gender.equals(GenderEnum.fromString(origValue)))
                         .findFirst()
                         .orElseThrow(()->new TestFailException("Unable to find a valid Gender enum that is not the same as the original value: "+origValue))
                         .getValue();
@@ -214,13 +214,13 @@ public class MhaChangePersonDetailsDataPrep extends BatchFileDataPrep {
                 fieldOption = origValue;
                 break;
             case "INVALID":
-                fieldOption = Gender.invalidGender();
+                fieldOption = GenderEnum.invalidGender();
                 break;
             default:
-                if ( Gender.fromString(option) == null ) {
+                if ( GenderEnum.fromString(option) == null ) {
                     throw new TestFailException("Unsupported person details option for gender change: "+option);
                 } else {
-                    fieldOption = Gender.fromString(option).getValue();
+                    fieldOption = GenderEnum.fromString(option).getValue();
                 }
         }
         return fieldOption;

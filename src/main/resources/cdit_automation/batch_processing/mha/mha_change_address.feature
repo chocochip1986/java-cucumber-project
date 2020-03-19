@@ -90,6 +90,28 @@ Feature: MHA Change address
     | nca                    | mha_c                 |
     | nca                    | nca                   |
 
+  @set_6
+  Scenario Outline: MHA claims john changes address from an existing property which he does not live in
+    Given A singaporean person john owns a landed property abc
+    Given A singaporean person jane owns a landed property abf
+    And john owns a landed property abd
+    And john resides in a condo property abe
+    And the mha change address file contains information that john changed from (<prev_address_indicator>)abf to (<cur_address_indicator>)abd 5 days ago
+    When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
+    And the Mha Change Address batch job completes running with status VALIDATED_TO_PREPARED_ERROR
+    And the error message contains Invalid Person Property association
+    Examples:
+      | prev_address_indicator | cur_address_indicator |
+      | mha_z                  | mha_z                 |
+      | mha_z                  | mha_c                 |
+      | mha_z                  | nca                   |
+      | mha_c                  | mha_z                 |
+      | mha_c                  | mha_c                 |
+      | mha_c                  | nca                   |
+      | nca                    | mha_z                 |
+      | nca                    | mha_c                 |
+      | nca                    | nca                   |
+
   @set_7
   Scenario Outline: CDS is unable to map a person's previous address if it does not exist in the system
     Given A singaporean person john owns a landed property abc

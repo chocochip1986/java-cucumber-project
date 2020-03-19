@@ -48,6 +48,7 @@ import cdit_automation.repositories.DualCitizenValidatedRepo;
 import cdit_automation.repositories.ErrorMessageRepo;
 import cdit_automation.repositories.FileDetailRepo;
 import cdit_automation.repositories.FileReceivedRepo;
+import cdit_automation.repositories.GenderRepo;
 import cdit_automation.repositories.IncomeRepo;
 import cdit_automation.repositories.IncomingRecordRepo;
 import cdit_automation.repositories.NationalityRepo;
@@ -148,6 +149,7 @@ public class AbstractAutoWired {
     @Autowired protected AnnualValueRepo annualValueRepo;
     @Autowired protected SpecialPropertyRepo specialPropertyRepo;
     @Autowired protected SpecialMappingRepo specialMappingRepo;
+    @Autowired protected GenderRepo genderRepo;
 
     @Autowired protected DeathDateValidatedRepo deathDateValidatedRepo;
     @Autowired protected NoInteractionValidatedRepo noInteractionValidatedRepo;

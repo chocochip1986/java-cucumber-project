@@ -50,7 +50,10 @@ spring:
 test-env:
   env-name: qa
   datasource:
-    url: https://datasource-qa.cpfb.gds-gov.tech
+    url: jdbc:oracle:thin:@//cdsracdev-scan.cpfb.gds-gov.tech:1625/allot.cpfb.gds-gov.tech
+    username: Datasource
+    password: Ft2FUEA$GPyUx^
+    driver-class-name: oracle.jdbc.driver.OracleDriver
   datasource-ui:
     url: localhost
     port: 4200

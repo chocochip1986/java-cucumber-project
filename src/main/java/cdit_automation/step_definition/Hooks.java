@@ -99,6 +99,7 @@ public class Hooks extends AbstractSteps {
         personStatusRepo.truncateTable();
         personPropertyRepo.truncateTable();
         personNameRepo.truncateTable();
+        genderRepo.truncateTable();
         propertyDetailRepo.truncateTable();
         specialPropertyRepo.truncateTable();
 //        specialMappingRepo.truncateTable();

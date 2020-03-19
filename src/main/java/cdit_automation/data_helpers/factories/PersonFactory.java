@@ -2,7 +2,7 @@ package cdit_automation.data_helpers.factories;
 
 import cdit_automation.constants.TestConstants;
 import cdit_automation.data_setup.Phaker;
-import cdit_automation.enums.Gender;
+import cdit_automation.enums.GenderEnum;
 import cdit_automation.enums.NationalityEnum;
 import cdit_automation.enums.PersonIdTypeEnum;
 import cdit_automation.models.Batch;
@@ -13,7 +13,6 @@ import cdit_automation.models.PersonId;
 import cdit_automation.models.PersonName;
 import cdit_automation.models.embeddables.BiTemporalData;
 import cdit_automation.models.embeddables.BusinessTemporalData;
-import cdit_automation.models.embeddables.DbTemporalData;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
@@ -28,7 +27,7 @@ public class PersonFactory extends AbstractFactory {
         private LocalDate birthDate;
         private LocalDate deathDate;
         private String name;
-        private Gender gender;
+        private GenderEnum gender;
         private NationalityEnum nationality;
         private String identifier;
 
@@ -131,7 +130,7 @@ public class PersonFactory extends AbstractFactory {
         return createNewPPPersonId(null, null, null, null, nric);
     }
 
-    public PersonId createNewPPPersonId(LocalDate birthDate, LocalDate deathDate, String name, Gender gender, String identifier) {
+    public PersonId createNewPPPersonId(LocalDate birthDate, LocalDate deathDate, String name, GenderEnum gender, String identifier) {
         return createPersonData(birthDate, deathDate, name, gender, NationalityEnum.PERMANENT_RESIDENT, identifier);
     }
 
@@ -143,7 +142,7 @@ public class PersonFactory extends AbstractFactory {
         return createNewFRPersonId(null, null, null, null, fin);
     }
 
-    public PersonId createNewFRPersonId(LocalDate birthDate, LocalDate deathDate, String name, Gender gender, String identifier) {
+    public PersonId createNewFRPersonId(LocalDate birthDate, LocalDate deathDate, String name, GenderEnum gender, String identifier) {
         return createPersonData(birthDate, deathDate, name, gender, NationalityEnum.NON_SINGAPORE_CITIZEN, identifier);
     }
 
@@ -171,7 +170,7 @@ public class PersonFactory extends AbstractFactory {
         return createPersonData(birthDate, null, name, null, NationalityEnum.SINGAPORE_CITIZEN, null);
     }
 
-    public PersonId createNewSCPersonId(LocalDate birthDate, LocalDate deathDate, String name, Gender gender, String identifier) {
+    public PersonId createNewSCPersonId(LocalDate birthDate, LocalDate deathDate, String name, GenderEnum gender, String identifier) {
         return createPersonData(birthDate, deathDate, name, gender, NationalityEnum.SINGAPORE_CITIZEN, identifier);
     }
 
@@ -183,7 +182,7 @@ public class PersonFactory extends AbstractFactory {
         return createDualCitizen(null, null, null, null, identifier);
     }
 
-    public PersonId createDualCitizen(LocalDate birthDate, LocalDate deathDate, String name, Gender gender, String identifier) {
+    public PersonId createDualCitizen(LocalDate birthDate, LocalDate deathDate, String name, GenderEnum gender, String identifier) {
         return createPersonData(birthDate, deathDate, name, gender, NationalityEnum.DUAL_CITIZENSHIP, identifier);
     }
 
@@ -194,7 +193,7 @@ public class PersonFactory extends AbstractFactory {
         nationalityRepo.updateValidFrom(dateUtils.localDateToDate(birthDate), person, dateUtils.localDateToDate(oldValidFrom));
     }
 
-    public PersonId createPersonData(LocalDate birthDate, LocalDate deathDate, String name, Gender gender, NationalityEnum nationalityEnum, String identifier) {
+    public PersonId createPersonData(LocalDate birthDate, LocalDate deathDate, String name, GenderEnum gender, NationalityEnum nationalityEnum, String identifier) {
         PersonOptions personOptions = new PersonOptions();
         if ( birthDate != null ) {
             personOptions.setBirthDate(birthDate);

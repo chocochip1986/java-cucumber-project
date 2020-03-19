@@ -1,6 +1,6 @@
 package cdit_automation.data_setup;
 
-import cdit_automation.enums.Gender;
+import cdit_automation.enums.GenderEnum;
 import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,7 +33,7 @@ public class Phaker {
 
     private static final String[] NUMBERS = new String[]{"1", "2", "3", "4", "5", "6", "7", "9", "0"};
     private static final String[] ALPHABETS = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
-    private static final Gender[] GENDERS = Gender.values();
+    private static final GenderEnum[] GENDERS = GenderEnum.values();
     private static final String[] MOBILENUMBER = new String[]{"9", "8"};
 
     private static final int[] DAYS_IN_MONTHS = new int[]{30, 27, 30, 29, 30, 29, 30, 30, 29, 30, 29, 30};
@@ -107,7 +107,7 @@ public class Phaker {
         return faker.name().lastName() + " " + faker.name().firstName();
     }
 
-    public static Gender validGender() {
+    public static GenderEnum validGender() {
         return GENDERS[new Random().nextInt(GENDERS.length)];
     }
 

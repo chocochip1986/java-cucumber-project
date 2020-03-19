@@ -1,7 +1,7 @@
 package cdit_automation.models;
 
 import cdit_automation.enums.AddressIndicatorEnum;
-import cdit_automation.enums.Gender;
+import cdit_automation.enums.GenderEnum;
 import cdit_automation.enums.NationalityEnum;
 import cdit_automation.enums.YesNoTypeEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -16,11 +16,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
@@ -54,7 +50,7 @@ public class BulkCitizenValidated extends AbstractValidated {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender", length = 1)
-    private Gender gender;
+    private GenderEnum gender;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "address_indicator")

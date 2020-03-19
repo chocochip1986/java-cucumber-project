@@ -1,13 +1,13 @@
 package cdit_automation.enums;
 
-public enum Gender {
+public enum GenderEnum {
     MALE("M"),
     FEMALE("F"),
     UNKNOWN("U");
 
     private String value;
 
-    Gender(String s) {
+    GenderEnum(String s) {
         this.value = s;
     }
 
@@ -20,8 +20,8 @@ public enum Gender {
         return this.value;
     }
 
-    public static Gender fromString(String str) {
-        for (Gender enumVal : Gender.values()) {
+    public static GenderEnum fromString(String str) {
+        for (GenderEnum enumVal : GenderEnum.values()) {
             if (enumVal.getValue().equals(str)) {
                 return enumVal;
             }

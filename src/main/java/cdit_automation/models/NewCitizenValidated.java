@@ -1,7 +1,7 @@
 package cdit_automation.models;
 
 import cdit_automation.enums.AddressIndicatorEnum;
-import cdit_automation.enums.Gender;
+import cdit_automation.enums.GenderEnum;
 import cdit_automation.enums.InvalidAddressTagEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -48,7 +48,7 @@ public class NewCitizenValidated extends AbstractValidated {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender")
-    private Gender gender;
+    private GenderEnum gender;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "old_address_indicator")
