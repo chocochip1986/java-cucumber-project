@@ -51,10 +51,10 @@ public class MhaNoInteractionFileDataPrep extends BatchFileDataPrep {
         return Person.create();
     }
     
-    public PersonId getPersonId(Map<String, String> map, Person person) {
+    public PersonId getPersonId(Map<String, String> map, Batch batch, Person person) {
 
         return PersonId.create(
-                Batch.builder().build(),
+                batch,
                 PersonIdTypeEnum.valueOf(map.get(FIELD_ID_TYPE)),
                 person,
                 map.get(FIELD_NRIC),

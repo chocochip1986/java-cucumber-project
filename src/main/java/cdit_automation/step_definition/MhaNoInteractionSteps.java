@@ -58,11 +58,14 @@ public class MhaNoInteractionSteps extends AbstractSteps {
       List<PersonId> personIdList = new ArrayList<>();
       List<Map<String, String>> detailList = dataTable.asMaps(String.class, String.class);
 
+      Batch batch = Batch.builder().build();
+      batchRepo.save(batch);
+      
       detailList.forEach(
               detail -> {
                   Person person = mhaNoInteractionFileDataPrep.getPerson();
                   personList.add(person);
-                  personIdList.add(mhaNoInteractionFileDataPrep.getPersonId(detail, person));
+                  personIdList.add(mhaNoInteractionFileDataPrep.getPersonId(detail, batch, person));
               });
        
       testContext.set(SAVED_PERSONS, personRepo.saveAll(personList));
