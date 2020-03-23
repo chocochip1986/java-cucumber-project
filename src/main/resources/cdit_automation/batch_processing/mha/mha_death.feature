@@ -26,7 +26,7 @@ Feature: Data processing for MHA death broadcast
       | 1                 | 1                             |
     When MHA sends the MHA_DEATH_DATE file to Datasource sftp for processing
     And the Mha Death batch job completes running with status CLEANUP
-    Then I verify that there is an error message for invalid death dates
+    Then the error message contains Date of death is earlier than Date of birth
 
   @set_4
   Scenario: MHA sends a Death file with a FIN for processing
@@ -35,7 +35,6 @@ Feature: Data processing for MHA death broadcast
     | 1                 |
     When MHA sends the MHA_DEATH_DATE file to Datasource sftp for processing
     And the Mha Death batch job completes running with status CLEANUP
-    Then I verify that there is an error message for invalid nric
 
   @set_5
   Scenario: MHA sends a death date for a person who already is dead
@@ -44,7 +43,7 @@ Feature: Data processing for MHA death broadcast
       | 1                    |
     When MHA sends the MHA_DEATH_DATE file to Datasource sftp for processing
     And the Mha Death batch job completes running with status CLEANUP
-    Then I verify that there is an error message for existing death case
+    Then the error message contains Citizen has an existing Death Date
 
   @set_6 @defect @GRYFFINDOR-897
   Scenario: MHA sends a future death date
