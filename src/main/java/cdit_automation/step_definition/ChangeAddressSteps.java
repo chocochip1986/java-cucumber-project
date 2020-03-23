@@ -89,13 +89,15 @@ public class ChangeAddressSteps extends AbstractSteps {
     }
 
     @And("^the mha change address file contains information that ([A-Za-z]+) changed from \\((mha_z|mha_c|nca)\\)([a-z0-9]+) to \\((mha_z|mha_c|nca)\\)([a-z0-9]+) " +
-            "(\\d) days ago$")
+            "(\\d+) days ago$")
     public void theMhaChangeAddressFileContainsInfoThat(String personName, String prevIndicatorType, String prevPropertyName, String curIndicatorType, String curPropertyName, long daysAgo) {
         checkIfPersonExistsInTestContext(personName);
         checkIfPropertyExistsInTestContext(prevPropertyName);
         checkIfPropertyExistsInTestContext(curPropertyName);
 
-        batchFileDataWriter.begin(mhaChangeAddressDataPrep.generateSingleDateNoOfRecordsHeader(1), FileTypeEnum.MHA_CHANGE_ADDRESS, null);
+        LocalDate date = dateUtils.daysBeforeToday(daysAgo);
+
+        batchFileDataWriter.begin(mhaChangeAddressDataPrep.generateSingleDateNoOfRecordsHeader(date, 1), FileTypeEnum.MHA_CHANGE_ADDRESS, null);
         mhaChangeAddressFileDataPrep.createLineInBody(testContext.get(personName),
                 addressIndicatorEnumFrom(prevIndicatorType),
                 testContext.get(prevPropertyName),

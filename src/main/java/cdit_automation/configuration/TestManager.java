@@ -165,7 +165,7 @@ public class TestManager {
 
     public void sendNotificationToSlack(String message) {
         if ( testEnv.getEnv().equals(TestEnv.Env.QA) ) {
-            slack.sendToSlack(testEnv.getTopicArn(), message, Slack.Level.NEUTRAL);
+//            slack.sendToSlack(testEnv.getTopicArn(), message, Slack.Level.NEUTRAL);
         }
     }
 
