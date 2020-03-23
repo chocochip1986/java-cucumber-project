@@ -70,5 +70,14 @@ Feature: Data processing for MHA death broadcast
       | PartialDuplicates |
       | 1                 |
     When MHA sends the MHA_DEATH_DATE file to Datasource sftp for processing
+    And the Mha Death batch job completes running with status BULK_CHECK_VALIDATION_ERROR
+    Then the error message contains Partially Duplicate Record found
+
+  @set_9
+  Scenario: MHA sends partially duplicated entries
+    Given the mha death file has the following details:
+      | PartialDuplicates | ValidSCDeathCases |
+      | 1                 | 1                 |
+    When MHA sends the MHA_DEATH_DATE file to Datasource sftp for processing
     And the Mha Death batch job completes running with status CLEANUP
     Then the error message contains Partially Duplicate Record found
