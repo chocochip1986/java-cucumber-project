@@ -22,7 +22,7 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
     public List<String> createBodyOfTestScenarios(List<Map<String, String>> list, StepDefLevelTestContext testContext, Timestamp receivedTimestamp) {
         List<String> listOfInvalidNrics = createListWithInvalidNrics(parseStringSize(list.get(0).get("InvalidNrics")));
         List<String> listOfDuplicatedEntries = createListOfDuplicatedEntries(parseStringSize(list.get(0).get("DuplicatedEntries")));
-        List<String> listOfDuplicatedNricOnlyEntries = createListOfDuplicatedNricOnlyEntries(parseStringSize(list.get(0).get("DuplicatedNricOnlyEntries")));
+        List<String> listOfDuplicatedNricOnlyEntries = createListOfDuplicatedNricOnlyEntries(parseStringSize(list.get(0).get("PartialDuplicates")));
         List<String> listOfValidSCDeathCases = createListOfValidSCDeathCases(parseStringSize(list.get(0).get("ValidSCDeathCases")), receivedTimestamp.toLocalDateTime().toLocalDate());
         List<String> listOfValidPPDeathCases = createListOfValidPPDeathCases(parseStringSize(list.get(0).get("ValidPPDeathCases")), receivedTimestamp.toLocalDateTime().toLocalDate());
         List<String> listOfValidFRDeathCases = createListOfValidFRDeathCases(parseStringSize(list.get(0).get("ValidFRDeathCases")), receivedTimestamp.toLocalDateTime().toLocalDate());
