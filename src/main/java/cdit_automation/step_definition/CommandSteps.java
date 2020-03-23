@@ -84,7 +84,7 @@ public class CommandSteps extends AbstractSteps {
 
     @When("^(?:MHA|IRAS) sends the (MHA_BULK_CITIZEN|MHA_NEW_CITIZEN|MHA_NO_INTERACTION|MHA_CHANGE_ADDRESS|MHA_DUAL_CITIZEN|MHA_PERSON_DETAIL_CHANGE|MHA_DEATH_DATE|MHA_CEASED_CITIZEN) file to Datasource sftp for processing$")
     public void mhaSendsTheFileToDatasourceSftpForProcessing(FileTypeEnum fileTypeEnum) {
-        if ( testManager.getTestEnvironment().getEnv().equals(TestEnv.Env.LOCAL) ) {
+        if ( testManager.getTestEnvironment().getEnv().equals(TestEnv.Env.LOCAL) || testManager.getTestEnvironment().getEnv().equals(TestEnv.Env.AUTOMATION) ) {
             FileDetail fileDetail = fileDetailRepo.findByFileEnum(fileTypeEnum);
             FileReceived fileReceived = batchFileCreator.createFileReceived(fileDetail, fileTypeEnum.getValue().toLowerCase(), testContext.get("receivedTimestamp"));
             testContext.set("fileReceived", fileReceived);
@@ -161,7 +161,7 @@ public class CommandSteps extends AbstractSteps {
     }
 
     private void trigger() {
-        if ( testManager.getTestEnvironment().getEnv().equals(TestEnv.Env.LOCAL) ) {
+        if ( testManager.getTestEnvironment().getEnv().equals(TestEnv.Env.LOCAL) || testManager.getTestEnvironment().getEnv().equals(TestEnv.Env.AUTOMATION) ) {
             FileReceived fileReceived = testContext.get("fileReceived");
             if ( fileReceived == null ) {
                 throw new TestFailException("No file received record created!!!");
