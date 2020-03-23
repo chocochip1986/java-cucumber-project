@@ -7,6 +7,13 @@ import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.Batch;
 import cdit_automation.models.ErrorMessage;
 import cdit_automation.models.FileReceived;
+import cdit_automation.models.Nationality;
+import cdit_automation.models.PersonDetail;
+import cdit_automation.models.PersonId;
+import cdit_automation.models.PersonName;
+import cdit_automation.models.PersonProperty;
+import cdit_automation.models.Property;
+import cdit_automation.models.PropertyDetail;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import lombok.extern.slf4j.Slf4j;
@@ -146,5 +153,39 @@ public class CommonSteps extends AbstractSteps {
         List<ErrorMessage> errorMessages = errorMessageRepo.findByBatch(batch);
 
         testAssert.assertTrue(errorMessages.isEmpty(), "There are error messages for batch: "+batch.getId());
+    }
+    
+    @And("^I verify that person with ([S|T|F|G][0-9]{7}[A-Z]) (is|is not) persisted in Datasource$")
+    public void iVerifyThatPersonWithFXIsPersistedInDatasource(String identifier, String persisted) {
+        log.info("Verifying records of person with " + identifier + " " + persisted + " persisted.");
+        PersonId personId = personIdRepo.findByNaturalId(identifier);
+        
+        // If "is not" persisted, check personId is null. Without personId, nothing can be created.
+        if (persisted.equalsIgnoreCase("is not")) {
+            testAssert.assertNull(personId, "PersonId record found for "+identifier);
+            return;
+        }
+        
+        // Otherwise, check all relevant data is created.
+        testAssert.assertNotNull(personId, "No PersonId record for "+identifier);
+        testAssert.assertNotNull(personId.getPerson(), "No Person record for "+identifier);
+
+        Nationality nationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
+        testAssert.assertNotNull(nationality, "No Nationality record for "+personId.getNaturalId());
+
+        PersonName personName = personNameRepo.findByPerson(personId.getPerson());
+        testAssert.assertNotNull(personName, "No PersonName record for "+personId.getNaturalId());
+
+        PersonDetail personDetail = personDetailRepo.findByPerson(personId.getPerson());
+        testAssert.assertNotNull(personDetail, "No Person Detail record for "+personId.getNaturalId());
+
+        PersonProperty personProperty = personPropertyRepo.findByPerson(personId.getPerson());
+        testAssert.assertNotNull(personProperty, "No Person Property record for "+personId.getNaturalId());
+
+        Property property = propertyRepo.findByPropertyId(personProperty.getIdentifier().getPropertyEntity().getPropertyId());
+        testAssert.assertNotNull(property, "No property record for "+personId.getNaturalId());
+
+        PropertyDetail propertyDetail = propertyDetailRepo.findByProperty(property);
+        testAssert.assertNotNull(propertyDetail, "No property detail for "+personId.getNaturalId());
     }
 }
