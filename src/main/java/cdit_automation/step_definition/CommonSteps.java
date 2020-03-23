@@ -1,5 +1,6 @@
 package cdit_automation.step_definition;
 
+import cdit_automation.aws.modules.Slack;
 import cdit_automation.configuration.TestEnv;
 import cdit_automation.enums.BatchStatusEnum;
 import cdit_automation.exceptions.TestFailException;
