@@ -42,6 +42,31 @@ aws:
     topicArn: ""
 ---
 spring:
+  profiles: automation
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521:ORCLCDB
+    username: C##DATASOURCE
+    password: pwd
+    driver-class-name: oracle.jdbc.OracleDriver
+test-env:
+  env-name: automation
+  datasource:
+    url: https://datasource-qa.cpfb.gds-gov.tech
+    port: 8081
+  datasource-ui:
+    url: localhost
+    port: 4200
+    username: cdit
+    password: cdit
+  implicit-wait: 5
+  explicit-wait: 30
+  wait: 600
+  fail-fast: false
+aws:
+  sns:
+    topicArn: ""
+---
+spring:
   profiles: qa
   datasource:
     url: jdbc:oracle:thin:@//cdsracdev-scan.cpfb.gds-gov.tech:1625/allot.cpfb.gds-gov.tech
