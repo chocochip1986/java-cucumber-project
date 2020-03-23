@@ -85,24 +85,6 @@ public class MhaDeathSteps extends AbstractSteps {
         }
     }
 
-    @Then("I verify that there is an error message for existing death case")
-    public void iVerifyThatThereIsAnErrorMessageForExistingDeathCase() {
-        log.info("Verify that there is an error message for existing death case");
-
-        FileReceived fileReceived = testContext.get("fileReceived");
-        Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
-
-        List<String> listOfPpl = testContext.get("listOfPplWhoAreAlreadyDead");
-        for ( int i = 0 ; i < listOfPpl.size() ; i++ ) {
-            String nric = listOfPpl.get(i).substring(0,9);
-            DeathDateValidated deathDateValidated = deathDateValidatedRepo.findByNricAndBatch(nric, batch);
-            ErrorMessage errorMessage = errorMessageRepo.findByValidatedIdAndValidatedType(deathDateValidated.getId(), ErrorMessage.ValidatedTypes.DEATH_DATE);
-
-            testAssert.assertNotNull(errorMessage, "No error messages at all!");
-            testAssert.assertEquals(ErrorMessageConstants.MAP_TO_PREPARED_DATA_ERROR, errorMessage.getMessage(), "Error message contains incorrect message!");
-        }
-    }
-
     @Then("I verify that there is an error message for future death date case")
     public void iVerifyThatThereIsAnErrorMessageForFutureDeathDateCase() {
         log.info("Verify that there is an error message for future death date case");

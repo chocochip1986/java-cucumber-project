@@ -16,7 +16,8 @@ public class TestEnv {
     @Getter
     public enum Env {
         LOCAL("local"),
-        QA("qa");
+        QA("qa"),
+        AUTOMATION("automation");
 
         private String name;
 
