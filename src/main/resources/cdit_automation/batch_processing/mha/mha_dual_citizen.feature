@@ -33,7 +33,7 @@ Feature: Data processing for MHA dual citizenship
     | NewDualCitizensInFile | InvalidNrics | ExistingDualCitizensInFile |
     | 1                     | 1            | 1                          |
     When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
-    And the Mha Dual Citizen batch job completes running with status RAW_DATA_ERROR
+    And the Mha Dual Citizen batch job completes running with status CLEANUP
     Then I verify that there is an error message for invalid nric
     
   @Set_4
