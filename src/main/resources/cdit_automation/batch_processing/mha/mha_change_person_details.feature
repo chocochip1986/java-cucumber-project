@@ -39,7 +39,7 @@ Feature: Data processing for Mha Change in Person Details
       | valid     | B                         | 19860924             | 20000924                | valid                 |
       | S5881915H | N                         | Jay Chou             | Tan Tan Ah Beng         | valid                 |
     When MHA sends the MHA_PERSON_DETAIL_CHANGE file to Datasource sftp for processing
-    And the Mha Change of Personal Details batch job completes running with status BULK_CHECK_VALIDATION_ERROR
+    And the Mha Change of Personal Details batch job completes running with status CLEANUP
     And the error message contains Partially Duplicate Record found
 
    @set_5
@@ -50,7 +50,7 @@ Feature: Data processing for Mha Change in Person Details
        | valid     | N                         | Chao Ah Beng         | Tan Ah Beng             | valid                 |
        | S5881915H | S                         | U                    | F                       | valid                 |
      When MHA sends the MHA_PERSON_DETAIL_CHANGE file to Datasource sftp for processing
-     And the Mha Change of Personal Details batch job completes running with status BULK_CHECK_VALIDATION_ERROR
+     And the Mha Change of Personal Details batch job completes running with status CLEANUP
      And the error message contains Partially Duplicate Record found
 
   @set_6
@@ -61,7 +61,7 @@ Feature: Data processing for Mha Change in Person Details
       | valid     | N                         | Chao Ah Beng         | Tan Ah Beng             | valid                 |
       | S5881915H | B                         | 20180919             | 20191231                | valid                 |
     When MHA sends the MHA_PERSON_DETAIL_CHANGE file to Datasource sftp for processing
-    And the Mha Change of Personal Details batch job completes running with status BULK_CHECK_VALIDATION_ERROR
+    And the Mha Change of Personal Details batch job completes running with status CLEANUP
     And the error message contains Partially Duplicate Record found
 
   @set_7
