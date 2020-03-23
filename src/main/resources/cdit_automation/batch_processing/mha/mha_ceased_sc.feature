@@ -129,7 +129,7 @@ Feature: Data processing for Mha ceased citizenship
       | Message                                 | Count |
       | Nationality must not be SG country code | 1     |
 
-  @set_10
+  @set_1
   Scenario: Mha sends a ceased citizenship for a citizen would was previously a dual citizen
     Given that john was convert from a dual citizen to a singaporean 10 days ago
     And john's citizenship ceased 9 days ago
@@ -137,7 +137,7 @@ Feature: Data processing for Mha ceased citizenship
     Then the Mha Ceased Citizen batch job completes running with status CLEANUP
     And I verify that john is not a citizen 9 days ago
 
-  @set_10
+  @set_2
   Scenario: Mha sends a ceased citizenship file containing a person who is already non Singaporean
     Given the file has the following details:
       | CeasedCitizenWhoIsNonSG |
