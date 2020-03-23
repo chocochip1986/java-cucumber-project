@@ -223,7 +223,7 @@ Feature: MHA Change address
     Then john does not reside in abc since 6 days ago
     And john resides in the lorong buangkok special property
 
-  @set_15 @defect
+  @set_15 @defect @RVC115
   Scenario Outline: John moves to a new special property address
     Given A 60 year old singaporean person john resides a hdb property abc
     And the mha change address file contains information that john changed from (<prev_address_indicator>)abc to a new (<cur_address_indicator>)lorong_buangkok property 5 days ago
