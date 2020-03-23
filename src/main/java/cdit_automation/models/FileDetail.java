@@ -216,7 +216,7 @@ public class FileDetail extends AbstractEntity  {
             case MHA_PERSON_DETAIL_CHANGE:
                 agency = AgencyEnum.MHA;
                 hasFooterFiller = false;
-                headerSize = 16;
+                headerSize = 8;
                 bodySize = 84;
                 footerFillerSize = 0;
                 header = true;
