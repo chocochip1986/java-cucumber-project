@@ -64,13 +64,13 @@ Feature: Data processing for Mha Change in Person Details
     And the Mha Change of Personal Details batch job completes running with status BULK_CHECK_VALIDATION_ERROR
     And the error message contains Partially Duplicate Record found
 
-    @set_7
-    Scenario: MHa sends a file with full duplicated records
-      Given the mha person details file has the following details:
-        | nric      | data_item_change_category | data_item_orig_value | data_item_change_value  | data_item_change_date |
-        | S5881915H | N                         | Jay Chou             | Tan Ah Beng             | 20180723              |
-        | valid     | B                         | 19860924             | 20000924                | valid                 |
-        | S5881915H | N                         | Jay Chou             | Tan Ah Beng             | 20180723              |
-      When MHA sends the MHA_PERSON_DETAIL_CHANGE file to Datasource sftp for processing
-      And the Mha Change of Personal Details batch job completes running with status CLEANUP
-      And the error message contains Completely Duplicate Record found
+  @set_7
+  Scenario: MHa sends a file with full duplicated records
+    Given the mha person details file has the following details:
+      | nric      | data_item_change_category | data_item_orig_value | data_item_change_value  | data_item_change_date |
+      | S5881915H | N                         | Jay Chou             | Tan Ah Beng             | 20180723              |
+      | valid     | B                         | 19860924             | 20000924                | valid                 |
+      | S5881915H | N                         | Jay Chou             | Tan Ah Beng             | 20180723              |
+    When MHA sends the MHA_PERSON_DETAIL_CHANGE file to Datasource sftp for processing
+    And the Mha Change of Personal Details batch job completes running with status CLEANUP
+    And the error message contains Completely Duplicate Record found
