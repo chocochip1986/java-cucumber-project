@@ -169,6 +169,10 @@ public class TestManager {
         }
     }
 
+    public boolean isDevEnvironment() {
+        return testEnv.getEnv().equals(TestEnv.Env.LOCAL) || testEnv.getEnv().equals(TestEnv.Env.AUTOMATION);
+    }
+
     private String constructTestRunSummary(String message) {
         message = System.lineSeparator()+TEST_SUMMARY_TITLE+message;
         message += System.lineSeparator()+TEST_SUMMARY_TITLE;
