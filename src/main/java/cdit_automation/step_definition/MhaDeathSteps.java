@@ -28,13 +28,13 @@ import org.junit.Ignore;
 public class MhaDeathSteps extends AbstractSteps {
     @Given("^the mha death file is empty$")
     public void theMhaDeathFileIsEmpty() throws IOException {
-        batchFileDataWriter.begin(mhaChangePersonDetailsDataPrep.generateDoubleHeader(), FileTypeEnum.MHA_DEATH_DATE, null);
+        batchFileDataWriter.begin(mhaChangePersonDetailsDataPrep.generateSingleHeader(), FileTypeEnum.MHA_DEATH_DATE, null);
         batchFileDataWriter.end();
     }
 
     @Given("^the mha death file has the following details:$")
     public void theMhaDeathFileHasTheFollowingDetails(DataTable table) throws IOException {
-        batchFileDataWriter.begin(mhaChangePersonDetailsDataPrep.generateDoubleHeader(), FileTypeEnum.MHA_DEATH_DATE, null);
+        batchFileDataWriter.begin(mhaChangePersonDetailsDataPrep.generateSingleHeader(), FileTypeEnum.MHA_DEATH_DATE, null);
         Timestamp receivedTimestamp = dateUtils.beginningOfDayToTimestamp(dateUtils.now());
 
         List<Map<String, String>> list = table.asMaps(String.class, String.class);

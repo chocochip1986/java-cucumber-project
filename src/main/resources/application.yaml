@@ -44,16 +44,15 @@ aws:
 spring:
   profiles: qa
   datasource:
-    url: jdbc:oracle:thin:@oracle-db.co6e722tselv.ap-southeast-1.rds.amazonaws.com:1521:ALLOT
-    username: datasource_qa
-    password: perMaNalTY
-test-env:
-  env-name: qa
-  datasource:
     url: jdbc:oracle:thin:@//cdsracdev-scan.cpfb.gds-gov.tech:1625/allot.cpfb.gds-gov.tech
     username: Datasource
     password: Ft2FUEA$GPyUx^
     driver-class-name: oracle.jdbc.driver.OracleDriver
+test-env:
+  env-name: qa
+  datasource:
+    url: https://datasource-qa.cpfb.gds-gov.tech
+    port: 8081
   datasource-ui:
     url: localhost
     port: 4200

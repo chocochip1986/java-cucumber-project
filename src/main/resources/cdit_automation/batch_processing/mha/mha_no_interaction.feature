@@ -67,7 +67,8 @@ Feature: Data processing for MHA no interaction list (NIL)
     And the Mha no interaction batch job completes running with status FILE_ERROR
     And I verify that the following error message appeared:
       | Message                                       | Count |
-      | Must have 1 Footer record.                    | 1     |
+      | Footer record count must be numeric.          | 1     |
+      | Must have at least 1 valid body record.       | 1     |
     And I verify number of records in MHA no interaction validated table is 0
     
   @set_5
@@ -100,8 +101,8 @@ Feature: Data processing for MHA no interaction list (NIL)
     When MHA sends the MHA_NO_INTERACTION file to Datasource sftp for processing
     And the Mha no interaction batch job completes running with status RAW_DATA_ERROR
     And I verify that the following error message appeared:
-      | Message                                                | Count |
-      | {"extractionDate":["Must be in yyyymmdd date format"]} | 1     |
+      | Message                                                    | Count |
+      | "Must be in yyyyMMdd date format."                         | 1     |
     And I verify number of records in MHA no interaction validated table is 1
 
   @set_7
@@ -117,8 +118,8 @@ Feature: Data processing for MHA no interaction list (NIL)
     When MHA sends the MHA_NO_INTERACTION file to Datasource sftp for processing
     And the Mha no interaction batch job completes running with status RAW_DATA_ERROR
     And I verify that the following error message appeared:
-      | Message                                                | Count |
-      | {"cutOffDate":["Must be in yyyymmdd date format"]}     | 1     |
+      | Message                                                    | Count |
+      | "Must be in yyyyMMdd date format."                         | 1     |
     And I verify number of records in MHA no interaction validated table is 1
 
   @set_8
@@ -168,8 +169,8 @@ Feature: Data processing for MHA no interaction list (NIL)
     When MHA sends the MHA_NO_INTERACTION file to Datasource sftp for processing
     And the Mha no interaction batch job completes running with status RAW_DATA_ERROR
     And I verify that the following error message appeared:
-      | Message                                                            | Count |
-      | {"Others":["Extraction Date must be equal/after Cut-off Date."]}   | 1     |
+      | Message                                               | Count |
+      | "Extraction Date must be equal/after Cut-off Date."   | 1     |
     And I verify number of records in MHA no interaction validated table is 1
 
   @set_11
@@ -226,9 +227,9 @@ Feature: Data processing for MHA no interaction list (NIL)
     When MHA sends the MHA_NO_INTERACTION file to Datasource sftp for processing
     And the Mha no interaction batch job completes running with status RAW_DATA_ERROR
     And I verify that the following error message appeared:
-      | Message                                                                   | Count |
-      | {"nric":["size must be between 9 and 9","NRIC cannot be null/blank."]}    | 1     |
-      | {"nric":["Must be valid NRIC in format [S or T]1234567[A-Z]"]}            | 1     |
+      | Message                                                     | Count |
+      | "size must be between 9 and 9","NRIC cannot be null/blank." | 1     |
+      | "Must be valid NRIC in format [S/T]1234567[A-Z]"           | 1     |
     And I verify number of records in MHA no interaction validated table is 1
 
   @set_14

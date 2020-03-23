@@ -25,7 +25,7 @@ Feature: Data processing for MHA death broadcast
       | ValidSCDeathCases | DeathDateEarlierThanBirthDate |
       | 1                 | 1                             |
     When MHA sends the MHA_DEATH_DATE file to Datasource sftp for processing
-    And the Mha Death batch job completes running with status VALIDATED_TO_PREPARED_ERROR
+    And the Mha Death batch job completes running with status CLEANUP
     Then I verify that there is an error message for invalid death dates
 
   @set_4
@@ -34,7 +34,7 @@ Feature: Data processing for MHA death broadcast
     | ValidFRDeathCases |
     | 1                 |
     When MHA sends the MHA_DEATH_DATE file to Datasource sftp for processing
-    And the Mha Death batch job completes running with status RAW_DATA_ERROR
+    And the Mha Death batch job completes running with status CLEANUP
     Then I verify that there is an error message for invalid nric
 
   @set_5
@@ -43,7 +43,7 @@ Feature: Data processing for MHA death broadcast
       | PplWhoAreAlreadyDead |
       | 1                    |
     When MHA sends the MHA_DEATH_DATE file to Datasource sftp for processing
-    And the Mha Death batch job completes running with status VALIDATED_TO_PREPARED_ERROR
+    And the Mha Death batch job completes running with status CLEANUP
     Then I verify that there is an error message for existing death case
 
   @set_6 @defect @GRYFFINDOR-897
@@ -54,3 +54,30 @@ Feature: Data processing for MHA death broadcast
     When MHA sends the MHA_DEATH_DATE file to Datasource sftp for processing
     And the Mha Death batch job completes running with status VALIDATED_TO_PREPARED_ERROR
     Then I verify that there is an error message for future death date case
+
+  @set_7
+  Scenario: MHA sends duplicated entries
+    Given the mha death file has the following details:
+      | DuplicatedEntries |
+      | 1                 |
+    When MHA sends the MHA_DEATH_DATE file to Datasource sftp for processing
+    And the Mha Death batch job completes running with status CLEANUP
+    Then the error message contains Completely Duplicate Record found
+
+  @set_8
+  Scenario: MHA sends partially duplicated entries
+    Given the mha death file has the following details:
+      | PartialDuplicates |
+      | 1                 |
+    When MHA sends the MHA_DEATH_DATE file to Datasource sftp for processing
+    And the Mha Death batch job completes running with status BULK_CHECK_VALIDATION_ERROR
+    Then the error message contains Partially Duplicate Record found
+
+  @set_9
+  Scenario: MHA sends partially duplicated entries
+    Given the mha death file has the following details:
+      | PartialDuplicates | ValidSCDeathCases |
+      | 1                 | 1                 |
+    When MHA sends the MHA_DEATH_DATE file to Datasource sftp for processing
+    And the Mha Death batch job completes running with status CLEANUP
+    Then the error message contains Partially Duplicate Record found

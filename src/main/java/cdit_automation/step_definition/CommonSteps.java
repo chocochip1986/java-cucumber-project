@@ -1,5 +1,6 @@
 package cdit_automation.step_definition;
 
+import cdit_automation.aws.modules.Slack;
 import cdit_automation.configuration.TestEnv;
 import cdit_automation.enums.BatchStatusEnum;
 import cdit_automation.exceptions.TestFailException;
@@ -8,13 +9,14 @@ import cdit_automation.models.ErrorMessage;
 import cdit_automation.models.FileReceived;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.Ignore;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.Ignore;
 
 @Slf4j
 @Ignore
@@ -52,10 +54,10 @@ public class CommonSteps extends AbstractSteps {
                 }, batch);
                 batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
                 if (batch == null) {
-//                    slack.sendToSlack(testManager.testEnv.getTopicArn(), "No batch record created for fileReceived record: "+fileReceived.getId().toString(), Slack.Level.NEUTRAL);
+                    slack.sendToSlack(testManager.testEnv.getTopicArn(), "No batch record created for fileReceived record: "+fileReceived.getId().toString(), Slack.Level.NEUTRAL);
                     testAssert.assertNotNull(batch, "The "+batchJobName+" job from "+agencyName+" is null!!!");
                 } else {
-//                    slack.sendToSlack(testManager.testEnv.getTopicArn(), String.format("Status:%s", batch.getStatus()), Slack.Level.NEUTRAL);
+                    slack.sendToSlack(testManager.testEnv.getTopicArn(), String.format("Status:%s", batch.getStatus()), Slack.Level.NEUTRAL);
                     testAssert.assertEquals(expectedBatchStatus, batch.getStatus(), "The "+batchJobName+" job from "+agencyName+" did not complete!!!");
                 }
                 testContext.set("batch", batch);
@@ -116,11 +118,13 @@ public class CommonSteps extends AbstractSteps {
                                     (long) expectedMessageCount,
                                     errorMessages.stream()
                                             .filter(z -> z.equalsIgnoreCase(expectedErrorMessage) ||
-                                                    z.matches(".*"+expectedErrorMessage+".*"))
+                                                    z.matches(".*"+expectedErrorMessage+".*") ||
+                                                    z.contains(expectedErrorMessage))
                                             .count(),
                                     "Unexpected repetition of [ " + expectedErrorMessage + " ] error message");
                             errorMessages.removeIf(e -> e.equalsIgnoreCase(expectedErrorMessage) ||
-                                    e.matches(".*"+expectedErrorMessage+".*"));
+                                    e.matches(".*"+expectedErrorMessage+".*") ||
+                                    e.contains(expectedErrorMessage));
                         });
 
         testAssert.assertEquals(Collections.emptyList(), errorMessages, "Unexpected error message found!");
