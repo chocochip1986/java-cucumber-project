@@ -44,7 +44,7 @@ aws:
 spring:
   profiles: automation
   datasource:
-    url: jdbc:oracle:thin:@localhost:1521:ORCLCDB
+    url: jdbc:oracle:thin:@oracledb:1521:ORCLCDB
     username: C##DATASOURCE
     password: pwd
     driver-class-name: oracle.jdbc.OracleDriver
