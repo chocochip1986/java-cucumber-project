@@ -1,6 +1,8 @@
 package cdit_automation.utilities;
 
 public class StringUtils {
+
+    public static final String EMPTY_STRING = "";
     public static final String SPACE = " ";
 
     public static String leftPad(String str, int finalLength) {
@@ -51,9 +53,17 @@ public class StringUtils {
     public static String getValueFromKeyValueArray(String[] keyValue) {
 
         if (keyValue.length == 1) {
-            return StringUtils.SPACE;
+            return SPACE;
         }
 
         return keyValue[1];
+    }
+    
+    public static String returnEmptyStringIfNull(String value) {
+        if (value == null) {
+            return EMPTY_STRING;
+        }
+        
+        return value;
     }
 }
