@@ -52,7 +52,7 @@ Feature: File Trail
   @set_3
   Scenario: CPF officer observe the mha new citizen file ingested successfully
     Given a MHA_NEW_CITIZEN file with the following details
-      | NRIC      | FIN       | NAME   | DOB      | GENDER | OLD_ADDR_IND | OLD_ADDR_IND2 | OLD_ADDR | NEW_ADDR_IND | NEW_ADDR_IND2 | NEW_ADDR            | NEW_INVALID_ADDR_TAG | DATE_OF_ADDR_CHANGE | CTZ_ATT_DATE |
+      | NRIC      | FIN       | NAME   | DOB      | GENDER | OLD_ADDR_IND | OLD_ADDR_TYPE | OLD_ADDR | NEW_ADDR_IND | NEW_ADDR_TYPE | NEW_ADDR            | NEW_INVALID_ADDR_TAG | DATE_OF_ADDR_CHANGE | CTZ_ATT_DATE |
       | T4669435F | G4562923L | I AM A | 20200101 | F      | C            | C             | Hotel 81 | C            | C             | The Fullerton Hotel |                      | 20200201            | 20200115     |
       | S7536226I | G4345241Q | I AM B | 20200101 | F      | C            | C             | Hotel 81 | C            | C             | The Fullerton Hotel |                      | 20200201            | 20200115     |
       | T2146457G | F5520667T | I AM C | 20200101 | F      | C            | C             | Hotel 81 | C            | C             | The Fullerton Hotel |                      | 20200201            | 20200115     |
@@ -77,7 +77,7 @@ Feature: File Trail
   @set_4
   Scenario: CPF officer observe the mha new citizen file has full format error
     Given a MHA_NEW_CITIZEN file with the following details
-      | NRIC | FIN       | NAME   | DOB      | GENDER | OLD_ADDR_IND | OLD_ADDR_IND2 | OLD_ADDR | NEW_ADDR_IND | NEW_ADDR_IND2 | NEW_ADDR            | NEW_INVALID_ADDR_TAG | DATE_OF_ADDR_CHANGE | CTZ_ATT_DATE |
+      | NRIC | FIN       | NAME   | DOB      | GENDER | OLD_ADDR_IND | OLD_ADDR_TYPE | OLD_ADDR | NEW_ADDR_IND | NEW_ADDR_TYPE | NEW_ADDR            | NEW_INVALID_ADDR_TAG | DATE_OF_ADDR_CHANGE | CTZ_ATT_DATE |
       | T    | G4562923L | I AM A | 20200101 | F      | C            | C             | Hotel 81 | C            | C             | The Fullerton Hotel |                      | 20200201            | 20200115     |
       | S    | G4345241Q | I AM B | 20200101 | F      | C            | C             | Hotel 81 | C            | C             | The Fullerton Hotel |                      | 20200201            | 20200115     |
       | T    | F5520667T | I AM C | 20200101 | F      | C            | C             | Hotel 81 | C            | C             | The Fullerton Hotel |                      | 20200201            | 20200115     |
@@ -101,7 +101,7 @@ Feature: File Trail
   @set_5
   Scenario: CPF officer observe the mha new citizen file has full content error
     Given a MHA_NEW_CITIZEN file with the following details
-      | NRIC      | FIN       | NAME   | DOB      | GENDER | OLD_ADDR_IND | OLD_ADDR_IND2 | OLD_ADDR | NEW_ADDR_IND | NEW_ADDR_IND2 | NEW_ADDR            | NEW_INVALID_ADDR_TAG | DATE_OF_ADDR_CHANGE | CTZ_ATT_DATE |
+      | NRIC      | FIN       | NAME   | DOB      | GENDER | OLD_ADDR_IND | OLD_ADDR_TYPE | OLD_ADDR | NEW_ADDR_IND | NEW_ADDR_TYPE | NEW_ADDR            | NEW_INVALID_ADDR_TAG | DATE_OF_ADDR_CHANGE | CTZ_ATT_DATE |
       | T4669435F | G4562923L | I AM A | 20200101 | F      | C            | C             | Hotel 81 | C            | C             | The Fullerton Hotel |                      | 20200201            | 99990115     |
       | S7536226I | G4345241Q | I AM B | 20200101 | F      | C            | C             | Hotel 81 | C            | C             | The Fullerton Hotel |                      | 20200201            | 99990115     |
       | T2146457G | F5520667T | I AM C | 20200101 | F      | C            | C             | Hotel 81 | C            | C             | The Fullerton Hotel |                      | 20200201            | 99990115     |
@@ -126,7 +126,7 @@ Feature: File Trail
   @set_6
   Scenario: CPF officer observe the mha new citizen file has partial format and content errors
     Given a MHA_NEW_CITIZEN file with the following details
-      | NRIC      | FIN       | NAME   | DOB      | GENDER | OLD_ADDR_IND | OLD_ADDR_IND2 | OLD_ADDR | NEW_ADDR_IND | NEW_ADDR_IND2 | NEW_ADDR            | NEW_INVALID_ADDR_TAG | DATE_OF_ADDR_CHANGE | CTZ_ATT_DATE |
+      | NRIC      | FIN       | NAME   | DOB      | GENDER | OLD_ADDR_IND | OLD_ADDR_TYPE | OLD_ADDR | NEW_ADDR_IND | NEW_ADDR_TYPE | NEW_ADDR            | NEW_INVALID_ADDR_TAG | DATE_OF_ADDR_CHANGE | CTZ_ATT_DATE |
       | T         | G4562923L | I AM A | 20200101 | F      | C            | C             | Hotel 81 | C            | C             | The Fullerton Hotel |                      | 20200201            | 20200115     |
       | S         | G4345241Q | I AM B | 20200101 | F      | C            | C             | Hotel 81 | C            | C             | The Fullerton Hotel |                      | 20200201            | 20200115     |
       | T         | F5520667T | I AM C | 20200101 | F      | C            | C             | Hotel 81 | C            | C             | The Fullerton Hotel |                      | 20200201            | 20200115     |
