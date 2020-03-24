@@ -51,7 +51,7 @@ spring:
 test-env:
   env-name: automation
   datasource:
-    url: https://datasource
+    url: datasource
     port: 8081
   datasource-ui:
     url: localhost
