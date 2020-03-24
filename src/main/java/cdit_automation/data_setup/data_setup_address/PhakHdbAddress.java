@@ -23,7 +23,8 @@ public class PhakHdbAddress {
     };
 
     public static PhakAbstractAddress fakeItTillYouMakeIt() {
-        return new PhakAbstractAddress(recommendAUnitNo(), recommendABlockNo(), recommendAFloorNo(), recommendAStreetName(), recommendABuildingName(), recommendAnOldPostalCode(), recommendAPostalCode(), recommendAStreetCode(), PhakHdbAddress.class);
+        boolean isRand = new Random().nextBoolean();
+        return new PhakAbstractAddress(recommendAUnitNo(), recommendABlockNo(), recommendAFloorNo(), recommendAStreetName(), recommendABuildingName(), recommendAnOldPostalCode(isRand), recommendAPostalCode(!isRand), recommendAStreetCode(), PhakHdbAddress.class);
     }
 
     private static String recommendAStreetCode() {
@@ -50,11 +51,17 @@ public class PhakHdbAddress {
         return null;
     }
 
-    private static String recommendAnOldPostalCode() {
+    private static String recommendAnOldPostalCode(boolean isRand) {
+        if(isRand){
+            return null;
+        }
         return Phaker.validNumber(4);
     }
 
-    private static String recommendAPostalCode() {
+    private static String recommendAPostalCode(boolean isRand) {
+        if(isRand){
+            return null;
+        }
         return recommandAPostalCodeSector()+ Phaker.validNumber(4);
     }
 

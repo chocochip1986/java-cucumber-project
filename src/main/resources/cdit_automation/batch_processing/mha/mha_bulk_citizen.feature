@@ -39,4 +39,37 @@ Feature: Data processing for MHA bulk citizen file
     When MHA sends the MHA_BULK_CITIZEN file to Datasource sftp for processing
     And the Mha Bulk batch job completes running with status FILE_ERROR
     And the error message contains Must have at least 1 valid body record
-    
+
+  @set_4
+  Scenario: Datasource service partial duplicated records
+    Given the mha bulk file is being created
+    Given the mha bulk file has the following details:
+      | Singaporean,M,Name:Laksa Girl,Nric:S1412535C,ctzIssDate:20190325,MHAAddress,BuildingName:123113afweaafawe aefa121,UnitNo:12,BlkNo:212,StrtName:faea eae,FlrNo:12,InvalidAddressTag:D,Quantity:1       |
+      | Singaporean,M,Name:Laksa Boy,Nric:S1412535C,ctzIssDate:20190325,MHAAddress,BuildingName:123113afweaafawe aefa121,UnitNo:12,BlkNo:212,StrtName:faea eae,FlrNo:12,InvalidAddressTag:D,Quantity:1       |
+    And the mha bulk file is created
+    When MHA sends the MHA_BULK_CITIZEN file to Datasource sftp for processing
+    And the Mha Bulk batch job completes running with status BULK_CHECK_VALIDATION_ERROR
+    Then the error message contains Partially Duplicate Record found
+
+  @set_5
+  Scenario: Datasource service partial duplicated records and one valid record
+    Given the mha bulk file is being created
+    Given the mha bulk file has the following details:
+      | Singaporean,M,Name:Laksa Girl,Nric:S1412535C,ctzIssDate:20190325,MHAAddress,BuildingName:123113afweaafawe aefa121,UnitNo:12,BlkNo:212,StrtName:faea eae,FlrNo:12,InvalidAddressTag:D,Quantity:1       |
+      | Singaporean,M,Name:Laksa Boy,Nric:S1412535C,ctzIssDate:20190325,MHAAddress,BuildingName:123113afweaafawe aefa121,UnitNo:12,BlkNo:212,StrtName:faea eae,FlrNo:12,InvalidAddressTag:D,Quantity:1       |
+      | PermanentResident,DoB:19860901,Name:Roti John,F,DoD:DeathBeforeBirth,Overseas,BlkNo:212,StrtName:faea eae,FlrNo:12,BuildingName:123113afweaafawe aefa121,mhaAddrType:A,Quantity:1                     |
+    And the mha bulk file is created
+    When MHA sends the MHA_BULK_CITIZEN file to Datasource sftp for processing
+    And the Mha Bulk batch job completes running with status CLEANUP
+    Then the error message contains Partially Duplicate Record found
+
+  @set_6
+  Scenario: Datasource service partial duplicated records
+    Given the mha bulk file is being created
+    Given the mha bulk file has the following details:
+      | Singaporean,M,Name:Laksa Boy,Nric:S1412535C,ctzIssDate:20190325,MHAAddress,BuildingName:123113afweaafawe aefa121,UnitNo:12,BlkNo:212,StrtName:faea eae,FlrNo:12,InvalidAddressTag:D,Quantity:1       |
+      | Singaporean,M,Name:Laksa Boy,Nric:S1412535C,ctzIssDate:20190325,MHAAddress,BuildingName:123113afweaafawe aefa121,UnitNo:12,BlkNo:212,StrtName:faea eae,FlrNo:12,InvalidAddressTag:D,Quantity:1       |
+    And the mha bulk file is created
+    When MHA sends the MHA_BULK_CITIZEN file to Datasource sftp for processing
+    And the Mha Bulk batch job completes running with status CLEANUP
+    Then the error message contains Completely Duplicate Record found

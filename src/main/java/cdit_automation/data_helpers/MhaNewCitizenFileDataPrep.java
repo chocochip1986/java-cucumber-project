@@ -3,6 +3,8 @@ package cdit_automation.data_helpers;
 import cdit_automation.data_helpers.batch_entities.MhaNewCitizenFileEntry;
 import cdit_automation.enums.FileTypeEnum;
 import io.cucumber.datatable.DataTable;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -18,7 +20,7 @@ public class MhaNewCitizenFileDataPrep extends BatchFileDataPrep {
   }
 
   public void writeToFile(List<String> entries) {
-    batchFileDataWriter.begin(generateSingleHeader(), FileTypeEnum.MHA_NEW_CITIZEN, null);
+    batchFileDataWriter.begin(generateSingleHeader(LocalDate.now()), FileTypeEnum.MHA_NEW_CITIZEN, null);
     entries.forEach(line -> batchFileDataWriter.chunkOrWrite(line));
     batchFileDataWriter.end();
   }

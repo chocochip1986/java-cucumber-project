@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-mvn clean install -DskipTests
+mvn clean package -DskipTests
 cd deployment
 docker build -t 026083545547.dkr.ecr.ap-southeast-1.amazonaws.com/test-automation:v1 .
 # Login
