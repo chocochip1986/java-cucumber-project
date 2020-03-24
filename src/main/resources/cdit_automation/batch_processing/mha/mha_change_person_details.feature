@@ -28,7 +28,7 @@ Feature: Data processing for Mha Change in Person Details
       | valid | N                         | Chao Ah Beng         | Tan Ah Beng             | valid                 |
       | valid | D                         | 19860924             | 20000924                | valid                 |
     When MHA sends the MHA_PERSON_DETAIL_CHANGE file to Datasource sftp for processing
-    And the Mha Change of Personal Details batch job completes running with status RAW_DATA_ERROR
+    And the Mha Change of Personal Details batch job completes running with status CLEANUP
     And the error message contains Invalid Person Detail Data Item Changed type
 
   @set_4
