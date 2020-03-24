@@ -58,8 +58,13 @@ public class ChangeAddressSteps extends AbstractSteps {
         LocalDate birthDate = age == null ? dateUtils.yearsBeforeToday(40) : dateUtils.yearsBeforeToday(age);
 
         PersonId personId = residentialStatus.equals("singaporean") ? personFactory.createNewSCPersonId(birthDate, person) : personFactory.createNewFRPersonId(birthDate, person);
-
-        testContext.set(propertyName, addressFactory.createPropertyFor(personId.getPerson(), getOwnershipType(residency), propertyTypeEnum));
+        if(!testContext.contains(propertyName)){
+            testContext.set(propertyName, addressFactory.createPropertyFor(personId.getPerson(), getOwnershipType(residency), propertyTypeEnum));
+        }
+        else{
+            PropertyDetail existingPropertyDetail = testContext.get(propertyName);
+            addressFactory.createPersonPropertyWhenAddressExist(personId.getPerson(), existingPropertyDetail.getProperty(), getOwnershipType(residency));
+        }
         testContext.set(person, personId);
     }
 

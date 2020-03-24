@@ -56,6 +56,27 @@ public class AddressFactory extends AbstractFactory {
         return createProperty(person, addressOptions);
     }
 
+    public void createPersonPropertyWhenAddressExist(Person person, Property property, ResidencyEnum residencyEnum){
+        Batch batch = Batch.builder().build();
+        batchRepo.save(batch);
+        BiTemporalData biTemporalData = new BiTemporalData()
+                .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(retrieveBirthDate(person)));
+
+        PersonPropertyId personPropertyId = PersonPropertyId.builder().personEntity(person).propertyEntity(property).build();
+
+        if ( residencyEnum.equals(ResidencyEnum.BOTH) ) {
+            personPropertyRepo.save(PersonProperty.create(batch, personPropertyId, PersonPropertyTypeEnum.RESIDENCE, biTemporalData));
+            personPropertyRepo.save(PersonProperty.create(batch, personPropertyId, PersonPropertyTypeEnum.OWNERSHIP, biTemporalData));
+        } else {
+            if ( residencyEnum.equals(ResidencyEnum.OWNERSHIP) ) {
+                personPropertyRepo.save(PersonProperty.create(batch, personPropertyId, PersonPropertyTypeEnum.OWNERSHIP, biTemporalData));
+            } else {
+                personPropertyRepo.save(PersonProperty.create(batch, personPropertyId, PersonPropertyTypeEnum.RESIDENCE, biTemporalData));
+            }
+        }
+
+    }
+
     private PropertyDetail createProperty(Person person, AddressOptions addressOptions) {
         Batch batch = Batch.createCompleted();
         BiTemporalData biTemporalData = new BiTemporalData()

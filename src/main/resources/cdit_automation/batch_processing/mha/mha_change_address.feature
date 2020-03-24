@@ -13,12 +13,14 @@ Feature: MHA Change address
   @set_2
   Scenario: CDS fails to processes a MHA change address file with partial duplicated records of same NRIC but different current address
     Given A singaporean person john resides in a landed property abc
+    Given A singaporean person johnson resides in a hdb property def
     And the mha change address file contains the following details:
     | person | previous_address        | current_address                                                                                            | address_change_dte |
     | john   | Existing:abc,AddrType:C | IndType:Z,AddrType:C,Block:12B,Street:16 Sheraton Street,Unit:13,Floor:12,Building:The Clive,Postal:232902 | 20190909           |
     | john   | Existing:abc,AddrType:C | IndType:Z,AddrType:C,Block:14B,Street:22 Jalan Besar,Unit:14,Floor:40,Building:City View,Postal:232902     | 20190909           |
+    | johnson| Existing:def,AddrType:C | IndType:Z,AddrType:C,Block:123,Street:22 Jalan Jalan,Unit:12,Floor:20,Building:City View,Postal:452932     | 20190909           |
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
-    And the Mha Change Address batch job completes running with status BULK_CHECK_VALIDATION_ERROR
+    And the Mha Change Address batch job completes running with status CLEANUP
     And the error message contains Partially Duplicate Record found.
 
   @set_3
@@ -37,13 +39,15 @@ Feature: MHA Change address
   @set_4
   Scenario: CDS fails to processes a MHA change address file with both full and partial duplicated records for same NRIC
     Given A singaporean person john resides in a landed property abc
+    Given A singaporean person ahmeng resides in a landed property abc
     And the mha change address file contains the following details:
       | person | previous_address        | current_address                                                                                            | address_change_dte |
       | john   | Existing:abc,AddrType:C | IndType:Z,AddrType:C,Block:12B,Street:16 Sheraton Street,Unit:13,Floor:12,Building:The Clive,Postal:232902 | 20190909           |
       | john   | Existing:abc,AddrType:C | IndType:Z,AddrType:C,Block:12B,Street:16 Sheraton Street,Unit:13,Floor:12,Building:The Clive,Postal:232902 | 20190909           |
       | john   | Existing:abc,AddrType:C | IndType:Z,AddrType:C,Block:14B,Street:22 Jalan Besar,Unit:14,Floor:40,Building:City View,Postal:232902     | 20190909           |
+      | ahmeng | Existing:abc,AddrType:C | IndType:Z,AddrType:C,Block:14B,Street:22 Jalan Besar,Unit:14,Floor:40,Building:City View,Postal:232902     | 20190909           |
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
-    And the Mha Change Address batch job completes running with status BULK_CHECK_VALIDATION_ERROR
+    And the Mha Change Address batch job completes running with status CLEANUP
     And the error message contains Partially Duplicate Record found.
 
   @set_5
