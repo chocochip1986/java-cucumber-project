@@ -1,6 +1,8 @@
 package cdit_automation.utilities;
 
 import cdit_automation.exceptions.TestFailException;
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -9,6 +11,7 @@ import java.nio.file.Files;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 
+@Slf4j
 public class FileUtils {
     public static void replaceLineInFile(String absolutePathToFile, String newLine, long lineNumber) {
         replaceLineInFile(new File(absolutePathToFile), newLine, lineNumber);
@@ -33,6 +36,8 @@ public class FileUtils {
             if (!file.exists()) {
                 file.createNewFile();
                 ensureFileIsReadableAndWritable(file);
+            } else {
+                log.info("File at "+absolutePathToFile+" already exists...");
             }
         } catch ( IOException e ) {
             throw new TestFailException("Unable to create file at path: "+absolutePathToFile);
@@ -88,11 +93,10 @@ public class FileUtils {
         if ( file == null || line == null ) {
             throw new TestFailException("File or input line cannot be null!");
         }
+        if ( !file.exists() ) {
+            throw new TestFailException("File does not exists at "+file.getAbsolutePath());
+        }
         try {
-            if ( !file.exists() ) {
-                file.createNewFile();
-                ensureFileIsReadableAndWritable(file);
-            }
             FileOutputStream fos = new FileOutputStream(file, true);
             fos.write(line.getBytes());
             fos.close();
@@ -102,12 +106,10 @@ public class FileUtils {
     }
 
     private static void ensureFileIsReadableAndWritable(File file) {
-        file.setReadable(true, false);
-        file.setWritable(true, false);
-        if ( !file.canRead() ) {
+        if ( !file.setReadable(true, false) ) {
             throw new TestFailException("Unable to set file to be readable!!! "+file.getAbsolutePath());
         }
-        if ( !file.canWrite() ) {
+        if ( !file.setWritable(true, false) ) {
             throw new TestFailException("Unable to set file to be writable!!! "+file.getAbsolutePath());
         }
     }

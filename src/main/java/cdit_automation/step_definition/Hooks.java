@@ -21,6 +21,7 @@ public class Hooks extends AbstractSteps {
     @Before(order=2)
     public void beforeScenario(Scenario scenario) {
         truncateAllTables();
+        clearOutputArtifactsDirectory();
         displayScenarioStartMessage(scenario);
     }
 
@@ -122,5 +123,9 @@ public class Hooks extends AbstractSteps {
         testManager.closeBrowser();
         testContext.flush();
         batchFileDataWriter.reset();
+    }
+
+    private void clearOutputArtifactsDirectory() {
+        testManager.clearOutputArtifactsDirectory();
     }
 }
