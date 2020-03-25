@@ -32,6 +32,7 @@ public class FileUtils {
         try {
             if (!file.exists()) {
                 file.createNewFile();
+                ensureFileIsReadableAndWritable(file);
             }
         } catch ( IOException e ) {
             throw new TestFailException("Unable to create file at path: "+absolutePathToFile);
@@ -44,6 +45,7 @@ public class FileUtils {
         try {
             Files.deleteIfExists(file.toPath());
             file.createNewFile();
+            ensureFileIsReadableAndWritable(file);
         } catch ( IOException e ) {
             throw new TestFailException("Unable to replace file at path: "+absolutePathToFile);
         }
@@ -57,6 +59,7 @@ public class FileUtils {
         try {
             if ( !file.exists() ) {
                 file.createNewFile();
+                ensureFileIsReadableAndWritable(file);
             }
             FileOutputStream fos = new FileOutputStream(file, true);
             for(String line : lines) {
@@ -71,6 +74,7 @@ public class FileUtils {
     public static File createAndWriteToFile(File file, String line) {
         try {
             Files.deleteIfExists(file.toPath());
+            ensureFileIsReadableAndWritable(file);
             FileOutputStream fos = new FileOutputStream(file, true);
             fos.write(line.getBytes());
             fos.close();
@@ -87,12 +91,21 @@ public class FileUtils {
         try {
             if ( !file.exists() ) {
                 file.createNewFile();
+                ensureFileIsReadableAndWritable(file);
             }
             FileOutputStream fos = new FileOutputStream(file, true);
             fos.write(line.getBytes());
             fos.close();
         } catch ( IOException e ) {
             throw new TestFailException("Unable to create file at path: "+file.getAbsolutePath());
+        }
+    }
+
+    private static void ensureFileIsReadableAndWritable(File file) {
+        file.setReadable(true);
+        file.setWritable(true);
+        if ( !(file.canRead() && file.canWrite()) ) {
+            throw new TestFailException("Unable to set file to be readable and writable!!! "+file.getAbsolutePath());
         }
     }
 }
