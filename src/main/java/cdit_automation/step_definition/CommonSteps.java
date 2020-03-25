@@ -75,7 +75,7 @@ public class CommonSteps extends AbstractSteps {
                     @Override
                     public String get() {
                         List<ErrorMessage> errorMessages = errorMessageRepo.findByBatch(batch);
-                        return errorMessages.stream().map(errorMessage -> errorMessage.getMessage()+System.lineSeparator()).collect(Collectors.joining());
+                        return errorMessages.isEmpty() ? "" : errorMessages.stream().map(errorMessage -> errorMessage.getMessage()+System.lineSeparator()).collect(Collectors.joining());
                     }
                 });
                 testContext.set("batch", batch);
