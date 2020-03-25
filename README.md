@@ -17,6 +17,8 @@
     - ####[Running via an executable jar with tags](#running-via-an-executable-jar-with-tags)
         - ####[Preparing the jar](#preparing-the-jar)
     - ####[Running via bash script](#running-via-bash-script)
+    - ####[Running in Datasource CI](#running-in-datasource-ci)
+- ####[Cucumber Tagging](#cucumber-tagging)
 - ####[Restrictions](restrictions)
 
 ---
@@ -169,6 +171,18 @@ cp ~/.m2/repository/com/oracle/ojdbc8/12.2.0.1/ojdbc8-12.2.0.1.jar ~/folder/cdit
 ```
 mvn install:install-file -DgroupId=com.oracle -DartifactId=ojdbc8 \ -Dversion=12.2.0.1 -Dpackaging=jar -Dfile=./src/main/resources/ojdbc.jar
 ```
+
+###Running in Datasource CI
+1. For Datasource CI to pickup the test automation image with your newest changes, you need to log obtain a aws session token
+2. Assuming you are in the project root, run:
+```
+scripts/deploy_to_ecr.sh
+```
+3. Don't forget to commit and push your changes too :)
+
+###Cucumber Tagging
+1. Cucumber tags are case sensitive
+2. It's simply a way to categorize your tests and run them in sets
 
 ###Restrictions
 1. If you are using JetBrains's Intellij to run this test suite, you must use the community edition. The cucumber and gherkin plugins only work on the community version.
