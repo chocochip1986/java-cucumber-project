@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -70,7 +71,13 @@ public class CommonSteps extends AbstractSteps {
                 testContext.set("batch", batch);
             } else {
                 Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
-                testAssert.assertEquals(expectedBatchStatus, batch.getStatus(), "The "+batchJobName+" job from "+agencyName+" did not complete!!!");
+                testAssert.assertEquals(expectedBatchStatus, batch.getStatus(), new Supplier<String>() {
+                    @Override
+                    public String get() {
+                        List<ErrorMessage> errorMessages = errorMessageRepo.findByBatch(batch);
+                        return errorMessages.stream().map(errorMessage -> errorMessage.getMessage()+System.lineSeparator()).collect(Collectors.joining());
+                    }
+                });
                 testContext.set("batch", batch);
             }
         } else {
