@@ -255,8 +255,11 @@ public class TestManager {
     private Path setOutputArtifactsDir() {
         File outputDir = new File(projectRoot+File.separator+"output_artifacts");
         if ( !outputDir.exists() || !outputDir.isDirectory() ) {
-            outputDir.mkdir();
+            if (!outputDir.mkdir()) {
+                throw new TestFailException("Unable to make directory at: "+outputDir.getAbsolutePath());
+            }
             ensureDirectoryIsAssessable(outputDir);
+
         }
         return outputDir.toPath();
     }
@@ -264,7 +267,9 @@ public class TestManager {
     private Path setTestResultsDir() {
         File outputDir = new File(projectRoot+File.separator+"test_results");
         if ( !outputDir.exists() || !outputDir.isDirectory() ) {
-            outputDir.mkdir();
+            if(!outputDir.mkdir()) {
+                throw new TestFailException("Unable to make directory at: "+outputDir.getAbsolutePath());
+            }
             ensureDirectoryIsAssessable(outputDir);
         }
         return outputDir.toPath();
