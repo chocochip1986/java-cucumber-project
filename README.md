@@ -183,6 +183,13 @@ scripts/deploy_to_ecr.sh
 ###Cucumber Tagging
 1. Cucumber tags are case sensitive
 2. It's simply a way to categorize your tests and run them in sets
+3. Every test scenario must have a @set_<number> tag tagged to it. This is essentially for the Datasource CI to pick it up and run it.  
+All set tag numbers must range from 1 to 10. For example:
+```
+@set_1
+Scenario: Test scenario title
+Given blah blah blah
+```
 
 ###Restrictions
 1. If you are using JetBrains's Intellij to run this test suite, you must use the community edition. The cucumber and gherkin plugins only work on the community version.
