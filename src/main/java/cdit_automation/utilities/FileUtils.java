@@ -102,10 +102,13 @@ public class FileUtils {
     }
 
     private static void ensureFileIsReadableAndWritable(File file) {
-        file.setReadable(true);
-        file.setWritable(true);
-        if ( !(file.canRead() && file.canWrite()) ) {
-            throw new TestFailException("Unable to set file to be readable and writable!!! "+file.getAbsolutePath());
+        file.setReadable(true, false);
+        file.setWritable(true, false);
+        if ( !file.canRead() ) {
+            throw new TestFailException("Unable to set file to be readable!!! "+file.getAbsolutePath());
+        }
+        if ( !file.canWrite() ) {
+            throw new TestFailException("Unable to set file to be writable!!! "+file.getAbsolutePath());
         }
     }
 }
