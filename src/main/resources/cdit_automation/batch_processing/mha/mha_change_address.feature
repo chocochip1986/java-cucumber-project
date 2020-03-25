@@ -72,7 +72,7 @@ Feature: MHA Change address
     | nca                    | mha_c                 |
     | nca                    | nca                   |
 
-  @set_6
+  @set_6 @Defect @Rvc-110
   Scenario Outline: CDS successfully updates address information to an existing address
     Given A singaporean person john owns a landed property abc
     And john owns a landed property abd
