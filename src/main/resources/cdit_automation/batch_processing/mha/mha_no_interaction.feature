@@ -173,7 +173,7 @@ Feature: Data processing for MHA no interaction list (NIL)
       | "Extraction Date must be equal/after Cut-off Date."   | 1     |
     And I verify number of records in MHA no interaction validated table is 1
 
-  @set_11
+  @set_1
   Scenario: Datasource service processes a MHA no interaction list file with extraction & cut-off date after file received.
     Given the file have the following header details:
       |9999010199990101|
@@ -191,7 +191,7 @@ Feature: Data processing for MHA no interaction list (NIL)
       | Cut-off date cannot be after File Received date.         | 1     |
     And I verify number of records in MHA no interaction validated table is 1
 
-  @set_12 @defect @GRYFFINDOR-1095
+  @set_2 @defect @GRYFFINDOR-1095
   Scenario: Datasource service processes a MHA no interaction list file with wrong body length.
     Given the file have the following header details:
       |2019010120190101|
@@ -209,7 +209,7 @@ Feature: Data processing for MHA no interaction list (NIL)
       | Must have at least 1 valid body record.       | 1     |
     And I verify number of records in MHA no interaction validated table is 0
 
-  @set_13 @note:order-of-error-message-affect-test
+  @set_3 @note:order-of-error-message-affect-test
   Scenario: Datasource service processes a MHA no interaction list file with the below combination of body records.
             - Nric is spaces (i.e. '         ')
             - Nric is invalid
@@ -232,7 +232,7 @@ Feature: Data processing for MHA no interaction list (NIL)
       | "Must be valid NRIC in format [S/T]1234567[A-Z]"           | 1     |
     And I verify number of records in MHA no interaction validated table is 1
 
-  @set_14
+  @set_4
   Scenario: Datasource service processes a MHA no interaction list file with no body provided.
     Given the file have the following header details:
       |2019010120190101|
@@ -246,7 +246,7 @@ Feature: Data processing for MHA no interaction list (NIL)
       | Must have at least 1 valid body record.       | 1     |
     And I verify number of records in MHA no interaction validated table is 0
     
-  @set_15 @defect @GRYFFINDOR-1095
+  @set_5 @defect @GRYFFINDOR-1095
   Scenario: Datasource service processes a MHA no interaction list file with empty body provided.
     Given the file have the following header details:
       |2019010120190101|
@@ -264,7 +264,7 @@ Feature: Data processing for MHA no interaction list (NIL)
       | Must have at least 1 valid body record.       | 1     |
     And I verify number of records in MHA no interaction validated table is 0
 
-  @set_16 @defect @GRYFFINDOR-1096
+  @set_6 @defect @GRYFFINDOR-1096
   Scenario: Datasource service processes a MHA no interaction list file with nric not found in prepared DB.
     Given the file have the following header details:
       |2019010120190101|
@@ -281,7 +281,7 @@ Feature: Data processing for MHA no interaction list (NIL)
       | Unable to map to prepared data.               | 1     |
     And I verify number of records in MHA no interaction validated table is 1
     
-  @set_17
+  @set_7
   Scenario: Datasource service processes a MHA no interaction list file successfully.
     Given the database populated with the following person and person id details:
       |nric         |id_type    |
@@ -302,7 +302,7 @@ Feature: Data processing for MHA no interaction list (NIL)
     And I verify that the person status is updated correctly
     And I remove the test data from the prepared database
     
-  @set_18 @defect @GRYFFINDOR-1097
+  @set_8 @defect @GRYFFINDOR-1097
   Scenario: Datasource service processes a MHA no interaction list file with no content (i.e totally empty file).
     And the MHA no interaction file is created
     When MHA sends the MHA_NO_INTERACTION file to Datasource sftp for processing
@@ -310,13 +310,13 @@ Feature: Data processing for MHA no interaction list (NIL)
     And I verify number of records in MHA no interaction validated table is 0
     And the error message contains Must have at least 1 valid body record
 
-  @set_19 @defect
+  @set_9 @defect
   Scenario: Datasource service processes a MHA no interaction list file with duplicate nric in same file.
 
-  @set_20 @defect
+  @set_10 @defect
   Scenario: Datasource service processes a MHA no interaction list file with duplicate nric in different batch file.
 
-  @set_21 @defect @RVC-76
+  @set_1 @defect @RVC-76
   Scenario: Datasource service processes a MHA no interaction list file with footer length exceed expected length.
     Given the file have the following header details:
       |2019010120190101|
