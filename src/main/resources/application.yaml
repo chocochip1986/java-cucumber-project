@@ -43,6 +43,10 @@ aws:
 ---
 spring:
   profiles: automation
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
   datasource:
     url: jdbc:oracle:thin:@oracledb:1521:ORCLCDB
     username: C##DATASOURCE
@@ -68,6 +72,10 @@ aws:
 ---
 spring:
   profiles: qa
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
   datasource:
     url: jdbc:oracle:thin:@//cdsracdev-scan.cpfb.gds-gov.tech:1625/allot.cpfb.gds-gov.tech
     username: Datasource
