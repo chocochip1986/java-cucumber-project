@@ -101,7 +101,7 @@ public class Assert {
     }
 
     private void takeScreenshot() {
-        File srcFile = ((TakesScreenshot)driverManager.getDriver()).getScreenshotAs(OutputType.FILE);
+        File srcFile = testManager.takeScreenshot(OutputType.FILE);
         File destFile = new File(testManager.getTestResultsDir()+File.separator+"screenshot01.jpg");
         try {
             FileUtils.copyFile(srcFile, destFile);

@@ -85,8 +85,11 @@ public class TestManager {
         }
     }
 
-    public File takeScreenshot() {
-        return ((TakesScreenshot)getDriverManager().getDriver()).getScreenshotAs(OutputType.FILE);
+    public void takeScreenshot(Scenario scenario) {
+        if ( isBrowserOpened() ) {
+            saveScreenshot(screenshotNameMaker(scenario));
+            embedScreenshotIntoReport(scenario);
+        }
     }
 
     public boolean isBrowserOpened() {
@@ -308,5 +311,30 @@ public class TestManager {
 
     private ZonedDateTime getLocalDateTimeNow() {
         return ZonedDateTime.now(ZoneId.of("Asia/Singapore"));
+    }
+
+    private void embedScreenshotIntoReport(Scenario scenario) {
+        final byte[] screenshot = takeScreenshot(OutputType.BYTES);
+        scenario.embed(screenshot, "image/png", screenshotNameMaker(scenario));
+    }
+
+    private void saveScreenshot(String screenshotName) {
+        File srcFile = takeScreenshot(OutputType.FILE);
+        File destFile = new File(getTestResultsDir()+File.separator+screenshotName+".jpg");
+        try {
+            FileUtils.copyFile(srcFile, destFile);
+        } catch ( IOException e ) {
+            String errorMsg = "Unable to save screenshot from "+srcFile.getAbsolutePath()+" to "+destFile.getAbsolutePath();
+            errorMsg += "\n"+e.getClass().toString()+": "+e.getStackTrace();
+            throw new TestFailException(errorMsg);
+        }
+    }
+
+    private String screenshotNameMaker(Scenario scenario) {
+        return scenario.getName().replace(" ", "_");
+    }
+
+    public <T> T takeScreenshot(OutputType<T> outputType) {
+        return ((TakesScreenshot) getDriverManager().getDriver()).getScreenshotAs(outputType);
     }
 }

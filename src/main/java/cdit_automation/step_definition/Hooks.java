@@ -37,7 +37,7 @@ public class Hooks extends AbstractSteps {
             String message = "======================================================";
             message += System.lineSeparator()+"Scenario: "+scenario.getName()+ " => Status: "+scenario.getStatus();
             message += System.lineSeparator()+"======================================================";
-            takeScreenshot(screenshotNameMaker(scenario));
+            testManager.takeScreenshot(scenario);
             testManager.sendNotificationToSlack(message);
             if ( testManager.failFastEnabled() ) {
                 reset();
