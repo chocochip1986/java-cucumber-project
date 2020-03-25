@@ -38,6 +38,16 @@ public class CeasedCitizenValidated extends AbstractValidated {
   @Column(name = "citizen_renunciation_date")
   private LocalDate citizenRenunciationDate;
 
+  @Column(name = "record_details_validated")
+  private String recordDetailsValidated;
+
+  @Column(name = "duplicate_record_marker")
+  private Long duplicateRecordMarker;
+
+  @Column(name = "is_mappable")
+  @NotNull
+  private Boolean isMappable;
+
   @Override
   public String toString() {
     return StringUtils.rightPad(this.nric, 9)

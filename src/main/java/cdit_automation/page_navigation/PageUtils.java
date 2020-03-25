@@ -1,5 +1,7 @@
 package cdit_automation.page_navigation;
 
+import cdit_automation.configuration.TestEnv;
+import cdit_automation.configuration.TestManager;
 import cdit_automation.driver_management.DriverManager;
 import java.io.File;
 import java.time.Duration;
@@ -26,6 +28,9 @@ public class PageUtils {
 
     @Autowired
     DriverManager driverManager;
+
+    @Autowired
+    TestManager testManager;
 
     private Wait wait;
     private long EXPLICIT_WAIT;
@@ -251,11 +256,6 @@ public class PageUtils {
 
     private void errorMessage(String error_message) {
         log.error(error_message);
-        takeScreenshot();
-    }
-
-    private void takeScreenshot() {
-        File srcFile = ((TakesScreenshot)driverManager.getDriver()).getScreenshotAs(OutputType.FILE);
     }
 
     private WebElement yieldToBlock(BiFunction<String, String, WebElement> function, String cssOrXpath, String errMsg) {

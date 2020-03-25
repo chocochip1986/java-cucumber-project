@@ -8,6 +8,7 @@ import cdit_automation.exceptions.UnsupportedBrowserException;
 import cdit_automation.page_navigation.PageUtils;
 import io.cucumber.java.Scenario;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -17,6 +18,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -83,8 +85,11 @@ public class TestManager {
         }
     }
 
-    public File takeScreenshot() {
-        return ((TakesScreenshot)getDriverManager().getDriver()).getScreenshotAs(OutputType.FILE);
+    public void takeScreenshot(Scenario scenario) {
+        if ( isBrowserOpened() ) {
+            saveScreenshot(screenshotNameMaker(scenario));
+            embedScreenshotIntoReport(scenario);
+        }
     }
 
     public boolean isBrowserOpened() {
@@ -232,6 +237,20 @@ public class TestManager {
         return testResultsDir;
     }
 
+    public boolean clearOutputArtifactsDirectory() {
+        File outputDir = new File(this.outputArtifactsDir.toString());
+        return clearDirectory(outputDir);
+    }
+
+    private boolean clearDirectory(File targetedDirectory) {
+        try {
+            FileUtils.cleanDirectory(targetedDirectory);
+            return true;
+        } catch ( IOException e ) {
+            throw new TestFailException("Unable to clear directory at: "+targetedDirectory.getAbsolutePath());
+        }
+    }
+
     private Path setProjectRoot() {
         return Paths.get(System.getProperty("user.dir"));
     }
@@ -239,7 +258,11 @@ public class TestManager {
     private Path setOutputArtifactsDir() {
         File outputDir = new File(projectRoot+File.separator+"output_artifacts");
         if ( !outputDir.exists() || !outputDir.isDirectory() ) {
-            outputDir.mkdir();
+            if (!outputDir.mkdir()) {
+                throw new TestFailException("Unable to make directory at: "+outputDir.getAbsolutePath());
+            }
+            ensureDirectoryIsAssessable(outputDir);
+
         }
         return outputDir.toPath();
     }
@@ -247,9 +270,24 @@ public class TestManager {
     private Path setTestResultsDir() {
         File outputDir = new File(projectRoot+File.separator+"test_results");
         if ( !outputDir.exists() || !outputDir.isDirectory() ) {
-            outputDir.mkdir();
+            if(!outputDir.mkdir()) {
+                throw new TestFailException("Unable to make directory at: "+outputDir.getAbsolutePath());
+            }
+            ensureDirectoryIsAssessable(outputDir);
         }
         return outputDir.toPath();
+    }
+
+    private void ensureDirectoryIsAssessable(File directory) {
+        if (!directory.setExecutable(true, false)) {
+            throw new TestFailException("Directory is non-accessible!");
+        }
+        if (!directory.setWritable(true, false)) {
+            throw new TestFailException("Directory is non-writable!");
+        }
+        if (!directory.setReadable(true, false)) {
+            throw new TestFailException("Directory is non-readable!");
+        }
     }
 
     private void establishTestSuiteShutDownHook() {
@@ -273,5 +311,30 @@ public class TestManager {
 
     private ZonedDateTime getLocalDateTimeNow() {
         return ZonedDateTime.now(ZoneId.of("Asia/Singapore"));
+    }
+
+    private void embedScreenshotIntoReport(Scenario scenario) {
+        final byte[] screenshot = takeScreenshot(OutputType.BYTES);
+        scenario.embed(screenshot, "image/png", screenshotNameMaker(scenario));
+    }
+
+    private void saveScreenshot(String screenshotName) {
+        File srcFile = takeScreenshot(OutputType.FILE);
+        File destFile = new File(getTestResultsDir()+File.separator+screenshotName+".jpg");
+        try {
+            FileUtils.copyFile(srcFile, destFile);
+        } catch ( IOException e ) {
+            String errorMsg = "Unable to save screenshot from "+srcFile.getAbsolutePath()+" to "+destFile.getAbsolutePath();
+            errorMsg += "\n"+e.getClass().toString()+": "+e.getStackTrace();
+            throw new TestFailException(errorMsg);
+        }
+    }
+
+    private String screenshotNameMaker(Scenario scenario) {
+        return scenario.getName().replace(" ", "_");
+    }
+
+    public <T> T takeScreenshot(OutputType<T> outputType) {
+        return ((TakesScreenshot) getDriverManager().getDriver()).getScreenshotAs(outputType);
     }
 }

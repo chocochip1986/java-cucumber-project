@@ -43,15 +43,19 @@ aws:
 ---
 spring:
   profiles: automation
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
   datasource:
-    url: jdbc:oracle:thin:@localhost:1521:ORCLCDB
+    url: jdbc:oracle:thin:@oracledb:1521:ORCLCDB
     username: C##DATASOURCE
     password: pwd
     driver-class-name: oracle.jdbc.OracleDriver
 test-env:
   env-name: automation
   datasource:
-    url: https://datasource-qa.cpfb.gds-gov.tech
+    url: datasource
     port: 8081
   datasource-ui:
     url: localhost
@@ -68,6 +72,10 @@ aws:
 ---
 spring:
   profiles: qa
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
   datasource:
     url: jdbc:oracle:thin:@//cdsracdev-scan.cpfb.gds-gov.tech:1625/allot.cpfb.gds-gov.tech
     username: Datasource

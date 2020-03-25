@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +26,10 @@ public class DeathDateValidated extends AbstractValidated {
 
     @Column(name = "death_date")
     private LocalDate deathDate;
+
+    @Column(name = "is_mappable")
+    @NotNull
+    private Boolean isMappable;
 
     public static DeathDateValidated create(Batch batch) {
         return build(batch, Phaker.validNric(), Phaker.validPastDate());

@@ -5,6 +5,8 @@ import cdit_automation.driver_management.DriverManager;
 import cdit_automation.exceptions.TestFailException;
 import java.io.File;
 import java.io.IOException;
+import java.util.function.Supplier;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
@@ -68,6 +70,14 @@ public class Assert {
         }
     }
 
+    public void assertEquals(Object expected, Object actual, Supplier<String> generateErrorMessage ) {
+        if ( !actual.equals(expected) ) {
+            String finalMsg = generateErrorMessage.get();
+            finalMsg += System.lineSeparator()+"Expected: "+expected.toString()+System.lineSeparator()+"Actual: "+actual.toString();
+            raiseError(finalMsg);
+        }
+    }
+
     public void assertNotEquals(Object expected, Object actual, String errorMsg) {
         if ( actual.equals(expected) ) {
             String finalMsg = errorMsg+"\nExpected: "+expected.toString()+"\nActual: "+actual.toString();
@@ -91,7 +101,7 @@ public class Assert {
     }
 
     private void takeScreenshot() {
-        File srcFile = ((TakesScreenshot)driverManager.getDriver()).getScreenshotAs(OutputType.FILE);
+        File srcFile = testManager.takeScreenshot(OutputType.FILE);
         File destFile = new File(testManager.getTestResultsDir()+File.separator+"screenshot01.jpg");
         try {
             FileUtils.copyFile(srcFile, destFile);
