@@ -6,6 +6,7 @@ import cdit_automation.data_helpers.batch_entities.MhaChangePersonDetailsFileEnt
 import cdit_automation.data_helpers.batch_entities.MhaChangePersonDetailsFileEntryCatGender;
 import cdit_automation.data_helpers.batch_entities.MhaChangePersonDetailsFileEntryCatName;
 import cdit_automation.data_helpers.batch_entities.MhaChangePersonDetailsFileEntryCatUnsupported;
+import cdit_automation.data_helpers.factories.PersonFactory;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.GenderEnum;
 import cdit_automation.enums.PersonDetailDataItemChangedEnum;
@@ -14,6 +15,7 @@ import cdit_automation.models.PersonId;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +28,11 @@ import org.springframework.stereotype.Component;
 public class MhaChangePersonDetailsDataPrep extends BatchFileDataPrep {
     private @Autowired AutowireCapableBeanFactory beanFactory;
 
+    HashMap<String, Character> nricCategoryMap;
     public List<String> createBodyOfTestScenarios(List<Map<String, String>> listOfScenarios) {
         List<String> body = new ArrayList<>();
 
+        nricCategoryMap = new HashMap<String, Character>();
         for (Map<String, String> scenario : listOfScenarios) {
             body.add(createScenarioEntry(scenario));
         }
@@ -42,54 +46,102 @@ public class MhaChangePersonDetailsDataPrep extends BatchFileDataPrep {
     }
 
     private String setupDataForScenario(char itemChangeCat, Map<String, String> scenario) {
-        MhaChangePersonDetailsFileEntry mhaChangePersonDetailsFileEntry;
+        MhaChangePersonDetailsFileEntry mhaChangePersonDetailsFileEntry = null;
         LocalDate dataItemChangeDate = createItemChangeDate(scenario.get("data_item_change_date"));
         LocalDate birthDate = generateBirthDate(dataItemChangeDate);
         String nric = nricFieldOptions(scenario.get("nric"));
         PersonId personId;
-        switch (itemChangeCat) {
-            case 'S':
-                GenderEnum originalGender = GenderEnum.fromString(scenario.get("data_item_orig_value"));
-                personId = personFactory.createNewSCPersonId(birthDate, null, null, originalGender, nric);
-                mhaChangePersonDetailsFileEntry = new MhaChangePersonDetailsFileEntryCatGender(
-                        nric,
-                        scenario.get("data_item_change_value"),
-                        dataItemChangeDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD),
-                        scenario.get("data_item_change_category").charAt(0), personId );
-                break;
-            case 'N':
-                personId = personFactory.createNewSCPersonId(birthDate, null, scenario.get("data_item_orig_value"), null, nric);
-                mhaChangePersonDetailsFileEntry = new MhaChangePersonDetailsFileEntryCatName(
-                        nric,
-                        scenario.get("data_item_change_value"),
-                        dataItemChangeDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD),
-                        scenario.get("data_item_change_category").charAt(0), personId);
-                break;
-            case 'B':
-                LocalDate origBirthDate = dateUtils.parse(scenario.get("data_item_orig_value"));
-                personId = personFactory.createNewSCPersonId(origBirthDate, null, null, null, nric);
-                mhaChangePersonDetailsFileEntry = new MhaChangePersonDetailsFileEntryCatBirthDate(
-                        nric,
-                        scenario.get("data_item_change_value"),
-                        dataItemChangeDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD),
-                        scenario.get("data_item_change_category").charAt(0), personId);
-                break;
-            case 'D':
-                //NOT GOING TO SUPPORT DEATH DATE CHANGES
+        if(!nricCategoryMap.containsKey(nric)){
+            switch (itemChangeCat) {
+                case 'S':
+                    GenderEnum originalGender = GenderEnum.fromString(scenario.get("data_item_orig_value"));
+                    personId = personFactory.createNewSCPersonId(birthDate, null, null, originalGender, nric);
+                    mhaChangePersonDetailsFileEntry = new MhaChangePersonDetailsFileEntryCatGender(
+                            nric,
+                            scenario.get("data_item_change_value"),
+                            dataItemChangeDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD),
+                            scenario.get("data_item_change_category").charAt(0), personId );
+                    break;
+                case 'N':
+                    personId = personFactory.createNewSCPersonId(birthDate, null, scenario.get("data_item_orig_value"), null, nric);
+                    mhaChangePersonDetailsFileEntry = new MhaChangePersonDetailsFileEntryCatName(
+                            nric,
+                            scenario.get("data_item_change_value"),
+                            dataItemChangeDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD),
+                            scenario.get("data_item_change_category").charAt(0), personId);
+                    break;
+                case 'B':
+                    LocalDate origBirthDate = dateUtils.parse(scenario.get("data_item_orig_value"));
+                    personId = personFactory.createNewSCPersonId(origBirthDate, null, null, null, nric);
+                    mhaChangePersonDetailsFileEntry = new MhaChangePersonDetailsFileEntryCatBirthDate(
+                            nric,
+                            scenario.get("data_item_change_value"),
+                            dataItemChangeDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD),
+                            scenario.get("data_item_change_category").charAt(0), personId);
+                    break;
+                case 'D':
+                    //NOT GOING TO SUPPORT DEATH DATE CHANGES
+                    throw new TestFailException("Death Category will not supported!");
 //                throw new TestFailException("Death Category will not supported!");
-            default:
-                mhaChangePersonDetailsFileEntry = new MhaChangePersonDetailsFileEntryCatUnsupported(nric,
-                        scenario.get("data_item_change_value"),
-                        dataItemChangeDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD),
-                        scenario.get("data_item_change_category").charAt(0), null);
-                log.info("Unsupported item change category: "+itemChangeCat);
+                default:
+                    mhaChangePersonDetailsFileEntry = new MhaChangePersonDetailsFileEntryCatUnsupported(nric,
+                            scenario.get("data_item_change_value"),
+                            dataItemChangeDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD),
+                            scenario.get("data_item_change_category").charAt(0), null);
+                    log.info("Unsupported item change category: "+itemChangeCat);
+            }
+            nricCategoryMap.put(nric, itemChangeCat);
         }
+        else{
+            switch (itemChangeCat) {
+                case 'S':
+                    GenderEnum originalGender = GenderEnum.fromString(scenario.get("data_item_orig_value"));
+                    personId = personFactory.createGenderIfNotCreated(nric, originalGender);
+                    mhaChangePersonDetailsFileEntry = new MhaChangePersonDetailsFileEntryCatGender(
+                            nric,
+                            scenario.get("data_item_change_value"),
+                            dataItemChangeDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD),
+                            scenario.get("data_item_change_category").charAt(0), personId);
+                    break;
+                case 'N':
+                    String originalName = scenario.get("data_item_orig_value");
+                    personId = personFactory.createPersonNameIfNotCreated(nric, originalName);
+                    mhaChangePersonDetailsFileEntry = new MhaChangePersonDetailsFileEntryCatName(
+                            nric,
+                            scenario.get("data_item_change_value"),
+                            dataItemChangeDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD),
+                            scenario.get("data_item_change_category").charAt(0), personId);
+                    break;
+                case 'B':
+                    LocalDate origBirthDate = dateUtils.parse(scenario.get("data_item_orig_value"));
+                    personId = personFactory.createPersonDetailIfNotCreated(nric, origBirthDate);
+                    mhaChangePersonDetailsFileEntry = new MhaChangePersonDetailsFileEntryCatBirthDate(
+                            nric,
+                            scenario.get("data_item_change_value"),
+                            dataItemChangeDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD),
+                            scenario.get("data_item_change_category").charAt(0), personId);
+                    break;
+                case 'D':
+                    //NOT GOING TO SUPPORT DEATH DATE CHANGES
+                    throw new TestFailException("Death Category will not supported!");
+//                throw new TestFailException("Death Category will not supported!");
+                default:
+                    mhaChangePersonDetailsFileEntry = new MhaChangePersonDetailsFileEntryCatUnsupported(nric,
+                            scenario.get("data_item_change_value"),
+                            dataItemChangeDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD),
+                            scenario.get("data_item_change_category").charAt(0), null);
+                    log.info("Unsupported item change category: " + itemChangeCat);
+            }
+            nricCategoryMap.put(nric, itemChangeCat);
+        }
+
         beanFactory.autowireBean(mhaChangePersonDetailsFileEntry);
         if ( !mhaChangePersonDetailsFileEntry.isValid() ) {
             String errorMsg = "Error with Mha Change Person Details Data Entry: "+mhaChangePersonDetailsFileEntry.getNric();
             errorMsg += System.lineSeparator()+String.join(System.lineSeparator(), mhaChangePersonDetailsFileEntry.getErrorMessages());
             log.warn(errorMsg);
         }
+
         return mhaChangePersonDetailsFileEntry.toString();
     }
 
@@ -244,3 +296,4 @@ public class MhaChangePersonDetailsDataPrep extends BatchFileDataPrep {
         return nricFieldOption;
     }
 }
+

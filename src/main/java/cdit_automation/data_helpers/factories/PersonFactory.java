@@ -212,6 +212,53 @@ public class PersonFactory extends AbstractFactory {
         return createPerson(personOptions);
     }
 
+    public PersonId createGenderIfNotCreated(String nric, GenderEnum originalGender){
+        PersonId personId = personIdRepo.findByNaturalId(nric);
+
+        Gender gender = genderRepo.findByPerson(personId.getPerson());
+        if(gender == null){
+            Batch b = Batch.createCompleted();
+            BiTemporalData biTemporalData = new BiTemporalData().generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(LocalDate.of(1965, 01, 01)));
+            batchRepo.save(b);
+            Gender newGender = Gender.builder()
+                    .batch(b)
+                    .genderEnum(originalGender)
+                    .biTemporalData(biTemporalData)
+                    .build();
+            genderRepo.save(newGender);
+        }
+        return personId;
+    }
+
+    public PersonId createPersonNameIfNotCreated(String nric, String originalName){
+        PersonId personId = personIdRepo.findByNaturalId(nric);
+
+        PersonName personName = personNameRepo.findByPerson(personId.getPerson());
+        if(personName == null){
+            Batch b = Batch.createCompleted();
+            BiTemporalData biTemporalData = new BiTemporalData().generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(LocalDate.of(1965, 01, 01)));
+            batchRepo.save(b);
+            PersonName originalPersonName = PersonName.create(b, personName.getPerson(), originalName, biTemporalData);
+            personNameRepo.save(originalPersonName);
+        }
+        return personId;
+    }
+
+    public PersonId createPersonDetailIfNotCreated(String nric, LocalDate originalDob){
+        PersonId personId = personIdRepo.findByNaturalId(nric);
+
+        PersonDetail personDetail = personDetailRepo.findByPerson(personId.getPerson());
+        if(personDetail == null){
+            Batch b = Batch.createCompleted();
+            BiTemporalData biTemporalData = new BiTemporalData().generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(LocalDate.of(1965, 01, 01)));
+            batchRepo.save(b);
+            PersonDetail originalDetail = PersonDetail.create(b, personDetail.getPerson(), originalDob, null, biTemporalData);
+            personDetailRepo.save(originalDetail);
+        }
+        return personId;
+    }
+
+
     private PersonId createPerson(PersonOptions personOptions) {
         Batch batch = Batch.createCompleted();
         Person person = Person.create();
