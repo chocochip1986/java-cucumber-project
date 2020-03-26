@@ -61,7 +61,7 @@ public class BatchFileDataWriter {
         this.fileDetail = retreiveFileDetailsFor(fileTypeEnum);
 
         setupDestinationFile();
-        FileUtils.createAndWriteToFile(this.destionationFile, this.header);
+        FileUtils.writeToFile(this.destionationFile, this.header);
         this.isInstantiated = true;
     }
 

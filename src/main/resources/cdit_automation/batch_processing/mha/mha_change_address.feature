@@ -72,7 +72,7 @@ Feature: MHA Change address
     | nca                    | mha_c                 |
     | nca                    | nca                   |
 
-  @set_6
+  @set_6 @Defect @Rvc-110
   Scenario Outline: CDS successfully updates address information to an existing address
     Given A singaporean person john owns a landed property abc
     And john owns a landed property abd
@@ -181,7 +181,7 @@ Feature: MHA Change address
     Then john does not reside in abd since 6 days ago
     And john resides in abc from 5 days ago
 
-  @set_11
+  @set_1
   Scenario: John moves to an existing address that Jane is living in
     Given A 30 year old singaporean person john owns a landed property abc
     And john resides in a hdb property abd
@@ -193,7 +193,7 @@ Feature: MHA Change address
     Then john does not reside in abd since 6 days ago
     And john resides in abe from 5 days ago
 
-  @set_12
+  @set_2
   Scenario: John moves back to the same address
     Given A 60 year old singaporean person john owns a hdb property abc
     And john resides in a condo property abd
@@ -205,7 +205,7 @@ Feature: MHA Change address
     Then john does not reside in abc since 6 days ago
     And john resides in abd from 5 days ago
 
-  @set_13
+  @set_3
   Scenario: Person has changed his address many times in the past and mha tells us that he change address again
     Given A 30 year old singaporean person john resides a hdb property abc
     And john had lived in a hdb property abd from 12 Jan 2000 to 12 Jan 2015
@@ -216,7 +216,7 @@ Feature: MHA Change address
     And there are no error messages
     Then john does not reside in abc since 6 days ago
 
-  @set_14
+  @set_4
   Scenario: John moves to an existing special property address
     Given A 60 year old singaporean person john resides a hdb property abc
     And A 40 year old singaporean person jane resides in a lorong_buangkok property abe
@@ -227,7 +227,7 @@ Feature: MHA Change address
     Then john does not reside in abc since 6 days ago
     And john resides in the lorong buangkok special property
 
-  @set_15 @defect @RVC115
+  @set_5 @defect @RVC115
   Scenario Outline: John moves to a new special property address
     Given A 60 year old singaporean person john resides a hdb property abc
     And the mha change address file contains information that john changed from (<prev_address_indicator>)abc to a new (<cur_address_indicator>)lorong_buangkok property 5 days ago

@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,11 +38,15 @@ public class PersonDetailChangeValidated extends AbstractValidated {
     @Column(name = "duplicate_record_marker")
     private int duplicateRecordMarker;
 
-    @Column(name = "incoming_record_details")
-    private String incomingRecordDetails;
+    @Column(name = "record_details_validated")
+    private String recordDetailsValidated;
 
     @Column(name = "data_item_changed_date")
     private LocalDate dataItemChangedDate;
+
+    @Column(name = "is_mappable")
+    @NotNull
+    private Boolean isMappable;
 
     public static PersonDetailChangeValidated createGender(Batch batch, String nric, String dataItemNewValue, LocalDate dataItemChangedDate) {
         return build(batch, nric, PersonDetailDataItemChangedEnum.GENDER, dataItemNewValue, dataItemChangedDate);

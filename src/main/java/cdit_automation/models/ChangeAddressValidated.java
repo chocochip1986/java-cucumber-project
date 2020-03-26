@@ -13,6 +13,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -68,11 +70,15 @@ public class ChangeAddressValidated extends AbstractValidated {
     @JoinColumn(name = "new_nca_address_id", referencedColumnName = "id")
     private NewNcaAddress newNcaAddress;
 
-    @Column(name = "change_addr_record_details")
-    private String recordDetails;
+    @Column(name = "record_details_validated")
+    private String recordDetailsValidated;
 
     @Column(name = "duplicate_record_marker")
     private int duplicateRecordMarker;
+
+    @Column(name = "is_mappable")
+    @NotNull
+    private Boolean isMappable;
 
     public static ChangeAddressValidated createOldNcaNewNca(Batch batch, OldNcaAddress oldNcaAddress, NewNcaAddress newNcaAddress) {
         return build(batch,
