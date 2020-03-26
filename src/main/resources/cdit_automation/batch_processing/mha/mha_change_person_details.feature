@@ -16,7 +16,7 @@ Feature: Data processing for Mha Change in Person Details
     | nric  | data_item_change_category | data_item_orig_value | data_item_change_value  | data_item_change_date |
     | valid | S                         | M                    | F                       | valid                 |
     | valid | N                         | Chao Ah Beng         | Tan Ah Beng             | valid                 |
-    | valid | B                         | 19860924             | 20000924                | valid                 |
+    | valid | B                         | 20010924             | 20000924                | valid                 |
     When MHA sends the MHA_PERSON_DETAIL_CHANGE file to Datasource sftp for processing
     And the Mha Change of Personal Details batch job completes running with status CLEANUP
 
@@ -26,7 +26,7 @@ Feature: Data processing for Mha Change in Person Details
       | nric  | data_item_change_category | data_item_orig_value | data_item_change_value  | data_item_change_date |
       | valid | S                         | M                    | F                       | valid                 |
       | valid | N                         | Chao Ah Beng         | Tan Ah Beng             | valid                 |
-      | valid | D                         | 19860924             | 20000924                | valid                 |
+      | valid | D                         | 20010924             | 20000924                | valid                 |
     When MHA sends the MHA_PERSON_DETAIL_CHANGE file to Datasource sftp for processing
     And the Mha Change of Personal Details batch job completes running with status CLEANUP
     And the error message contains Invalid Person Detail Data Item Changed type
@@ -36,7 +36,7 @@ Feature: Data processing for Mha Change in Person Details
     Given the mha person details file has the following details:
       | nric      | data_item_change_category | data_item_orig_value | data_item_change_value  | data_item_change_date |
       | S5881915H | N                         | Jay Chou             | Tan Ah Beng             | valid                 |
-      | valid     | B                         | 19860924             | 20000924                | valid                 |
+      | valid     | B                         | 20010924             | 20000924                | valid                 |
       | S5881915H | N                         | Jay Chou             | Tan Tan Ah Beng         | valid                 |
     When MHA sends the MHA_PERSON_DETAIL_CHANGE file to Datasource sftp for processing
     And the Mha Change of Personal Details batch job completes running with status CLEANUP
@@ -57,9 +57,9 @@ Feature: Data processing for Mha Change in Person Details
   Scenario: Mha sends a file with repeated partial duplicated birth date
     Given the mha person details file has the following details:
       | nric      | data_item_change_category | data_item_orig_value | data_item_change_value  | data_item_change_date |
-      | S5881915H | B                         | 20180909             | 20191231                | valid                 |
+      | S5881915H | B                         | 20200101             | 20191231                | valid                 |
       | valid     | N                         | Chao Ah Beng         | Tan Ah Beng             | valid                 |
-      | S5881915H | B                         | 20180919             | 20191231                | valid                 |
+      | S5881915H | B                         | 20200101             | 20191231                | valid                 |
     When MHA sends the MHA_PERSON_DETAIL_CHANGE file to Datasource sftp for processing
     And the Mha Change of Personal Details batch job completes running with status CLEANUP
     And the error message contains Partially Duplicate Record found
@@ -69,7 +69,7 @@ Feature: Data processing for Mha Change in Person Details
     Given the mha person details file has the following details:
       | nric      | data_item_change_category | data_item_orig_value | data_item_change_value  | data_item_change_date |
       | S5881915H | N                         | Jay Chou             | Tan Ah Beng             | 20180723              |
-      | valid     | B                         | 19860924             | 20000924                | valid                 |
+      | valid     | B                         | 20010924             | 20000924                | valid                 |
       | S5881915H | N                         | Jay Chou             | Tan Ah Beng             | 20180723              |
     When MHA sends the MHA_PERSON_DETAIL_CHANGE file to Datasource sftp for processing
     And the Mha Change of Personal Details batch job completes running with status CLEANUP

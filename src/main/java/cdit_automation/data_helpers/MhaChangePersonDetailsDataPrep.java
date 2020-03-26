@@ -81,7 +81,7 @@ public class MhaChangePersonDetailsDataPrep extends BatchFileDataPrep {
                     break;
                 case 'D':
                     //NOT GOING TO SUPPORT DEATH DATE CHANGES
-                    throw new TestFailException("Death Category will not supported!");
+//                    throw new TestFailException("Death Category will not supported!");
 //                throw new TestFailException("Death Category will not supported!");
                 default:
                     mhaChangePersonDetailsFileEntry = new MhaChangePersonDetailsFileEntryCatUnsupported(nric,
