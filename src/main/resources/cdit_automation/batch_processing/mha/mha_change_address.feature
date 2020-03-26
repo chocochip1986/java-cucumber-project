@@ -142,7 +142,7 @@ Feature: MHA Change address
     Given A singaporean person john owns a landed property abc
     And john owns a landed property abd
     And john resides in a condo property abe
-    And the mha change address file contains information that john changed from a new (<prev_address_indicator>)abc property to a new (<cur_address_indicator>)landed property 5 days ago
+    And the mha change address file contains information that john changed from a new (<prev_address_indicator>)condo property to a new (<cur_address_indicator>)landed property 5 days ago
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
     And the Mha Change Address batch job completes running with status VALIDATED_TO_PREPARED_ERROR
     And the error message contains Invalid validity of old address

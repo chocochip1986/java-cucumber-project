@@ -153,7 +153,7 @@ public class ChangeAddressSteps extends AbstractSteps {
             "(\\d) days ago$")
     public void theMhaChangeAddressFileContainsInfoThat4(String personName, String prevIndicatorType, String prevPropertyName, String curIndicatorType, String curPropertyName, int daysAgo) {
         checkIfPersonExistsInTestContext(personName);
-        PropertyTypeEnum prevPropertyTypeEnum = retrievePropertyOrError(curPropertyName);
+        PropertyTypeEnum prevPropertyTypeEnum = retrievePropertyOrError(prevPropertyName);
         PropertyTypeEnum curPropertyTypeEnum = retrievePropertyOrError(curPropertyName);
 
         batchFileDataWriter.begin(mhaChangeAddressDataPrep.generateSingleDateNoOfRecordsHeader(1), FileTypeEnum.MHA_CHANGE_ADDRESS, null);
