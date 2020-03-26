@@ -79,6 +79,7 @@ public class CeasedCitizenValidated extends AbstractValidated {
             .name(name)
             .nationality(nationality)
             .citizenRenunciationDate(citizenRenunciationDate)
+            .isMappable(true)
             .build();
   }
 }

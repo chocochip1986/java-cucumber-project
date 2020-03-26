@@ -37,10 +37,10 @@ Feature: Data processing for Mha ceased citizenship
       | CeasedCitizen | NumberOfDuplication |
       | 1             | 3                   |
     When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
-    Then the Mha Ceased Citizen batch job completes running with status BULK_CHECK_VALIDATION_ERROR
+    Then the Mha Ceased Citizen batch job completes running with status CLEANUP
     And I verify that the following error message appeared:
-      | Message                       | Count |
-      | Duplicate NRIC found in file. | 3     |
+      | Message                            | Count |
+      | Completely Duplicate Record found. | 3     |
 
   @set_4 @GRYFFINDOR-908 @defect
   Scenario: Mha send a ceased citizenship file with a record existing in the system and also duplicated in the file

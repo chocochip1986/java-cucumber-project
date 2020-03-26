@@ -143,6 +143,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
               .nationality(Phaker.randomNonSGCountryCode())
               .citizenRenunciationDate(dateUtils.daysBeforeToday(30))
               .nric(nric)
+              .isMappable(true)
               .build();
       ceasedCitizenRepo.save(ceasedCitizen);
       PersonId currentPersonId = personIdRepo.findPersonByNaturalId(nric);

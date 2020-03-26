@@ -58,7 +58,7 @@ Feature: Data processing for MHA new citizen file
       | T1601518G |           | Person C  | 19001231 | M      | Z            | A             | 117       Vista Rise | Z            | A             | 888       Diamond Rise | D                    | 20200301            |              |
       | T1601511Z | G1801510U | Person A  | 19990101 | M      | Z            | A             | 999       High Rise  | Z            | A             | 001       Low Rise     | D                    | 20200301            | 19990101     |
     When MHA sends the MHA_NEW_CITIZEN file to Datasource sftp for processing
-    And the Mha New Citizen batch job completes running with status CLEANUP
-    And I verify that person with T1601518G is persisted in Datasource
+    And the Mha New Citizen batch job completes running with status ERROR_RATE_ERROR
+    And I verify that person with T1601518G is not persisted in Datasource
     And I verify that person with T1601511Z is not persisted in Datasource
     And the error message contains Partially Duplicate Record found.

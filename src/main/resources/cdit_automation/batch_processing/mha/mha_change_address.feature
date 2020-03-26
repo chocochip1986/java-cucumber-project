@@ -20,7 +20,7 @@ Feature: MHA Change address
     | john   | Existing:abc,AddrType:C | IndType:Z,AddrType:C,Block:14B,Street:22 Jalan Besar,Unit:14,Floor:40,Building:City View,Postal:232902     | 20190909           |
     | johnson| Existing:def,AddrType:C | IndType:Z,AddrType:C,Block:123,Street:22 Jalan Jalan,Unit:12,Floor:20,Building:City View,Postal:452932     | 20190909           |
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
-    And the Mha Change Address batch job completes running with status CLEANUP
+    And the Mha Change Address batch job completes running with status ERROR_RATE_ERROR
     And the error message contains Partially Duplicate Record found.
 
   @set_3
@@ -47,7 +47,7 @@ Feature: MHA Change address
       | john   | Existing:abc,AddrType:C | IndType:Z,AddrType:C,Block:14B,Street:22 Jalan Besar,Unit:14,Floor:40,Building:City View,Postal:232902     | 20190909           |
       | ahmeng | Existing:abc,AddrType:C | IndType:Z,AddrType:C,Block:14B,Street:22 Jalan Besar,Unit:14,Floor:40,Building:City View,Postal:232902     | 20190909           |
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
-    And the Mha Change Address batch job completes running with status CLEANUP
+    And the Mha Change Address batch job completes running with status ERROR_RATE_ERROR
     And the error message contains Partially Duplicate Record found.
 
   @set_5
