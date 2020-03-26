@@ -14,6 +14,7 @@ public class FileTrailPage extends AbstractPage {
     public final String BACK_BTN = "//button[@class='secondary-button']/child::span[@class='secondary-button-text' and text()='BACK']";
     public final String FILE_TRAIL_PAGE = "//header[@class='header' and text()='File Trail']";
     public final String REASONABLENESS_TRENDING_PAGE = ".trending-page-link";
+    public final String REJECT_FILE_BTN = "//button[@class='secondary-button']/child::span[@class='secondary-button-text' and text()='REJECT FILE']";
 
     public final String FILE_TRAIL_INCOMING_INFO_SUBHEADER = "//div[@class='header-title' and text()='Incoming Information']";
     public final String FILE_TRAIL_FORMAT_VALIDATION_INFO_SUBHEADER = "//div[@class='header-title' and text()='Format Validation Information']";
@@ -33,6 +34,7 @@ public class FileTrailPage extends AbstractPage {
     public void clickReasonablenessTrending() {
         pageUtils.click_on(REASONABLENESS_TRENDING_PAGE);
     }
+    public void clickRejectFile() { pageUtils.click_on(REJECT_FILE_BTN); }
 
     public void verifyFileTrailPage(Batch batch) {
         testAssert.assertTrue(pageUtils.hasElement(FILE_TRAIL_PAGE), "File Trail page is not displayed!");
@@ -156,6 +158,15 @@ public class FileTrailPage extends AbstractPage {
         return getCount(FILE_TRAIL_CONTENT_VALIDATION_FAILED_COUNT);
     }
 
+    public boolean isRejectFileButtonExist() {
+        return waitUntilCondition(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return pageUtils.hasElement(REJECT_FILE_BTN);
+            }
+        });
+    }
+    
     private String getCount(String xpath) {
         pageUtils.waitForElementToHaveNumericalDigit(xpath);
         Optional<WebElement> targetOpt = Optional.ofNullable(pageUtils.findElement(xpath));

@@ -26,7 +26,8 @@ public enum BatchStatusEnum {
     CLEANUP("CLEANUP"),
     CLEANUP_ERROR("CLEANUP_ERROR"),
     SENT_DATA("SENT_DATA"),
-    SENDING_ERROR("SENDING_ERROR");
+    SENDING_ERROR("SENDING_ERROR"),
+    USER_REJECTED("USER_REJECTED");
 
     private static BatchStatusEnum[] ERROR_STATUSES = new BatchStatusEnum[]{
             INIT_ERROR,

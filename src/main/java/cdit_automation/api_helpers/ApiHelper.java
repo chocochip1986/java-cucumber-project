@@ -59,7 +59,7 @@ public class ApiHelper extends AbstractApiHelper {
     }
 
     public void sendCallToTriggerBatchJob(@NotNull FileReceived fileReceived) {
-        String url = "http://"+testEnv.getDatasourceUrl()+":"+testEnv.getDatasourcePort()+"/receiver/validateFile";
+        String url = "http://"+testEnv.getDatasourceUrl()+":"+testEnv.getDatasourcePort()+"/v1/validateFile";
 
         MultiValueMap<String, String> httpHeader = new LinkedMultiValueMap<>();
         httpHeader.put("Content-Type", Arrays.asList(MediaType.APPLICATION_JSON_VALUE));

@@ -25,11 +25,24 @@ public class FileTrailSteps extends AbstractSteps {
         fileTrailPage.clickBack();
     }
 
+    @And("^I click on the reject file button$")
+    public void iClickOnRejectFileButton() {
+        log.info("Clicking on reject file button...");
+        fileTrailPage.clickRejectFile();
+    }
+
     @Then("I verify that I see the file trail page")
     public void iVerifyThatISeeTheFileTrailPage() {
         log.info("Verifying file trail page is displayed...");
         Batch batch = testContext.get("batch");
         fileTrailPage.verifyFileTrailPage(batch);
+    }
+
+    @Then("I verify that I see the reject file button")
+    public void iVerifyThatISeeTheRejectFileButton() {
+        log.info("Verifying reject file button is displayed...");
+        boolean isExist = fileTrailPage.isRejectFileButtonExist();
+        testAssert.assertTrue(isExist, "Unable to locate reject file button");
     }
 
     @And("^I click on the reasonableness trending link$")
