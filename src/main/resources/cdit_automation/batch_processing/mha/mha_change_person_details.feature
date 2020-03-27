@@ -1,6 +1,7 @@
 @development
 @change_person_details
 @mha
+@truncate
 Feature: Data processing for Mha Change in Person Details
 
   @set_1

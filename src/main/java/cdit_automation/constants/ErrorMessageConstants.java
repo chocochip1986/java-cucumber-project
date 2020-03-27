@@ -92,7 +92,7 @@ public class ErrorMessageConstants {
             "Citizenship attainment date should be later than previous citizenship ceased date";
     public static final String ATTAINMENT_AFTER_EXTRACTION =
             "Citizenship attainment date cannot be after extraction date";
-    public static final String WRONG_GENDER = "Gender can only be M, F or U";
+    public static final String WRONG_GENDER = "GenderEnum can only be M, F or U";
     public static final String WRONG_ADDRESSINDICATOR =
             "Invalid address indicator. Only space, C or Z";
     public static final String WRONG_DUALNATIONALITY =

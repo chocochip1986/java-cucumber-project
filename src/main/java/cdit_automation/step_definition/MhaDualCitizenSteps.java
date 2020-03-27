@@ -143,7 +143,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
 
         FileReceived fileReceived = testContext.get("fileReceived");
 
-        Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
+        Batch batch = batchRepo.findFirstByFileReceivedOrderByCreatedAtDesc(fileReceived);
 
         List<ErrorMessage> errorMessages = errorMessageRepo.findByBatch(batch);
 

@@ -1,6 +1,7 @@
 @development
 @bulk_citizen
 @mha
+@truncate
 Feature: Data processing for MHA bulk citizen file
 
   @set_1 @GRYFFINDOR-912

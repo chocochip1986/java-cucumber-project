@@ -47,10 +47,10 @@ public class CommonSteps extends AbstractSteps {
             FileReceived fileReceived = testContext.get("fileReceived");
 
             if ( testManager.getTestEnvironment().getEnv().equals(TestEnv.Env.QA) ) {
-                Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
+                Batch batch = batchRepo.findFirstByFileReceivedOrderByCreatedAtDesc(fileReceived);
                 boolean isVerified = waitUntilConditionForBatch(new Predicate<Batch>(){
                     public boolean test(Batch batch) {
-                        batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
+                        batch = batchRepo.findFirstByFileReceivedOrderByCreatedAtDesc(fileReceived);
                         if ( batch != null && batch.getStatus().equals(expectedBatchStatus) ) {
                             return Boolean.TRUE;
                         } else if ( batch != null && BatchStatusEnum.isBatchStatusAnErrorStatus(batch.getStatus()) ) {
@@ -60,7 +60,7 @@ public class CommonSteps extends AbstractSteps {
                         }
                     }
                 }, batch);
-                batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
+                batch = batchRepo.findFirstByFileReceivedOrderByCreatedAtDesc(fileReceived);
                 if (batch == null) {
                     slack.sendToSlack(testManager.testEnv.getTopicArn(), "No batch record created for fileReceived record: "+fileReceived.getId().toString(), Slack.Level.NEUTRAL);
                     testAssert.assertNotNull(batch, "The "+batchJobName+" job from "+agencyName+" is null!!!");
@@ -70,7 +70,7 @@ public class CommonSteps extends AbstractSteps {
                 }
                 testContext.set("batch", batch);
             } else {
-                Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
+                Batch batch = batchRepo.findFirstByFileReceivedOrderByCreatedAtDesc(fileReceived);
                 testAssert.assertEquals(expectedBatchStatus, batch.getStatus(), new Supplier<String>() {
                     @Override
                     public String get() {
@@ -78,7 +78,12 @@ public class CommonSteps extends AbstractSteps {
                         return errorMessages.isEmpty() ? "" : errorMessages.stream().map(errorMessage -> errorMessage.getMessage()+System.lineSeparator()).collect(Collectors.joining());
                     }
                 });
-                testContext.set("batch", batch);
+                
+                if (testContext.contains("batch")) {
+                    testContext.replace("batch", batch);
+                } else {
+                    testContext.set("batch", batch);
+                }
             }
         } else {
             throw new TestFailException("No batch job previously created!");
@@ -115,13 +120,13 @@ public class CommonSteps extends AbstractSteps {
 
     @And("I verify that the following error message appeared:")
     public void iVerifyThatTheFollowingErrorMessageAppeared(DataTable table) {
-        
-        Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(testContext.get("fileReceived"));
+
+        Batch batch = batchRepo.findFirstByFileReceivedOrderByCreatedAtDesc(testContext.get("fileReceived"));
         List<String> errorMessages =
                 errorMessageRepo.findByBatch(batch).stream()
                         .map(ErrorMessage::getMessage)
                         .collect(Collectors.toList());
-        
+
         List<Map<String, String>> dataMap = table.asMaps(String.class, String.class);
         dataMap
                 .forEach(
@@ -152,7 +157,7 @@ public class CommonSteps extends AbstractSteps {
             throw new TestFailException("No file received record!");
         }
 
-        Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
+        Batch batch = batchRepo.findFirstByFileReceivedOrderByCreatedAtDesc(fileReceived);
         if ( batch == null ) {
             throw new TestFailException("No batch record created for fileReceived record: "+fileReceived.getId());
         }

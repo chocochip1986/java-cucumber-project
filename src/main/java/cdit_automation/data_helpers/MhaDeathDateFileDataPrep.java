@@ -1,7 +1,9 @@
 package cdit_automation.data_helpers;
 
 import cdit_automation.configuration.StepDefLevelTestContext;
+import cdit_automation.data_helpers.batch_entities.MhaDeathBroadcastFileEntry;
 import cdit_automation.data_setup.Phaker;
+import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.models.PersonDetail;
 import cdit_automation.models.PersonId;
 import java.sql.Timestamp;
@@ -14,6 +16,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.validation.constraints.NotNull;
+
+import io.cucumber.datatable.DataTable;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -183,6 +187,19 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
         }
 
         return listOfPpl;
+    }
+
+    public List<String> formatEntries(DataTable dataTable) {
+        List<Map<String, String>> dataRows = dataTable.asMaps(String.class, String.class);
+        List<MhaDeathBroadcastFileEntry> entries = dataRows.stream().map(MhaDeathBroadcastFileEntry::new).collect(Collectors.toList());
+        return entries.stream().map(MhaDeathBroadcastFileEntry::toRawString).collect(Collectors.toList());
+    }
+
+    public void writeToFile(String dateStr, List<String> entries) {
+        LocalDate localDate = dateUtils.parse(dateStr);
+        batchFileDataWriter.begin(generateSingleHeader(localDate), FileTypeEnum.MHA_DEATH_DATE, 10);
+        entries.forEach(entry -> batchFileDataWriter.chunkOrWrite(entry));
+        batchFileDataWriter.end();
     }
 
     private String randomDeathDate(@NotNull LocalDate fileReceviedDate, @NotNull LocalDate birthDate) {

@@ -1,6 +1,7 @@
 @development
 @death
 @mha
+@truncate
 Feature: Data processing for MHA death broadcast
 
   @set_1

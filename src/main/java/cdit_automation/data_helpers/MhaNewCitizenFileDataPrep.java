@@ -20,7 +20,11 @@ public class MhaNewCitizenFileDataPrep extends BatchFileDataPrep {
   }
 
   public void writeToFile(List<String> entries) {
-    batchFileDataWriter.begin(generateSingleHeader(LocalDate.now()), FileTypeEnum.MHA_NEW_CITIZEN, null);
+    this.writeToFile(generateSingleHeader(LocalDate.now()), entries);
+  }
+  
+  public void writeToFile(String dateStr, List<String> entries) {
+    batchFileDataWriter.begin(dateStr, FileTypeEnum.MHA_NEW_CITIZEN, null);
     entries.forEach(line -> batchFileDataWriter.chunkOrWrite(line));
     batchFileDataWriter.end();
   }

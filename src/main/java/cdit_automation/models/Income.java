@@ -58,6 +58,10 @@ public class Income extends AbstractEntity {
   @Enumerated(EnumType.STRING)
   private AssessableIncomeStatus assessableIncomeStatus;
 
+  @NotNull
+  @Column(name = "appeal_case")
+  private boolean isAppealCase;
+
   @Embedded private BiTemporalData biTemporalData;
 
   public static Income create(

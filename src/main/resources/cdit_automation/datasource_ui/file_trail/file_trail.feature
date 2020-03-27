@@ -1,6 +1,7 @@
 @development
 @datasourceui
 @file_trail
+@truncate
 Feature: File Trail
 
   @set_1

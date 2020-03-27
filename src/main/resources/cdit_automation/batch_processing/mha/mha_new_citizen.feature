@@ -1,6 +1,7 @@
 @development
 @new_citizen
 @mha
+@truncate
 Feature: Data processing for MHA new citizen file
 
   @set_1

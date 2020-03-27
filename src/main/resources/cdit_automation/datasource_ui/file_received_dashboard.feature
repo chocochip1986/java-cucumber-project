@@ -1,5 +1,6 @@
 @development
 @datasourceui
+@truncate
 Feature: Datasource UI file received dashboard
 
   @set_1

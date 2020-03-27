@@ -1,6 +1,7 @@
 @development
 @no_interaction
 @mha
+@truncate
 Feature: Data processing for MHA no interaction list (NIL)
 
   @set_1

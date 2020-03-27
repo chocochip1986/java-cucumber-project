@@ -1,6 +1,7 @@
 @development
 @egress_bulk_citizen
 @iras
+@truncate
 Feature: Data processing for IRAS tri-monthly citizen file
 
   # Possible value for each column

@@ -1,6 +1,7 @@
 @development
 @change_address
 @mha
+@truncate
 Feature: MHA Change address
 
   @set_1

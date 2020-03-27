@@ -1,6 +1,7 @@
 @development
 @datasourceui
 @revalidate_file
+@truncate
 Feature: Re-validate file
 
   @set_1
