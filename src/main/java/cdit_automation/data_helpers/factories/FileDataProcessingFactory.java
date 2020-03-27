@@ -5,6 +5,7 @@ import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.enums.ReasonablenessCheckDataItemEnum;
 import cdit_automation.enums.SpringJobStatusEnum;
 import cdit_automation.exceptions.TestFailException;
+import cdit_automation.models.AbstractValidated;
 import cdit_automation.models.Batch;
 import cdit_automation.models.BulkCitizenValidated;
 import cdit_automation.models.CeasedCitizenValidated;
@@ -12,6 +13,7 @@ import cdit_automation.models.ChangeAddressValidated;
 import cdit_automation.models.DeathDateValidated;
 import cdit_automation.models.DoubleDateHeaderValidated;
 import cdit_automation.models.DualCitizenValidated;
+import cdit_automation.models.ErrorMessage;
 import cdit_automation.models.FileDetail;
 import cdit_automation.models.FileReceived;
 import cdit_automation.models.IncomingRecord;
@@ -31,13 +33,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class FileDataProcessingFactory extends AbstractFactory {
-    public Batch generateRecordsBasedOn(BatchStatusEnum batchStatusEnum, FileTypeEnum fileTypeEnum, int totalRecordCount) {
-        return generateRecordsBasedOn(batchStatusEnum, fileTypeEnum, totalRecordCount, dateUtils.now());
+    public Batch generateRecordsBasedOn(BatchStatusEnum batchStatusEnum, FileTypeEnum fileTypeEnum, int totalRecordCount, LocalDate localDate) {
+        return generateRecordsBasedOn(batchStatusEnum, fileTypeEnum, totalRecordCount, localDate, 0);
     }
 
-    public Batch generateRecordsBasedOn(BatchStatusEnum batchStatusEnum, FileTypeEnum fileTypeEnum, int totalRecordCount, LocalDate batchJobProcessedDate) {
+    public Batch generateRecordsBasedOn(BatchStatusEnum batchStatusEnum, FileTypeEnum fileTypeEnum, int totalRecordCount, LocalDate batchJobProcessedDate, int errorPercent) {
         Batch batch = null;
-        int validatedCount = 0;
+        List<? extends AbstractValidated> validatedList;
         switch (batchStatusEnum) {
             case INIT:
             case INIT_ERROR:
@@ -45,62 +47,44 @@ public class FileDataProcessingFactory extends AbstractFactory {
                 //Only batch record is created
                 return createBatchJobRecords(batchStatusEnum, fileTypeEnum, batchJobProcessedDate);
             case FILE_CHECKED:
-                //Create incoming records only
+                batch = createBatchJobRecords(batchStatusEnum, fileTypeEnum, batchJobProcessedDate);
+                createIncomingRecords(batch, totalRecordCount);
+                break;
             case FILE_ERROR:
                 //Create incoming records only
                 //Some errors occured i.e. no footer, no header, incorrect header to footer, incorrect bound count
                 batch = createBatchJobRecords(batchStatusEnum, fileTypeEnum, batchJobProcessedDate);
                 createIncomingRecords(batch, totalRecordCount);
+                createErrorMessagesForIncomingRecords(batch, errorPercent);
                 break;
-            case BULK_CHECK_VALIDATED_DATA:
-                //validated records are created, statistics are also created
-//                break;
             case BULK_CHECK_VALIDATION_ERROR:
-                //validated records are created, but got some errors. could be header dates invalid, etc
+            case ERROR_RATE_ERROR:
+                //validated records are created, failed error rate check
                 batch = createBatchJobRecords(batchStatusEnum, fileTypeEnum, batchJobProcessedDate);
                 createIncomingRecords(batch, totalRecordCount);
                 createHeaderValidatedRecord(batch, fileTypeEnum);
-                validatedCount = createValidatedRecords(batch, totalRecordCount, fileTypeEnum);
-                createStatisticalRecords(batch, validatedCount);
+                validatedList = createValidatedRecords(batch, totalRecordCount, fileTypeEnum);
+                createStatisticalRecords(batch, validatedList.size());
+                createErrorMessagesForValidatedRecords(validatedList, batch, errorPercent);
                 break;
             case ERROR_RATE:
-                //validated records are created, passed error rate check
-            case ERROR_RATE_ERROR:
-                batch = createBatchJobRecords(batchStatusEnum, fileTypeEnum, batchJobProcessedDate);
-                createIncomingRecords(batch, totalRecordCount);
-                createHeaderValidatedRecord(batch, fileTypeEnum);
-                validatedCount = createValidatedRecords(batch, totalRecordCount, fileTypeEnum);
-                createStatisticalRecords(batch, validatedCount);
-                //validated records are created, failed error rate check
-                break;
+            case BULK_CHECK_VALIDATED_DATA:
             case MAPPED_DATA:
                 //prepared data persisted, no issues
             case MAPPING_ERROR:
-                batch = createBatchJobRecords(batchStatusEnum, fileTypeEnum, batchJobProcessedDate);
-                createIncomingRecords(batch, totalRecordCount);
-                createHeaderValidatedRecord(batch, fileTypeEnum);
-                validatedCount = createValidatedRecords(batch, totalRecordCount, fileTypeEnum);
-                createStatisticalRecords(batch, validatedCount);
                 //prepared data persisted got issues
-                break;
             case BULK_MAPPED_DATA:
                 //prepared data persisted
             case BULK_MAPPED_DATA_ERROR:
-                batch = createBatchJobRecords(batchStatusEnum, fileTypeEnum, batchJobProcessedDate);
-                createIncomingRecords(batch, totalRecordCount);
-                createHeaderValidatedRecord(batch, fileTypeEnum);
-                validatedCount = createValidatedRecords(batch, totalRecordCount, fileTypeEnum);
-                createStatisticalRecords(batch, validatedCount);
                 //prepared data persisted
-                break;
             case CLEANUP:
                 //prepared data persisted
             case CLEANUP_ERROR:
                 batch = createBatchJobRecords(batchStatusEnum, fileTypeEnum, batchJobProcessedDate);
                 createIncomingRecords(batch, totalRecordCount);
                 createHeaderValidatedRecord(batch, fileTypeEnum);
-                validatedCount = createValidatedRecords(batch, totalRecordCount, fileTypeEnum);
-                createStatisticalRecords(batch, validatedCount);
+                validatedList = createValidatedRecords(batch, totalRecordCount, fileTypeEnum);
+                createStatisticalRecords(batch, validatedList.size());
                 //prepared data persisted
                 break;
             default:
@@ -137,36 +121,64 @@ public class FileDataProcessingFactory extends AbstractFactory {
         }
     }
 
-    private int createValidatedRecords(Batch batch, int totalRecordCount, FileTypeEnum fileTypeEnum) {
+    private void createErrorMessagesForIncomingRecords(Batch batch, int errorPercent) {
+        List<ErrorMessage> errorMessages = new ArrayList<>();
+        List<IncomingRecord> incomingRecords = incomingRecordRepo.findAllBodyByBatch(batch);
+
+        int numerOfErrorenousRecords = Math.floorDiv(incomingRecords.size() * errorPercent, 100);
+        for ( int i = 0 ; i < numerOfErrorenousRecords ; i++ ) {
+            errorMessages.add(ErrorMessage.createErrorMsgForIncomingRecord(incomingRecords.get(0), batch));
+        }
+        errorMessageRepo.saveAll(errorMessages);
+    }
+
+    private void createErrorMessagesForValidatedRecords(List<? extends AbstractValidated> abstractValidateds, Batch batch, int errorPercent) {
+        List<ErrorMessage> errorMessages = new ArrayList<>();
+
+        int numberOfErrorenousRecords = Math.floorDiv(abstractValidateds.size() * errorPercent,  100);
+        for ( int i = 0 ; i < numberOfErrorenousRecords ; i++ ) {
+            errorMessages.add(ErrorMessage.createErrorMsgForValidatedRecord(abstractValidateds.get(i), batch));
+        }
+        errorMessageRepo.saveAll(errorMessages);
+    }
+
+    private List<? extends AbstractValidated> createValidatedRecords(Batch batch, int totalRecordCount, FileTypeEnum fileTypeEnum) {
         switch (fileTypeEnum) {
             case MHA_BULK_CITIZEN:
                 List<BulkCitizenValidated> bulkCitizenValidateds = new ArrayList<>();
-                return createRecordsFor(bulkCitizenValidateds, totalRecordCount, bulkCitizenValidatedRepo, batch,
+                createRecordsFor(bulkCitizenValidateds, totalRecordCount, bulkCitizenValidatedRepo, batch,
                         () -> bulkCitizenValidatedFactory.createValidBulkCitizenValidatedRecord(batch));
+                return bulkCitizenValidateds;
             case MHA_DUAL_CITIZEN:
                 List<DualCitizenValidated> dualCitizenValidateds = new ArrayList<>();
-                return createRecordsFor(dualCitizenValidateds, totalRecordCount, dualCitizenValidatedRepo, batch,
+                createRecordsFor(dualCitizenValidateds, totalRecordCount, dualCitizenValidatedRepo, batch,
                         () -> dualCitizenValidatedFactory.create(batch));
+                return dualCitizenValidateds;
             case MHA_PERSON_DETAIL_CHANGE:
                 List<PersonDetailChangeValidated> personDetailChangeValidateds = new ArrayList<>();
-                return createRecordsFor(personDetailChangeValidateds, totalRecordCount, personDetailChangeValidatedRepo, batch,
+                createRecordsFor(personDetailChangeValidateds, totalRecordCount, personDetailChangeValidatedRepo, batch,
                         () -> personDetailChangeValidatedFactory.create(batch));
+                return personDetailChangeValidateds;
             case MHA_CEASED_CITIZEN:
                 List<CeasedCitizenValidated> ceasedCitizenValidateds = new ArrayList<>();
-                return createRecordsFor(ceasedCitizenValidateds, totalRecordCount, ceasedCitizenValidatedRepo, batch,
+                createRecordsFor(ceasedCitizenValidateds, totalRecordCount, ceasedCitizenValidatedRepo, batch,
                         () -> ceasedCitizenValidatedFactory.create(batch));
+                return ceasedCitizenValidateds;
             case MHA_DEATH_DATE:
                 List<DeathDateValidated> deathDateValidateds = new ArrayList<>();
-                return createRecordsFor(deathDateValidateds, totalRecordCount, deathDateValidatedRepo, batch,
+                createRecordsFor(deathDateValidateds, totalRecordCount, deathDateValidatedRepo, batch,
                         () -> deathDateValidatedFactory.create(batch));
+                return deathDateValidateds;
             case MHA_CHANGE_ADDRESS:
                 List<ChangeAddressValidated> changeAddressValidateds = new ArrayList<>();
-                return createRecordsFor(changeAddressValidateds, totalRecordCount, changeAddressValidatedRepo, batch,
+                createRecordsFor(changeAddressValidateds, totalRecordCount, changeAddressValidatedRepo, batch,
                         () -> changeAddressValidatedFactory.create(batch));
+                return changeAddressValidateds;
             case MHA_NEW_CITIZEN:
                 List<NewCitizenValidated> newCitizenValidateds = new ArrayList<>();
-                return createRecordsFor(newCitizenValidateds, totalRecordCount, newCitizenValidatedRepo, batch,
+                createRecordsFor(newCitizenValidateds, totalRecordCount, newCitizenValidatedRepo, batch,
                         () -> newCitizenValidatedFactory.createValidNewCitizenValidatedRecord(batch));
+                return newCitizenValidateds;
             default:
                 throw new TestFailException("Unsupported batch status '"+fileTypeEnum.getValue()+" for data creation");
         }

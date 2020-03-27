@@ -42,6 +42,7 @@ public class ErrorMessage extends AbstractEntity  {
     }
 
     private static final long serialVersionUID = 1L;
+    private static final String STANDARD_ERROR_MESSAGE = "THIS IS AN ERROR MESSAGE";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -88,4 +89,33 @@ public class ErrorMessage extends AbstractEntity  {
     @NotNull
     @Column(name = "message")
     private String message;
+
+    public static ErrorMessage createErrorMsgForValidatedRecord(AbstractValidated abstractValidated, Batch batch) {
+        return build(batch, null, abstractValidated, STANDARD_ERROR_MESSAGE);
+    }
+
+    public static ErrorMessage createErrorMsgForValidatedRecord(AbstractValidated abstractValidated, Batch batch, String message) {
+        return build(batch, null, abstractValidated, message);
+    }
+
+    public static ErrorMessage createErrorMsgForIncomingRecord(IncomingRecord incomingRecord, Batch batch) {
+        return build(batch, incomingRecord, null, STANDARD_ERROR_MESSAGE);
+    }
+
+    public static ErrorMessage createErrorMsgForIncomingRecord(IncomingRecord incomingRecord, Batch batch, String message) {
+        return build(batch, incomingRecord, null, message);
+    }
+
+    public static ErrorMessage create(Batch batch, IncomingRecord incomingRecord, AbstractValidated abstractValidated, String message) {
+        return build(batch, incomingRecord, abstractValidated, message);
+    }
+
+    private static ErrorMessage build(Batch batch, IncomingRecord incomingRecord, AbstractValidated abstractValidated, String message) {
+        return ErrorMessage.builder()
+                .batch(batch)
+                .incomingRecord(incomingRecord)
+                .validatedData(abstractValidated)
+                .message(message)
+                .build();
+    }
 }
