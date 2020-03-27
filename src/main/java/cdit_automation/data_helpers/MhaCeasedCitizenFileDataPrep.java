@@ -82,6 +82,11 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
             parseStringSize(map.get("NumberOfDuplication")),
             Stream.concat(citizens.stream(), repeatedCitizens.stream())
                 .collect(Collectors.toList()));
+    List<MhaCeasedCitizenFileEntry> partialDuplicateCitizens = 
+        getPartialDuplicateCitizens(
+             parseStringSize(map.get("NumberOfPartialDuplication")),
+             Stream.concat(citizens.stream(), repeatedCitizens.stream())
+                 .collect(Collectors.toList()));
     List<MhaCeasedCitizenFileEntry> ceasedCitizenWithSGCountryCode =
         getCeasedCitizenWithSG(parseStringSize(map.get("CeasedCitizenWithSGCountryCode")));
     List<MhaCeasedCitizenFileEntry> ceasedCitizenWhoIsNonSG =
@@ -96,6 +101,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
                 renunciationAfterCutOffDateCitizens,
                 awardedCitizens,
                 duplicateCitizens,
+                partialDuplicateCitizens,
                 ceasedCitizenWithSGCountryCode,
                 ceasedCitizenWhoIsNonSG)
             .flatMap(Collection::stream)
@@ -394,6 +400,31 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
             }
             results.addAll(duplicateList);
           });
+    }
+    return results;
+  }
+
+  private List<MhaCeasedCitizenFileEntry> getPartialDuplicateCitizens(
+          int numberOfDuplication, List<MhaCeasedCitizenFileEntry> citizens) {
+    
+    List<MhaCeasedCitizenFileEntry> results = new ArrayList<>();
+    
+    if (numberOfDuplication != 0) {
+      citizens.forEach(
+              c -> {
+                List<MhaCeasedCitizenFileEntry> duplicateList =
+                        Collections.nCopies(numberOfDuplication - 1, c);
+                for (MhaCeasedCitizenFileEntry dup : duplicateList) {
+                  
+                  // randomize name & renunciation date
+                  dup.setName(Phaker.validName());
+                  dup.setCitizenRenunciationDate(
+                          dateUtils.yearsBeforeDate(dup.getCitizenRenunciationDate(), random.nextInt(10)));
+                  
+                  batchFileDataWriter.chunkOrWrite(dup.toString());
+                }
+                results.addAll(duplicateList);
+              });
     }
     return results;
   }

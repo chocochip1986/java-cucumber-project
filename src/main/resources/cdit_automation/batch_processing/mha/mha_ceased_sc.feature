@@ -30,7 +30,7 @@ Feature: Data processing for Mha ceased citizenship
       | Not SC or Dual Citizen currently. | 1     |
 
   @set_3 @GRYFFINDOR-908 @defect
-  Scenario: Mha send a ceased citizenship file with duplicate record
+  Scenario: Mha send a ceased citizenship file with completely duplicate records
     Given the database populated with the following data:
       | SingaporeCitizen | DualCitizen |
       | 1                | 0           |
@@ -148,3 +148,17 @@ Feature: Data processing for Mha ceased citizenship
     And I verify that the following error message appeared:
       | Message                                 | Count |
       | Not SC or Dual Citizen currently.       | 1     |
+
+  @set_3
+  Scenario: Mha send a ceased citizenship file with partially duplicate records
+    Given the database populated with the following data:
+      | SingaporeCitizen | DualCitizen |
+      | 1                | 0           |
+    And the file has the following details:
+      | CeasedCitizen | NumberOfPartialDuplication |
+      | 1             | 3                          |
+    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
+    Then the Mha Ceased Citizen batch job completes running with status BULK_CHECK_VALIDATION_ERROR
+    And I verify that the following error message appeared:
+      | Message                            | Count |
+      | Partially Duplicate Record found.  | 3     |
