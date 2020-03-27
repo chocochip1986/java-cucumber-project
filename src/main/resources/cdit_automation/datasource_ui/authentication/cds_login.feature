@@ -1,5 +1,6 @@
 @development
 @datasourceui
+@truncate
 Feature: CDS Authentication
 
   @set_1

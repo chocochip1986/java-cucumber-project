@@ -39,7 +39,7 @@ public class PersonName extends AbstractEntity {
     private Batch batch;
 
     @ManyToOne
-    @JoinColumn(name = "entity_key", nullable = false)
+    @JoinColumn(name = "entity_key")
     @NotNull
     private Person person;
 

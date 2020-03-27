@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface BatchRepo extends JpaRepository<Batch, Long> {
 
     //findByFileReceivedOrderByCreatedAtDesc
-    Batch findByFileReceivedOrderByCreatedAtDesc(FileReceived fileReceived);
+    Batch findFirstByFileReceivedOrderByCreatedAtDesc(FileReceived fileReceived);
 
     @Transactional
     @Modifying

@@ -49,7 +49,7 @@ public class BatchFileCreator extends AbstractFileCreator {
 
         FileReceivedDataDto fileReceivedDataDto = FileReceivedDataDto.createOk(fileDetail, file, timestamp);
 
-        apiHelper.sendCallToCreateFileReceivedRecord(fileReceivedDataDto);
+         apiHelper.sendCallToCreateFileReceivedRecord(fileReceivedDataDto);
 
         boolean isFound = waitUntilCondition(new Supplier<Boolean>(){
             public Boolean get() {

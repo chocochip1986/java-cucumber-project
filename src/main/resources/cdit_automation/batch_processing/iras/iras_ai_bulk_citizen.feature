@@ -1,6 +1,7 @@
 @development
 @ingresss_bulk_citizen
 @iras
+@truncate
 Feature: Data processing for IRAS bulk citizen file
 
   @set_1 @wip

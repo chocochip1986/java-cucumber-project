@@ -58,7 +58,7 @@ public class CommandSteps extends AbstractSteps {
     @When("^Datasource is triggered to generate the IRAS AI Bulk file$")
     public void datasourceIsTriggeredToGenerateTheIRASAIBulkFile() {
         Path filePath = Paths.get(testManager.getProjectRoot().toString(), "src", "main", "resources", "artifacts");
-        apiHelper.sendCallToTriggerOutgoingIrasAiJob( filePath.toFile(), dateUtils.now());
+        apiHelper.sendCallToTriggerOutgoingIrasAiJob(dateUtils.now());
         testContext.set("filePath", filePath);
     }
 
@@ -69,7 +69,6 @@ public class CommandSteps extends AbstractSteps {
         Path filePath = Paths.get(testManager.getProjectRoot().toString(), "src", "main", "resources", "artifacts");
         apiHelper.sendCallToTriggerOutgoingIrasTriMonthlyAiJob(
                 extractionDate,
-                filePath.toFile(),
                 isFirstTriMonthly);
         testContext.set("filePath", filePath);
         testContext.set("isFirstTriMonthly", isFirstTriMonthly);
@@ -82,11 +81,11 @@ public class CommandSteps extends AbstractSteps {
         testContext.set("fileReceived", batchFileCreator.replaceFile(fileDetail, fileTypeEnum.getValue().toLowerCase()));
     }
 
-    @When("^(?:MHA|IRAS) sends the (MHA_BULK_CITIZEN|MHA_NEW_CITIZEN|MHA_NO_INTERACTION|MHA_CHANGE_ADDRESS|MHA_DUAL_CITIZEN|MHA_PERSON_DETAIL_CHANGE|MHA_DEATH_DATE|MHA_CEASED_CITIZEN) file to Datasource sftp for processing$")
+    @When("^(?:MHA|IRAS) sends the (MHA_BULK_CITIZEN|MHA_NEW_CITIZEN|MHA_NO_INTERACTION|MHA_CHANGE_ADDRESS|MHA_DUAL_CITIZEN|MHA_PERSON_DETAIL_CHANGE|MHA_DEATH_DATE|MHA_CEASED_CITIZEN|IRAS_BULK_AI|IRAS_THRICE_MONTHLY_AI) file to Datasource sftp for processing$")
     public void mhaSendsTheFileToDatasourceSftpForProcessing(FileTypeEnum fileTypeEnum) {
         if ( testManager.isDevEnvironment() ) {
             FileDetail fileDetail = fileDetailRepo.findByFileEnum(fileTypeEnum);
-            FileReceived fileReceived = batchFileCreator.createFileReceived(fileDetail, fileTypeEnum.getValue().toLowerCase(), testContext.get("receivedTimestamp"));
+            FileReceived fileReceived = batchFileCreator.createFileReceived(fileDetail, fileDetail.getFileName(), testContext.get("receivedTimestamp"));
             testContext.set("fileReceived", fileReceived);
 
             log.info("Triggering "+fileTypeEnum.getHumanized_value()+" job is run");

@@ -47,6 +47,10 @@ public class FileDetail extends AbstractEntity  {
     @Column(name = "file_type")
     private FileTypeEnum fileEnum;
 
+    @NotNull
+    @Column(name = "file_name")
+    private String fileName;
+
     private Boolean header;
     private Boolean footer;
 
@@ -66,6 +70,10 @@ public class FileDetail extends AbstractEntity  {
     @Column(name = "footer_filler_size")
     private Integer footerFillerSize;
 
+    @NotNull
+    @Column(name = "actual_footer_size")
+    private Integer actualFooterSize;
+
     @Column(name = "frequency")
     @Enumerated(EnumType.STRING)
     private FileFrequencyEnum frequency;
@@ -73,11 +81,7 @@ public class FileDetail extends AbstractEntity  {
     @JsonIgnore
     @OneToMany(mappedBy = "fileDetail", cascade = CascadeType.ALL)
     private List<FileReceived> fileReceivedList;
-
-    @NotNull
-    @Column(name = "file_name")
-    private String fileName;
-
+    
     @SuppressWarnings("squid:S2637")
     public FileDetail(FileTypeEnum fileEnum) {
         this.fileEnum = fileEnum;
@@ -88,6 +92,7 @@ public class FileDetail extends AbstractEntity  {
                 hasFooterFiller = false;
                 headerSize = 16;
                 bodySize = 41;
+                actualFooterSize = 9;
                 footerFillerSize = 0;
                 header = true;
                 footer = true;
@@ -98,6 +103,7 @@ public class FileDetail extends AbstractEntity  {
                 hasFooterFiller = false;
                 headerSize = 8;
                 bodySize = 25;
+                actualFooterSize = 9;
                 footerFillerSize = 0;
                 header = true;
                 footer = true;
@@ -108,6 +114,7 @@ public class FileDetail extends AbstractEntity  {
                 hasFooterFiller = false;
                 headerSize = 16;
                 bodySize = 9;
+                actualFooterSize = 9;
                 footerFillerSize = 9;
                 header = true;
                 footer = true;
@@ -118,6 +125,7 @@ public class FileDetail extends AbstractEntity  {
                 hasFooterFiller = false;
                 headerSize = 8;
                 bodySize = 9;
+                actualFooterSize = 0;
                 footerFillerSize = 0;
                 header = true;
                 footer = false;
@@ -126,8 +134,9 @@ public class FileDetail extends AbstractEntity  {
             case MHA_NO_INTERACTION:
                 agency = AgencyEnum.MHA;
                 hasFooterFiller = false;
-                headerSize = 14;
+                headerSize = 16;
                 bodySize = 25;
+                actualFooterSize = 9;
                 footerFillerSize = 0;
                 header = true;
                 footer = true;
@@ -136,8 +145,9 @@ public class FileDetail extends AbstractEntity  {
             case MHA_NEW_CITIZEN:
                 agency = AgencyEnum.MHA;
                 hasFooterFiller = false;
-                headerSize = 16;
-                bodySize = 303;
+                actualFooterSize = 9;
+                headerSize = 8;
+                bodySize = 292;
                 footerFillerSize = 0;
                 header = true;
                 footer = true;
@@ -148,16 +158,18 @@ public class FileDetail extends AbstractEntity  {
                 hasFooterFiller = false;
                 headerSize = 16;
                 bodySize = 204;
+                actualFooterSize = 9;
                 footerFillerSize = 0;
                 header = true;
                 footer = true;
-                frequency = FileFrequencyEnum.MONTHLY;
+                frequency = FileFrequencyEnum.YEARLY;
                 break;
             case MHA_DEATH_DATE:
                 agency = AgencyEnum.MHA;
                 hasFooterFiller = false;
-                headerSize = 16;
+                headerSize = 8;
                 bodySize = 17;
+                actualFooterSize = 9;
                 footerFillerSize = 0;
                 header = true;
                 footer = true;
@@ -168,6 +180,7 @@ public class FileDetail extends AbstractEntity  {
                 hasFooterFiller = false;
                 headerSize = 8;
                 bodySize = 32;
+                actualFooterSize = 0;
                 footerFillerSize = 0;
                 header = true;
                 footer = false;
@@ -178,6 +191,7 @@ public class FileDetail extends AbstractEntity  {
                 hasFooterFiller = false;
                 headerSize = 16;
                 bodySize = 200;
+                actualFooterSize = 9;
                 footerFillerSize = 0;
                 header = true;
                 footer = true;
@@ -188,7 +202,8 @@ public class FileDetail extends AbstractEntity  {
                 hasFooterFiller = true;
                 headerSize = 9;
                 bodySize = 317;
-                footerFillerSize = 20;
+                actualFooterSize = 11;
+                footerFillerSize = 21;
                 header = true;
                 footer = true;
                 frequency = FileFrequencyEnum.MONTHLY;
@@ -196,8 +211,9 @@ public class FileDetail extends AbstractEntity  {
             case MHA_DUAL_CITIZEN:
                 agency = AgencyEnum.MHA;
                 hasFooterFiller = false;
-                headerSize = 16;
+                headerSize = 8;
                 bodySize = 9;
+                actualFooterSize = 9;
                 footerFillerSize = 0;
                 header = true;
                 footer = true;
@@ -206,8 +222,9 @@ public class FileDetail extends AbstractEntity  {
             case MHA_CEASED_CITIZEN:
                 agency = AgencyEnum.MHA;
                 hasFooterFiller = false;
-                headerSize = 16;
-                bodySize = 86;
+                headerSize = 8;
+                bodySize = 85;
+                actualFooterSize = 9;
                 footerFillerSize = 0;
                 header = true;
                 footer = true;
@@ -218,6 +235,62 @@ public class FileDetail extends AbstractEntity  {
                 hasFooterFiller = false;
                 headerSize = 8;
                 bodySize = 84;
+                actualFooterSize = 9;
+                footerFillerSize = 0;
+                header = true;
+                footer = true;
+                frequency = FileFrequencyEnum.MONTHLY;
+                break;
+            case IRAS_BULK_AI:
+                agency = AgencyEnum.IRAS;
+                hasFooterFiller = true;
+                headerSize = 50;
+                bodySize = 50;
+                actualFooterSize = 9;
+                footerFillerSize = 1;
+                header = true;
+                footer = true;
+                frequency = FileFrequencyEnum.YEARLY;
+                break;
+            case IRAS_THRICE_MONTHLY_AI:
+                agency = AgencyEnum.IRAS;
+                hasFooterFiller = true;
+                headerSize = 50;
+                bodySize = 50;
+                actualFooterSize = 9;
+                footerFillerSize = 1;
+                header = true;
+                footer = true;
+                frequency = FileFrequencyEnum.THRICE_MONTHLY;
+                break;
+            case CPFB_CLASSIFIED_ACCOUNT:
+                agency = AgencyEnum.CPFB;
+                hasFooterFiller = false;
+                headerSize = 30;
+                bodySize = 30;
+                actualFooterSize = 9;
+                footerFillerSize = 0;
+                header = true;
+                footer = true;
+                frequency = FileFrequencyEnum.DAILY;
+                break;
+            case CPFB_NURSING_HOME:
+                agency = AgencyEnum.CPFB;
+                hasFooterFiller = false;
+                headerSize = 8;
+                bodySize = 23;
+                actualFooterSize = 9;
+                footerFillerSize = 0;
+                header = true;
+                footer = true;
+                frequency = FileFrequencyEnum.MONTHLY;
+                break;
+            case CPFB_LORONG_BUANGKOK:
+                agency = AgencyEnum.CPFB;
+                hasFooterFiller = false;
+                headerSize = 8;
+                bodySize = 20;
+                actualFooterSize = 9;
                 footerFillerSize = 0;
                 header = true;
                 footer = true;

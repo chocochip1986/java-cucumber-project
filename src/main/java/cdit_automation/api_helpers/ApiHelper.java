@@ -27,22 +27,16 @@ public class ApiHelper extends AbstractApiHelper {
         super();
     }
 
-    public void sendCallToTriggerOutgoingIrasAiJob(@Nullable File file, @NotNull LocalDate date) {
+    public void sendCallToTriggerOutgoingIrasAiJob(@NotNull LocalDate date) {
         String requestParams = "date="+date.format(Phaker.DATETIME_FORMATTER_YYYYMMDD);
-        if ( file != null ) {
-            requestParams = "filePath="+file.getAbsolutePath()+"/"+"&"+requestParams;
-        }
 
         String url = "http://"+testEnv.getDatasourceUrl()+":"+testEnv.getDatasourcePort()+"/egress/iras/ai/bulk?"+requestParams;
 
         getCall(url);
     }
 
-    public void sendCallToTriggerOutgoingIrasTriMonthlyAiJob(@NotNull LocalDate date, @Nullable File file, @NotNull boolean isFirst) {
-        String requestParams = "date=" + date.format(Phaker.DATETIME_FORMATTER_YYYYMMDD) + "&isFirstTriMonthly=" + (isFirst ? "true" : "false");
-        if ( file != null ) {
-            requestParams = "filePath="+file.getAbsolutePath()+"/"+"&"+requestParams;
-        }
+    public void sendCallToTriggerOutgoingIrasTriMonthlyAiJob(@NotNull LocalDate date, @NotNull boolean isCurrentYAExcluded) {
+        String requestParams = "date=" + date.format(Phaker.DATETIME_FORMATTER_YYYYMMDD) + "&excludeCurrentYA=" + (isCurrentYAExcluded ? "true" : "false");
         String url = "http://"+testEnv.getDatasourceUrl()+":"+testEnv.getDatasourcePort()+"/egress/iras/ai/thriceMonthly?"+requestParams;
         getCall(url);
     }
@@ -66,10 +60,25 @@ public class ApiHelper extends AbstractApiHelper {
 
         Map<String, String> requestBodyKeyValuePairs = new HashMap<String, String>() {{
             put("fileReceivedId", fileReceived.getId().toString());
+            put("isIgnoreErrorRate", "false");
         }};
 
         JSONObject httpBody = addToBody(requestBodyKeyValuePairs);
 
         postCall(url, httpHeader, httpBody.toString());
     }
+
+  public void sendCallToTriggerOutgoingIrasFirstBulkJob(
+      @NotNull LocalDate localDate, @NotNull String yearOfAssessment) {
+    String url =
+        "http://"
+            + testEnv.getDatasourceUrl()
+            + ":"
+            + testEnv.getDatasourcePort()
+            + "/egress/iras/ai/firstBulk?date="
+            + localDate.format(Phaker.DATETIME_FORMATTER_YYYYMMDD)
+            + "&yearOfAssessment="
+            + yearOfAssessment;
+    getCall(url);
+  }
 }

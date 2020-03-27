@@ -97,7 +97,7 @@ public class MhaNoInteractionSteps extends AbstractSteps {
       if (testContext.contains(FILE_RECEIVED)) {
           
           FileReceived fileReceived = testContext.get(FILE_RECEIVED);
-          Batch batch = batchRepo.findByFileReceivedOrderByCreatedAtDesc(fileReceived);
+          Batch batch = batchRepo.findFirstByFileReceivedOrderByCreatedAtDesc(fileReceived);
           
           long count = noInteractionValidatedRepo.countAllByBatch(batch);
           testAssert.assertEquals(noOfRecords, count, "The expected number of record(s) does not match!!!");

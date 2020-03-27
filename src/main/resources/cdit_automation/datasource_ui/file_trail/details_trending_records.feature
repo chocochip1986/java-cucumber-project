@@ -1,6 +1,7 @@
 @development
 @datasourceui
 @trending_records
+@truncate
 Feature: Details of Trending Records for files
 
   @set_1

@@ -1,6 +1,7 @@
 @development
 @dual_citizen
 @mha
+@truncate
 Feature: Data processing for MHA dual citizenship
 
   @set_1

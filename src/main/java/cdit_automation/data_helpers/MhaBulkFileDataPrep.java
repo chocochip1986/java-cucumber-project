@@ -1,8 +1,10 @@
 package cdit_automation.data_helpers;
 
 import cdit_automation.configuration.StepDefLevelTestContext;
+import cdit_automation.data_helpers.batch_entities.MhaBulkCitizenFileEntry;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.AddressIndicatorEnum;
+import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.enums.GenderEnum;
 import cdit_automation.enums.InvalidAddressTagEnum;
 import cdit_automation.enums.MhaAddressTypeEnum;
@@ -10,18 +12,17 @@ import cdit_automation.enums.NationalityEnum;
 import cdit_automation.enums.NcaAddressTypeEnum;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.utilities.StringUtils;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import io.cucumber.datatable.DataTable;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Component
 public class MhaBulkFileDataPrep extends BatchFileDataPrep {
@@ -401,9 +402,9 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
                         optionsList.remove(option);
                         return "A";
                     } else {
-                        GenderEnum gender = GenderEnum.fromString(option);
+                        GenderEnum genderEnum = GenderEnum.fromString(option);
                         optionsList.remove(option);
-                        return gender.getValue();
+                        return genderEnum.getValue();
                     }
                 })
                 .orElse(GenderEnum.MALE.getValue());
@@ -512,6 +513,20 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
         else {
             return 1;
         }
+    }
+
+    public List<String> formatEntries(DataTable dataTable) {
+        List<Map<String, String>> dataRows = dataTable.asMaps(String.class, String.class);
+        List<MhaBulkCitizenFileEntry> entries =
+                dataRows.stream().map(MhaBulkCitizenFileEntry::new).collect(Collectors.toList());
+        return entries.stream().map(MhaBulkCitizenFileEntry::toRawString).collect(Collectors.toList());
+    }
+    
+    public void writeToFile(String dateStr, List<String> entries) {
+        LocalDate date = dateUtils.parse(dateStr);
+        batchFileDataWriter.begin(generateDoubleHeader(date, date), FileTypeEnum.MHA_BULK_CITIZEN, 10);
+        entries.forEach(entry -> batchFileDataWriter.chunkOrWrite(entry));
+        batchFileDataWriter.end();
     }
 
     @NoArgsConstructor

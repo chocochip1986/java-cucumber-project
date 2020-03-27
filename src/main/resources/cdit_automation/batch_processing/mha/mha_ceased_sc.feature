@@ -1,6 +1,7 @@
 @development
 @ceased_citizen
 @mha
+@truncate
 Feature: Data processing for Mha ceased citizenship
 
   @set_1
