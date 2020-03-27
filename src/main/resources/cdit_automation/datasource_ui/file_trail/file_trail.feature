@@ -170,9 +170,9 @@ Feature: File Trail
     Then the Mha new citizen batch job completes running with status ERROR_RATE_ERROR
     And I search for the file
     Then I verify that I see the file trail page
-#    Then I verify that I see the reject file button
-#    And I click on the reject file button
-#    Then I should see the Files Dashboard
-#    Then the Mha new citizen batch job completes running with status USER_REJECTED
-#    Then The records should be displayed with the correct current status
+    Then I verify that I see the reject file button
+    And I click on the reject file button
+    Then I should see the Files Dashboard
+    Then the Mha new citizen batch job completes running with status USER_REJECTED
+    Then The records should be displayed with the correct current status
     And I logout of CDS Intranet

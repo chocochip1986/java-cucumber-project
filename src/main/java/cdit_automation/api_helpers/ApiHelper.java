@@ -22,6 +22,8 @@ import org.springframework.util.MultiValueMap;
 @Component
 public class ApiHelper extends AbstractApiHelper {
 
+    private static String urlSuffix = "/v1";
+
     @Autowired
     public ApiHelper () {
         super();
@@ -42,7 +44,7 @@ public class ApiHelper extends AbstractApiHelper {
     }
 
     public void sendCallToCreateFileReceivedRecord(FileReceivedDataDto fileReceivedDataDto) {
-        String url = "http://"+testEnv.getDatasourceUrl()+":"+testEnv.getDatasourcePort()+"/v1/fileReceived";
+        String url = "http://"+testEnv.getDatasourceUrl()+":"+testEnv.getDatasourcePort()+ urlSuffix + "/fileReceived";
         MultiValueMap<String, String> httpHeader = new LinkedMultiValueMap<>();
         httpHeader.put("Content-Type", Arrays.asList(MediaType.APPLICATION_JSON_VALUE));
 
@@ -53,7 +55,7 @@ public class ApiHelper extends AbstractApiHelper {
     }
 
     public void sendCallToTriggerBatchJob(@NotNull FileReceived fileReceived) {
-        String url = "http://"+testEnv.getDatasourceUrl()+":"+testEnv.getDatasourcePort()+"/receiver/validateFile";
+        String url = "http://"+testEnv.getDatasourceUrl()+":"+testEnv.getDatasourcePort()+ urlSuffix + "/validateFile";
 
         MultiValueMap<String, String> httpHeader = new LinkedMultiValueMap<>();
         httpHeader.put("Content-Type", Arrays.asList(MediaType.APPLICATION_JSON_VALUE));
