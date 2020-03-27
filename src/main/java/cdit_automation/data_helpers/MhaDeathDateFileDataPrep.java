@@ -82,6 +82,8 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
 
             batchFileDataWriter.chunkOrWrite(inputLine);
             batchFileDataWriter.chunkOrWrite(inputLine);
+
+            generateAndSavePersonIdForDeathDateFile(dupNric, randomDeathDate);
         }
 
         return listOfDuplicatedEntries;
@@ -213,5 +215,15 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
 
     private String randomDeathDate() {
         return Phaker.validPastDate().format(Phaker.DATETIME_FORMATTER_YYYYMMDD);
+    }
+
+    // Date of Birth will be generated based on Death Date - 1 year
+    private void generateAndSavePersonIdForDeathDateFile(String nric, String deathDateString) {
+        
+        LocalDate deathDate = dateUtils.parse(deathDateString);
+        LocalDate dateOfBirth = dateUtils.yearsBeforeDate(deathDate, 1);
+        
+        PersonId personId = personFactory.createNewSCPersonId(dateOfBirth, Phaker.validName(), nric);
+        personIdRepo.save(personId);
     }
 }

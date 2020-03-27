@@ -47,7 +47,7 @@ Feature: Data processing for MHA death broadcast
     And the Mha Death batch job completes running with status CLEANUP
     Then the error message contains Citizen has an existing Death Date
 
-  @set_6
+  @set_6 @Defect @To-double-check-with-PO-on-this
   Scenario: MHA sends a future death date
     Given the mha death file has the following details:
       | PplWithFutureDeathDates |

@@ -170,6 +170,10 @@ public class PersonFactory extends AbstractFactory {
         return createPersonData(birthDate, null, name, null, NationalityEnum.SINGAPORE_CITIZEN, null);
     }
 
+    public PersonId createNewSCPersonId(LocalDate birthDate, String name, String nric) {
+        return createPersonData(birthDate, null, name, null, NationalityEnum.SINGAPORE_CITIZEN, nric);
+    }
+
     public PersonId createNewSCPersonId(LocalDate birthDate, LocalDate deathDate, String name, GenderEnum gender, String identifier) {
         return createPersonData(birthDate, deathDate, name, gender, NationalityEnum.SINGAPORE_CITIZEN, identifier);
     }
