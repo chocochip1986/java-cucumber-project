@@ -45,7 +45,6 @@ public class CeasedCitizenValidated extends AbstractValidated {
   private Long duplicateRecordMarker;
 
   @Column(name = "is_mappable")
-  @NotNull
   private Boolean isMappable;
 
   @Override

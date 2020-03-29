@@ -45,7 +45,6 @@ public class PersonDetailChangeValidated extends AbstractValidated {
     private LocalDate dataItemChangedDate;
 
     @Column(name = "is_mappable")
-    @NotNull
     private Boolean isMappable;
 
     public static PersonDetailChangeValidated createGender(Batch batch, String nric, String dataItemNewValue, LocalDate dataItemChangedDate) {

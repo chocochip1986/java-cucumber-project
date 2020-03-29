@@ -28,7 +28,6 @@ public class DeathDateValidated extends AbstractValidated {
     private LocalDate deathDate;
 
     @Column(name = "is_mappable")
-    @NotNull
     private Boolean isMappable;
 
     public static DeathDateValidated create(Batch batch) {

@@ -11,10 +11,11 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class FileTrailPage extends AbstractPage {
-    public final String BACK_BTN = "//button[@class='secondary-button']/child::span[@class='secondary-button-text' and text()='BACK']";
+    public final String BACK_BTN = "//button[contains(@class,'secondary-button')]/child::span[@class='secondary-button-text' and text()='BACK']";
+    public final String REJECT_FILE_BTN = "//button[contains(@class,'secondary-button')]/child::span[@class='secondary-button-text' and text()='REJECT FILE']";
+    
     public final String FILE_TRAIL_PAGE = "//header[@class='header' and text()='File Trail']";
     public final String REASONABLENESS_TRENDING_PAGE = ".trending-page-link";
-    public final String REJECT_FILE_BTN = "//button[@class='secondary-button']/child::span[@class='secondary-button-text' and text()='REJECT FILE']";
 
     public final String FILE_TRAIL_INCOMING_INFO_SUBHEADER = "//div[@class='header-title' and text()='Incoming Information']";
     public final String FILE_TRAIL_FORMAT_VALIDATION_INFO_SUBHEADER = "//div[@class='header-title' and text()='Format Validation Information']";

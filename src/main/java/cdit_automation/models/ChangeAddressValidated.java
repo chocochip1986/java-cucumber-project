@@ -77,7 +77,6 @@ public class ChangeAddressValidated extends AbstractValidated {
     private int duplicateRecordMarker;
 
     @Column(name = "is_mappable")
-    @NotNull
     private Boolean isMappable;
 
     public static ChangeAddressValidated createOldNcaNewNca(Batch batch, OldNcaAddress oldNcaAddress, NewNcaAddress newNcaAddress) {

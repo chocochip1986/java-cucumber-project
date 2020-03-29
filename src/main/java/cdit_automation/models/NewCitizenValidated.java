@@ -104,7 +104,6 @@ public class NewCitizenValidated extends AbstractValidated {
     private NewNcaAddress newNcaAddress;
 
     @Column(name = "is_mappable")
-    @NotNull
     private Boolean isMappable;
 
     @Column(name = "new_citizen_record_details")
