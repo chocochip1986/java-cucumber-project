@@ -27,30 +27,6 @@ Feature: File Trail
       | Load        | Urgent Action |
 
   @set_2
-  Scenario: CPF officer accesses file trail page
-    Given There is a MHA BULK CITIZEN file at Load step with Pending status processed 40 days ago
-    And the below MHA BULK CITIZEN reasonableness statistics with CLEANUP status inserted previously with year - 1 month + 0 day + 0
-      | data_item             | data_item_value |
-      | No of new 13 year old | 100             |
-    And the below MHA BULK CITIZEN reasonableness statistics with CLEANUP status inserted previously with year - 2 month + 0 day + 0
-      | data_item             | data_item_value |
-      | No of new 13 year old | 200             |
-    And the below MHA BULK CITIZEN reasonableness statistics with CLEANUP status inserted previously with year - 3 month + 0 day + 0
-      | data_item             | data_item_value |
-      | No of new 13 year old | 300             |
-    And the below MHA BULK CITIZEN reasonableness statistics with CLEANUP status inserted previously with year - 4 month + 0 day + 0
-      | data_item             | data_item_value |
-      | No of new 13 year old | 400             |
-    Given I am a CPF officer
-    And I login to CDS Intranet as a CPF officer
-    And I access Datasource UI Files Dashboard function
-    Then I should see that there are files displayed
-    And I search for the file
-    Then I verify that I see the file trail page
-    And I click on the reasonableness trending link
-    And I logout of CDS Intranet
-
-  @set_3
   Scenario: CPF officer observe the mha new citizen file ingested successfully
     Given a MHA_NEW_CITIZEN file with the following details
       | NRIC      | FIN       | NAME   | DOB      | GENDER | OLD_ADDR_IND | OLD_ADDR_TYPE | OLD_ADDR | NEW_ADDR_IND | NEW_ADDR_TYPE | NEW_ADDR            | NEW_INVALID_ADDR_TAG | DATE_OF_ADDR_CHANGE | CTZ_ATT_DATE |
@@ -75,7 +51,7 @@ Feature: File Trail
     Then I verify 12 records passed content validation
     And I logout of CDS Intranet
 
-  @set_4
+  @set_3
   Scenario: CPF officer observe the mha new citizen file has full format error
     Given a MHA_NEW_CITIZEN file with the following details
       | NRIC | FIN       | NAME   | DOB      | GENDER | OLD_ADDR_IND | OLD_ADDR_TYPE | OLD_ADDR | NEW_ADDR_IND | NEW_ADDR_TYPE | NEW_ADDR            | NEW_INVALID_ADDR_TAG | DATE_OF_ADDR_CHANGE | CTZ_ATT_DATE |
@@ -99,7 +75,7 @@ Feature: File Trail
     Then I verify 10 records failed format validation
     And I logout of CDS Intranet
 
-  @set_5
+  @set_4
   Scenario: CPF officer observe the mha new citizen file has full content error
     Given a MHA_NEW_CITIZEN file with the following details
       | NRIC      | FIN       | NAME   | DOB      | GENDER | OLD_ADDR_IND | OLD_ADDR_TYPE | OLD_ADDR | NEW_ADDR_IND | NEW_ADDR_TYPE | NEW_ADDR            | NEW_INVALID_ADDR_TAG | DATE_OF_ADDR_CHANGE | CTZ_ATT_DATE |
@@ -124,7 +100,7 @@ Feature: File Trail
     Then I verify 10 records failed content validation
     And I logout of CDS Intranet
 
-  @set_6
+  @set_5
   Scenario: CPF officer observe the mha new citizen file has partial format and content errors
     Given a MHA_NEW_CITIZEN file with the following details
       | NRIC      | FIN       | NAME   | DOB      | GENDER | OLD_ADDR_IND | OLD_ADDR_TYPE | OLD_ADDR | NEW_ADDR_IND | NEW_ADDR_TYPE | NEW_ADDR            | NEW_INVALID_ADDR_TAG | DATE_OF_ADDR_CHANGE | CTZ_ATT_DATE |
@@ -142,7 +118,7 @@ Feature: File Trail
     And I login to CDS Intranet as a CPF officer
     Then I access Datasource UI Files Dashboard function
     Then I should see that there are files displayed
-    Then the Mha new citizen batch job completes running with status CLEANUP
+    Then the Mha new citizen batch job completes running with status ERROR_RATE_ERROR
     And I search for the file
     Then I verify that I see the file trail page
     Then I verify 8 records passed format validation
@@ -151,8 +127,8 @@ Feature: File Trail
     Then I verify 4 records failed content validation
     And I logout of CDS Intranet
 
-  @set_7
-  Scenario: CPF officer observe the mha new citizen file has failed the error rate check
+  @set_6
+  Scenario: CPF officer observe the mha new citizen file has failed the error rate check and rejects the file
     Given a MHA_NEW_CITIZEN file with the following details
       | NRIC      | FIN       | NAME   | DOB      | GENDER | OLD_ADDR_IND | OLD_ADDR_TYPE | OLD_ADDR | NEW_ADDR_IND | NEW_ADDR_TYPE | NEW_ADDR            | NEW_INVALID_ADDR_TAG | DATE_OF_ADDR_CHANGE | CTZ_ATT_DATE |
       | T         | G4562923L | I AM A | 20200101 | F      | C            | C             | Hotel 81 | C            | C             | The Fullerton Hotel |                      | 20200201            | 20200115     |
@@ -164,15 +140,16 @@ Feature: File Trail
       | T5013175G | G2772450M | I AM G | 20200101 | F      | C            | C             | Hotel 81 | C            | C             | The Fullerton Hotel |                      | 20200201            | 20200115     |
       | S1366411J | G7491416R | I AM H | 20200101 | F      | C            | C             | Hotel 81 | C            | C             | The Fullerton Hotel |                      | 20200201            | 20200115     |
     When MHA sends the MHA_NEW_CITIZEN file to Datasource sftp for processing
-    And I login to CDS Intranet as a CPF officer
+    And the Mha new citizen batch job completes running with status ERROR_RATE_ERROR
+    When I login to CDS Intranet as a CPF officer
     Then I access Datasource UI Files Dashboard function
     Then I should see that there are files displayed
-    Then the Mha new citizen batch job completes running with status ERROR_RATE_ERROR
     And I search for the file
     Then I verify that I see the file trail page
     Then I verify that I see the reject file button
-    And I click on the reject file button
+    When I click on the reject file button
     Then I should see the Files Dashboard
-    Then the Mha new citizen batch job completes running with status USER_REJECTED
-    Then The records should be displayed with the correct current status
+    Then I should see that there are files displayed
+    And the Mha new citizen batch job completes running with status USER_REJECTED
+    And the current status of the file in the Dashboard is Follow-up : Rejected File
     And I logout of CDS Intranet

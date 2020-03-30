@@ -37,6 +37,10 @@ public class FilesDashBoardPage extends AbstractPage {
 
     public final String PAGE_NEXT_BTN = ".mat-paginator-navigation-next";
     public final String PAGE_BACK_BTN = ".mat-paginator-navigation-previous";
+    
+    public static final String MDT_TABLE_CELL_MDT_TEXT_CELL_DIV = "mdt-table-cell mdt-text-cell div";
+    public static final String CURRENT_STATUS_MAIN_TEXT = ".traffic-button-cell-text";
+    public static final String CURRENT_STATUS_SUB_TEXT = ".traffic-button-cell-subText";
 
     public void accessRandomFileTrail() {
         WebElement webElement = pageUtils.findFirstElement(FILE_TRAIL_BUTTONS);
@@ -44,7 +48,14 @@ public class FilesDashBoardPage extends AbstractPage {
     }
 
     public void verifyFilesDashboardPage() {
-        testAssert.assertTrue(pageUtils.hasElement(FILES_DASHBOARD_SUBTITLE), "Files Dashboard page is not displayed!!!");
+        boolean isLoaded = waitUntilCondition(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return pageUtils.hasElement(FILES_DASHBOARD_SUBTITLE);
+            }
+        });
+        
+        testAssert.assertTrue(isLoaded, "Files Dashboard page is not displayed!!!");
     }
 
     public void verifyFilesExistsInTable() {
@@ -149,6 +160,16 @@ public class FilesDashBoardPage extends AbstractPage {
     }
 
     public void searchForFile(FileReceived fileReceived) {
+        WebElement targetFileTrailWebElement = findFileReceivedWebElement(fileReceived);
+        if ( targetFileTrailWebElement == null ) {
+            throw new TestFailException("Unable to find file: "+fileReceived.getFilePath());
+        }
+        WebElement webElement = targetFileTrailWebElement.findElement(By.tagName("button"));
+        webElement.click();
+    }
+
+    public WebElement findFileReceivedWebElement(FileReceived fileReceived) {
+        
         WebElement itemsPerPageWebElement = pageUtils.findElement(PAGINATION_SELECTED_PAGE_INNER_SPAN);
         WebElement maxPageWebElement = pageUtils.findElement(PAGE_MAX_SIZE);
         Pattern pattern = Pattern.compile("^.* of (\\d+)$");
@@ -161,9 +182,9 @@ public class FilesDashBoardPage extends AbstractPage {
                 validateFilesExists(rowsOfFiles);
                 for ( WebElement rowWebElement : rowsOfFiles ) {
                     List<WebElement> cellWebElements = rowWebElement.findElements(By.cssSelector(".mat-cell"));
-                    if ( cellWebElements.get(0).findElement(By.cssSelector("mdt-table-cell mdt-text-cell div")).getText().equals(fileReceived.getFileDetail().getAgency().getValue()) &&
-                            cellWebElements.get(1).findElement(By.cssSelector("mdt-table-cell mdt-text-cell div")).getText().matches("^"+fileReceived.getFileDetail().getFileName()+".*$") &&
-                            cellWebElements.get(4).findElement(By.cssSelector("mdt-table-cell mdt-text-cell div")).getText().equals(fileReceived.getReceivedTimestamp().toLocalDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
+                    if (cellWebElements.get(0).findElement(By.cssSelector(MDT_TABLE_CELL_MDT_TEXT_CELL_DIV)).getText().equals(fileReceived.getFileDetail().getAgency().getValue()) && 
+                            cellWebElements.get(1).findElement(By.cssSelector(MDT_TABLE_CELL_MDT_TEXT_CELL_DIV)).getText().matches("^"+fileReceived.getFileDetail().getFileName()+".*$") &&
+                            cellWebElements.get(4).findElement(By.cssSelector(MDT_TABLE_CELL_MDT_TEXT_CELL_DIV)).getText().equals(fileReceived.getReceivedTimestamp().toLocalDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
                     ) {
                         targetFileTrailWebElement = rowWebElement;
                         break;
@@ -174,11 +195,8 @@ public class FilesDashBoardPage extends AbstractPage {
                 }
             }
         }
-        if ( targetFileTrailWebElement == null ) {
-            throw new TestFailException("Unable to find file: "+fileReceived.getFilePath());
-        }
-        WebElement webElement = targetFileTrailWebElement.findElement(By.tagName("button"));
-        webElement.click();
+        
+        return targetFileTrailWebElement;
     }
 
     public void traverseToPreviousFileDashBoardPage() {

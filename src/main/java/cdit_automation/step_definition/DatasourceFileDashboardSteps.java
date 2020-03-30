@@ -1,12 +1,17 @@
 package cdit_automation.step_definition;
 
+import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.FileReceived;
 import cdit_automation.pages.FilesDashBoardPage;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 @Slf4j
 @Ignore
@@ -61,5 +66,30 @@ public class DatasourceFileDashboardSteps extends AbstractSteps {
         log.info("Searching for file...");
         FileReceived fileReceived = testContext.get("fileReceived");
         filesDashBoardPage.searchForFile(fileReceived);
+    }
+
+    @And("^the current status of the file in the Dashboard is (.*) : (.*)$")
+    public void theCurrentStatusOfTheFileInTheDashboard(String mainStatus, String subStatus) {
+        log.info("Verifying that the file is in the Dashboard with status: " + mainStatus + " : " + subStatus);
+
+        FileReceived fileReceived = testContext.get("fileReceived");
+        WebElement targetFileWebElement = filesDashBoardPage.findFileReceivedWebElement(fileReceived);
+        
+        if (targetFileWebElement == null) {
+            throw new TestFailException("Unable to find file: " + fileReceived.getFilePath());
+        }
+        
+        List<WebElement> cellWebElements = targetFileWebElement.findElements(By.cssSelector(".mat-cell"));
+        WebElement currentStatusElement = cellWebElements.get(6);
+        
+        String mainStatusCellText = 
+                currentStatusElement.findElement(By.cssSelector(FilesDashBoardPage.CURRENT_STATUS_MAIN_TEXT)).getText();
+        String subStatusCellText = 
+                currentStatusElement.findElement(By.cssSelector(FilesDashBoardPage.CURRENT_STATUS_SUB_TEXT)).getText();
+
+        testAssert.assertEquals
+                (mainStatus, mainStatusCellText, "Main status expected does not match with main status displayed.");
+        testAssert.assertEquals
+                (subStatus, subStatusCellText, "Sub status expected does not match with sub status displayed.");
     }
 }

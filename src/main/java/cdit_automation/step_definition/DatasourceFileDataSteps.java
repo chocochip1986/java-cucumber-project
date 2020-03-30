@@ -66,18 +66,19 @@ public class DatasourceFileDataSteps extends AbstractSteps {
             generateFileReceived(BatchStatusEnum.randomValidBatchStatusEnum(), count);
         }
     }
+
     @Given("^There is a file of each current status type processed by Datasource$")
     public void thereAreOneFileForEachTypeOfCurrentStatus() {
         // Processing, Failed File, Exceeded Error Rate, Rejected File, System Error, 100% Pass
-        Map<FileStatusSubTextEnum, BatchStatusEnum> currentStatusToBatchStatusMap
-                = new HashMap<FileStatusSubTextEnum, BatchStatusEnum>(){{
-                    put(FileStatusSubTextEnum.PROCESSING, BatchStatusEnum.FILE_CHECKED);
-                    put(FileStatusSubTextEnum.FAILED_FILE, BatchStatusEnum.FILE_ERROR);
-                    put(FileStatusSubTextEnum.EXCEEDED_ERROR_RATE, BatchStatusEnum.ERROR_RATE_ERROR);
-                    put(FileStatusSubTextEnum.REJECTED_FILE, BatchStatusEnum.MAPPING_ERROR);
-                    put(FileStatusSubTextEnum.SYSTEM_ERROR, BatchStatusEnum.INIT_ERROR);
-                    put(FileStatusSubTextEnum.HUNDRED_PERCENT_PASS, BatchStatusEnum.CLEANUP);
-        }};
+        Map<FileStatusSubTextEnum, BatchStatusEnum> currentStatusToBatchStatusMap = new HashMap<>();
+        
+        currentStatusToBatchStatusMap.put(FileStatusSubTextEnum.PROCESSING, BatchStatusEnum.FILE_CHECKED);
+        currentStatusToBatchStatusMap.put(FileStatusSubTextEnum.FAILED_FILE, BatchStatusEnum.FILE_ERROR);
+        currentStatusToBatchStatusMap.put(FileStatusSubTextEnum.EXCEEDED_ERROR_RATE, BatchStatusEnum.ERROR_RATE_ERROR);
+        currentStatusToBatchStatusMap.put(FileStatusSubTextEnum.REJECTED_FILE, BatchStatusEnum.USER_REJECTED);
+        currentStatusToBatchStatusMap.put(FileStatusSubTextEnum.SYSTEM_ERROR, BatchStatusEnum.INIT_ERROR);
+        currentStatusToBatchStatusMap.put(FileStatusSubTextEnum.HUNDRED_PERCENT_PASS, BatchStatusEnum.CLEANUP);
+        
         testContext.set("currentStatusToBatchStatusMap", currentStatusToBatchStatusMap);
 
         log.info("Creating file for each current status type...");

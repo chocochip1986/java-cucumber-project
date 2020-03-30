@@ -3,12 +3,10 @@ package cdit_automation.api_helpers;
 import cdit_automation.data_helpers.FileReceivedDataDto;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.models.FileReceived;
-import java.io.File;
 import java.time.LocalDate;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
@@ -46,24 +44,20 @@ public class ApiHelper extends AbstractApiHelper {
     public void sendCallToCreateFileReceivedRecord(FileReceivedDataDto fileReceivedDataDto) {
         String url = "http://"+testEnv.getDatasourceUrl()+":"+testEnv.getDatasourcePort()+ urlSuffix + "/fileReceived";
         MultiValueMap<String, String> httpHeader = new LinkedMultiValueMap<>();
-        httpHeader.put("Content-Type", Arrays.asList(MediaType.APPLICATION_JSON_VALUE));
+        httpHeader.put("Content-Type", Collections.singletonList(MediaType.APPLICATION_JSON_VALUE));
 
         postCall(url, httpHeader, fileReceivedDataDto.toJsonAsString());
-//        Map<String, String> requestBodyKeyValuePairs = new HashMap<>(); {{
-//
-//        }};
     }
 
     public void sendCallToTriggerBatchJob(@NotNull FileReceived fileReceived) {
         String url = "http://"+testEnv.getDatasourceUrl()+":"+testEnv.getDatasourcePort()+ urlSuffix + "/validateFile";
 
         MultiValueMap<String, String> httpHeader = new LinkedMultiValueMap<>();
-        httpHeader.put("Content-Type", Arrays.asList(MediaType.APPLICATION_JSON_VALUE));
+        httpHeader.put("Content-Type", Collections.singletonList(MediaType.APPLICATION_JSON_VALUE));
 
-        Map<String, String> requestBodyKeyValuePairs = new HashMap<String, String>() {{
-            put("fileReceivedId", fileReceived.getId().toString());
-            put("isIgnoreErrorRate", "false");
-        }};
+        Map<String, String> requestBodyKeyValuePairs = new HashMap<>();
+        requestBodyKeyValuePairs.put("fileReceivedId", fileReceived.getId().toString());
+        requestBodyKeyValuePairs.put("isIgnoreErrorRate", "false");
 
         JSONObject httpBody = addToBody(requestBodyKeyValuePairs);
 

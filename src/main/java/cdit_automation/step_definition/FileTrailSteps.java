@@ -6,6 +6,7 @@ import cdit_automation.pages.FileTrailPage;
 import cdit_automation.pages.datasource.TrendingRecordsPage;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class FileTrailSteps extends AbstractSteps {
         fileTrailPage.clickBack();
     }
 
-    @And("^I click on the reject file button$")
+    @When("^I click on the reject file button$")
     public void iClickOnRejectFileButton() {
         log.info("Clicking on reject file button...");
         fileTrailPage.clickRejectFile();
