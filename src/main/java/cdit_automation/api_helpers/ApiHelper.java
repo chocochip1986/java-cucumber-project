@@ -1,5 +1,6 @@
 package cdit_automation.api_helpers;
 
+import cdit_automation.configuration.TestEnv;
 import cdit_automation.data_helpers.FileReceivedDataDto;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.models.FileReceived;
@@ -21,6 +22,8 @@ import org.springframework.util.MultiValueMap;
 @Slf4j
 @Component
 public class ApiHelper extends AbstractApiHelper {
+
+    public static final String ACTUATOR_HEATH_ENDPOINT = "/actuator/health";
 
     private static String urlSuffix = "/v1";
 
@@ -82,5 +85,18 @@ public class ApiHelper extends AbstractApiHelper {
             + "&yearOfAssessment="
             + yearOfAssessment;
     getCall(url);
+  }
+
+    /**
+     * Send a GET request to Datasource to ensure environment is up with a response of 200/OK
+     * TODO: Have to implement assertion to response containing exactly this: {"status":"UP"}
+     */
+  public void sendCallToVerifyEnvironmentHealthIsUp() {
+      final String url = testEnv.getEnv().equals(TestEnv.Env.QA) ?
+            String.format("%s%s", testEnv.getDatasourceUrl(), ACTUATOR_HEATH_ENDPOINT) :
+            String.format("http://%s:%s%s", testEnv.getDatasourceUrl(), testEnv.getDatasourcePort(), ACTUATOR_HEATH_ENDPOINT);
+
+      log.info(String.format("Test Automation: %s %s", "Calling endpoint", url));
+        getCall(url);
   }
 }

@@ -13,7 +13,7 @@ import org.junit.Ignore;
 @Slf4j
 @Ignore
 public class Hooks extends AbstractSteps {
-    
+
     private static boolean failFastFlag = false;
 
     @Before(order=1)
@@ -27,19 +27,19 @@ public class Hooks extends AbstractSteps {
         clearOutputArtifactsDirectory();
         displayScenarioStartMessage(scenario);
     }
-    
+
     @Before(value = "@ResetFailFastFlag", order = 3)
     public void beforeScenarioResetSkipFlag() {
         failFastFlag = false;
     }
-    
+
     @Before(value = "@FailFast", order = 4)
     public void beforeFailFast() {
         if (failFastFlag) {
             Assume.assumeTrue(false);
         }
     }
-    
+
     @After(value = "@FailFast", order = 3)
     public void afterFailFast(Scenario scenario) {
         if (scenario.isFailed()) {

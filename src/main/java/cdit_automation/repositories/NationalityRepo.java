@@ -3,12 +3,14 @@ package cdit_automation.repositories;
 import cdit_automation.enums.NationalityEnum;
 import cdit_automation.models.Nationality;
 import cdit_automation.models.Person;
-import java.util.Date;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.List;
 
 @Repository
 public interface NationalityRepo extends JpaRepository<Nationality, Long> {
@@ -42,4 +44,8 @@ public interface NationalityRepo extends JpaRepository<Nationality, Long> {
     @Modifying
     @Query(value = "TRUNCATE TABLE nationality", nativeQuery = true)
     void truncateTable();
+
+    @Query(nativeQuery = true,
+    value = "SELECT pid.natural_id, nat.TYPE, nat.CITIZENSHIP_ATTAINMENT_DATE, nat.CITIZENSHIP_RENUNCIATION_DATE, nat.VALID_FROM, nat.VALID_TILL FROM Nationality nat INNER JOIN PERSON_ID pid ON nat.ENTITY_KEY = pid.ENTITY_KEY where pid.PERSON_ID_TYPE = 'NRIC'")
+    List<?> getNationalityWithNric();
 }
