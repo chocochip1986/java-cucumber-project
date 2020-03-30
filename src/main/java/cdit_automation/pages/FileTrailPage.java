@@ -13,7 +13,9 @@ import org.springframework.stereotype.Component;
 public class FileTrailPage extends AbstractPage {
     public final String BACK_BTN = "//button[contains(@class,'secondary-button')]/child::span[@class='secondary-button-text' and text()='BACK']";
     public final String REJECT_FILE_BTN = "//button[contains(@class,'secondary-button')]/child::span[@class='secondary-button-text' and text()='REJECT FILE']";
-    
+    public final String RE_VALIDATE_FILE_BTN = "//app-primary-button[@id='file-trail-load-button']/child::button";
+
+
     public final String FILE_TRAIL_PAGE = "//header[@class='header' and text()='File Trail']";
     public final String REASONABLENESS_TRENDING_PAGE = ".trending-page-link";
 
@@ -36,6 +38,7 @@ public class FileTrailPage extends AbstractPage {
         pageUtils.click_on(REASONABLENESS_TRENDING_PAGE);
     }
     public void clickRejectFile() { pageUtils.click_on(REJECT_FILE_BTN); }
+    public void clickRevalidateFile() { pageUtils.click_on(RE_VALIDATE_FILE_BTN); }
 
     public void verifyFileTrailPage(Batch batch) {
         testAssert.assertTrue(pageUtils.hasElement(FILE_TRAIL_PAGE), "File Trail page is not displayed!");
@@ -165,6 +168,13 @@ public class FileTrailPage extends AbstractPage {
             public Boolean get() {
                 return pageUtils.hasElement(REJECT_FILE_BTN);
             }
+        });
+    }
+
+    public boolean isReValidateWithoutErrorRateButtonExist() {
+        return waitUntilCondition(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() { return pageUtils.hasElement(RE_VALIDATE_FILE_BTN); }
         });
     }
     

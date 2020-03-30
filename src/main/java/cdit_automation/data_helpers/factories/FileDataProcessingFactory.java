@@ -30,7 +30,9 @@ import java.util.List;
 import java.util.function.Supplier;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Component
 public class FileDataProcessingFactory extends AbstractFactory {
     public Batch generateRecordsBasedOn(BatchStatusEnum batchStatusEnum, FileTypeEnum fileTypeEnum, int totalRecordCount, LocalDate localDate) {
