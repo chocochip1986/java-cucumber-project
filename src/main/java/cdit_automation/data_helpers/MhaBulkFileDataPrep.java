@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 @Component
 public class MhaBulkFileDataPrep extends BatchFileDataPrep {
 
+    private static final String DEFAULT_DEATH_DATE = "00000000";
     private static final String DEFAULT_RESIDENTIAL_STATUS = "Singaporean";
     private static final String DEFAULT_ADDRESS = "MHAAddress";
 
@@ -414,7 +415,7 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
         LocalDate birthDate = LocalDate.parse(dob, Phaker.DATETIME_FORMATTER_YYYYMMDD);
         return optionsList
                 .stream()
-                .filter(option -> option.matches("^DoD(:(DeathBeforeBirth|FutureDod|[\\d]{8}))?$"))
+                .filter(option -> option.matches("^DoD(:(DeathBeforeBirth|FutureDod|Spaces|[\\d]{8}))?$"))
                 .findFirst().map(option -> {
                     try {
                         if ( option.length() == 4 ) {
@@ -429,6 +430,9 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
                         } else if ( option.substring(4).matches("^[\\d]{8}$") ) {
                             optionsList.remove(option);
                             return LocalDate.parse(option.substring(4), Phaker.DATETIME_FORMATTER_YYYYMMDD).format(Phaker.DATETIME_FORMATTER_YYYYMMDD);
+                        } else if ( option.substring(4).matches("^Spaces$") ) {
+                            optionsList.remove(option);
+                            return "        ";
                         } else {
                             return null;
                         }
@@ -436,7 +440,7 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
                         return null;
                     }
                 })
-                .orElse("        ");
+                .orElse(DEFAULT_DEATH_DATE);
     }
 
     private String createBirthDate(List<String> optionsList) {
