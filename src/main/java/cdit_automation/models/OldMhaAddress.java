@@ -21,7 +21,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 @Table(name = "old_mha_address_validated")
-public class OldMhaAddress extends AbstractValidated {
+public class  OldMhaAddress extends AbstractValidated {
     @OneToOne(mappedBy = "oldMhaAddress")
     private NewCitizenValidated newCitizenValidated;
 

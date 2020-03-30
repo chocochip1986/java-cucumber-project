@@ -1,5 +1,6 @@
 package cdit_automation.data_setup;
 
+import cdit_automation.enums.AddressIndicatorEnum;
 import cdit_automation.enums.GenderEnum;
 import com.github.javafaker.Faker;
 import java.time.LocalDate;
@@ -13,8 +14,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Pattern;
 import javax.validation.constraints.Positive;
+
+import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -38,6 +42,10 @@ public class Phaker {
     private static final int[] DAYS_IN_MONTHS = new int[]{30, 27, 30, 29, 30, 29, 30, 30, 29, 30, 29, 30};
     public static final DateTimeFormatter DATETIME_FORMATTER_YYYYMMDD =
             DateTimeFormatter.ofPattern("yyyyMMdd");
+
+    public static final DateTimeFormatter DATETIME_FORMATTER_YYYYMMDD_HHMMSS =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     public static final LocalDate defaultLowerBoundaryDate = LocalDate.of(LocalDate.now().getYear() - 200, 1, 1);
     public static final LocalDate defaultUpperBoundaryDate = LocalDate.of(LocalDate.now().getYear() + 200, 12, 31);
 
@@ -51,6 +59,9 @@ public class Phaker {
             "51", "52", "53", "54", "55", "56", "57", "58", "59", "60",
             "61", "62", "63", "64", "65", "66", "67", "68", "69", "70",
             "71", "72", "73", "75", "76", "77", "78", "79", "80"};
+
+    private static int orderedNricCount = 0;
+    private static int orderedFinCount = 0;
 
     public static String fakeMd5() {
         return genRandomALPHABETS(64);
@@ -312,6 +323,10 @@ public class Phaker {
         return finalAlphabet;
     }
 
+    public static String randomLetter() {
+        return (faker.random().nextInt(26) + 'A') + "";
+    }
+
     private static String genMobileNumber() {
         return MOBILENUMBER[new Random().nextInt(MOBILENUMBER.length)];
     }
@@ -384,5 +399,20 @@ public class Phaker {
     private static List<Month> generateListOfMonthsBetweenDates(LocalDate fromDate, LocalDate toDate) {
 
         return null;
+    }
+
+    public static String uniqueOrderFin() {
+        final String firstLetter = orderedFinCount % 2 == 0 ? "F" : "G";
+        final String digits = Strings.padStart(orderedFinCount+"", 7, '0');
+        orderedFinCount +=1;
+        return firstLetter + digits + validChecksum(firstLetter, digits, FIN_MAP);
+    }
+
+    public static String uniqueOrderNric() {
+        orderedNricCount +=1;
+        final String firstLetter = orderedNricCount % 2 == 0 ? "S" : "T";
+        final String digits = Strings.padStart(orderedFinCount+"", 7, '0');
+        orderedNricCount +=1;
+        return firstLetter + digits + validChecksum(firstLetter, digits, NRIC_MAP);
     }
 }
