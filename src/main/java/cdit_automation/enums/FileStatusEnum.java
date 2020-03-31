@@ -3,7 +3,12 @@ package cdit_automation.enums;
 import java.util.Random;
 
 public enum FileStatusEnum {
-    REJECTED("REJECTED"),
+    ENCRYPTED_HAS_VIRUS("ENCRYPTED_HAS_VIRUS"),
+    FAIL_TO_DECRYPT("FAIL_TO_DECRYPT"),
+    FAIL_TO_HASH("FAIL_TO_HASH"),
+    FAIL_TO_UNZIP("FAIL_TO_UNZIP"),
+    DUPLICATED("DUPLICATED"),
+    DECRYPTED_HAS_VIRUS("DECRYPTED_HAS_VIRUS"),
     OK("OK");
 
     private String value;

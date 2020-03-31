@@ -211,7 +211,7 @@ public class IrasAssessableIncomeFileDataPrep extends BatchFileDataPrep {
         new BiTemporalData()
             .generateNewBiTemporalData(
                 dateUtils.beginningOfDayToTimestamp(dateUtils.parse(row.get("APPEAL_DATE"))));
-    return Income.builder()
+    Income result = Income.builder()
         .batch(batch)
         .assessableIncomeStatus(AssessableIncomeStatus.NEW_APPEAL_CASE)
         .biTemporalData(biTemporalData)
@@ -219,6 +219,16 @@ public class IrasAssessableIncomeFileDataPrep extends BatchFileDataPrep {
         .person(person)
         .isAppealCase(true)
         .build();
+
+    incomeRepo.findIncomeByNaturalIdAndYear(
+            row.get("NATURAL_ID"),
+            Integer.parseInt(row.get("APPEAL_YEAR")), row.get("APPEAL_DATE")
+    ).ifPresent(oldIncome -> {
+      result.setAssessableIncome(oldIncome.getAssessableIncome());
+      result.setAssessableIncomeStatus(oldIncome.getAssessableIncomeStatus());
+    });
+
+    return result;
   }
 
   public void turnOffAppealCase(String natural_id, String year) {

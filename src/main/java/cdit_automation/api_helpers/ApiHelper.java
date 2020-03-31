@@ -53,14 +53,14 @@ public class ApiHelper extends AbstractApiHelper {
     }
 
     public void sendCallToTriggerBatchJob(@NotNull FileReceived fileReceived) {
-        String url = "http://"+testEnv.getDatasourceUrl()+":"+testEnv.getDatasourcePort()+ urlSuffix + "/validateFile";
+        String url = "http://"+testEnv.getDatasourceUrl()+":"+testEnv.getDatasourcePort()+ "/receiver/validateFile";
 
         MultiValueMap<String, String> httpHeader = new LinkedMultiValueMap<>();
         httpHeader.put("Content-Type", Collections.singletonList(MediaType.APPLICATION_JSON_VALUE));
 
         Map<String, String> requestBodyKeyValuePairs = new HashMap<>();
         requestBodyKeyValuePairs.put("fileReceivedId", fileReceived.getId().toString());
-        requestBodyKeyValuePairs.put("isIgnoreErrorRate", "false");
+        requestBodyKeyValuePairs.put("isIgnoreErrorRate", "true");
 
         JSONObject httpBody = addToBody(requestBodyKeyValuePairs);
 
