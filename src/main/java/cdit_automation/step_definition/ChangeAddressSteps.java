@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.groups.Tuple;
 import org.junit.Ignore;
 
 @Slf4j
@@ -189,6 +190,35 @@ public class ChangeAddressSteps extends AbstractSteps {
         testAssert.assertEquals(dateUtils.beginningOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo)),
                 personProperty.getBiTemporalData().getBusinessTemporalData().getValidFrom(),
                 personName+" ("+personId.getNaturalId()+") does not reside in the address ("+propertyDetail.toString()+") from the address change date!");
+    }
+
+    @Then("^([A-Za-z]+) resides in the new ([a-z0-9]+) from (\\d+) days ago$")
+    public void residesInNewAddressFromDaysAgo(String personName, String propertyName, int daysAgo) {
+        checkIfPersonExistsInTestContext(personName);
+
+        PersonId personId = testContext.get(personName);
+        PhakAbstractAddress expectedPhakAddress = testContext.get("expectedNewAddress");
+        PersonProperty actualPersonProperty = personPropertyRepo.findByPersonAndType(personId.getPerson(), PersonPropertyTypeEnum.RESIDENCE.name());
+        PropertyDetail actualPropertyDetail = propertyDetailRepo.findByAddress(expectedPhakAddress.getUnitNo(),
+                expectedPhakAddress.getBlockNo(),
+                expectedPhakAddress.getFloorNo(),
+                expectedPhakAddress.getBuildingName(),
+                expectedPhakAddress.getStreetName(),expectedPhakAddress.getStreetCode(), expectedPhakAddress.getOldPostalCode(), expectedPhakAddress.getPostalCode());
+
+        testAssert.assertNotNull(actualPersonProperty, "no person property record indicating that "+personName+" of "+personId.getNaturalId()+" resides in "+propertyName);
+        testAssert.assertEquals(dateUtils.beginningOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo)),
+                actualPersonProperty.getBiTemporalData().getBusinessTemporalData().getValidFrom(),
+                personName+" ("+personId.getNaturalId()+") does not reside in the address ("+expectedPhakAddress.toString()+") from the address change date!");
+        testAssert.assertNotNull(actualPropertyDetail, "The new "+propertyName+" at "+expectedPhakAddress.toString()+" is not being persisted in PropertyDetail");
+        testAssert.assertEquals(Tuple.tuple(expectedPhakAddress.getUnitNo(),
+                expectedPhakAddress.getFloorNo(),
+                expectedPhakAddress.getBlockNo(),
+                expectedPhakAddress.getStreetCode(),
+                expectedPhakAddress.getStreetName(),
+                expectedPhakAddress.getBuildingName(),
+                expectedPhakAddress.getOldPostalCode(),
+                expectedPhakAddress.getPostalCode()),
+                actualPropertyDetail, "No Property Detail record created!", "unit", "floor", "blockNumber", "streetCode", "streetName", "buildingName", "postalCode", "newPostalCode", "");
     }
 
     private void checkIfPersonExistsInTestContext(String personName) {

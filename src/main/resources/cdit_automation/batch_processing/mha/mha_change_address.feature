@@ -51,9 +51,9 @@ Feature: MHA Change address
     And the Mha Change Address batch job completes running with status ERROR_RATE_ERROR
     And the error message contains Partially Duplicate Record found.
 
-  @set_5
+  @set_5 @defect @RVC-148
   Scenario Outline: CDS successfully updates address information to a non existent address
-    Given A 60 year old singaporean person john owns a landed property abc
+    Given A 60 year old singaporean person john owns a condo property abc
     And john owns a landed property abd
     And john resides in a condo property abe
     And the mha change address file contains information that john changed from (<prev_address_indicator>)abe to a new (<cur_address_indicator>)condo property 5 days ago
@@ -61,6 +61,7 @@ Feature: MHA Change address
     And the Mha Change Address batch job completes running with status CLEANUP
     And there are no error messages
     Then john does not reside in abe since 6 days ago
+    And john resides in the new condo from 5 days ago
   Examples:
     | prev_address_indicator | cur_address_indicator |
     | mha_z                  | mha_z                 |
