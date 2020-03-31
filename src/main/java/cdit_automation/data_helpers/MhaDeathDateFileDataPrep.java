@@ -33,6 +33,7 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
         List<String> listOfPplDeathDateEarlierThanBirthDate = createListOfPplDeathDateEarlierThanBirthDate(parseStringSize(list.get(0).get("DeathDateEarlierThanBirthDate")));
         List<String> listOfPplWhoAreAlreadyDead = createListOfPplWhoAreAlreadyDead(parseStringSize(list.get(0).get("PplWhoAreAlreadyDead")), receivedTimestamp.toLocalDateTime().toLocalDate());
         List<String> listOfPplWithFutureDeathDates = createListOfPplWithFutureDeathDates(parseStringSize(list.get(0).get("PplWithFutureDeathDates")));
+        List<String> listOfHybridDuplicateEntries = createListOfHybridDuplicateEntries(parseStringSize(list.get(0).get("HybridDuplicates")));
 
         testContext.set("listOfInvalidNrics", listOfInvalidNrics);
         testContext.set("listOfDuplicatedEntries", listOfDuplicatedEntries);
@@ -43,6 +44,7 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
         testContext.set("listOfPplDeathDateEarlierThanBirthDate", listOfPplDeathDateEarlierThanBirthDate);
         testContext.set("listOfPplWhoAreAlreadyDead", listOfPplWhoAreAlreadyDead);
         testContext.set("listOfPplWithFutureDeathDates", listOfPplWithFutureDeathDates);
+        testContext.set("listOfHybridDuplicateEntries", listOfHybridDuplicateEntries);
 
         List<String> body = Stream.of(listOfInvalidNrics,
                 listOfDuplicatedEntries,
@@ -52,6 +54,7 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
                 listOfValidFRDeathCases,
                 listOfPplWhoAreAlreadyDead,
                 listOfPplWithFutureDeathDates,
+                listOfHybridDuplicateEntries,
                 listOfPplDeathDateEarlierThanBirthDate).flatMap(Collection::stream).collect(Collectors.toList());
 
         return body;
@@ -61,7 +64,7 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
         List<String> listOfInvalidNrics = new ArrayList<>();
 
         for ( int i = 0 ; i < numOfInvalidNrics ; i++ ) {
-            String inputLine = Phaker.invalidNric()+randomDeathDate();
+            String inputLine = generateRandomDeathDateRecord(Phaker.invalidNric());
             listOfInvalidNrics.add(inputLine);
             batchFileDataWriter.chunkOrWrite(inputLine);
         }
@@ -94,11 +97,33 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
 
         for ( int i = 0 ; i < numOfDuplicatedEntries ; i++ ) {
             String dupNric = Phaker.validNric();
-            String inputLine1 = dupNric+randomDeathDate();
-            String inputLine2 = dupNric+randomDeathDate();
+            String inputLine1 = generateRandomDeathDateRecord(dupNric);
+            String inputLine2 = generateRandomDeathDateRecord(dupNric);
             listOfDuplicatedEntries.add(inputLine1);
             listOfDuplicatedEntries.add(inputLine2);
 
+            batchFileDataWriter.chunkOrWrite(inputLine1);
+            batchFileDataWriter.chunkOrWrite(inputLine2);
+        }
+
+        return listOfDuplicatedEntries;
+    }
+
+    public List<String> createListOfHybridDuplicateEntries(int numOfDuplicatedEntries) {
+
+        List<String> listOfDuplicatedEntries = new ArrayList<>();
+
+        for (int i = 0 ; i < numOfDuplicatedEntries ; i++) {
+            
+            String dupNric = Phaker.validNric();
+            String inputLine1 = generateRandomDeathDateRecord(dupNric);
+            String inputLine2 = generateRandomDeathDateRecord(dupNric);
+            
+            listOfDuplicatedEntries.add(inputLine1);
+            listOfDuplicatedEntries.add(inputLine1);
+            listOfDuplicatedEntries.add(inputLine2);
+
+            batchFileDataWriter.chunkOrWrite(inputLine1);
             batchFileDataWriter.chunkOrWrite(inputLine1);
             batchFileDataWriter.chunkOrWrite(inputLine2);
         }
@@ -225,5 +250,10 @@ public class MhaDeathDateFileDataPrep extends BatchFileDataPrep {
         
         PersonId personId = personFactory.createNewSCPersonId(dateOfBirth, Phaker.validName(), nric);
         personIdRepo.save(personId);
+    }
+
+    // Generate record with random death date for input nric
+    private String generateRandomDeathDateRecord(String nric) {
+        return nric + randomDeathDate();
     }
 }

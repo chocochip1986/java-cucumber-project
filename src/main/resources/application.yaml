@@ -22,8 +22,8 @@ test-env:
   datasource-ui:
     url: localhost
     port: 4200
-    username: user2
-    password: user2
+    username: datasource-user2
+    password: password
   implicit-wait: 1
   explicit-wait: 10
   wait: 10
@@ -89,7 +89,7 @@ test-env:
   datasource-ui:
     url: localhost
     port: 4200
-    username: user2
+    username: datasource-user2
     password: password
   implicit-wait: 5
   explicit-wait: 30

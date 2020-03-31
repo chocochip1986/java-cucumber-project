@@ -57,7 +57,7 @@ Feature: Data processing for MHA death broadcast
     Then I verify that there is an error message for future death date case
 
   @set_7
-  Scenario: MHA sends duplicated entries
+  Scenario: MHA sends completely duplicated entries
     Given the mha death file has the following details:
       | DuplicatedEntries |
       | 1                 |
@@ -78,6 +78,15 @@ Feature: Data processing for MHA death broadcast
   Scenario: MHA sends partially duplicated entries
     Given the mha death file has the following details:
       | PartialDuplicates | ValidSCDeathCases |
+      | 1                 | 1                 |
+    When MHA sends the MHA_DEATH_DATE file to Datasource sftp for processing
+    And the Mha Death batch job completes running with status ERROR_RATE_ERROR
+    Then the error message contains Partially Duplicate Record found
+
+  @set_1
+  Scenario: MHA sends hybrid (1 member having both completely & partially) duplicated entries
+    Given the mha death file has the following details:
+      | HybridDuplicates  | ValidSCDeathCases |
       | 1                 | 1                 |
     When MHA sends the MHA_DEATH_DATE file to Datasource sftp for processing
     And the Mha Death batch job completes running with status ERROR_RATE_ERROR
