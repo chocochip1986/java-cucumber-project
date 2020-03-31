@@ -68,7 +68,7 @@ Feature: Data processing for MHA new citizen file
   Scenario: Datasource service processes a MHA new citizen file with correct date format and value
     Given a MHA_NEW_CITIZEN file with the following details
       | NRIC      | FIN | NAME     | DOB      | GENDER | OLD_ADDR_IND | OLD_ADDR_TYPE | OLD_ADDR             | NEW_ADDR_IND | NEW_ADDR_TYPE | NEW_ADDR               | NEW_INVALID_ADDR_TAG | DATE_OF_ADDR_CHANGE | CTZ_ATT_DATE |
-      | S1501634E |     | Person A | 19001231 | M      | Z            | A             | 117       Vista Rise | Z            | A             | 888       Diamond Rise | D                    | 20200301            | 19001231     |
+      | S1501634E |     | Person A | 18000000 | M      | Z            | A             | 117       Vista Rise | Z            | A             | 888       Diamond Rise | D                    | 20200301            | 18000101     |
     When MHA sends the MHA_NEW_CITIZEN file to Datasource sftp for processing
     And the Mha New Citizen batch job completes running with status CLEANUP
     And I verify that person with S1501634E is persisted in Datasource
@@ -86,3 +86,93 @@ Feature: Data processing for MHA new citizen file
       |             | Wrong header length                                | FILE_ERROR                  |
       | 99999       | Wrong header length                                | FILE_ERROR                  |
       | FutureDate  | Extraction date cannot be after File Received date | BULK_CHECK_VALIDATION_ERROR |
+
+  @set_8
+  Scenario: Datasource service processes a MHA new citizen file with blank nric
+    Given a MHA_NEW_CITIZEN file with the following details
+      | NRIC | FIN | NAME     | DOB      | GENDER | OLD_ADDR_IND | OLD_ADDR_TYPE | OLD_ADDR             | NEW_ADDR_IND | NEW_ADDR_TYPE | NEW_ADDR               | NEW_INVALID_ADDR_TAG | DATE_OF_ADDR_CHANGE | CTZ_ATT_DATE |
+      |      |     | Person A | 19001231 | M      | Z            | A             | 117       Vista Rise | Z            | A             | 888       Diamond Rise | D                    | 20200301            | 19001231     |
+    When MHA sends the MHA_NEW_CITIZEN file to Datasource sftp for processing
+    And the Mha New Citizen batch job completes running with status RAW_DATA_ERROR
+    And the error message contains NRIC cannot be null/blank
+
+  @set_9
+  Scenario: Datasource service processes a MHA new citizen file with incorrect check digit
+    Given a MHA_NEW_CITIZEN file with the following details
+      | NRIC      | FIN | NAME     | DOB      | GENDER | OLD_ADDR_IND | OLD_ADDR_TYPE | OLD_ADDR             | NEW_ADDR_IND | NEW_ADDR_TYPE | NEW_ADDR               | NEW_INVALID_ADDR_TAG | DATE_OF_ADDR_CHANGE | CTZ_ATT_DATE |
+      | S1501645E |     | Person A | 19001231 | M      | Z            | A             | 117       Vista Rise | Z            | A             | 888       Diamond Rise | D                    | 20200301            | 19001231     |
+    When MHA sends the MHA_NEW_CITIZEN file to Datasource sftp for processing
+    And the Mha New Citizen batch job completes running with status RAW_DATA_ERROR
+    And the error message contains Must be valid NRIC in format [S/T]1234567[A-Z]
+
+  @set_10
+  Scenario: Datasource service processes a MHA new citizen file with only 8 alpha-numeric nric
+    Given a MHA_NEW_CITIZEN file with the following details
+      | NRIC     | FIN | NAME     | DOB      | GENDER | OLD_ADDR_IND | OLD_ADDR_TYPE | OLD_ADDR             | NEW_ADDR_IND | NEW_ADDR_TYPE | NEW_ADDR               | NEW_INVALID_ADDR_TAG | DATE_OF_ADDR_CHANGE | CTZ_ATT_DATE |
+      | S1501634 |     | Person A | 19001231 | M      | Z            | A             | 117       Vista Rise | Z            | A             | 888       Diamond Rise | D                    | 20200301            | 19001231     |
+    When MHA sends the MHA_NEW_CITIZEN file to Datasource sftp for processing
+    And the Mha New Citizen batch job completes running with status RAW_DATA_ERROR
+    And the error message contains NRIC Size must be exactly 9
+
+  @set_11
+  Scenario: Datasource service processes a MHA new citizen file with with NRIC S888
+    Given a MHA_NEW_CITIZEN file with the following details
+      | NRIC      | FIN | NAME     | DOB      | GENDER | OLD_ADDR_IND | OLD_ADDR_TYPE | OLD_ADDR             | NEW_ADDR_IND | NEW_ADDR_TYPE | NEW_ADDR               | NEW_INVALID_ADDR_TAG | DATE_OF_ADDR_CHANGE | CTZ_ATT_DATE |
+      | S8881634E |     | Person A | 19001231 | M      | Z            | A             | 117       Vista Rise | Z            | A             | 888       Diamond Rise | D                    | 20200301            | 19001231     |
+    When MHA sends the MHA_NEW_CITIZEN file to Datasource sftp for processing
+    And the Mha New Citizen batch job completes running with status RAW_DATA_ERROR
+    And the error message contains Must be valid NRIC
+
+  @set_12
+  Scenario: Datasource service processes a MHA new citizen file with with NRIC S555
+    Given a MHA_NEW_CITIZEN file with the following details
+      | NRIC      | FIN | NAME     | DOB      | GENDER | OLD_ADDR_IND | OLD_ADDR_TYPE | OLD_ADDR             | NEW_ADDR_IND | NEW_ADDR_TYPE | NEW_ADDR               | NEW_INVALID_ADDR_TAG | DATE_OF_ADDR_CHANGE | CTZ_ATT_DATE |
+      | S5551634E |     | Person A | 19001231 | M      | Z            | A             | 117       Vista Rise | Z            | A             | 888       Diamond Rise | D                    | 20200301            | 19001231     |
+    When MHA sends the MHA_NEW_CITIZEN file to Datasource sftp for processing
+    And the Mha New Citizen batch job completes running with status RAW_DATA_ERROR
+    And the error message contains Must be valid NRIC
+
+  @set_13
+  Scenario: Datasource service processes a MHA new citizen file with DOB DD = 00, and MM = 00 , Invalid year = 0000
+    Given a MHA_NEW_CITIZEN file with the following details
+      | NRIC      | FIN | NAME     | DOB | GENDER | OLD_ADDR_IND | OLD_ADDR_TYPE | OLD_ADDR             | NEW_ADDR_IND | NEW_ADDR_TYPE | NEW_ADDR               | NEW_INVALID_ADDR_TAG | DATE_OF_ADDR_CHANGE | CTZ_ATT_DATE |
+      | S1501634E |     | Person A |     | M      | Z            | A             | 117       Vista Rise | Z            | A             | 888       Diamond Rise | D                    | 20200301            | 18000101     |
+    When MHA sends the MHA_NEW_CITIZEN file to Datasource sftp for processing
+    And the Mha New Citizen batch job completes running with status RAW_DATA_ERROR
+    And the error message contains Date of Birth must be in valid format
+
+  @set_14
+  Scenario: Datasource service processes a MHA new citizen file with DOB field is empty / space
+    Given a MHA_NEW_CITIZEN file with the following details
+      | NRIC      | FIN | NAME     | DOB | GENDER | OLD_ADDR_IND | OLD_ADDR_TYPE | OLD_ADDR             | NEW_ADDR_IND | NEW_ADDR_TYPE | NEW_ADDR               | NEW_INVALID_ADDR_TAG | DATE_OF_ADDR_CHANGE | CTZ_ATT_DATE |
+      | S1501634E |     | Person A |     | M      | Z            | A             | 117       Vista Rise | Z            | A             | 888       Diamond Rise | D                    | 20200301            | 18000101     |
+    When MHA sends the MHA_NEW_CITIZEN file to Datasource sftp for processing
+    And the Mha New Citizen batch job completes running with status RAW_DATA_ERROR
+    And the error message contains Date of Birth must be in valid format
+
+  @set_15
+  Scenario: Datasource service processes a MHA new citizen file with DOB incorrect date format
+    Given a MHA_NEW_CITIZEN file with the following details
+      | NRIC      | FIN | NAME     | DOB       | GENDER | OLD_ADDR_IND | OLD_ADDR_TYPE | OLD_ADDR             | NEW_ADDR_IND | NEW_ADDR_TYPE | NEW_ADDR               | NEW_INVALID_ADDR_TAG | DATE_OF_ADDR_CHANGE | CTZ_ATT_DATE |
+      | S1501634E |     | Person A | 190012321 | M      | Z            | A             | 117       Vista Rise | Z            | A             | 888       Diamond Rise | D                    | 20200301            | 18000101     |
+    When MHA sends the MHA_NEW_CITIZEN file to Datasource sftp for processing
+    And the Mha New Citizen batch job completes running with status RAW_DATA_ERROR
+    And the error message contains Date of Birth must be in valid format
+
+  @set_16
+  Scenario: Datasource service processes a MHA new citizen file with DOB 20010229
+    Given a MHA_NEW_CITIZEN file with the following details
+      | NRIC      | FIN | NAME     | DOB      | GENDER | OLD_ADDR_IND | OLD_ADDR_TYPE | OLD_ADDR             | NEW_ADDR_IND | NEW_ADDR_TYPE | NEW_ADDR               | NEW_INVALID_ADDR_TAG | DATE_OF_ADDR_CHANGE | CTZ_ATT_DATE |
+      | S1501634E |     | Person A | 20010229 | M      | Z            | A             | 117       Vista Rise | Z            | A             | 888       Diamond Rise | D                    | 20200301            | 18000101     |
+    When MHA sends the MHA_NEW_CITIZEN file to Datasource sftp for processing
+    And the Mha New Citizen batch job completes running with status RAW_DATA_ERROR
+    And the error message contains Date of Birth must be in valid format
+
+  @set_17
+  Scenario: Datasource service processes a MHA new citizen file with DOB YYYY = 1799
+    Given a MHA_NEW_CITIZEN file with the following details
+      | NRIC      | FIN | NAME     | DOB      | GENDER | OLD_ADDR_IND | OLD_ADDR_TYPE | OLD_ADDR             | NEW_ADDR_IND | NEW_ADDR_TYPE | NEW_ADDR               | NEW_INVALID_ADDR_TAG | DATE_OF_ADDR_CHANGE | CTZ_ATT_DATE |
+      | S1501634E |     | Person A | 17991231 | M      | Z            | A             | 117       Vista Rise | Z            | A             | 888       Diamond Rise | D                    | 20200301            | 18000101     |
+    When MHA sends the MHA_NEW_CITIZEN file to Datasource sftp for processing
+    And the Mha New Citizen batch job completes running with status RAW_DATA_ERROR
+    And the error message contains Year value cannot be less than 1800
