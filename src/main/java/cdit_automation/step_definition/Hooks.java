@@ -105,6 +105,7 @@ public class Hooks extends AbstractSteps {
         deathDateValidatedRepo.truncateTable();
         bulkNcaAddressValidatedRepo.truncateTable();
         changeAddressValidatedRepo.truncateTable();
+        propertyValidatedRepo.truncateTable();
         newMhaAddressRepo.truncateTable();
         newNcaAddressRepo.truncateTable();
         oldMhaAddressRepo.truncateTable();

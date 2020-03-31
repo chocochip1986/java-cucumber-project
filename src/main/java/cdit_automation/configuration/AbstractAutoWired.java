@@ -114,6 +114,7 @@ public class AbstractAutoWired {
     @Autowired protected SpecialPropertyRepo specialPropertyRepo;
     @Autowired protected SpecialMappingRepo specialMappingRepo;
 
+    @Autowired protected PropertyValidatedRepo propertyValidatedRepo;
     @Autowired protected DeathDateValidatedRepo deathDateValidatedRepo;
     @Autowired protected NoInteractionValidatedRepo noInteractionValidatedRepo;
     @Autowired protected BulkCitizenValidatedRepo bulkCitizenValidatedRepo;
