@@ -5,7 +5,7 @@ import cdit_automation.data_helpers.FileReceivedDataDto;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.models.FileReceived;
 import java.time.LocalDate;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import javax.validation.constraints.NotNull;
@@ -47,7 +47,7 @@ public class ApiHelper extends AbstractApiHelper {
     public void sendCallToCreateFileReceivedRecord(FileReceivedDataDto fileReceivedDataDto) {
         String url = "http://"+testEnv.getDatasourceUrl()+":"+testEnv.getDatasourcePort()+ urlSuffix + "/fileReceived";
         MultiValueMap<String, String> httpHeader = new LinkedMultiValueMap<>();
-        httpHeader.put("Content-Type", Collections.singletonList(MediaType.APPLICATION_JSON_VALUE));
+        httpHeader.put("Content-Type", Arrays.asList(MediaType.APPLICATION_JSON_VALUE));
 
         postCall(url, httpHeader, fileReceivedDataDto.toJsonAsString());
     }
@@ -56,7 +56,7 @@ public class ApiHelper extends AbstractApiHelper {
         String url = "http://"+testEnv.getDatasourceUrl()+":"+testEnv.getDatasourcePort()+ "/receiver/validateFile";
 
         MultiValueMap<String, String> httpHeader = new LinkedMultiValueMap<>();
-        httpHeader.put("Content-Type", Collections.singletonList(MediaType.APPLICATION_JSON_VALUE));
+        httpHeader.put("Content-Type", Arrays.asList(MediaType.APPLICATION_JSON_VALUE));
 
         Map<String, String> requestBodyKeyValuePairs = new HashMap<>();
         requestBodyKeyValuePairs.put("fileReceivedId", fileReceived.getId().toString());
