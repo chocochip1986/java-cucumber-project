@@ -160,20 +160,21 @@ public class IrasAssessableIncomeFileDataPrep extends BatchFileDataPrep {
   public void insertAppealIncomes(DataTable dataTable) {
     Batch newBatch = Batch.createCompleted();
     batchRepo.save(newBatch);
-    
+
     List<Map<String, String>> dataRows = dataTable.asMaps(String.class, String.class);
-    List<Income> supersededIncomes =
-        dataRows.stream()
-            .map(this::supersedeIncome)
-            .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
-            .collect(Collectors.toList());
-    incomeRepo.saveAll(supersededIncomes);
-    
+
     List<Income> appealIncomes =
         dataRows.stream()
             .map(row -> createAppealIncome(row, newBatch))
             .collect(Collectors.toList());
     incomeRepo.saveAll(appealIncomes);
+
+    List<Income> supersededIncomes =
+            dataRows.stream()
+                    .map(this::supersedeIncome)
+                    .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
+                    .collect(Collectors.toList());
+    incomeRepo.saveAll(supersededIncomes);
   }
 
   private Optional<Income> supersedeIncome(Map<String, String> row) {
