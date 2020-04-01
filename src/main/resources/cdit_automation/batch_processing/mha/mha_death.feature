@@ -26,7 +26,7 @@ Feature: Data processing for MHA death broadcast
       | ValidSCDeathCases | DeathDateEarlierThanBirthDate |
       | 1                 | 1                             |
     When MHA sends the MHA_DEATH_DATE file to Datasource sftp for processing
-    And the Mha Death batch job completes running with status CLEANUP
+    And the Mha Death batch job completes running with status ERROR_RATE_ERROR
     Then the error message contains Date of death is earlier than Date of birth
 
   @set_4
@@ -80,7 +80,7 @@ Feature: Data processing for MHA death broadcast
       | PartialDuplicates | ValidSCDeathCases |
       | 1                 | 1                 |
     When MHA sends the MHA_DEATH_DATE file to Datasource sftp for processing
-    And the Mha Death batch job completes running with status CLEANUP
+    And the Mha Death batch job completes running with status ERROR_RATE_ERROR
     Then the error message contains Partially Duplicate Record found
 
   @set_10
@@ -89,5 +89,5 @@ Feature: Data processing for MHA death broadcast
       | HybridDuplicates  | ValidSCDeathCases |
       | 1                 | 1                 |
     When MHA sends the MHA_DEATH_DATE file to Datasource sftp for processing
-    And the Mha Death batch job completes running with status CLEANUP
+    And the Mha Death batch job completes running with status ERROR_RATE_ERROR
     Then the error message contains Partially Duplicate Record found

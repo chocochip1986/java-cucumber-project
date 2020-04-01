@@ -5,7 +5,6 @@ import cdit_automation.data_helpers.FileReceivedDataDto;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.models.FileReceived;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,14 +53,14 @@ public class ApiHelper extends AbstractApiHelper {
     }
 
     public void sendCallToTriggerBatchJob(@NotNull FileReceived fileReceived) {
-        String url = "http://"+testEnv.getDatasourceUrl()+":"+testEnv.getDatasourcePort()+ "/receiver/validateFile";
+        String url = "http://"+testEnv.getDatasourceUrl()+":"+testEnv.getDatasourcePort()+ urlSuffix + "/validateFile";
 
         MultiValueMap<String, String> httpHeader = new LinkedMultiValueMap<>();
         httpHeader.put("Content-Type", Collections.singletonList(MediaType.APPLICATION_JSON_VALUE));
 
         Map<String, String> requestBodyKeyValuePairs = new HashMap<>();
         requestBodyKeyValuePairs.put("fileReceivedId", fileReceived.getId().toString());
-        requestBodyKeyValuePairs.put("isIgnoreErrorRate", "true");
+        requestBodyKeyValuePairs.put("isIgnoreErrorRate", "false");
 
         JSONObject httpBody = addToBody(requestBodyKeyValuePairs);
 
