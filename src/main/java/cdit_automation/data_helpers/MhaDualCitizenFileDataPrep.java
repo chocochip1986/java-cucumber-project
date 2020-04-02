@@ -41,7 +41,9 @@ public class MhaDualCitizenFileDataPrep extends BatchFileDataPrep {
     public List<String> createListOfNonExistentNrics(int numOfNonExistentNrics) {
         List<String> nonExistentNricsList = new ArrayList<>();
         for ( int i = 0 ; i < numOfNonExistentNrics ; i++ ) {
-            nonExistentNricsList.add(Phaker.validNric());
+            String nric = Phaker.validNric();
+            nonExistentNricsList.add(nric);
+            batchFileDataWriter.chunkOrWrite(nric);
         }
         return nonExistentNricsList;
     }
