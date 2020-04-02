@@ -33,14 +33,14 @@ public class ApiHelper extends AbstractApiHelper {
     public void sendCallToTriggerOutgoingIrasAiJob(@NotNull LocalDate date) {
         String requestParams = "date="+date.format(Phaker.DATETIME_FORMATTER_YYYYMMDD);
 
-        String url = "http://"+testEnv.getDatasourceUrl()+":"+testEnv.getDatasourcePort()+"/egress/iras/ai/bulk?"+requestParams;
+        String url = "http://"+testEnv.getDatasourceUrl()+":"+testEnv.getDatasourcePort()+ urlSuffix +"/egress/iras/ai/bulk?"+requestParams;
 
         getCall(url);
     }
 
     public void sendCallToTriggerOutgoingIrasTriMonthlyAiJob(@NotNull LocalDate date, @NotNull boolean isCurrentYAExcluded) {
         String requestParams = "date=" + date.format(Phaker.DATETIME_FORMATTER_YYYYMMDD) + "&excludeCurrentYA=" + (isCurrentYAExcluded ? "true" : "false");
-        String url = "http://"+testEnv.getDatasourceUrl()+":"+testEnv.getDatasourcePort()+"/egress/iras/ai/thriceMonthly?"+requestParams;
+        String url = "http://"+testEnv.getDatasourceUrl()+":"+testEnv.getDatasourcePort()+ urlSuffix +"/egress/iras/ai/thriceMonthly?"+requestParams;
         getCall(url);
     }
 
@@ -53,14 +53,14 @@ public class ApiHelper extends AbstractApiHelper {
     }
 
     public void sendCallToTriggerBatchJob(@NotNull FileReceived fileReceived) {
-        String url = "http://"+testEnv.getDatasourceUrl()+":"+testEnv.getDatasourcePort()+ "/receiver/validateFile";
+        String url = "http://"+testEnv.getDatasourceUrl()+":"+testEnv.getDatasourcePort()+ urlSuffix + "/validateFile";
 
         MultiValueMap<String, String> httpHeader = new LinkedMultiValueMap<>();
         httpHeader.put("Content-Type", Collections.singletonList(MediaType.APPLICATION_JSON_VALUE));
 
         Map<String, String> requestBodyKeyValuePairs = new HashMap<>();
         requestBodyKeyValuePairs.put("fileReceivedId", fileReceived.getId().toString());
-        requestBodyKeyValuePairs.put("isIgnoreErrorRate", "true");
+        requestBodyKeyValuePairs.put("isIgnoreErrorRate", "false");
 
         JSONObject httpBody = addToBody(requestBodyKeyValuePairs);
 
@@ -74,6 +74,7 @@ public class ApiHelper extends AbstractApiHelper {
             + testEnv.getDatasourceUrl()
             + ":"
             + testEnv.getDatasourcePort()
+            + urlSuffix
             + "/egress/iras/ai/firstBulk?date="
             + localDate.format(Phaker.DATETIME_FORMATTER_YYYYMMDD)
             + "&yearOfAssessment="
