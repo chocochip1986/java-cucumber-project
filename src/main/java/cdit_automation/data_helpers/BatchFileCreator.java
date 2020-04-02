@@ -63,7 +63,7 @@ public class BatchFileCreator extends AbstractFileCreator {
         });
 
         if ( !isFound ) {
-            throw new TestFailException("Unable to find a File Received record corresponding to the following information: "+fileReceivedDataDto.toString());
+            throw new TestFailException("Unable to find a File Received record corresponding to the following information: "+fileReceivedDataDto.toJsonAsString());
         }
 
         FileReceived fileReceived = fileReceivedRepo.findByFileDetailIdAndFileStatusEnumAndHash(fileReceivedDataDto.getFileDetailId(), fileReceivedDataDto.getFileStatusEnum(), fileReceivedDataDto.getHash());
