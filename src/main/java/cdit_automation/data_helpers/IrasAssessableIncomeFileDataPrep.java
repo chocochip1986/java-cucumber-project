@@ -163,18 +163,18 @@ public class IrasAssessableIncomeFileDataPrep extends BatchFileDataPrep {
 
     List<Map<String, String>> dataRows = dataTable.asMaps(String.class, String.class);
 
-    List<Income> appealIncomes =
-        dataRows.stream()
-            .map(row -> createAppealIncome(row, newBatch))
-            .collect(Collectors.toList());
-    incomeRepo.saveAll(appealIncomes);
-
     List<Income> supersededIncomes =
             dataRows.stream()
                     .map(this::supersedeIncome)
                     .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
                     .collect(Collectors.toList());
     incomeRepo.saveAll(supersededIncomes);
+
+    List<Income> appealIncomes =
+        dataRows.stream()
+            .map(row -> createAppealIncome(row, newBatch))
+            .collect(Collectors.toList());
+    incomeRepo.saveAll(appealIncomes);
   }
 
   private Optional<Income> supersedeIncome(Map<String, String> row) {
@@ -221,9 +221,11 @@ public class IrasAssessableIncomeFileDataPrep extends BatchFileDataPrep {
         .isAppealCase(true)
         .build();
 
+    LocalDate appealDate = dateUtils.parse(row.get("APPEAL_DATE"));
+    LocalDate supercededDate = appealDate.minusDays(1);
     incomeRepo.findIncomeByNaturalIdAndYear(
             row.get("NATURAL_ID"),
-            Integer.parseInt(row.get("APPEAL_YEAR")), row.get("APPEAL_DATE")
+            Integer.parseInt(row.get("APPEAL_YEAR")), supercededDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD)
     ).ifPresent(oldIncome -> {
       result.setAssessableIncome(oldIncome.getAssessableIncome());
       result.setAssessableIncomeStatus(oldIncome.getAssessableIncomeStatus());
