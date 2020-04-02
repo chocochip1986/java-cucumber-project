@@ -116,7 +116,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         log.info("Verifying that existing dual citizens who did not appear in the file will become Singaporeans");
 
         List<PersonId> personIds;
-        Date now = dateUtils.localDateToDate(dateUtils.now());
+        LocalDate runDate = testContext.get("runDate");
         for(String identifier : listOfExpiredDCs) {
             personIds = personIdRepo.findDualCitizen(identifier);
 
@@ -126,6 +126,10 @@ public class MhaDualCitizenSteps extends AbstractSteps {
             Nationality currentNationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
 
             testAssert.assertEquals(NationalityEnum.SINGAPORE_CITIZEN, currentNationality.getNationality(), "Person with nric "+identifier+" is not converted to Singaporean!");
+            testAssert.assertEquals(dateUtils.beginningOfDayToTimestamp(runDate), currentNationality.getBiTemporalData().getBusinessTemporalData().getValidFrom(), "Person with nric "+identifier+" did not start his SG citizenship from "+runDate.toString());
+
+            Nationality prevNationality = nationalityRepo.findNationalityByPerson(personId.getPerson(), dateUtils.localDateToDate(runDate.minusDays(1l)));
+            testAssert.assertEquals(dateUtils.endOfDayToTimestamp(runDate.minusDays(1l)), prevNationality.getBiTemporalData().getBusinessTemporalData().getValidTill(), "Person with nric "+identifier+" did not end his DC nationality on "+runDate.minusDays(1l).toString());
         }
     }
 
