@@ -525,12 +525,48 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
                 dataRows.stream().map(MhaBulkCitizenFileEntry::new).collect(Collectors.toList());
         return entries.stream().map(MhaBulkCitizenFileEntry::toRawString).collect(Collectors.toList());
     }
-    
+
     public void writeToFile(String dateStr, List<String> entries) {
-        LocalDate date = dateUtils.parse(dateStr);
-        batchFileDataWriter.begin(generateDoubleHeader(date, date), FileTypeEnum.MHA_BULK_CITIZEN, 10);
+        writeToFile(dateStr, dateStr, entries);
+    }
+
+    public void writeToFile(String dateOfRunStr, String cutOffDateStr, List<String> entries) {
+        LocalDate dateOfRun = dateUtils.parse(dateOfRunStr);
+        LocalDate cutOffDate = dateUtils.parse(cutOffDateStr);
+        batchFileDataWriter.begin(generateDoubleHeader(dateOfRun, cutOffDate), FileTypeEnum.MHA_BULK_CITIZEN, 10);
         entries.forEach(entry -> batchFileDataWriter.chunkOrWrite(entry));
         batchFileDataWriter.end();
+    }
+
+    public String resolveDateString(String dateStr) {
+        if (dateStr.equalsIgnoreCase("empty")) {
+            return "";
+        }
+
+        if (dateStr.equalsIgnoreCase("space")) {
+            return StringUtils.rightPad("", 8, StringUtils.SPACE);
+        }
+
+        if (dateStr.startsWith("CurrentDate")) {
+            LocalDate result = LocalDate.now();
+
+            String[] tokens = dateStr.split(StringUtils.SPACE);
+            if (tokens.length == 1) {
+                return result.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD);
+            }
+
+            long operand = Long.parseLong(tokens[2]);
+            String operator = tokens[1];
+            if (operator.matches("-")) {
+                result = result.minusDays(operand);
+            } else {
+                result = result.plusDays(operand);
+            }
+
+            return result.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD);
+        }
+
+        return dateStr;
     }
 
     @NoArgsConstructor

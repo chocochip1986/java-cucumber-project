@@ -1,12 +1,15 @@
 package cdit_automation.step_definition;
 
+import cdit_automation.data_helpers.batch_entities.MhaBulkCitizenFileEntry;
 import cdit_automation.enums.FileTypeEnum;
+import cdit_automation.utilities.StringUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -21,8 +24,7 @@ public class MhaBulkSteps extends AbstractSteps {
             List<String> newBody = testContext.remove("body");
             newBody.addAll(body);
             testContext.set("body", newBody);
-        }
-        else {
+        } else {
             testContext.set("body", body);
         }
     }
@@ -40,6 +42,20 @@ public class MhaBulkSteps extends AbstractSteps {
     @Given("the mha bulk file is being created with no records")
     public void theMhaBulkFileIsBeingCreatedWithNoRecords() {
         batchFileDataWriter.begin(mhaBulkFileDataPrep.generateDoubleHeader(), FileTypeEnum.MHA_BULK_CITIZEN, null);
+        batchFileDataWriter.end();
+    }
+
+    @Given("^the mha bulk file is created with DateOfRun (.*) and CutOffDate (.*) with one record$")
+    public void theMhaBulkFileIsCreatedWithDateOfRunDateOfRunAndCutOffDateCutOffDate(
+            String dateOfRun, String cutOffDate) {
+        String resolvedDateOfRun = mhaBulkFileDataPrep.resolveDateString(dateOfRun);
+        String resolvedCutOffDate = mhaBulkFileDataPrep.resolveDateString(cutOffDate);
+        MhaBulkCitizenFileEntry entry = new MhaBulkCitizenFileEntry("T4945521B", "-", "<AUTO>",
+                "19881003", "        ", "M", "C", "C",
+                "<AUTO>", "D", "19881003");
+        batchFileDataWriter.begin(
+                resolvedDateOfRun.concat(resolvedCutOffDate), FileTypeEnum.MHA_BULK_CITIZEN, 1);
+        batchFileDataWriter.chunkOrWrite(entry.toRawString());
         batchFileDataWriter.end();
     }
 }
