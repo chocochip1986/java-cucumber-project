@@ -71,7 +71,7 @@ Feature: Data processing for MHA dual citizenship
     And no update is done for these nrics
     Then I verify that there are new dual citizen in datasource db
 
-  @set_8
+  @set_8 @defect
   Scenario: Person has a ceased citizenship date that is after the dual citizen date of run
     Given jane who is 45 years old had her citizenship renounced 4 days ago
     And the mha dual citizen file sends information that jane is a dual citizen 3 days ago
