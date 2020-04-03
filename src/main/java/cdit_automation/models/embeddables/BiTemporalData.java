@@ -38,4 +38,11 @@ public class BiTemporalData implements Serializable {
                 .dbTemporalData(new DbTemporalData())
                 .build();
     }
+
+    public static BiTemporalData create(Timestamp validfrom, Timestamp validtill) {
+        return BiTemporalData.builder()
+                .businessTemporalData(new BusinessTemporalData(validfrom, validtill))
+                .dbTemporalData(new DbTemporalData())
+                .build();
+    }
 }

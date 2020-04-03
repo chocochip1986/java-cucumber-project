@@ -104,8 +104,8 @@ public class PersonFactory extends AbstractFactory {
         }
     }
 
-    public PersonId createCeasedCitizen(String name, LocalDate renunciationDate) {
-        PersonId personId = createNewSCPersonId();
+    public PersonId createCeasedCitizen(String name, LocalDate birthDate, LocalDate renunciationDate) {
+        PersonId personId = createNewSCPersonId(birthDate, name);
         Nationality pastNationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
         Date date = new Date(dateUtils.endOfDayToTimestamp(renunciationDate.minusDays(1l)).getTime());
         nationalityRepo.updateValidTill(date, pastNationality.getId());

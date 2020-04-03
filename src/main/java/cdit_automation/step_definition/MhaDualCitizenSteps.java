@@ -16,6 +16,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -243,10 +244,11 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         }
     }
 
-    @Given("^([a-z_]+) had (?:his|her) citizenship renounced (\\d+) days ago$")
-    public void personHadHisHerCitizenshipRenouncedDaysAgo(String personName, int daysAgo) {
+    @Given("^([a-z_]+) who is (\\d+) years old had (?:his|her) citizenship renounced (\\d+) days ago$")
+    public void personHadHisHerCitizenshipRenouncedDaysAgo(String personName, int age, int daysAgo) {
         LocalDate renunciationDate = dateUtils.daysBeforeToday(daysAgo);
-        PersonId personId = personFactory.createCeasedCitizen(personName, renunciationDate);
+        LocalDate birthDate = dateUtils.yearsBeforeToday(age);
+        PersonId personId = personFactory.createCeasedCitizen(personName, birthDate, renunciationDate);
 
         testContext.set(personName, personId);
     }
@@ -261,11 +263,24 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         batchFileDataWriter.end();
     }
 
-    @Then("([a-z_]+) remains a non singaporean")
+    @Then("^([a-z_]+) remains a non singaporean$")
     public void janeRemainsANonSingaporean(String personName) {
         PersonId personId = testContext.get(personName);
 
         Nationality currentNationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
         testAssert.assertEquals(NationalityEnum.NON_SINGAPORE_CITIZEN, currentNationality.getNationality(), "Person with "+personId.getNaturalId()+" is not a non_singaporean!");
+    }
+
+    @And("^([a-z_]+) is a dual citizen(?: with a citizenship attainment date dating (\\d+) days ago)?$")
+    public void personIsADualCitizen(String personName, Integer daysAgo) {
+        PersonId personId = testContext.get(personName);
+
+        Nationality curNationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
+        testAssert.assertEquals(NationalityEnum.DUAL_CITIZENSHIP, curNationality.getNationality(), "Person with "+personId.getNaturalId()+" is not a dual citizen!");
+
+        if ( daysAgo != null ) {
+            Timestamp expectedCitizenshipAttainmentDate = dateUtils.beginningOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo));
+            testAssert.assertEquals(expectedCitizenshipAttainmentDate, curNationality.getCitizenshipAttainmentDate(), "Person with "+personId.getNaturalId()+" does not have a citizenship attainment date of "+expectedCitizenshipAttainmentDate);
+        }
     }
 }
