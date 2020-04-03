@@ -6,6 +6,7 @@ import cdit_automation.models.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,10 +48,20 @@ public interface NationalityRepo extends JpaRepository<Nationality, Long> {
             "AND ( n.biTemporalData.businessTemporalData.validTill = null OR n.biTemporalData.businessTemporalData.validTill >= TRUNC(SYSDATE) ))")
     int updateNationality(NationalityEnum nationalityEnum, Person person);
 
-    @Transactional
-    @Modifying
-    @Query(value = "TRUNCATE TABLE nationality", nativeQuery = true)
-    void truncateTable();
+  @Transactional
+  @Modifying
+  @Query(value = "TRUNCATE TABLE nationality", nativeQuery = true)
+  void truncateTable();
+
+  @Query(
+      value =
+          "SELECT nat.* FROM NATIONALITY nat "
+              + "INNER JOIN PERSON_ID pid on nat.ENTITY_KEY = pid.ENTITY_KEY "
+              + "WHERE pid.NATURAL_ID =:naturalId "
+              + "ORDER BY CAST(nat.VALID_FROM AS DATE) DESC "
+              + "FETCH FIRST ROW ONLY",
+      nativeQuery = true)
+  Nationality findByNaturalId(@Param("naturalId") String naturalId);
 
     @Query(nativeQuery = true,
     value = "SELECT pid.natural_id, nat.TYPE, nat.CITIZENSHIP_ATTAINMENT_DATE, nat.CITIZENSHIP_RENUNCIATION_DATE, nat.VALID_FROM, nat.VALID_TILL FROM Nationality nat INNER JOIN PERSON_ID pid ON nat.ENTITY_KEY = pid.ENTITY_KEY where pid.PERSON_ID_TYPE = 'NRIC'")
