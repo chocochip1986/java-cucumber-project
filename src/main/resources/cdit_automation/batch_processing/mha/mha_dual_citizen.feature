@@ -74,10 +74,11 @@ Feature: Data processing for MHA dual citizenship
   @set_8
   Scenario: Person has a ceased citizenship date that is after the dual citizen date of run
     Given jane who is 45 years old had her citizenship renounced 4 days ago
-    And the mha dual citizen file sends information that jane is a dual citizen 5 days ago
+    And the mha dual citizen file sends information that jane is a dual citizen 3 days ago
     When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
     And the Mha Dual Citizen batch job completes running with status CLEANUP
     Then jane remains a non singaporean
+    And the error message contains Person has already ceased Singapore citizenship
 
   @set_9
   Scenario: Person who previously ceased citizenship becomes a dual citizen
