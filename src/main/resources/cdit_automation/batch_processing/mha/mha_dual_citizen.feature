@@ -80,7 +80,7 @@ Feature: Data processing for MHA dual citizenship
     Then jane remains a non singaporean
 
   @set_9
-  Scenario: Person loses dual citizenship and becomes a non singaporean
+  Scenario: Person who previously ceased citizenship becomes a dual citizen
     Given jane who is 12 years old had her citizenship renounced 365 days ago
     And jane became a singapore citizen 10 days ago
     And the mha dual citizen file sends information that jane is a dual citizen 5 days ago
@@ -88,3 +88,14 @@ Feature: Data processing for MHA dual citizenship
     Then the Mha Dual Citizen batch job completes running with status CLEANUP
     And there are no error messages
     And jane is a dual citizen with a citizenship attainment date dating 10 days ago
+
+  @set_10
+  Scenario: Person loses dual citizenship and becomes a non singaporean
+    Given jane who is 12 years old had her citizenship renounced 365 days ago
+    And jane became a singapore citizen 10 days ago
+    And mha states that jane is a dual citizen since 8 days ago
+    And mha sends a dual citizen file without jane in it 5 days ago
+    When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
+    Then the Mha Dual Citizen batch job completes running with status CLEANUP
+    And there are no error messages
+    Then jane is a singaporean from 5 days ago

@@ -1,5 +1,6 @@
 package cdit_automation.step_definition;
 
+import cdit_automation.constants.Constants;
 import cdit_automation.constants.TestConstants;
 import cdit_automation.data_helpers.batch_entities.MhaDualCitizenFileEntry;
 import cdit_automation.data_setup.Phaker;
@@ -11,6 +12,7 @@ import cdit_automation.models.ErrorMessage;
 import cdit_automation.models.FileReceived;
 import cdit_automation.models.Nationality;
 import cdit_automation.models.PersonId;
+import cdit_automation.models.embeddables.BiTemporalData;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -282,5 +284,44 @@ public class MhaDualCitizenSteps extends AbstractSteps {
             Timestamp expectedCitizenshipAttainmentDate = dateUtils.beginningOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo));
             testAssert.assertEquals(expectedCitizenshipAttainmentDate, curNationality.getCitizenshipAttainmentDate(), "Person with "+personId.getNaturalId()+" does not have a citizenship attainment date of "+expectedCitizenshipAttainmentDate);
         }
+    }
+
+    @And("^mha states that ([a-z_]+) is a dual citizen since (\\d+) days ago$")
+    public void mhaStatesThatPersonIsADualCitizenSinceDaysAgo(String personName, int daysAgo) {
+        PersonId personId = testContext.get(personName);
+
+        Nationality prevNationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
+        Date validTill = new Date(dateUtils.endOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo).minusDays(1l)).getTime());
+        nationalityRepo.updateValidTill(validTill, prevNationality.getId());
+
+        Batch batch = Batch.createCompleted();
+        BiTemporalData biTemporalData = BiTemporalData.create(dateUtils.beginningOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo)), Timestamp.valueOf(Constants.INFINITE_LOCAL_DATE_TIME));
+        Nationality curNationality = Nationality.create(batch, personId.getPerson(), NationalityEnum.DUAL_CITIZENSHIP, biTemporalData, prevNationality.getCitizenshipAttainmentDate(), prevNationality.getCitizenshipRenunciationDate());
+
+        batchRepo.save(batch);
+        nationalityRepo.save(curNationality);
+    }
+
+    @And("^mha sends a dual citizen file without ([a-z_]+) in it (\\d+) days ago$")
+    public void mhaSendsADualCitizenFileWithoutPersonInItDaysAgo(String personName, int daysAgo) {
+        LocalDate runDate = dateUtils.daysBeforeToday(daysAgo);
+        batchFileDataWriter.begin(mhaDualCitizenFileDataPrep.generateSingleHeader(runDate), FileTypeEnum.MHA_DUAL_CITIZEN, null);
+        //Putting a random valid DC into the file to prevent failure
+        mhaDualCitizenFileDataPrep.createListOfNewDualCitizens(1);
+        batchFileDataWriter.end();
+    }
+
+    @Then("^([a-z_]+) is a singaporean from (\\d+) days ago$")
+    public void personIsASingaporeanFromDaysAgo(String personName, int daysAgo) {
+        PersonId personId = testContext.get(personName);
+
+        Timestamp validFrom = dateUtils.beginningOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo));
+        Nationality curNationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
+        testAssert.assertEquals(NationalityEnum.SINGAPORE_CITIZEN, curNationality.getNationality(), "Person with "+personId.getNaturalId()+" is not a Singaporean!");
+        testAssert.assertEquals(validFrom, curNationality.getBiTemporalData().getBusinessTemporalData().getValidFrom(), "Person with "+personId.getNaturalId()+" did not become a Singaporean on "+validFrom.toString());
+
+        Date validTill = new Date(dateUtils.beginningOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo).minusDays(1l)).getTime());
+        Nationality prevNationality = nationalityRepo.findNationalityByPerson(personId.getPerson(), validTill);
+        testAssert.assertEquals(dateUtils.endOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo).minusDays(1l)), prevNationality.getBiTemporalData().getBusinessTemporalData().getValidTill(), "Person with "+personId.getNaturalId()+" did not end his/her previous nationality on "+validTill.toString());
     }
 }

@@ -40,7 +40,7 @@ public class MhaNewCitizenSteps extends AbstractSteps {
     Batch batch = Batch.createCompleted();
 
     BiTemporalData nationalityBiTemporalData = BiTemporalData.create(
-            dateUtils.beginningOfDayToTimestamp(citizenshipAttainmentDate.minusDays(1l)),
+            dateUtils.beginningOfDayToTimestamp(citizenshipAttainmentDate),
             Timestamp.valueOf(Constants.INFINITE_LOCAL_DATE_TIME));
     Nationality prevNationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
     nationalityRepo.updateValidTill(dateUtils.endOfDayToTimestamp(citizenshipAttainmentDate.minusDays(1l)), prevNationality.getId());
