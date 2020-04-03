@@ -28,18 +28,22 @@ public class PersonPropertyTimelineReconstruction extends AbstractAutoWired {
 
         //TODO New record valid_from, valid_till falls entirely outside the original timeline
         BiTemporalData biTemporalData = BiTemporalData.builder()
-                .businessTemporalData(new BusinessTemporalData(originalTimeLine.get(originalTimeLine.size()-1).getBiTemporalData().getBusinessTemporalData().getValidFrom(), originalTimeLine.get(0).getBiTemporalData().getBusinessTemporalData().getValidTill()))
+                .businessTemporalData(new BusinessTemporalData(originalTimeLine.get(originalTimeLine.size()-1).getIdentifier().getValidFrom(), originalTimeLine.get(0).getValidTill()))
                 .dbTemporalData(new DbTemporalData())
                 .build();
-        PersonProperty personPropertyTimeline = PersonProperty.builder()
+        PersonPropertyId personPropertyIdTimeline = PersonPropertyId.builder()
                 .type(PersonPropertyTypeEnum.RESIDENCE)
-                .biTemporalData(biTemporalData)
+                .validFrom(originalTimeLine.get(originalTimeLine.size()-1).getIdentifier().getValidFrom())
+                .build();
+        PersonProperty personPropertyTimeline = PersonProperty.builder()
+                .identifier(personPropertyIdTimeline)
+                .validTill(originalTimeLine.get(0).getValidTill())
                 .build();
 
-        if ( (newPersonPropertyRecord.getBiTemporalData().getBusinessTemporalData().getValidFrom().before(personPropertyTimeline.getBiTemporalData().getBusinessTemporalData().getValidFrom()) &&
-        newPersonPropertyRecord.getBiTemporalData().getBusinessTemporalData().getValidTill().before(personPropertyTimeline.getBiTemporalData().getBusinessTemporalData().getValidFrom())) ||
-            (newPersonPropertyRecord.getBiTemporalData().getBusinessTemporalData().getValidFrom().after(personPropertyTimeline.getBiTemporalData().getBusinessTemporalData().getValidTill()) &&
-            newPersonPropertyRecord.getBiTemporalData().getBusinessTemporalData().getValidTill().after(personPropertyTimeline.getBiTemporalData().getBusinessTemporalData().getValidTill()))) {
+        if ( (newPersonPropertyRecord.getIdentifier().getValidFrom().before(personPropertyTimeline.getIdentifier().getValidFrom()) &&
+        newPersonPropertyRecord.getValidTill().before(personPropertyTimeline.getIdentifier().getValidFrom())) ||
+            (newPersonPropertyRecord.getIdentifier().getValidFrom().after(personPropertyTimeline.getValidTill()) &&
+            newPersonPropertyRecord.getValidTill().after(personPropertyTimeline.getValidTill()))) {
             return;
         }
 
@@ -47,28 +51,30 @@ public class PersonPropertyTimelineReconstruction extends AbstractAutoWired {
         PersonProperty overlappedRecord = personPropertyRepo.findOverlappingRecord(newPersonPropertyRecord);
         if ( overlappedRecord != null ) {
             List<PersonProperty> slicedPersonProperties = new ArrayList<>();
-            if ( overlappedRecord.getBiTemporalData().getBusinessTemporalData().getValidFrom().before(newPersonPropertyRecord.getBiTemporalData().getBusinessTemporalData().getValidFrom()) ) {
-                PersonPropertyId personPropertyId = PersonPropertyId.builder().personEntity(person).propertyEntity(overlappedRecord.getIdentifier().getPropertyEntity()).build();
+            if ( overlappedRecord.getIdentifier().getValidFrom().before(newPersonPropertyRecord.getIdentifier().getValidFrom()) ) {
+                PersonPropertyId personPropertyId = PersonPropertyId.builder()
+                        .personEntity(person)
+                        .propertyEntity(overlappedRecord.getIdentifier().getPropertyEntity())
+                        .validFrom(overlappedRecord.getIdentifier().getValidFrom())
+                        .type(overlappedRecord.getIdentifier().getType())
+                        .build();
                 slicedPersonProperties.add(PersonProperty.builder().
                         identifier(personPropertyId)
                         .batch(overlappedRecord.getBatch())
-                        .biTemporalData(overlappedRecord.getBiTemporalData()
-                                .generateNewBiTemporalData(
-                                        overlappedRecord.getBiTemporalData().getBusinessTemporalData().getValidFrom(),
-                                        Timestamp.valueOf(newPersonPropertyRecord.getBiTemporalData().getBusinessTemporalData().getValidFrom().toLocalDateTime().minusDays(1))))
-                        .type(overlappedRecord.getType())
+                        .validTill(Timestamp.valueOf(newPersonPropertyRecord.getIdentifier().getValidFrom().toLocalDateTime().minusDays(1)))
                         .build());
             }
-            if ( overlappedRecord.getBiTemporalData().getBusinessTemporalData().getValidTill().after(newPersonPropertyRecord.getBiTemporalData().getBusinessTemporalData().getValidTill()) ) {
-                PersonPropertyId personPropertyId = PersonPropertyId.builder().personEntity(person).propertyEntity(overlappedRecord.getIdentifier().getPropertyEntity()).build();
+            if ( overlappedRecord.getValidTill().after(newPersonPropertyRecord.getValidTill()) ) {
+                PersonPropertyId personPropertyId = PersonPropertyId.builder()
+                        .personEntity(person)
+                        .propertyEntity(overlappedRecord.getIdentifier().getPropertyEntity())
+                        .validFrom(Timestamp.valueOf(newPersonPropertyRecord.getValidTill().toLocalDateTime().plusDays(1)))
+                        .type(overlappedRecord.getIdentifier().getType())
+                        .build();
                 slicedPersonProperties.add(PersonProperty.builder().
                         identifier(personPropertyId)
                         .batch(overlappedRecord.getBatch())
-                        .biTemporalData(overlappedRecord.getBiTemporalData()
-                                .generateNewBiTemporalData(
-                                        Timestamp.valueOf(newPersonPropertyRecord.getBiTemporalData().getBusinessTemporalData().getValidTill().toLocalDateTime().plusDays(1)),
-                                        overlappedRecord.getBiTemporalData().getBusinessTemporalData().getValidTill()))
-                        .type(overlappedRecord.getType())
+                        .validTill(overlappedRecord.getValidTill())
                         .build());
             }
             personPropertyRepo.deleteByPersonAndPropertyAndBatch(overlappedRecord);

@@ -2,6 +2,8 @@ package cdit_automation.models;
 
 import cdit_automation.enums.PersonPropertyTypeEnum;
 import cdit_automation.models.embeddables.BiTemporalData;
+import cdit_automation.models.embeddables.BusinessTemporalData;
+import cdit_automation.models.embeddables.DbTemporalData;
 import cdit_automation.models.embeddables.PersonPropertyId;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Column;
@@ -21,6 +23,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.sql.Timestamp;
+
 
 @Entity
 @Getter
@@ -39,33 +43,32 @@ public class PersonProperty extends AbstractEntity {
     @NotNull
     private Batch batch;
 
-    @Column(name = "type")
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private PersonPropertyTypeEnum type;
+    @Embedded @JsonIgnore protected DbTemporalData dbTemporalData;
 
-    @JsonIgnore
-    @Embedded
-    private BiTemporalData biTemporalData;
+    @Column(name = "valid_till")
+    private Timestamp validTill;
 
-    public static PersonProperty createResidingProperty(Batch batch, PersonPropertyId personPropertyId, BiTemporalData biTemporalData) {
-        return build(batch, personPropertyId, PersonPropertyTypeEnum.RESIDENCE, biTemporalData);
+
+//    @JsonIgnore
+//    @Embedded
+//    private BiTemporalData biTemporalData;
+
+    public static PersonProperty createPersonProperty(Batch batch, PersonPropertyId personPropertyId, Timestamp validTill) {
+        return build(batch, personPropertyId, validTill);
     }
 
-    public static PersonProperty createOwnedProperty(Batch batch, PersonPropertyId personPropertyId, BiTemporalData biTemporalData) {
-        return build(batch, personPropertyId, PersonPropertyTypeEnum.OWNERSHIP, biTemporalData);
+
+    public static PersonProperty create(Batch batch, PersonPropertyId personPropertyId, Timestamp validTill) {
+        return build(batch, personPropertyId, validTill);
     }
 
-    public static PersonProperty create(Batch batch, PersonPropertyId personPropertyId, PersonPropertyTypeEnum personPropertyTypeEnum, BiTemporalData biTemporalData) {
-        return build(batch, personPropertyId, personPropertyTypeEnum, biTemporalData);
-    }
-
-    private static PersonProperty build(Batch batch, PersonPropertyId personPropertyId, PersonPropertyTypeEnum personPropertyTypeEnum, BiTemporalData biTemporalData) {
+    private static PersonProperty build(Batch batch, PersonPropertyId personPropertyId, Timestamp validTill) {
         return PersonProperty.builder()
                 .batch(batch)
-                .biTemporalData(biTemporalData)
+                .dbTemporalData(new DbTemporalData())
+                .validTill(validTill)
                 .identifier(personPropertyId)
-                .type(personPropertyTypeEnum)
+//                .type(personPropertyTypeEnum)
                 .build();
     }
 }

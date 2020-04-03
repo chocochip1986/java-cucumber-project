@@ -15,9 +15,6 @@ import cdit_automation.models.PersonId;
 import cdit_automation.models.PersonProperty;
 import cdit_automation.models.PropertyDetail;
 import cdit_automation.models.SpecialProperty;
-import cdit_automation.models.embeddables.BiTemporalData;
-import cdit_automation.models.embeddables.BusinessTemporalData;
-import cdit_automation.models.embeddables.DbTemporalData;
 import cdit_automation.models.embeddables.PersonPropertyId;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
@@ -188,7 +185,7 @@ public class ChangeAddressSteps extends AbstractSteps {
 
         testAssert.assertNotNull(personProperty, "no person property record indicating that "+personName+" of "+personId.getNaturalId()+" resides in "+propertyName);
         testAssert.assertEquals(dateUtils.beginningOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo)),
-                personProperty.getBiTemporalData().getBusinessTemporalData().getValidFrom(),
+                personProperty.getIdentifier().getValidFrom(),
                 personName+" ("+personId.getNaturalId()+") does not reside in the address ("+propertyDetail.toString()+") from the address change date!");
     }
 
@@ -282,13 +279,11 @@ public class ChangeAddressSteps extends AbstractSteps {
             PersonPropertyId personPropertyId = PersonPropertyId.builder()
                     .personEntity(personId.getPerson())
                     .propertyEntity(curPropertyDetail.getProperty())
+                    .type(PersonPropertyTypeEnum.RESIDENCE)
+                    .validFrom(dateUtils.beginningOfDayToTimestamp(addressChangeDate))
                     .build();
-            BiTemporalData biTemporalData = BiTemporalData.builder()
-                    .businessTemporalData(
-                            new BusinessTemporalData(dateUtils.beginningOfDayToTimestamp(addressChangeDate), Timestamp.valueOf(Constants.INFINITE_LOCAL_DATE_TIME)))
-                    .dbTemporalData(new DbTemporalData())
-                    .build();
-            personPropertyRepo.save(PersonProperty.createResidingProperty(batch, personPropertyId, biTemporalData));
+
+            personPropertyRepo.save(PersonProperty.createPersonProperty(batch, personPropertyId, Timestamp.valueOf(Constants.INFINITE_LOCAL_DATE_TIME)));
         } else {
             personPropertyRepo.updateValidFrom(curPersonProperty.getIdentifier().getPersonEntity(),
                     curPersonProperty.getIdentifier().getPropertyEntity(),

@@ -1,9 +1,14 @@
 package cdit_automation.models.embeddables;
 
+import cdit_automation.enums.PersonPropertyTypeEnum;
 import cdit_automation.models.Person;
 import cdit_automation.models.Property;
 import java.io.Serializable;
+import java.sql.Timestamp;
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
@@ -27,4 +32,13 @@ public class PersonPropertyId implements Serializable {
     @JoinColumn(name = "property_entity_key", nullable = false)
     @NotNull
     private Property propertyEntity;
+
+    @Column(name = "type")
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private PersonPropertyTypeEnum type;
+
+    @Column(name = "valid_from")
+    @NotNull
+    private Timestamp validFrom;
 }

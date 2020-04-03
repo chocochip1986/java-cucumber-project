@@ -18,7 +18,13 @@ import cdit_automation.models.SpecialMapping;
 import cdit_automation.models.SpecialProperty;
 import cdit_automation.models.embeddables.BiTemporalData;
 import cdit_automation.models.embeddables.PersonPropertyId;
+
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
@@ -62,16 +68,28 @@ public class AddressFactory extends AbstractFactory {
         BiTemporalData biTemporalData = new BiTemporalData()
                 .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(retrieveBirthDate(person)));
 
-        PersonPropertyId personPropertyId = PersonPropertyId.builder().personEntity(person).propertyEntity(property).build();
+        PersonPropertyId personPropertyId = PersonPropertyId.builder()
+                .personEntity(person)
+                .propertyEntity(property)
+                .validFrom(dateUtils.beginningOfDayToTimestamp(retrieveBirthDate(person)))
+                .type(PersonPropertyTypeEnum.OWNERSHIP)
+                .build();
 
         if ( residencyEnum.equals(ResidencyEnum.BOTH) ) {
-            personPropertyRepo.save(PersonProperty.create(batch, personPropertyId, PersonPropertyTypeEnum.RESIDENCE, biTemporalData));
-            personPropertyRepo.save(PersonProperty.create(batch, personPropertyId, PersonPropertyTypeEnum.OWNERSHIP, biTemporalData));
+            PersonPropertyId personPropertyId2 = PersonPropertyId.builder()
+                    .personEntity(person)
+                    .propertyEntity(property)
+                    .validFrom(dateUtils.beginningOfDayToTimestamp(retrieveBirthDate(person)))
+                    .type(PersonPropertyTypeEnum.RESIDENCE)
+                    .build();
+            personPropertyRepo.save(PersonProperty.create(batch, personPropertyId, Timestamp.valueOf("9999-12-31 23:59:59")));
+            personPropertyRepo.save(PersonProperty.create(batch, personPropertyId2, Timestamp.valueOf("9999-12-31 23:59:59")));
         } else {
             if ( residencyEnum.equals(ResidencyEnum.OWNERSHIP) ) {
-                personPropertyRepo.save(PersonProperty.create(batch, personPropertyId, PersonPropertyTypeEnum.OWNERSHIP, biTemporalData));
+                personPropertyRepo.save(PersonProperty.create(batch, personPropertyId, Timestamp.valueOf("9999-12-31 23:59:59")));
             } else {
-                personPropertyRepo.save(PersonProperty.create(batch, personPropertyId, PersonPropertyTypeEnum.RESIDENCE, biTemporalData));
+                personPropertyId.setType(PersonPropertyTypeEnum.RESIDENCE);
+                personPropertyRepo.save(PersonProperty.create(batch, personPropertyId, Timestamp.valueOf("9999-12-31 23:59:59")));
             }
         }
 
@@ -84,7 +102,12 @@ public class AddressFactory extends AbstractFactory {
         Property property = Property.builder().build();
         PropertyDetail propertyDetail = createPropertyData(addressOptions, batch, property, biTemporalData);
 
-        PersonPropertyId personPropertyId = PersonPropertyId.builder().personEntity(person).propertyEntity(propertyDetail.getProperty()).build();
+        PersonPropertyId personPropertyId = PersonPropertyId.builder()
+                .personEntity(person)
+                .propertyEntity(propertyDetail.getProperty())
+                .validFrom(dateUtils.beginningOfDayToTimestamp(retrieveBirthDate(person)))
+                .type(PersonPropertyTypeEnum.OWNERSHIP)
+                .build();
 
         batchRepo.save(batch);
         propertyRepo.save(property);
@@ -98,13 +121,20 @@ public class AddressFactory extends AbstractFactory {
         }
 
         if ( addressOptions.ownershipEnum.equals(ResidencyEnum.BOTH) ) {
-            personPropertyRepo.save(PersonProperty.create(batch, personPropertyId, PersonPropertyTypeEnum.RESIDENCE, biTemporalData));
-            personPropertyRepo.save(PersonProperty.create(batch, personPropertyId, PersonPropertyTypeEnum.OWNERSHIP, biTemporalData));
+            PersonPropertyId personPropertyId2 = PersonPropertyId.builder()
+                    .personEntity(person)
+                    .propertyEntity(property)
+                    .validFrom(dateUtils.beginningOfDayToTimestamp(retrieveBirthDate(person)))
+                    .type(PersonPropertyTypeEnum.RESIDENCE)
+                    .build();
+            personPropertyRepo.save(PersonProperty.create(batch, personPropertyId, Timestamp.valueOf("9999-12-31 23:59:59")));
+            personPropertyRepo.save(PersonProperty.create(batch, personPropertyId2, Timestamp.valueOf("9999-12-31 23:59:59")));
         } else {
             if ( addressOptions.ownershipEnum.equals(ResidencyEnum.OWNERSHIP) ) {
-                personPropertyRepo.save(PersonProperty.create(batch, personPropertyId, PersonPropertyTypeEnum.OWNERSHIP, biTemporalData));
+                personPropertyRepo.save(PersonProperty.create(batch, personPropertyId, Timestamp.valueOf("9999-12-31 23:59:59")));
             } else {
-                personPropertyRepo.save(PersonProperty.create(batch, personPropertyId, PersonPropertyTypeEnum.RESIDENCE, biTemporalData));
+                personPropertyId.setType(PersonPropertyTypeEnum.RESIDENCE);
+                personPropertyRepo.save(PersonProperty.create(batch, personPropertyId, Timestamp.valueOf("9999-12-31 23:59:59")));
             }
         }
 

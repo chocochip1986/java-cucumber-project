@@ -76,10 +76,10 @@ Feature: MHA Change address
 
   @set_6 @Defect @Rvc-110
   Scenario Outline: CDS successfully updates address information to an existing address
-    Given A singaporean person john owns a landed property abc
+    Given A singaporean person john owns and resides a landed property abc
     And john owns a landed property abd
-    And john resides in a condo property abe
-    And the mha change address file contains information that john changed from (<prev_address_indicator>)abe to (<cur_address_indicator>)abd 5 days ago
+#    And john resides in a condo property abe
+    And the mha change address file contains information that john changed from (<prev_address_indicator>)abc to (<cur_address_indicator>)abd 5 days ago
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
     And the Mha Change Address batch job completes running with status CLEANUP
     And there are no error messages
@@ -87,14 +87,14 @@ Feature: MHA Change address
   Examples:
     | prev_address_indicator | cur_address_indicator |
     | mha_z                  | mha_z                 |
-    | mha_z                  | mha_c                 |
-    | mha_z                  | nca                   |
-    | mha_c                  | mha_z                 |
-    | mha_c                  | mha_c                 |
-    | mha_c                  | nca                   |
-    | nca                    | mha_z                 |
-    | nca                    | mha_c                 |
-    | nca                    | nca                   |
+#    | mha_z                  | mha_c                 |
+#    | mha_z                  | nca                   |
+#    | mha_c                  | mha_z                 |
+#    | mha_c                  | mha_c                 |
+#    | mha_c                  | nca                   |
+#    | nca                    | mha_z                 |
+#    | nca                    | mha_c                 |
+#    | nca                    | nca                   |
 
   @set_6
   Scenario Outline: MHA claims john changes address from an existing property which he does not live in
@@ -207,6 +207,8 @@ Feature: MHA Change address
     Then john does not reside in abc since 6 days ago
     And john resides in abd from 5 days ago
 
+    #TODO:New Scenario
+    #Change address A=> B => A
   @set_3
   Scenario: Person has changed his address many times in the past and mha tells us that he change address again
     Given A 30 year old singaporean person john resides a hdb property abc
@@ -249,3 +251,11 @@ Feature: MHA Change address
       | nca                    | mha_z                 |
       | nca                    | mha_c                 |
       | nca                    | nca                   |
+
+
+  @set_6
+  Scenario: CDS processes a MHA change address file with same new and current address
+    Given A singaporean person john resides in a landed property abc
+    And the mha change address file contains information that john changed from (mha_z)abc to (mha_z)abc 5 days ago
+    When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
+    And the Mha Change Address batch job completes running with status VALIDATED_TO_PREPARED_ERROR
