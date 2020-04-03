@@ -1,5 +1,6 @@
 package cdit_automation.step_definition;
 
+import cdit_automation.constants.Constants;
 import cdit_automation.constants.TestConstants;
 import cdit_automation.data_helpers.batch_entities.MhaDualCitizenFileEntry;
 import cdit_automation.data_setup.Phaker;
@@ -11,11 +12,13 @@ import cdit_automation.models.ErrorMessage;
 import cdit_automation.models.FileReceived;
 import cdit_automation.models.Nationality;
 import cdit_automation.models.PersonId;
+import cdit_automation.models.embeddables.BiTemporalData;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.jni.Local;
 import org.junit.Ignore;
 
 @Slf4j
@@ -240,5 +244,84 @@ public class MhaDualCitizenSteps extends AbstractSteps {
             PersonId personId = personIdRepo.findByNaturalId(nric);
             testAssert.assertNull(personId, "There exists a person with such an nric "+nric);
         }
+    }
+
+    @Given("^([a-z_]+) who is (\\d+) years old had (?:his|her) citizenship renounced (\\d+) days ago$")
+    public void personHadHisHerCitizenshipRenouncedDaysAgo(String personName, int age, int daysAgo) {
+        LocalDate renunciationDate = dateUtils.daysBeforeToday(daysAgo);
+        LocalDate birthDate = dateUtils.yearsBeforeToday(age);
+        PersonId personId = personFactory.createCeasedCitizen(personName, birthDate, renunciationDate);
+
+        testContext.set(personName, personId);
+    }
+
+    @And("^the mha dual citizen file sends information that ([a-z_]+) is a dual citizen (\\d+) days ago$")
+    public void theMhaDualCitizenFileSendsInformationThatPersonIsADualCitizenDaysAgo(String personName, int daysAgo) {
+        LocalDate runDate = dateUtils.daysBeforeToday(daysAgo);
+        batchFileDataWriter.begin(mhaDualCitizenFileDataPrep.generateSingleHeader(runDate), FileTypeEnum.MHA_DUAL_CITIZEN, null);
+
+        PersonId personId = testContext.get(personName);
+        mhaDualCitizenFileDataPrep.createNewDualCitizen(personId.getNaturalId());
+        batchFileDataWriter.end();
+    }
+
+    @Then("^([a-z_]+) remains a non singaporean$")
+    public void janeRemainsANonSingaporean(String personName) {
+        PersonId personId = testContext.get(personName);
+
+        Nationality currentNationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
+        testAssert.assertEquals(NationalityEnum.NON_SINGAPORE_CITIZEN, currentNationality.getNationality(), "Person with "+personId.getNaturalId()+" is not a non_singaporean!");
+    }
+
+    @And("^([a-z_]+) is a dual citizen(?: with a citizenship attainment date dating (\\d+) days ago)?$")
+    public void personIsADualCitizen(String personName, Integer daysAgo) {
+        PersonId personId = testContext.get(personName);
+
+        Nationality curNationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
+        testAssert.assertEquals(NationalityEnum.DUAL_CITIZENSHIP, curNationality.getNationality(), "Person with "+personId.getNaturalId()+" is not a dual citizen!");
+
+        if ( daysAgo != null ) {
+            Timestamp expectedCitizenshipAttainmentDate = dateUtils.beginningOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo));
+            testAssert.assertEquals(expectedCitizenshipAttainmentDate, curNationality.getCitizenshipAttainmentDate(), "Person with "+personId.getNaturalId()+" does not have a citizenship attainment date of "+expectedCitizenshipAttainmentDate);
+        }
+    }
+
+    @And("^mha states that ([a-z_]+) is a dual citizen since (\\d+) days ago$")
+    public void mhaStatesThatPersonIsADualCitizenSinceDaysAgo(String personName, int daysAgo) {
+        PersonId personId = testContext.get(personName);
+
+        Nationality prevNationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
+        Date validTill = new Date(dateUtils.endOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo).minusDays(1l)).getTime());
+        nationalityRepo.updateValidTill(validTill, prevNationality.getId());
+
+        Batch batch = Batch.createCompleted();
+        BiTemporalData biTemporalData = BiTemporalData.create(dateUtils.beginningOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo)), Timestamp.valueOf(Constants.INFINITE_LOCAL_DATE_TIME));
+        Nationality curNationality = Nationality.create(batch, personId.getPerson(), NationalityEnum.DUAL_CITIZENSHIP, biTemporalData, prevNationality.getCitizenshipAttainmentDate(), prevNationality.getCitizenshipRenunciationDate());
+
+        batchRepo.save(batch);
+        nationalityRepo.save(curNationality);
+    }
+
+    @And("^mha sends a dual citizen file without ([a-z_]+) in it (\\d+) days ago$")
+    public void mhaSendsADualCitizenFileWithoutPersonInItDaysAgo(String personName, int daysAgo) {
+        LocalDate runDate = dateUtils.daysBeforeToday(daysAgo);
+        batchFileDataWriter.begin(mhaDualCitizenFileDataPrep.generateSingleHeader(runDate), FileTypeEnum.MHA_DUAL_CITIZEN, null);
+        //Putting a random valid DC into the file to prevent failure
+        mhaDualCitizenFileDataPrep.createListOfNewDualCitizens(1);
+        batchFileDataWriter.end();
+    }
+
+    @Then("^([a-z_]+) is a singaporean from (\\d+) days ago$")
+    public void personIsASingaporeanFromDaysAgo(String personName, int daysAgo) {
+        PersonId personId = testContext.get(personName);
+
+        Timestamp validFrom = dateUtils.beginningOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo));
+        Nationality curNationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
+        testAssert.assertEquals(NationalityEnum.SINGAPORE_CITIZEN, curNationality.getNationality(), "Person with "+personId.getNaturalId()+" is not a Singaporean!");
+        testAssert.assertEquals(validFrom, curNationality.getBiTemporalData().getBusinessTemporalData().getValidFrom(), "Person with "+personId.getNaturalId()+" did not become a Singaporean on "+validFrom.toString());
+
+        Date validTill = new Date(dateUtils.beginningOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo).minusDays(1l)).getTime());
+        Nationality prevNationality = nationalityRepo.findNationalityByPerson(personId.getPerson(), validTill);
+        testAssert.assertEquals(dateUtils.endOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo).minusDays(1l)), prevNationality.getBiTemporalData().getBusinessTemporalData().getValidTill(), "Person with "+personId.getNaturalId()+" did not end his/her previous nationality on "+validTill.toString());
     }
 }

@@ -72,6 +72,13 @@ public class Assert {
         }
     }
 
+    public void assertEquals(int expected, int actual, String errorMsg) {
+        if (!(expected==actual)) {
+            String finalMsg = String.format("%s\nExpected: %d\nActual: %d", errorMsg, expected, actual);
+            raiseError(finalMsg);
+        }
+    }
+
     public void assertEquals(Object expected, Object actual, Supplier<String> generateErrorMessage ) {
         if ( !actual.equals(expected) ) {
             String finalMsg = generateErrorMessage.get();

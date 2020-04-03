@@ -210,7 +210,7 @@ Feature: Data processing for MHA no interaction list (NIL)
       | Must have at least 1 valid body record.       | 1     |
     And I verify number of records in MHA no interaction validated table is 0
 
-  @set_3 @note:order-of-error-message-affect-test
+  @set_3 @defect @not-catered-for-flow-through-yet @order-of-error-message-affect-test
   Scenario: Datasource service processes a MHA no interaction list file with the below combination of body records.
             - Nric is spaces (i.e. '         ')
             - Nric is invalid
@@ -230,7 +230,7 @@ Feature: Data processing for MHA no interaction list (NIL)
     And I verify that the following error message appeared:
       | Message                                                     | Count |
       | "size must be between 9 and 9","NRIC cannot be null/blank." | 1     |
-      | "Must be valid NRIC in format [S/T]1234567[A-Z]"           | 1     |
+      | "Must be valid NRIC in format [S/T]1234567[A-Z]"            | 1     |
     And I verify number of records in MHA no interaction validated table is 1
 
   @set_4
