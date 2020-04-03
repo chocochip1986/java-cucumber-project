@@ -204,7 +204,7 @@ public class ChangeAddressSteps extends AbstractSteps {
 
         testAssert.assertNotNull(actualPersonProperty, "no person property record indicating that "+personName+" of "+personId.getNaturalId()+" resides in "+propertyName);
         testAssert.assertEquals(dateUtils.beginningOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo)),
-                actualPersonProperty.getBiTemporalData().getBusinessTemporalData().getValidFrom(),
+                actualPersonProperty.getIdentifier().getValidFrom(),
                 personName+" ("+personId.getNaturalId()+") does not reside in the address ("+expectedPhakAddress.toString()+") from the address change date!");
         testAssert.assertNotNull(actualPropertyDetail, "The new "+propertyName+" at "+expectedPhakAddress.toString()+" is not being persisted in PropertyDetail");
         testAssert.assertEquals(Tuple.tuple(expectedPhakAddress.getUnitNo(),
