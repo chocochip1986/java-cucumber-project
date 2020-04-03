@@ -16,36 +16,36 @@ Feature: IRAS UAT Test Scenarios
     Seed database
     """
     Given MHA send MHA_BULK_CITIZEN file on 20200522 with the following data:
-      | NRIC      | FIN | NAME   | DOB      | DOD      | GENDER | ADDR_IND | ADDR_TYPE | ADDR   | INVALID_ADDR_TAG | NATIONALITY | CTZ_ATT_DATE | DC |
-      | T4945521B | -   | <AUTO> | 19881003 | 00000000 | M      | C        | C         | <AUTO> | -                | SG          | 19881003     | N  |
-      | T7431328G | -   | <AUTO> | 19860820 | 00000000 | M      | C        | C         | <AUTO> | -                | SG          | 19860820     | N  |
-      | T0491551D | -   | <AUTO> | 19760107 | 00000000 | M      | C        | C         | <AUTO> | -                | SG          | 19760107     | N  |
-      | T6383387D | -   | <AUTO> | 19570109 | 00000000 | M      | C        | C         | <AUTO> | -                | SG          | 19570109     | N  |
-      | T2307477F | -   | <AUTO> | 19471119 | 00000000 | M      | C        | C         | <AUTO> | -                | SG          | 19471119     | N  |
-      | S9431366Z | -   | <AUTO> | 19421103 | 00000000 | M      | C        | C         | <AUTO> | -                | SG          | 19421103     | N  |
-      | S4035558H | -   | <AUTO> | 19470726 | 00000000 | M      | C        | C         | <AUTO> | -                | SG          | 19470726     | N  |
-      | S5568671H | -   | <AUTO> | 19741229 | 00000000 | M      | C        | C         | <AUTO> | -                | SG          | 19741229     | N  |
-      | S8383595H | -   | <AUTO> | 19751222 | 00000000 | M      | C        | C         | <AUTO> | -                | SG          | 19751222     | N  |
-      | T0035110A | -   | <AUTO> | 19860927 | 00000000 | M      | C        | C         | <AUTO> | -                | SG          | 19860927     | N  |
-      | T4666665D | -   | <AUTO> | 19540214 | 00000000 | M      | C        | C         | <AUTO> | -                | SG          | 20200520     | N  |
-      | T9287323J | -   | <AUTO> | 19401001 | 00000000 | M      | C        | C         | <AUTO> | -                | SG          | 20200420     | N  |
-      | S3592339Z | -   | <AUTO> | 19990831 | 00000000 | M      | C        | C         | <AUTO> | -                | SG          | 20190320     | N  |
-      | S1115805F | -   | <AUTO> | 19881003 | 00000000 | F      | C        | C         | <AUTO> | -                | SG          | 19881003     | N  |
-      | S8475446C | -   | <AUTO> | 19860820 | 00000000 | F      | C        | C         | <AUTO> | -                | SG          | 19860820     | N  |
-      | S0601258B | -   | <AUTO> | 19760107 | 00000000 | F      | C        | C         | <AUTO> | -                | SG          | 19760107     | N  |
-      | S4983542F | -   | <AUTO> | 19570109 | 00000000 | F      | C        | C         | <AUTO> | -                | SG          | 19570109     | N  |
-      | S4435748H | -   | <AUTO> | 19471119 | 00000000 | F      | C        | C         | <AUTO> | -                | SG          | 19471119     | N  |
-      | S0036843A | -   | <AUTO> | 19421103 | 00000000 | F      | C        | C         | <AUTO> | -                | SG          | 19421103     | N  |
-      | T0638340D | -   | <AUTO> | 19470726 | 00000000 | F      | C        | C         | <AUTO> | -                | SG          | 19470726     | N  |
-      | S8125763I | -   | <AUTO> | 19741229 | 00000000 | F      | C        | C         | <AUTO> | -                | SG          | 19741229     | N  |
-      | T4461874A | -   | <AUTO> | 19751222 | 00000000 | F      | C        | C         | <AUTO> | -                | SG          | 19751222     | N  |
-      | T2559298G | -   | <AUTO> | 19860927 | 00000000 | F      | C        | C         | <AUTO> | -                | SG          | 19860927     | N  |
-      | T1748414H | -   | <AUTO> | 19881003 | 00000000 | F      | C        | C         | <AUTO> | -                | SG          | 19881003     | N  |
-      | S7758879E | -   | <AUTO> | 19860820 | 00000000 | F      | C        | C         | <AUTO> | -                | SG          | 19860820     | N  |
-      | S8125038C | -   | <AUTO> | 19760107 | 00000000 | F      | C        | C         | <AUTO> | -                | SG          | 19760107     | N  |
-      | T5430400A | -   | <AUTO> | 19570109 | 00000000 | F      | C        | C         | <AUTO> | -                | SG          | 19570109     | N  |
-      | S0805207G | -   | <AUTO> | 19471119 | 00000000 | F      | C        | C         | <AUTO> | -                | SG          | 19471119     | N  |
-      | S5478995E | -   | <AUTO> | 19421103 | 00000000 | F      | C        | C         | <AUTO> | -                | SG          | 19421103     | N  |
+      | NRIC      | FIN | NAME   | DOB      | DOD      | GENDER | ADDR_IND | ADDR_TYPE | ADDR   | INVALID_ADDR_TAG | CTZ_ATT_DATE |
+      | T4945521B | -   | <AUTO> | 19881003 | 00000000 | M      | C        | C         | <AUTO> | -                | 19881003     |
+      | T7431328G | -   | <AUTO> | 19860820 | 00000000 | M      | C        | C         | <AUTO> | -                | 19860820     |
+      | T0491551D | -   | <AUTO> | 19760107 | 00000000 | M      | C        | C         | <AUTO> | -                | 19760107     |
+      | T6383387D | -   | <AUTO> | 19570109 | 00000000 | M      | C        | C         | <AUTO> | -                | 19570109     |
+      | T2307477F | -   | <AUTO> | 19471119 | 00000000 | M      | C        | C         | <AUTO> | -                | 19471119     |
+      | S9431366Z | -   | <AUTO> | 19421103 | 00000000 | M      | C        | C         | <AUTO> | -                | 19421103     |
+      | S4035558H | -   | <AUTO> | 19470726 | 00000000 | M      | C        | C         | <AUTO> | -                | 19470726     |
+      | S5568671H | -   | <AUTO> | 19741229 | 00000000 | M      | C        | C         | <AUTO> | -                | 19741229     |
+      | S8383595H | -   | <AUTO> | 19751222 | 00000000 | M      | C        | C         | <AUTO> | -                | 19751222     |
+      | T0035110A | -   | <AUTO> | 19860927 | 00000000 | M      | C        | C         | <AUTO> | -                | 19860927     |
+      | T4666665D | -   | <AUTO> | 19540214 | 00000000 | M      | C        | C         | <AUTO> | -                | 20200520     |
+      | T9287323J | -   | <AUTO> | 19401001 | 00000000 | M      | C        | C         | <AUTO> | -                | 20200420     |
+      | S3592339Z | -   | <AUTO> | 19990831 | 00000000 | M      | C        | C         | <AUTO> | -                | 20190320     |
+      | S1115805F | -   | <AUTO> | 19881003 | 00000000 | F      | C        | C         | <AUTO> | -                | 19881003     |
+      | S8475446C | -   | <AUTO> | 19860820 | 00000000 | F      | C        | C         | <AUTO> | -                | 19860820     |
+      | S0601258B | -   | <AUTO> | 19760107 | 00000000 | F      | C        | C         | <AUTO> | -                | 19760107     |
+      | S4983542F | -   | <AUTO> | 19570109 | 00000000 | F      | C        | C         | <AUTO> | -                | 19570109     |
+      | S4435748H | -   | <AUTO> | 19471119 | 00000000 | F      | C        | C         | <AUTO> | -                | 19471119     |
+      | S0036843A | -   | <AUTO> | 19421103 | 00000000 | F      | C        | C         | <AUTO> | -                | 19421103     |
+      | T0638340D | -   | <AUTO> | 19470726 | 00000000 | F      | C        | C         | <AUTO> | -                | 19470726     |
+      | S8125763I | -   | <AUTO> | 19741229 | 00000000 | F      | C        | C         | <AUTO> | -                | 19741229     |
+      | T4461874A | -   | <AUTO> | 19751222 | 00000000 | F      | C        | C         | <AUTO> | -                | 19751222     |
+      | T2559298G | -   | <AUTO> | 19860927 | 00000000 | F      | C        | C         | <AUTO> | -                | 19860927     |
+      | T1748414H | -   | <AUTO> | 19881003 | 00000000 | F      | C        | C         | <AUTO> | -                | 19881003     |
+      | S7758879E | -   | <AUTO> | 19860820 | 00000000 | F      | C        | C         | <AUTO> | -                | 19860820     |
+      | S8125038C | -   | <AUTO> | 19760107 | 00000000 | F      | C        | C         | <AUTO> | -                | 19760107     |
+      | T5430400A | -   | <AUTO> | 19570109 | 00000000 | F      | C        | C         | <AUTO> | -                | 19570109     |
+      | S0805207G | -   | <AUTO> | 19471119 | 00000000 | F      | C        | C         | <AUTO> | -                | 19471119     |
+      | S5478995E | -   | <AUTO> | 19421103 | 00000000 | F      | C        | C         | <AUTO> | -                | 19421103     |
     When MHA sends the MHA_BULK_CITIZEN file to Datasource sftp for processing
     Then the Mha Bulk Citizen batch job completes running with status BULK_CHECK_VALIDATION_ERROR
     And I verify that the following error message appeared:
@@ -61,8 +61,8 @@ Feature: IRAS UAT Test Scenarios
     Invalid natural id will not exist in database due to constraint checks. Specially for this test scenario, I will insert invalid natural id into database.
     """
     Given the following person's details, insert into database manually, valid from 20200522 till infinity
-      | NRIC      | FIN | NAME   | DOB      | DOD      | GENDER | ADDR_IND | ADDR_TYPE | ADDR   | INVALID_ADDR_TAG | NATIONALITY | CTZ_ATT_DATE | DC |
-      | S0000001K | -   | <AUTO> | 19530325 | 00000000 | M      | C        | C         | <AUTO> | -                | SG          | 19530325     | N  |
+      | NRIC      | FIN | NAME   | DOB      | DOD      | GENDER | ADDR_IND | ADDR_TYPE | ADDR   | INVALID_ADDR_TAG | CTZ_ATT_DATE |
+      | S0000001K | -   | <AUTO> | 19530325 | 00000000 | M      | C        | C         | <AUTO> | -                | 19530325     |
     And I verify NRIC S0000001K persisted correctly
 
   Scenario: FIN holder insertion
@@ -70,12 +70,12 @@ Feature: IRAS UAT Test Scenarios
     FIN holders will appear in database through martial status file, and only FIN is known.
     """
     Given the following fin person's details, insert into database manually, valid from 20180212 till infinity
-      | NRIC | FIN       | NAME | DOB | DOD      | GENDER | ADDR_IND | ADDR_TYPE | ADDR | INVALID_ADDR_TAG | NATIONALITY | CTZ_ATT_DATE | DC |
-      | -    | G8688152M | -    | -   | 00000000 | F      | -        | -         | -    | -                | -           | -            | N  |
-      | -    | G5262765L | -    | -   | 00000000 | F      | -        | -         | -    | -                | -           | -            | N  |
-      | -    | F0000003C | -    | -   | 00000000 | F      | -        | -         | -    | -                | -           | -            | N  |
-      | -    | G4563228N | -    | -   | 00000000 | F      | -        | -         | -    | -                | -           | -            | N  |
-      | -    | F6307232W | -    | -   | 00000000 | F      | -        | -         | -    | -                | -           | -            | N  |
+      | NRIC | FIN       | NAME | DOB | DOD      | GENDER | ADDR_IND | ADDR_TYPE | ADDR | INVALID_ADDR_TAG | CTZ_ATT_DATE |
+      | -    | G8688152M | -    | -   | 00000000 | F      | -        | -         | -    | -                | -            |
+      | -    | G5262765L | -    | -   | 00000000 | F      | -        | -         | -    | -                | -            |
+      | -    | F0000003C | -    | -   | 00000000 | F      | -        | -         | -    | -                | -            |
+      | -    | G4563228N | -    | -   | 00000000 | F      | -        | -         | -    | -                | -            |
+      | -    | F6307232W | -    | -   | 00000000 | F      | -        | -         | -    | -                | -            |
     And I verify FIN G8688152M persisted correctly
     And I verify FIN G5262765L persisted correctly
     And I verify FIN F0000003C persisted correctly

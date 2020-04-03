@@ -1,6 +1,8 @@
 package cdit_automation.step_definition;
 
+import cdit_automation.constants.TestConstants;
 import cdit_automation.data_helpers.batch_entities.MhaDualCitizenFileEntry;
+import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.enums.NationalityEnum;
 import cdit_automation.exceptions.TestDataSetupErrorException;
@@ -14,6 +16,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -58,11 +61,13 @@ public class MhaDualCitizenSteps extends AbstractSteps {
 
     @Given("the mha dual citizen file has the following details:")
     public void thatTheMhaDualCitizenFileHasTheFollowingDetails(DataTable table) throws IOException {
-        batchFileDataWriter.begin(mhaDualCitizenFileDataPrep.generateSingleHeader(), FileTypeEnum.MHA_DUAL_CITIZEN, null);
+        LocalDate runDate =  TestConstants.DEFAULT_EXTRACTION_DATE;
+        batchFileDataWriter.begin(runDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD), FileTypeEnum.MHA_DUAL_CITIZEN, null);
         List<Map<String, String>> list = table.asMaps(String.class, String.class);
         List<String> body = mhaDualCitizenFileDataPrep.bodyCreator(list, testContext);
 
         testContext.set("listOfIdentifiersToWriteToFile", body);
+        testContext.set("runDate", runDate);
         batchFileDataWriter.end();
     }
 
@@ -73,12 +78,17 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         log.info("Verifying that all new dual citizens are in datasource"+listOfNewDCs.toArray().toString());
 
         List<PersonId> personIds = Collections.emptyList();
-        Date now = dateUtils.localDateToDate(dateUtils.now());
+        LocalDate runDate = testContext.get("runDate");
         for(String identifier : listOfNewDCs) {
             personIds = personIdRepo.findDualCitizen(identifier);
 
             testAssert.assertEquals(1, personIds.size(), "Person with nric: "+identifier+" is not a dual citizen!");
 
+            Nationality nationality = nationalityRepo.findNationalityByPerson(personIds.get(0).getPerson());
+            testAssert.assertNotNull(nationality, "No nationality record exists for nric "+identifier);
+            testAssert.assertEquals(dateUtils.beginningOfDayToTimestamp(runDate), nationality.getBiTemporalData().getBusinessTemporalData().getValidFrom(), "Person with "+identifier+" did not begin his/her DC nationality from "+runDate.toString());
+            Nationality prevNationality = nationalityRepo.findNationalityByPerson(personIds.get(0).getPerson(), dateUtils.localDateToDate(runDate.minusDays(1l)));
+            testAssert.assertEquals(dateUtils.endOfDayToTimestamp(runDate.minusDays(1l)), prevNationality.getBiTemporalData().getBusinessTemporalData().getValidTill(), "Person with "+identifier+" did not end his/her previous nationality on "+runDate.minusDays(1l).toString());
         }
 
     }
@@ -106,7 +116,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         log.info("Verifying that existing dual citizens who did not appear in the file will become Singaporeans");
 
         List<PersonId> personIds;
-        Date now = dateUtils.localDateToDate(dateUtils.now());
+        LocalDate runDate = testContext.get("runDate");
         for(String identifier : listOfExpiredDCs) {
             personIds = personIdRepo.findDualCitizen(identifier);
 
@@ -116,6 +126,10 @@ public class MhaDualCitizenSteps extends AbstractSteps {
             Nationality currentNationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
 
             testAssert.assertEquals(NationalityEnum.SINGAPORE_CITIZEN, currentNationality.getNationality(), "Person with nric "+identifier+" is not converted to Singaporean!");
+            testAssert.assertEquals(dateUtils.beginningOfDayToTimestamp(runDate), currentNationality.getBiTemporalData().getBusinessTemporalData().getValidFrom(), "Person with nric "+identifier+" did not start his SG citizenship from "+runDate.toString());
+
+            Nationality prevNationality = nationalityRepo.findNationalityByPerson(personId.getPerson(), dateUtils.localDateToDate(runDate.minusDays(1l)));
+            testAssert.assertEquals(dateUtils.endOfDayToTimestamp(runDate.minusDays(1l)), prevNationality.getBiTemporalData().getBusinessTemporalData().getValidTill(), "Person with nric "+identifier+" did not end his DC nationality on "+runDate.minusDays(1l).toString());
         }
     }
 
@@ -217,5 +231,14 @@ public class MhaDualCitizenSteps extends AbstractSteps {
                 prevNationality.getBiTemporalData().getBusinessTemporalData().getValidTill(),
                 personName+" ("+personId.getNaturalId()+") did not end his/her singaporean nationality on "+dateUtils.endOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo)));
 
+    }
+
+    @And("no update is done for these nrics")
+    public void noUpdateIsDoneForTheseNrics() {
+        List<String> nrics = testContext.get("listOfNonExistentNrics");
+        for (String nric: nrics) {
+            PersonId personId = personIdRepo.findByNaturalId(nric);
+            testAssert.assertNull(personId, "There exists a person with such an nric "+nric);
+        }
     }
 }

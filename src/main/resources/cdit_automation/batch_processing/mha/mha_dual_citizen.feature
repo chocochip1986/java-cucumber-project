@@ -60,3 +60,13 @@ Feature: Data processing for MHA dual citizenship
     When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
     Then the Mha Dual Citizen batch job completes running with status CLEANUP
     And I verify that john is a dual citizen 99 days ago
+
+  @set_7
+  Scenario: Person nric is not found in CDS
+    Given the mha dual citizen file has the following details:
+    | NonExistentNrics | NewDualCitizensInFile |
+    | 1                | 1                     |
+    When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
+    And the Mha Dual Citizen batch job completes running with status CLEANUP
+    And no update is done for these nrics
+    Then I verify that there are new dual citizen in datasource db

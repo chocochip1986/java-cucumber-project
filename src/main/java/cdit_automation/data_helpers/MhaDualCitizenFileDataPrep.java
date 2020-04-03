@@ -26,14 +26,26 @@ public class MhaDualCitizenFileDataPrep extends BatchFileDataPrep {
         List<String> listOfExpiredDCs = createListOfExpiredDualCitizens(parseStringSize(list.get(0).get("ExpiredDualCitizens")));
         List<String> listOfDuplicatedNrics = createDuplicatedValidNricEntries(parseStringSize(list.get(0).get("DuplicatedNrics")));
         List<String> listOfInvalidNrics = createListOfInvalidNrics(parseStringSize(list.get(0).get("InvalidNrics")));
+        List<String> listOfNonExistentNrics = createListOfNonExistentNrics(parseStringSize(list.get(0).get("NonExistentNrics")));
 
         testContext.set("listOfNewDCs", listOfNewDCs);
         testContext.set("listOfExistingDCs", listOfExistingDCs);
         testContext.set("listOfExpiredDCs", listOfExpiredDCs);
         testContext.set("listOfDuplicatedNrics", listOfDuplicatedNrics);
         testContext.set("listOfInvalidNrics", listOfInvalidNrics);
+        testContext.set("listOfNonExistentNrics", listOfNonExistentNrics);
 
-        return Stream.of(listOfNewDCs, listOfExistingDCs, listOfDuplicatedNrics, listOfInvalidNrics).flatMap(Collection::stream).collect(Collectors.toList());
+        return Stream.of(listOfNewDCs, listOfExistingDCs, listOfDuplicatedNrics, listOfInvalidNrics, listOfNonExistentNrics).flatMap(Collection::stream).collect(Collectors.toList());
+    }
+
+    public List<String> createListOfNonExistentNrics(int numOfNonExistentNrics) {
+        List<String> nonExistentNricsList = new ArrayList<>();
+        for ( int i = 0 ; i < numOfNonExistentNrics ; i++ ) {
+            String nric = Phaker.validNric();
+            nonExistentNricsList.add(nric);
+            batchFileDataWriter.chunkOrWrite(nric);
+        }
+        return nonExistentNricsList;
     }
 
     public List<String> createDuplicatedValidNricEntries(int numOfDuplicatedEntries) {

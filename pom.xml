@@ -158,7 +158,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <finalName>uber-${artifactId}</finalName>
+                            <finalName>uber-${project.artifactId}</finalName>
                             <minimizeJar>true</minimizeJar>
                             <createDependencyReducedPom>true</createDependencyReducedPom>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
@@ -168,7 +168,7 @@
                                 </transformer>
                             </transformers>
                             <outputDirectory>./deployment</outputDirectory>
-                            <outputFile>./deployment/uber-${artifactId}.jar</outputFile>
+                            <outputFile>./deployment/uber-${project.artifactId}.jar</outputFile>
                             <filters>
                                 <filter>
                                     <artifact>com.govtech.cditautomation:cdit-automation</artifact>

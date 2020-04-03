@@ -19,6 +19,7 @@ import io.cucumber.java.en.And;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +79,7 @@ public class CommonSteps extends AbstractSteps {
                         return errorMessages.isEmpty() ? "" : errorMessages.stream().map(errorMessage -> errorMessage.getMessage()+System.lineSeparator()).collect(Collectors.joining());
                     }
                 });
-                
+
                 if (testContext.contains("batch")) {
                     testContext.replace("batch", batch);
                 } else {
@@ -115,7 +116,11 @@ public class CommonSteps extends AbstractSteps {
 
         List<ErrorMessage> errorMessage = errorMessageRepo.findByBatch(batch);
 
-        testAssert.assertEquals(true, errorMessage.stream().filter(errMsg -> errMsg.getMessage().matches(".*"+errorMsg+".*")).findFirst().isPresent(), "No such error message is found for batch: "+batch.getId());
+        Arrays.asList(errorMsg.split(",")).forEach(m -> {
+            testAssert.assertTrue(
+                    errorMessage.stream().anyMatch(errMsg -> errMsg.getMessage().matches(".*" + m.trim() + ".*")),
+                    "No such error message [" + m.trim() + "] is found for batch: " + batch.getId());
+        });
     }
 
     @And("I verify that the following error message appeared:")
@@ -166,18 +171,18 @@ public class CommonSteps extends AbstractSteps {
 
         testAssert.assertTrue(errorMessages.isEmpty(), "There are error messages for batch: "+batch.getId());
     }
-    
+
     @And("^I verify that person with ([S|T|F|G][0-9]{7}[A-Z]) (is|is not) persisted in Datasource$")
     public void iVerifyThatPersonWithFXIsPersistedInDatasource(String identifier, String persisted) {
         log.info("Verifying records of person with " + identifier + " " + persisted + " persisted.");
         PersonId personId = personIdRepo.findByNaturalId(identifier);
-        
+
         // If "is not" persisted, check personId is null. Without personId, nothing can be created.
         if (persisted.equalsIgnoreCase("is not")) {
             testAssert.assertNull(personId, "PersonId record found for "+identifier);
             return;
         }
-        
+
         // Otherwise, check all relevant data is created.
         testAssert.assertNotNull(personId, "No PersonId record for "+identifier);
         testAssert.assertNotNull(personId.getPerson(), "No Person record for "+identifier);

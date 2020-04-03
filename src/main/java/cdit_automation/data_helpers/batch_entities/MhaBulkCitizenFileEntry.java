@@ -18,25 +18,37 @@ public class MhaBulkCitizenFileEntry {
   private String addressType;
   private String address;
   private String invalidAddressTag;
-  private String nationality;
   private String citizenshipAttainmentIssueDate;
-  private String dualCitizen;
+
+  public MhaBulkCitizenFileEntry(String nric, String fin, String name, String dateOfBirth, String dateOfDeath,
+                                 String gender, String addressIndicator, String addressType, String address,
+                                 String invalidAddressTag, String citizenshipAttainmentIssueDate) {
+    this.nric = resolveNric(nric);
+    this.fin = resolveFin(fin);
+    this.name = resolveName(name);
+    this.dateOfBirth = resolveDateOfBirth(dateOfBirth);
+    this.dateOfDeath = dateOfDeath;
+    this.gender = resolveGender(gender);
+    this.addressIndicator = resolveAddressIndicator(addressIndicator);
+    this.addressType = resolveAddressType(addressType);
+    this.address = resolveAddress(address);
+    this.invalidAddressTag = resolveInvalidAddressTag(invalidAddressTag);
+    this.citizenshipAttainmentIssueDate = resolveCitizenAttainmentIssueDate(citizenshipAttainmentIssueDate);
+  }
 
   public MhaBulkCitizenFileEntry(Map<String, String> row) {
     this.nric = resolveNric(row.get("NRIC"));
     this.fin = resolveFin(row.get("FIN"));
     this.name = resolveName(row.get("NAME"));
-    this.dateOfBirth = resolveDateOFBirth(row.get("DOB"));
+    this.dateOfBirth = resolveDateOfBirth(row.get("DOB"));
     this.dateOfDeath = resolveDateOfDeath(row.get("DOD"));
     this.gender = resolveGender(row.get("GENDER"));
     this.addressIndicator = resolveAddressIndicator(row.get("ADDR_IND"));
     this.addressType = resolveAddressType(row.get("ADDR_TYPE"));
     this.address = resolveAddress(row.get("ADDR"));
     this.invalidAddressTag = resolveInvalidAddressTag(row.get("INVALID_ADDR_TAG"));
-    this.nationality = resolveNationality(row.get("NATIONALITY"));
     this.citizenshipAttainmentIssueDate =
         resolveCitizenAttainmentIssueDate(row.get("CTZ_ATT_DATE"));
-    this.dualCitizen = resolveDualCitizen(row.get("DC"));
   }
 
   private String resolveNric(String str) {
@@ -54,7 +66,7 @@ public class MhaBulkCitizenFileEntry {
     return str.equalsIgnoreCase("-") ? "" : str;
   }
 
-  private String resolveDateOFBirth(String str) {
+  private String resolveDateOfBirth(String str) {
     return str.equalsIgnoreCase("-") ? "" : str;
   }
 
@@ -89,15 +101,7 @@ public class MhaBulkCitizenFileEntry {
     return str.equalsIgnoreCase("-") ? "" : str;
   }
 
-  private String resolveNationality(String str) {
-    return str.equalsIgnoreCase("-") ? "" : str;
-  }
-
   private String resolveCitizenAttainmentIssueDate(String str) {
-    return str.equalsIgnoreCase("-") ? "" : str;
-  }
-
-  private String resolveDualCitizen(String str) {
     return str.equalsIgnoreCase("-") ? "" : str;
   }
 
@@ -111,9 +115,7 @@ public class MhaBulkCitizenFileEntry {
         + StringUtils.rightPad(this.addressIndicator, 1)
         + StringUtils.rightPad(this.addressType, 1)
         + StringUtils.rightPad(this.address, 89, StringUtils.SPACE)
-        + StringUtils.rightPad(this.invalidAddressTag, 1)
-        + StringUtils.rightPad(this.nationality, 2, StringUtils.SPACE)
-        + StringUtils.rightPad(this.citizenshipAttainmentIssueDate, 8)
-        + StringUtils.rightPad(this.dualCitizen, 1);
+        + StringUtils.rightPad(this.invalidAddressTag, 1, StringUtils.SPACE)
+        + StringUtils.rightPad(this.citizenshipAttainmentIssueDate, 8);
   }
 }
