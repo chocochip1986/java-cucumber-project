@@ -34,6 +34,13 @@ public interface NationalityRepo extends JpaRepository<Nationality, Long> {
     @Transactional
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Nationality n " +
+            "SET n.biTemporalData.businessTemporalData.validTill = ?1 " +
+            "WHERE n.id = ?2")
+    int updateValidTill(Date newValidFill, long id);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE Nationality n " +
             "SET n.nationality = ?1 " +
             "WHERE n.person = ?2 " +
             "AND ( n.biTemporalData.businessTemporalData.validFrom <= TRUNC(SYSDATE) " +

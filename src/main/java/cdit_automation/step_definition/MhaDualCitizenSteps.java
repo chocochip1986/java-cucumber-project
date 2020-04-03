@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.jni.Local;
 import org.junit.Ignore;
 
 @Slf4j
@@ -240,5 +241,31 @@ public class MhaDualCitizenSteps extends AbstractSteps {
             PersonId personId = personIdRepo.findByNaturalId(nric);
             testAssert.assertNull(personId, "There exists a person with such an nric "+nric);
         }
+    }
+
+    @Given("^([a-z_]+) had (?:his|her) citizenship renounced (\\d+) days ago$")
+    public void personHadHisHerCitizenshipRenouncedDaysAgo(String personName, int daysAgo) {
+        LocalDate renunciationDate = dateUtils.daysBeforeToday(daysAgo);
+        PersonId personId = personFactory.createCeasedCitizen(personName, renunciationDate);
+
+        testContext.set(personName, personId);
+    }
+
+    @And("^the mha dual citizen file sends information that ([a-z_]+) is a dual citizen (\\d+) days ago$")
+    public void theMhaDualCitizenFileSendsInformationThatPersonIsADualCitizenDaysAgo(String personName, int daysAgo) {
+        LocalDate runDate = dateUtils.daysBeforeToday(daysAgo);
+        batchFileDataWriter.begin(mhaDualCitizenFileDataPrep.generateSingleHeader(runDate), FileTypeEnum.MHA_DUAL_CITIZEN, null);
+
+        PersonId personId = testContext.get(personName);
+        mhaDualCitizenFileDataPrep.createNewDualCitizen(personId.getNaturalId());
+        batchFileDataWriter.end();
+    }
+
+    @Then("([a-z_]+) remains a non singaporean")
+    public void janeRemainsANonSingaporean(String personName) {
+        PersonId personId = testContext.get(personName);
+
+        Nationality currentNationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
+        testAssert.assertEquals(NationalityEnum.NON_SINGAPORE_CITIZEN, currentNationality.getNationality(), "Person with "+personId.getNaturalId()+" is not a non_singaporean!");
     }
 }

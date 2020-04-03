@@ -67,6 +67,11 @@ public class MhaDualCitizenFileDataPrep extends BatchFileDataPrep {
         return duplicateedList;
     }
 
+    public String createNewDualCitizen(String nric) {
+        batchFileDataWriter.chunkOrWrite(nric);
+        return nric;
+    }
+
     public List<String> createListOfNewDualCitizens(@Positive int numOfNewDCs) {
         List<String> listOfNewDCs = new ArrayList<>();
         for ( int i = 0 ; i < numOfNewDCs ; i++ ) {

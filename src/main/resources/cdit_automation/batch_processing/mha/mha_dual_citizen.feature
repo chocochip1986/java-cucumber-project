@@ -70,3 +70,11 @@ Feature: Data processing for MHA dual citizenship
     And the Mha Dual Citizen batch job completes running with status CLEANUP
     And no update is done for these nrics
     Then I verify that there are new dual citizen in datasource db
+
+  @set_8
+  Scenario: Person has a ceased citizenship date that is after the dual citizen date of run
+    Given jane had her citizenship renounced 4 days ago
+    And the mha dual citizen file sends information that jane is a dual citizen 5 days ago
+    When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
+    And the Mha Dual Citizen batch job completes running with status CLEANUP
+    Then jane remains a non singaporean
