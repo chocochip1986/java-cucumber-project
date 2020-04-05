@@ -100,6 +100,8 @@ Feature: Data processing for MHA bulk citizen file
       | SPACE     | -   | <AUTO> | 19881003 | 00000000 | M      | C        | C         | <AUTO> | -                | 19881003     |
       | S1234567A | -   | <AUTO> | 19881003 | 00000000 | M      | C        | C         | <AUTO> | -                | 19881003     |
       | T494552B  | -   | <AUTO> | 19881003 | 00000000 | M      | C        | C         | <AUTO> | -                | 19881003     |
+      | t4945521B | -   | <AUTO> | 19881003 | 00000000 | M      | C        | C         | <AUTO> | -                | 19881003     |
+      | S4945521B | -   | <AUTO> | 19881003 | 00000000 | M      | C        | C         | <AUTO> | -                | 19881003     |
       | S5550000B | -   | <AUTO> | 19881003 | 00000000 | M      | C        | C         | <AUTO> | -                | 19881003     |
       | S8880001Z | -   | <AUTO> | 19881003 | 00000000 | M      | C        | C         | <AUTO> | -                | 19881003     |
     When MHA sends the MHA_BULK_CITIZEN file to Datasource sftp for processing

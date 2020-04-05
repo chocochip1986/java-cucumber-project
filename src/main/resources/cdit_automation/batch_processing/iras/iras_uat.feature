@@ -16,36 +16,36 @@ Feature: IRAS UAT Test Scenarios
     Seed database
     """
     Given MHA send MHA_BULK_CITIZEN file on 20200522 with the following data:
-      | NRIC      | FIN | NAME   | DOB      | DOD      | GENDER | ADDR_IND | ADDR_TYPE | ADDR   | INVALID_ADDR_TAG | CTZ_ATT_DATE |
-      | T4945521B | -   | <AUTO> | 19881003 | 00000000 | M      | C        | C         | <AUTO> | -                | 19881003     |
-      | T7431328G | -   | <AUTO> | 19860820 | 00000000 | M      | C        | C         | <AUTO> | -                | 19860820     |
-      | T0491551D | -   | <AUTO> | 19760107 | 00000000 | M      | C        | C         | <AUTO> | -                | 19760107     |
-      | T6383387D | -   | <AUTO> | 19570109 | 00000000 | M      | C        | C         | <AUTO> | -                | 19570109     |
-      | T2307477F | -   | <AUTO> | 19471119 | 00000000 | M      | C        | C         | <AUTO> | -                | 19471119     |
-      | S9431366Z | -   | <AUTO> | 19421103 | 00000000 | M      | C        | C         | <AUTO> | -                | 19421103     |
-      | S4035558H | -   | <AUTO> | 19470726 | 00000000 | M      | C        | C         | <AUTO> | -                | 19470726     |
-      | S5568671H | -   | <AUTO> | 19741229 | 00000000 | M      | C        | C         | <AUTO> | -                | 19741229     |
-      | S8383595H | -   | <AUTO> | 19751222 | 00000000 | M      | C        | C         | <AUTO> | -                | 19751222     |
-      | T0035110A | -   | <AUTO> | 19860927 | 00000000 | M      | C        | C         | <AUTO> | -                | 19860927     |
-      | T4666665D | -   | <AUTO> | 19540214 | 00000000 | M      | C        | C         | <AUTO> | -                | 20200520     |
-      | T9287323J | -   | <AUTO> | 19401001 | 00000000 | M      | C        | C         | <AUTO> | -                | 20200420     |
-      | S3592339Z | -   | <AUTO> | 19990831 | 00000000 | M      | C        | C         | <AUTO> | -                | 20190320     |
-      | S1115805F | -   | <AUTO> | 19881003 | 00000000 | F      | C        | C         | <AUTO> | -                | 19881003     |
-      | S8475446C | -   | <AUTO> | 19860820 | 00000000 | F      | C        | C         | <AUTO> | -                | 19860820     |
-      | S0601258B | -   | <AUTO> | 19760107 | 00000000 | F      | C        | C         | <AUTO> | -                | 19760107     |
-      | S4983542F | -   | <AUTO> | 19570109 | 00000000 | F      | C        | C         | <AUTO> | -                | 19570109     |
-      | S4435748H | -   | <AUTO> | 19471119 | 00000000 | F      | C        | C         | <AUTO> | -                | 19471119     |
-      | S0036843A | -   | <AUTO> | 19421103 | 00000000 | F      | C        | C         | <AUTO> | -                | 19421103     |
-      | T0638340D | -   | <AUTO> | 19470726 | 00000000 | F      | C        | C         | <AUTO> | -                | 19470726     |
-      | S8125763I | -   | <AUTO> | 19741229 | 00000000 | F      | C        | C         | <AUTO> | -                | 19741229     |
-      | T4461874A | -   | <AUTO> | 19751222 | 00000000 | F      | C        | C         | <AUTO> | -                | 19751222     |
-      | T2559298G | -   | <AUTO> | 19860927 | 00000000 | F      | C        | C         | <AUTO> | -                | 19860927     |
-      | T1748414H | -   | <AUTO> | 19881003 | 00000000 | F      | C        | C         | <AUTO> | -                | 19881003     |
-      | S7758879E | -   | <AUTO> | 19860820 | 00000000 | F      | C        | C         | <AUTO> | -                | 19860820     |
-      | S8125038C | -   | <AUTO> | 19760107 | 00000000 | F      | C        | C         | <AUTO> | -                | 19760107     |
-      | T5430400A | -   | <AUTO> | 19570109 | 00000000 | F      | C        | C         | <AUTO> | -                | 19570109     |
-      | S0805207G | -   | <AUTO> | 19471119 | 00000000 | F      | C        | C         | <AUTO> | -                | 19471119     |
-      | S5478995E | -   | <AUTO> | 19421103 | 00000000 | F      | C        | C         | <AUTO> | -                | 19421103     |
+      | NRIC      | FIN | NAME   | DOB      | DOD | GENDER | ADDR_IND | ADDR_TYPE | ADDR   | INVALID_ADDR_TAG | CTZ_ATT_DATE |
+      | T4945521B | -   | <AUTO> | 19881003 | -   | M      | C        | C         | <AUTO> | -                | 19881003     |
+      | T7431328G | -   | <AUTO> | 19860820 | -   | M      | C        | C         | <AUTO> | -                | 19860820     |
+      | T0491551D | -   | <AUTO> | 19760107 | -   | M      | C        | C         | <AUTO> | -                | 19760107     |
+      | T6383387D | -   | <AUTO> | 19570109 | -   | M      | C        | C         | <AUTO> | -                | 19570109     |
+      | T2307477F | -   | <AUTO> | 19471119 | -   | M      | C        | C         | <AUTO> | -                | 19471119     |
+      | S9431366Z | -   | <AUTO> | 19421103 | -   | M      | C        | C         | <AUTO> | -                | 19421103     |
+      | S4035558H | -   | <AUTO> | 19470726 | -   | M      | C        | C         | <AUTO> | -                | 19470726     |
+      | S5568671H | -   | <AUTO> | 19741229 | -   | M      | C        | C         | <AUTO> | -                | 19741229     |
+      | S8383595H | -   | <AUTO> | 19751222 | -   | M      | C        | C         | <AUTO> | -                | 19751222     |
+      | T0035110A | -   | <AUTO> | 19860927 | -   | M      | C        | C         | <AUTO> | -                | 19860927     |
+      | T4666665D | -   | <AUTO> | 19540214 | -   | M      | C        | C         | <AUTO> | -                | 20200520     |
+      | T9287323J | -   | <AUTO> | 19401001 | -   | M      | C        | C         | <AUTO> | -                | 20200420     |
+      | S3592339Z | -   | <AUTO> | 19990831 | -   | M      | C        | C         | <AUTO> | -                | 20190320     |
+      | S1115805F | -   | <AUTO> | 19881003 | -   | F      | C        | C         | <AUTO> | -                | 19881003     |
+      | S8475446C | -   | <AUTO> | 19860820 | -   | F      | C        | C         | <AUTO> | -                | 19860820     |
+      | S0601258B | -   | <AUTO> | 19760107 | -   | F      | C        | C         | <AUTO> | -                | 19760107     |
+      | S4983542F | -   | <AUTO> | 19570109 | -   | F      | C        | C         | <AUTO> | -                | 19570109     |
+      | S4435748H | -   | <AUTO> | 19471119 | -   | F      | C        | C         | <AUTO> | -                | 19471119     |
+      | S0036843A | -   | <AUTO> | 19421103 | -   | F      | C        | C         | <AUTO> | -                | 19421103     |
+      | T0638340D | -   | <AUTO> | 19470726 | -   | F      | C        | C         | <AUTO> | -                | 19470726     |
+      | S8125763I | -   | <AUTO> | 19741229 | -   | F      | C        | C         | <AUTO> | -                | 19741229     |
+      | T4461874A | -   | <AUTO> | 19751222 | -   | F      | C        | C         | <AUTO> | -                | 19751222     |
+      | T2559298G | -   | <AUTO> | 19860927 | -   | F      | C        | C         | <AUTO> | -                | 19860927     |
+      | T1748414H | -   | <AUTO> | 19881003 | -   | F      | C        | C         | <AUTO> | -                | 19881003     |
+      | S7758879E | -   | <AUTO> | 19860820 | -   | F      | C        | C         | <AUTO> | -                | 19860820     |
+      | S8125038C | -   | <AUTO> | 19760107 | -   | F      | C        | C         | <AUTO> | -                | 19760107     |
+      | T5430400A | -   | <AUTO> | 19570109 | -   | F      | C        | C         | <AUTO> | -                | 19570109     |
+      | S0805207G | -   | <AUTO> | 19471119 | -   | F      | C        | C         | <AUTO> | -                | 19471119     |
+      | S5478995E | -   | <AUTO> | 19421103 | -   | F      | C        | C         | <AUTO> | -                | 19421103     |
     When MHA sends the MHA_BULK_CITIZEN file to Datasource sftp for processing
     Then the Mha Bulk Citizen batch job completes running with status BULK_CHECK_VALIDATION_ERROR
     And I verify that the following error message appeared:
@@ -895,17 +895,6 @@ Feature: IRAS UAT Test Scenarios
       | T5874373E  | 0                 | PENDING_ASSESSMENT |
       | S3401364J  | 0                 | PENDING_ASSESSMENT |
 
-  Scenario: Cycle 2A, turn off appeal flag for those resolved cases
-    Given IRAS return the assessable income for the following natural id:
-      | NATURAL_ID | YEAR |
-      | T4945521B  | 2020 |
-      | T4945521B  | 2019 |
-      | T7431328G  | 2020 |
-      | T7431328G  | 2019 |
-      | T0491551D  | 2020 |
-      | T0491551D  | 2019 |
-    Then I turn off the appeal flag
-
   Scenario: Cycle 2B, new citizen file ingress on 10 June 2021
     Given MHA send MHA_NEW_CITIZEN file on 20210610 with the following data:
       | NRIC      | FIN       | NAME | DOB      | GENDER | OLD_ADDR_IND | OLD_ADDR_TYPE | OLD_ADDR           | NEW_ADDR_IND | NEW_ADDR_TYPE | NEW_ADDR           | NEW_INVALID_ADDR_TAG | DATE_OF_ADDR_CHANGE | CTZ_ATT_DATE |
@@ -951,11 +940,11 @@ Feature: IRAS UAT Test Scenarios
       | T5080649E  | 20210610    | 2019        |
       | T6386446Z  | 20210610    | 2021        |
 
-  Scenario: Cycle 2B, thrice monthly assessable income egress on 29 June 2021
-    Given I triggered thrice monthly assessable income egress job on 20210629
+  Scenario: Cycle 2B, thrice monthly assessable income egress on 15 June 2021
+    Given I triggered thrice monthly assessable income egress job on 20210615
     Then I retrieve the egress file
     Then I verify it has the following data:
-      | 02021062901            |
+      | 02021061501            |
       | 1T7700475G        2021 |
       | 1T6386446Z        2021 |
       | 1T8255237A        2021 |
@@ -1003,11 +992,11 @@ Feature: IRAS UAT Test Scenarios
       | 2000000044             |
     And delete the egress file
 
-  Scenario: Cycle 2B, thrice monthly assessable income ingress on 29 June 2021
+  Scenario: Cycle 2B, thrice monthly assessable income ingress on 15 June 2021
   """
     Initiate ingress for cycle 2b thrice
     """
-    Given IRAS provide the thrice monthly assessable income file on 20210629 with the following data:
+    Given IRAS provide the thrice monthly assessable income file on 20210615 with the following data:
       | RECORD_TYPE | NATURAL_ID | ASSESSABLE_INCOME | RESULT_INDICATOR | ASSESSMENT_YEAR |
       | 1           | T7431328G  | 0003145555        | 01               | 2021            |
       | 1           | T7431328G  | 0003145555        | 01               | 2020            |
@@ -1052,10 +1041,10 @@ Feature: IRAS UAT Test Scenarios
       | 1           | S0900370C  | 0003140000        | 01               | 2019            |
     When IRAS sends the IRAS_THRICE_MONTHLY_AI file to Datasource sftp for processing
     Then the Iras Assessable Income batch job completes running with status BULK_CHECK_VALIDATION_ERROR
-    Then I update the IRAS_THRICE_MONTHLY_AI file received date to 20210629
+    Then I update the IRAS_THRICE_MONTHLY_AI file received date to 20210615
     And I re-run the batch job
     Then the Iras Assessable Income batch job completes running with status CLEANUP
-    And I verify the following natural id's income status and value for year 2021 as of 20210629 are as follows:
+    And I verify the following natural id's income status and value for year 2021 as of 20210615 are as follows:
       | NATURAL_ID | ASSESSABLE_INCOME | STATUS             |
       | T7431328G  | 31455.55          | INCOME_ASSESSED    |
       | S9431366Z  | 0                 | PENDING_ASSESSMENT |
@@ -1073,7 +1062,7 @@ Feature: IRAS UAT Test Scenarios
       | T8255237A  | 11300             | INCOME_ASSESSED    |
       | T6386446Z  | 11300             | INCOME_ASSESSED    |
       | S0900370C  | 11400             | INCOME_ASSESSED    |
-    And I verify the following natural id's income status and value for year 2020 as of 20210629 are as follows:
+    And I verify the following natural id's income status and value for year 2020 as of 20210615 are as follows:
       | NATURAL_ID | ASSESSABLE_INCOME | STATUS             |
       | T7431328G  | 31455.55          | INCOME_ASSESSED    |
       | S9431366Z  | 0                 | PENDING_ASSESSMENT |
@@ -1088,7 +1077,7 @@ Feature: IRAS UAT Test Scenarios
       | S0600147E  | 0                 | PENDING_ASSESSMENT |
       | T5874373E  | 0                 | PENDING_ASSESSMENT |
       | S0900370C  | 21400             | INCOME_ASSESSED    |
-    And I verify the following natural id's income status and value for year 2019 as of 20210629 are as follows:
+    And I verify the following natural id's income status and value for year 2019 as of 20210615 are as follows:
       | NATURAL_ID | ASSESSABLE_INCOME | STATUS             |
       | T7431328G  | 31455.55          | INCOME_ASSESSED    |
       | T4666665D  | 0                 | PENDING_ASSESSMENT |
@@ -1100,4 +1089,45 @@ Feature: IRAS UAT Test Scenarios
       | T5874373E  | 0                 | PENDING_ASSESSMENT |
       | S3401364J  | 0                 | PENDING_ASSESSMENT |
       | S0900370C  | 31400             | INCOME_ASSESSED    |
-    
+
+  Scenario: Cycle 2C, dual citizen file ingress on 16 June 2021
+    Given MHA send MHA_DUAL_CITIZEN on 20210616 with the following data:
+      | S3401364J |
+      | S0600147E |
+    When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
+    Then the Mha Dual Citizen batch job completes running with status BULK_CHECK_VALIDATION_ERROR
+    Then I update the MHA_DUAL_CITIZEN file received date to 20210616
+    And I re-run the batch job
+    Then the Mha Dual Citizen batch job completes running with status CLEANUP
+
+  Scenario: Cycle 2C, ceased citizen file ingress on 20210630
+    Given MHA send MHA_CEASED_CITIZEN file on 20210630 with the following data:
+      | NRIC      | NAME   | NATIONALITY | CESSATION_DATE |
+      | S0600147E | <AUTO> | OO          | 20200620       |
+    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
+    Then the Mha Ceased Citizen batch job completes running with status BULK_CHECK_VALIDATION_ERROR
+    Then I update the MHA_DEATH_DATE file received date to 20210630
+    And I re-run the batch job
+    Then the Mha Ceased Citizen batch job completes running with status CLEANUP
+
+  Scenario: Cycle 2C, new citizen file ingress on 01 July 2021
+    Given MHA send MHA_NEW_CITIZEN file on 20210701 with the following data:
+      | NRIC      | FIN       | NAME     | DOB      | GENDER | OLD_ADDR_IND | OLD_ADDR_TYPE | OLD_ADDR           | NEW_ADDR_IND | NEW_ADDR_TYPE | NEW_ADDR           | NEW_INVALID_ADDR_TAG | DATE_OF_ADDR_CHANGE | CTZ_ATT_DATE |
+      | T6012487B | G8688152M | Jennifer | 19880105 | F      | C            | C             | Bedok South Ave 11 | C            | C             | Bedok South Ave 51 |                      | 20180704            | 20210630     |
+      | T1772613C | F6307232W | Lucy     | 19880105 | F      | C            | C             | Bedok South Ave 1  | C            | C             | Bedok South Ave 21 |                      | 20180704            | 20210630     |
+    When MHA sends the MHA_NEW_CITIZEN file to Datasource sftp for processing
+    Then the Mha New Citizen batch job completes running with status BULK_CHECK_VALIDATION_ERROR
+    Then I update the MHA_NEW_CITIZEN file received date to 20210701
+    And I re-run the batch job
+    Then the Mha New Citizen batch job completes running with status CLEANUP
+
+  Scenario: Cycle 2C, death broadcast file ingress on 01 July 2021
+    Given MHA send MHA_DEATH_DATE file on 20210701 with the following data:
+      | NATURALID | DOD      |
+      | S0601258B | 20191231 |
+    When MHA sends the MHA_DEATH_DATE file to Datasource sftp for processing
+    Then the Mha Death Date batch job completes running with status BULK_CHECK_VALIDATION_ERROR
+    Then I update the MHA_DEATH_DATE file received date to 20210701
+    And I re-run the batch job
+    Then the Mha Death Date batch job completes running with status CLEANUP
+

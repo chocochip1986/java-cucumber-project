@@ -229,6 +229,8 @@ public class IrasAssessableIncomeFileDataPrep extends BatchFileDataPrep {
     ).ifPresent(oldIncome -> {
       result.setAssessableIncome(oldIncome.getAssessableIncome());
       result.setAssessableIncomeStatus(oldIncome.getAssessableIncomeStatus());
+      result.setAssessableIncome(oldIncome.getAssessableIncome());
+      result.setAssessableIncomeStatus(oldIncome.getAssessableIncomeStatus());
     });
 
     return result;
