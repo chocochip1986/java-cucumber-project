@@ -5,7 +5,7 @@ Feature: IRAS UAT Test Scenarios
    Note: This feature file isn't ready to be executed in gitlab pipeline due to :
          1) Hasn't implement the file retrieval portion. (i.e. exposing file path in datasource containers in order for
             automation to pick up.
-         2) Date time issue, as the real world time moves on, test cases will break due to constraints. For example: 
+         2) Date time issue, as the real world time moves on, test cases will break due to constraints. For example:
             a) File received date must be after date of run
             b) File received date cannot be one month older than current date.
   """
@@ -209,7 +209,7 @@ Feature: IRAS UAT Test Scenarios
 
   Scenario: Cycle 1B, thrice monthly assessable income egress on 31 May 2020
   """
-    Initiate thrice monthly egress 
+    Initiate thrice monthly egress
     """
     Given I triggered thrice monthly assessable income egress job on 20200531
     Then I retrieve the egress file
@@ -1130,4 +1130,151 @@ Feature: IRAS UAT Test Scenarios
     Then I update the MHA_DEATH_DATE file received date to 20210701
     And I re-run the batch job
     Then the Mha Death Date batch job completes running with status CLEANUP
+
+  Scenario: Cycle 2C, thrice monthly assessable income egress on 22 July 2021
+    Given I triggered thrice monthly assessable income egress job on 20210722
+    Then I retrieve the egress file
+    Then I verify it has the following data:
+      | 02021072201            |
+      | 1S9431366Z        2021 |
+      | 1S4035558H        2021 |
+      | 1S8383595H        2021 |
+      | 1S0000001K        2021 |
+      | 1S5478995E        2021 |
+      | 1T4666665D        2021 |
+      | 1T9287323J        2021 |
+      | 1S3592339Z        2021 |
+      | 1T6012487B        2021 |
+      | 1G5262765L        2021 |
+      | 1F0000003C        2021 |
+      | 1G4563228N        2021 |
+      | 1T1772613C        2021 |
+      | 1S0036843A        2021 |
+      | 1T0491551D        2020 |
+      | 1S9431366Z        2020 |
+      | 1S4035558H        2020 |
+      | 1S0000001K        2020 |
+      | 1S5478995E        2020 |
+      | 1T4666665D        2020 |
+      | 1T6012487B        2020 |
+      | 1F0000003C        2020 |
+      | 1S0601258B        2020 |
+      | 1S0036843A        2020 |
+      | 1T7700475G        2020 |
+      | 1T8255237A        2020 |
+      | 1T6386446Z        2020 |
+      | 1T2430411B        2020 |
+      | 1T5874373E        2020 |
+      | 1S3401364J        2019 |
+      | 1S0000001K        2019 |
+      | 1S5478995E        2019 |
+      | 1T4666665D        2019 |
+      | 1T9287323J        2019 |
+      | 1T6012487B        2019 |
+      | 1G5262765L        2019 |
+      | 1F0000003C        2019 |
+      | 1T1772613C        2019 |
+      | 1S0601258B        2019 |
+      | 1T5874373E        2019 |
+      | 1S3401364J        2019 |
+      | 2000000041             |
+    And delete the egress file
+
+  Scenario: Cycle 2C, thrice monthly assessable income ingress on 22 July 2021
+  """
+    Initiate ingress for cycle 2c thrice
+    """
+    Given IRAS provide the thrice monthly assessable income file on 20210722 with the following data:
+      | RECORD_TYPE | NATURAL_ID | ASSESSABLE_INCOME | RESULT_INDICATOR | ASSESSMENT_YEAR |
+      | 1           | S9431366Z  | 0000000000        | 02               | 2021            |
+      | 1           | S4035558H  | 0000000000        | 02               | 2021            |
+      | 1           | S8383595H  | 0000000000        | 02               | 2021            |
+      | 1           | S5478995E  | 0000000000        | 04               | 2021            |
+      | 1           | T4666665D  | 0001140050        | 01               | 2021            |
+      | 1           | T9287323J  | 0000000000        | 04               | 2021            |
+      | 1           | S3592339Z  | 0000000000        | 04               | 2021            |
+      | 1           | G8688152M  | 0000000000        | 04               | 2021            |
+      | 1           | G5262765L  | 0000000000        | 04               | 2021            |
+      | 1           | G4563228N  | 0000000000        | 05               | 2021            |
+      | 1           | F6307232W  | 0000000000        | 05               | 2021            |
+      | 1           | S0036843A  | 0001140050        | 01               | 2021            |
+      | 1           | T0491551D  | 0000000000        | 02               | 2020            |
+      | 1           | S9431366Z  | 9999999999        | 01               | 2020            |
+      | 1           | S4035558H  | 0000000045        | 01               | 2020            |
+      | 1           | S5478995E  | 0000000051        | 01               | 2020            |
+      | 1           | T4666665D  | 0000000000        | 04               | 2020            |
+      | 1           | T6012487B  | 0000000000        | 02               | 2020            |
+      | 1           | S0601258B  | 0000000000        | 04               | 2020            |
+      | 1           | S0036843A  | 0000000000        | 04               | 2020            |
+      | 1           | T7700475G  | 0000000000        | 05               | 2020            |
+      | 1           | T8255237A  | 0000000000        | 05               | 2020            |
+      | 1           | T6386446Z  | 0000000000        | 05               | 2020            |
+      | 1           | T2430411B  | 0000000000        | 05               | 2020            |
+      | 1           | T5874373E  | 0000000000        | 05               | 2020            |
+      | 1           | S3401364J  | 0000000000        | 05               | 2020            |
+      | 1           | S5478995E  | 0000000000        | 00               | 2019            |
+      | 1           | T4666665D  | 0000000000        | 02               | 2019            |
+      | 1           | T9287323J  | 0000000000        | 02               | 2019            |
+      | 1           | T6012487B  | 0000000000        | 02               | 2019            |
+      | 1           | G5262765L  | 0000000000        | 02               | 2019            |
+      | 1           | T1772613C  | 0000000000        | 02               | 2019            |
+      | 1           | S0601258B  | 0000888888        | 01               | 2019            |
+      | 1           | T5874373E  | 0000000000        | 01               | 2019            |
+      | 1           | S3401364J  | 0001200000        | 01               | 2019            |
+    When IRAS sends the IRAS_THRICE_MONTHLY_AI file to Datasource sftp for processing
+    Then the Iras Assessable Income batch job completes running with status BULK_CHECK_VALIDATION_ERROR
+    Then I update the IRAS_THRICE_MONTHLY_AI file received date to 20210722
+    And I re-run the batch job
+    Then the Iras Assessable Income batch job completes running with status CLEANUP
+    And I verify the following natural id's income status and value for year 2021 as of 20210722 are as follows:
+      | NATURAL_ID | ASSESSABLE_INCOME | STATUS             |
+      | S9431366Z  | 0000000000        | PENDING_ASSESSMENT |
+      | S4035558H  | 0000000000        | PENDING_ASSESSMENT |
+      | S8383595H  | 0000000000        | PENDING_ASSESSMENT |
+      | S5478995E  | 0000000000        | PENDING_ASSESSMENT |
+      | T4666665D  | 0001140050        | INCOME_ASSESSED    |
+      | T9287323J  | 0000000000        | PENDING_ASSESSMENT |
+      | S3592339Z  | 0000000000        | PENDING_ASSESSMENT |
+      | G8688152M  | 0000000000        | PENDING_ASSESSMENT |
+      | G5262765L  | 0000000000        | PENDING_ASSESSMENT |
+      | G4563228N  | 0000000000        | PENDING_ASSESSMENT |
+      | F6307232W  | 0000000000        | PENDING_ASSESSMENT |
+      | S0036843A  | 0001140050        | INCOME_ASSESSED    |
+    And I verify the following natural id's income status and value for year 2020 as of 20210722 are as follows:
+      | NATURAL_ID | ASSESSABLE_INCOME | STATUS             |
+      | T0491551D  | 0000000000        | INCOME_ASSESSED |
+      | S9431366Z  | 9999999999        | INCOME_ASSESSED    |
+      | S4035558H  | 0000000045        | INCOME_ASSESSED    |
+      | S5478995E  | 0000000051        | INCOME_ASSESSED    |
+      | T4666665D  | 0000000000        | PENDING_ASSESSMENT |
+      | T6012487B  | 0000000000        | PENDING_ASSESSMENT |
+      | S0601258B  | 0000000000        | PENDING_ASSESSMENT |
+      | S0036843A  | 0000000000        | PENDING_ASSESSMENT |
+      | T7700475G  | 0000000000        | PENDING_ASSESSMENT |
+      | T8255237A  | 0000000000        | PENDING_ASSESSMENT |
+      | T6386446Z  | 0000000000        | PENDING_ASSESSMENT |
+      | T2430411B  | 0000000000        | PENDING_ASSESSMENT |
+      | T5874373E  | 0000000000        | PENDING_ASSESSMENT |
+      | S3401364J  | 0000000000        | PENDING_ASSESSMENT |
+    And I verify the following natural id's income status and value for year 2020 as of 20210722 are as follows:
+      | NATURAL_ID | ASSESSABLE_INCOME | STATUS             |
+      | S5478995E  | 0000000000        | RECORD_NOT_FOUND   |
+      | T4666665D  | 0000000000        | PENDING_ASSESSMENT |
+      | T9287323J  | 0000000000        | PENDING_ASSESSMENT |
+      | T6012487B  | 0000000000        | PENDING_ASSESSMENT |
+      | G5262765L  | 0000000000        | PENDING_ASSESSMENT |
+      | T1772613C  | 0000000000        | PENDING_ASSESSMENT |
+      | S0601258B  | 0000888888        | INCOME_ASSESSED    |
+      | T5874373E  | 0000000000        | INCOME_ASSESSED    |
+      | S3401364J  | 0001200000        | INCOME_ASSESSED    |
+
+
+
+
+
+
+
+
+
+
 
