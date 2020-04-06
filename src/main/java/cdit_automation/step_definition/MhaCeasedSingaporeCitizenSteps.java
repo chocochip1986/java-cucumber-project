@@ -1,21 +1,25 @@
 package cdit_automation.step_definition;
 
+import cdit_automation.constants.TestConstants;
 import cdit_automation.data_helpers.batch_entities.MhaCeasedCitizenFileEntry;
+import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.enums.NationalityEnum;
 import cdit_automation.models.Nationality;
 import cdit_automation.models.PersonId;
 import cdit_automation.models.PersonName;
+import cdit_automation.utilities.StringUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
-import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.Ignore;
+
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.Ignore;
 
 @Slf4j
 @Ignore
@@ -28,13 +32,12 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
         dataTable.asMaps(String.class, String.class), testContext);
   }
 
-  @Given("the file has the following details:")
-  public void theFileHasTheFollowingDetails(DataTable dataTable) throws IOException {
-    batchFileDataWriter.begin(mhaBulkFileDataPrep.generateSingleHeader(), FileTypeEnum.MHA_CEASED_CITIZEN, null);
+  @Given("^the file has the following details with Header date of run (.*)$")
+  public void theFileHasTheFollowingDetails(String dateOption, DataTable dataTable) {
 
-    mhaCeasedCitizenFileDataPrep.createBodyOfTestScenarios(
-        dataTable.asMaps(String.class, String.class), testContext);
-    batchFileDataWriter.end();
+      batchFileDataWriter.begin(getCeasedCitizenHeaderString(dateOption), FileTypeEnum.MHA_CEASED_CITIZEN, null);
+      mhaCeasedCitizenFileDataPrep.createBodyOfTestScenarios(dataTable.asMaps(String.class, String.class), testContext);
+      batchFileDataWriter.end();
   }
 
   @And("^I verify the the people listed in the file have nationality of (.*)$")
@@ -140,5 +143,51 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
       testAssert.assertEquals(dateUtils.endOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo).minusDays(1)),
               prevNationality.getBiTemporalData().getBusinessTemporalData().getValidTill(),
               personName+" ("+personId.getNaturalId()+") did not end his/her singaporean nationality on "+dateUtils.endOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo).minusDays(1)));
+    }
+
+    @And("^MHA sends a ceased citizenship file stating that ([a-z_]+) renounced (?:her|his) citizenship (\\d+) days ago$")
+    public void mhaSendsACeasedCitizenshipFileStatingThatPersonRenouncedHisCitizenshipDaysAgo(String personName, int ceasedSCdaysAgo) {
+      PersonId personId = testContext.get(personName);
+      LocalDate ceassationDate = dateUtils.daysBeforeToday(ceasedSCdaysAgo);
+
+      batchFileDataWriter.begin(mhaCeasedCitizenFileDataPrep.generateSingleHeader(), FileTypeEnum.MHA_CEASED_CITIZEN, null);
+      MhaCeasedCitizenFileEntry mhaCeasedCitizenFileEntry = new MhaCeasedCitizenFileEntry(personId.getNaturalId(), personName, NationalityEnum.US.getValue(), ceassationDate);
+      batchFileDataWriter.chunkOrWrite(mhaCeasedCitizenFileEntry.toString());
+      batchFileDataWriter.end();
+    }
+
+    @And("^([a-z_]+) is a non singaporean since (\\d+) days ago$")
+    public void personIsANonSingaporeanSinceDaysAgo(String personName, int daysAgo) {
+      PersonId personId = testContext.get(personName);
+
+      Nationality curNationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
+      testAssert.assertEquals(NationalityEnum.NON_SINGAPORE_CITIZEN, curNationality.getNationality(), "Person with "+personId.getNaturalId()+" is not a non-singaporean");
+      Date expectedValidFrom = new Date(dateUtils.beginningOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo)).getTime());
+      testAssert.assertEquals(expectedValidFrom, curNationality.getBiTemporalData().getBusinessTemporalData().getValidFrom(), "Person with "+personId.getNaturalId()+" is not a non-singaporean from "+expectedValidFrom.toString());
+
+    }
+
+    private String getCeasedCitizenHeaderString(String dateOption) {
+
+        String headerString;
+
+        switch (dateOption.toUpperCase()) {
+            case TestConstants.OPTION_VALID:
+                headerString = mhaBulkFileDataPrep.generateSingleHeader();
+                break;
+            case TestConstants.OPTION_SPACES:
+                headerString = StringUtils.rightPad(StringUtils.SPACE, 8);
+                break;
+            case TestConstants.OPTION_BLANK:
+                headerString = StringUtils.EMPTY_STRING;
+                break;
+            case TestConstants.OPTION_FUTURE_DATE:
+                headerString = Phaker.validFutureDate().format(dateUtils.DATETIME_FORMATTER_YYYYMMDD);
+                break;
+            default:
+                headerString = dateOption;
+        }
+
+        return headerString;
     }
 }

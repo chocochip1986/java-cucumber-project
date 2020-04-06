@@ -1,5 +1,6 @@
 package cdit_automation.data_helpers.factories;
 
+import cdit_automation.constants.Constants;
 import cdit_automation.constants.TestConstants;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.GenderEnum;
@@ -14,6 +15,8 @@ import cdit_automation.models.PersonId;
 import cdit_automation.models.PersonName;
 import cdit_automation.models.embeddables.BiTemporalData;
 import cdit_automation.models.embeddables.BusinessTemporalData;
+
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -145,6 +148,21 @@ public class PersonFactory extends AbstractFactory {
         batchRepo.save(batch);
         nationalityRepo.save(nationality);
         nationalityRepo.save(newNationality);
+        return personId;
+    }
+
+    public PersonId createSCTurnDualCitizen(String name, LocalDate birthDate, LocalDate runDate) {
+        PersonId personId = createNewSCPersonId(birthDate, name);
+        Nationality prevNationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
+        Date newValidTill = new Date(dateUtils.endOfDayToTimestamp(runDate.minusDays(1l)).getTime());
+        nationalityRepo.updateValidTill(newValidTill, prevNationality.getId());
+
+        Batch batch = Batch.createCompleted();
+        BiTemporalData biTemporalData = BiTemporalData.create(dateUtils.beginningOfDayToTimestamp(runDate), Timestamp.valueOf(Constants.INFINITE_LOCAL_DATE_TIME));
+        Nationality curNationality = Nationality.create(batch, personId.getPerson(), NationalityEnum.DUAL_CITIZENSHIP, biTemporalData);
+
+        batchRepo.save(batch);
+        nationalityRepo.save(curNationality);
         return personId;
     }
 

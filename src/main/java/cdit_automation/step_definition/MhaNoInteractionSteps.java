@@ -8,6 +8,7 @@ import cdit_automation.models.FileReceived;
 import cdit_automation.models.Person;
 import cdit_automation.models.PersonId;
 import cdit_automation.models.PersonStatus;
+import cdit_automation.utilities.CommonUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -149,8 +150,7 @@ public class MhaNoInteractionSteps extends AbstractSteps {
   private void addToListIfNotNull(List<String> writeToFileList, String detailString) {
       
       if (detailString != null) {
-          writeToFileList.add(
-                  mhaNoInteractionFileDataPrep.emptyStringIfInputIsKeywordBlank(detailString));
+          writeToFileList.add(CommonUtils.emptyStringIfInputIsKeywordBlank(detailString));
       }
   }
 }

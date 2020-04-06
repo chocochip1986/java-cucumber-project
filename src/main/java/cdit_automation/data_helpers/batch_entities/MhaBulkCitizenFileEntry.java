@@ -110,7 +110,7 @@ public class MhaBulkCitizenFileEntry {
         + StringUtils.rightPad(this.fin, 9, StringUtils.SPACE)
         + StringUtils.rightPad(this.name, 66, StringUtils.SPACE)
         + StringUtils.rightPad(this.dateOfBirth, 8)
-        + StringUtils.rightPad(this.dateOfDeath, 8)
+        + StringUtils.rightPad(this.dateOfDeath, 8, StringUtils.SPACE)
         + StringUtils.rightPad(this.gender, 1)
         + StringUtils.rightPad(this.addressIndicator, 1)
         + StringUtils.rightPad(this.addressType, 1)

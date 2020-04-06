@@ -168,7 +168,7 @@ public class AssessableIncomeSteps extends AbstractSteps {
                     + " WANT ["
                     + row.get("NATURAL_ID")
                     + "]");
-            
+
             testAssert.assertEquals(
                 persistedRecord.getAssessableIncome(),
                 new BigDecimal(row.get("ASSESSABLE_INCOME")),
@@ -178,7 +178,7 @@ public class AssessableIncomeSteps extends AbstractSteps {
                     + persistedRecord.getAssessableIncome()
                     + ", Want "
                     + row.get("ASSESSABLE_INCOME"));
-            
+
             testAssert.assertEquals(
                 persistedRecord.getAssessableIncomeStatus().getValue(),
                 row.get("STATUS"),
@@ -249,5 +249,12 @@ public class AssessableIncomeSteps extends AbstractSteps {
     dataRows.stream().forEach(row -> {
       irasAssessableIncomeFileDataPrep.turnOffAppealCase(row.get("NATURAL_ID"), row.get("YEAR"));
     });
+  }
+
+  @Given("MHA send MHA_DUAL_CITIZEN on {word} with the following data:")
+  public void mhaSendMHA_DUAL_CITIZENOnWithTheFollowingData(String dateStr, List<String> naturalIds) {
+    batchFileDataWriter.begin(dateStr, FileTypeEnum.MHA_DUAL_CITIZEN, null);
+    naturalIds.forEach(id -> batchFileDataWriter.chunkOrWrite(id));
+    batchFileDataWriter.end();
   }
 }
