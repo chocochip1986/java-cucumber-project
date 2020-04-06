@@ -24,6 +24,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Getter
@@ -67,6 +68,10 @@ public class PropertyValidated extends AbstractEntity {
 
     @Column(name = "new_postal_code")
     private String newPostalCode;
+
+    @Column(name = "street_code")
+    @Size(max = 6)
+    private String streetCode;
 
     @Column(name = "building_name")
     private String buildingName;
