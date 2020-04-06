@@ -324,4 +324,13 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         Nationality prevNationality = nationalityRepo.findNationalityByPerson(personId.getPerson(), validTill);
         testAssert.assertEquals(dateUtils.endOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo).minusDays(1l)), prevNationality.getBiTemporalData().getBusinessTemporalData().getValidTill(), "Person with "+personId.getNaturalId()+" did not end his/her previous nationality on "+validTill.toString());
     }
+
+    @Given("^([a-z_]+) who is (\\d+) years old converted to a dual citizen (\\d+) days ago$")
+    public void personConvertedToADualCitizenDaysAgo(String personName, int age, int daysAgo) {
+        LocalDate birthDate = dateUtils.yearsBeforeToday(age);
+        LocalDate runDate = dateUtils.daysBeforeToday(daysAgo);
+        PersonId personId = personFactory.createSCTurnDualCitizen(personName, birthDate, runDate);
+
+        testContext.set(personName, personId);
+    }
 }
