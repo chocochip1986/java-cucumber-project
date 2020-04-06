@@ -17,8 +17,12 @@ import cdit_automation.models.PropertyDetail;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.junit.Ignore;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -204,5 +208,20 @@ public class CommonSteps extends AbstractSteps {
 
         PropertyDetail propertyDetail = propertyDetailRepo.findByProperty(property);
         testAssert.assertNotNull(propertyDetail, "No property detail for "+personId.getNaturalId());
+    }
+
+    @And("^I will receive another file")
+    public void iWillReceiveAnotherFile() throws IOException {
+        File outputArtifactDir = new File(testManager.getOutputArtifactsDir().getFileName().toString());
+        String[] dirFiles;
+        if(outputArtifactDir.isDirectory()){
+            dirFiles = outputArtifactDir.list();
+            for (int i = 0; i < dirFiles.length; i++) {
+                File dirFile = new File(outputArtifactDir, dirFiles[i]);
+                if(!dirFile.isDirectory()){
+                    dirFile.delete();
+                }
+            }
+        }
     }
 }
