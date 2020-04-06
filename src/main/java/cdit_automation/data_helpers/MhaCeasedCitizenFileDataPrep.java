@@ -32,66 +32,80 @@ import org.springframework.stereotype.Component;
 @Component
 public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
 
+  private static final String SINGAPORE_CITIZEN = "SingaporeCitizen";
+  private static final String DUAL_CITIZEN = "DualCitizen";
+  private static final String CEASED_CITIZEN = "CeasedCitizen";
+  private static final String AVAILABLE_NRICS = "availableNrics";
+  private static final String PRESENT_CEASED_CITIZEN = "presentCeasedCitizen";
+  private static final String REPEATED_CEASED_CITIZEN = "RepeatedCeasedCitizen";
+  private static final String EMPTY_NAME = "EmptyName";
+  private static final String RENUNCIATION_DATE_AFTER_CUT_OFF = "RenunciationDateAfterCutOff";
+  private static final String AWARDED_SINGAPORE_CITIZEN = "AwardedSingaporeCitizen";
+  private static final String NUMBER_OF_DUPLICATION = "NumberOfDuplication";
+  private static final String NUMBER_OF_PARTIAL_DUPLICATION = "NumberOfPartialDuplication";
+  private static final String CEASED_CITIZEN_WITH_SG_COUNTRY_CODE = "CeasedCitizenWithSGCountryCode";
+  private static final String CEASED_CITIZEN_WHO_IS_NON_SG = "CeasedCitizenWhoIsNonSG";
+  
   private Random random = new Random();
   private BiTemporalData biTemporalData = new BiTemporalData();
 
   public void initDatabase(List<Map<String, String>> list, StepDefLevelTestContext testContext) {
     Map<String, String> map = list.get(0);
-    List<PersonId> scPersonIds = populateSCs(parseStringSize(map.get("SingaporeCitizen")));
-    List<PersonId> dcPersonIds = populateDCs(parseStringSize(map.get("DualCitizen")));
+    List<PersonId> scPersonIds = populateSCs(parseStringSize(map.get(SINGAPORE_CITIZEN)));
+    List<PersonId> dcPersonIds = populateDCs(parseStringSize(map.get(DUAL_CITIZEN)));
     List<String> availableNrics =
         Stream.concat(scPersonIds.stream(), dcPersonIds.stream())
             .map(PersonId::getNaturalId)
             .collect(Collectors.toList());
     List<CeasedCitizenValidated> ceasedCitizens =
-        populateCeasedCitizens(parseStringSize(map.get("CeasedCitizen")), availableNrics);
+        populateCeasedCitizens(parseStringSize(map.get(CEASED_CITIZEN)), availableNrics);
     List<String> usedNrics =
         ceasedCitizens.stream().map(CeasedCitizenValidated::getNric).collect(Collectors.toList());
     availableNrics.removeIf(usedNrics::contains);
 
-    testContext.set("availableNrics", availableNrics);
-    testContext.set("presentCeasedCitizen", ceasedCitizens);
+    testContext.set(AVAILABLE_NRICS, availableNrics);
+    testContext.set(PRESENT_CEASED_CITIZEN, ceasedCitizens);
   }
 
   public List<String> createBodyOfTestScenarios(
       List<Map<String, String>> list, StepDefLevelTestContext testContext) {
     Map<String, String> map = list.get(0);
     List<String> availableNrics =
-        testContext.get("availableNrics") == null
+        testContext.get(AVAILABLE_NRICS) == null
             ? new ArrayList<>()
-            : testContext.get("availableNrics");
+            : testContext.get(AVAILABLE_NRICS);
     List<CeasedCitizenValidated> presentCeasedCitizen =
-        testContext.get("presentCeasedCitizen") == null
+        testContext.get(PRESENT_CEASED_CITIZEN) == null
             ? new ArrayList<>()
-            : testContext.get("presentCeasedCitizen");
+            : testContext.get(PRESENT_CEASED_CITIZEN);
 
     List<MhaCeasedCitizenFileEntry> citizens =
-        getCitizens(parseStringSize(map.get("CeasedCitizen")), availableNrics);
+        getCitizens(parseStringSize(map.get(CEASED_CITIZEN)), availableNrics);
     List<MhaCeasedCitizenFileEntry> repeatedCitizens =
         getRepeatedCitizens(
-            parseStringSize(map.get("RepeatedCeasedCitizen")), presentCeasedCitizen);
+            parseStringSize(map.get(REPEATED_CEASED_CITIZEN)), presentCeasedCitizen);
     List<MhaCeasedCitizenFileEntry> emptyNameCitizens =
-        getEmptyNameCitizens(parseStringSize(map.get("EmptyName")));
+        getEmptyNameCitizens(parseStringSize(map.get(EMPTY_NAME)));
     List<MhaCeasedCitizenFileEntry> renunciationAfterCutOffDateCitizens =
         getRenunciationAfterCutOffDateCitizens(
-            parseStringSize(map.get("RenunciationDateAfterCutOff")));
+            parseStringSize(map.get(RENUNCIATION_DATE_AFTER_CUT_OFF)));
     List<MhaCeasedCitizenFileEntry> awardedCitizens =
-        getAwardedSCCitizens(parseStringSize(map.get("AwardedSingaporeCitizen")), availableNrics);
+        getAwardedSCCitizens(parseStringSize(map.get(AWARDED_SINGAPORE_CITIZEN)), availableNrics);
     List<MhaCeasedCitizenFileEntry> duplicateCitizens =
         getDuplicateCitizens(
-            parseStringSize(map.get("NumberOfDuplication")),
+            parseStringSize(map.get(NUMBER_OF_DUPLICATION)),
             Stream.concat(citizens.stream(), repeatedCitizens.stream())
                 .collect(Collectors.toList()));
     List<MhaCeasedCitizenFileEntry> partialDuplicateCitizens = 
         getPartialDuplicateCitizens(
-             parseStringSize(map.get("NumberOfPartialDuplication")),
+             parseStringSize(map.get(NUMBER_OF_PARTIAL_DUPLICATION)),
              Stream.concat(citizens.stream(), repeatedCitizens.stream())
                  .collect(Collectors.toList()));
     List<MhaCeasedCitizenFileEntry> ceasedCitizenWithSGCountryCode =
-        getCeasedCitizenWithSG(parseStringSize(map.get("CeasedCitizenWithSGCountryCode")));
+        getCeasedCitizenWithSG(parseStringSize(map.get(CEASED_CITIZEN_WITH_SG_COUNTRY_CODE)));
     List<MhaCeasedCitizenFileEntry> ceasedCitizenWhoIsNonSG =
         getCeasedCitizenWhoHasAForeignNationality(
-            parseStringSize(map.get("CeasedCitizenWhoIsNonSG")));
+            parseStringSize(map.get(CEASED_CITIZEN_WHO_IS_NON_SG)));
 
     List<MhaCeasedCitizenFileEntry> ceasedCitizens =
         Stream.of(

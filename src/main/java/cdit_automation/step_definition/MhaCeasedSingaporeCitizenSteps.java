@@ -191,5 +191,4 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
 
         return headerString;
     }
-
 }
