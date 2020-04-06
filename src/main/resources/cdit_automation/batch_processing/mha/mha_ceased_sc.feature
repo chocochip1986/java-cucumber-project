@@ -173,7 +173,8 @@ Feature: Data processing for Mha ceased citizenship
     And the error message contains <message>
     Examples:
       | dateOfRun   | message                                            | status                      |
-      | blank       | Must be in yyyyMMdd date format.                   | RAW_DATA_ERROR              |
+      | blank       | Wrong header length                                | FILE_ERROR                  |
+      | spaces      | Must be in yyyyMMdd date format.                   | RAW_DATA_ERROR              |
       | 12312020    | Must be in yyyyMMdd date format.                   | RAW_DATA_ERROR              |
       | futureDate  | Extraction date cannot be after File Received date | BULK_CHECK_VALIDATION_ERROR |
       | 20010229    | Must be in yyyyMMdd date format.                   | RAW_DATA_ERROR              |
@@ -182,21 +183,21 @@ Feature: Data processing for Mha ceased citizenship
       | 2001aBcD    | Must be in yyyyMMdd date format.                   | RAW_DATA_ERROR              |
       | 202010      | Wrong header length                                | FILE_ERROR                  |
 
-  @set_5 @wip
-  Scenario Outline: Mha send a ceased citizenship file with various types of nrics
-    Given the file has the following details with Header date of run valid
-      | EmptyName   |
-      | <nric>      |
-    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
-    Then the Mha Ceased Citizen batch job completes running with status <status>
-    And the error message contains <message>
-    Examples:
-      | nric        | message                                            | status                      |
-      | blank       | Must be in yyyyMMdd date format.                   | RAW_DATA_ERROR              |
-      | invalid     | Must be in yyyyMMdd date format.                   | RAW_DATA_ERROR              |
-      | S150163Z    | Extraction date cannot be after File Received date | BULK_CHECK_VALIDATION_ERROR |
-      | S5550000B   | Must be in yyyyMMdd date format.                   | RAW_DATA_ERROR              |
-      | S8880001Z   | Must be in yyyyMMdd date format.                   | RAW_DATA_ERROR              |
+#  @set_5 @wip
+#  Scenario Outline: Mha send a ceased citizenship file with various types of nrics
+#    Given the mha ceased citizen file contains the following details with Header date of run valid
+#      | Nric      | Name              | Nationality | Renunciation Date |
+#      | <nric>    |                   |             |                   |
+#    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
+#    Then the Mha Ceased Citizen batch job completes running with status <status>
+#    And the error message contains <message>
+#    Examples:
+#      | nric        | message                                            | status                      |
+#      | blank       | Must be in yyyyMMdd date format.                   | RAW_DATA_ERROR              |
+#      | invalid     | Must be in yyyyMMdd date format.                   | RAW_DATA_ERROR              |
+#      | S150163Z    | Extraction date cannot be after File Received date | BULK_CHECK_VALIDATION_ERROR |
+#      | S5550000B   | Must be in yyyyMMdd date format.                   | RAW_DATA_ERROR              |
+#      | S8880001Z   | Must be in yyyyMMdd date format.                   | RAW_DATA_ERROR              |
       
   @set_4 @wip
   Scenario: John ceased citizenship before he started becoming a dual citizen

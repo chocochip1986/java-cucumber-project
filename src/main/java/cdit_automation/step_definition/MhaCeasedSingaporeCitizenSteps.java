@@ -1,5 +1,6 @@
 package cdit_automation.step_definition;
 
+import cdit_automation.constants.TestConstants;
 import cdit_automation.data_helpers.batch_entities.MhaCeasedCitizenFileEntry;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.FileTypeEnum;
@@ -23,10 +24,6 @@ import java.util.Map;
 @Slf4j
 @Ignore
 public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
-
-  private static final String HEADER_OPTION_VALID = "valid";
-  private static final String HEADER_OPTION_BLANK = "blank";
-  private static final String HEADER_OPTION_FUTURE_DATE = "futureDate";
 
   @Given("the database populated with the following data:")
   public void theDatabasePopulatedWithTheFollowingData(DataTable dataTable) {
@@ -174,15 +171,17 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
 
         String headerString;
 
-        switch (dateOption) {
-
-            case HEADER_OPTION_VALID:
+        switch (dateOption.toUpperCase()) {
+            case TestConstants.OPTION_VALID:
                 headerString = mhaBulkFileDataPrep.generateSingleHeader();
                 break;
-            case HEADER_OPTION_BLANK:
+            case TestConstants.OPTION_SPACES:
                 headerString = StringUtils.rightPad(StringUtils.SPACE, 8);
                 break;
-            case HEADER_OPTION_FUTURE_DATE:
+            case TestConstants.OPTION_BLANK:
+                headerString = StringUtils.EMPTY_STRING;
+                break;
+            case TestConstants.OPTION_FUTURE_DATE:
                 headerString = Phaker.validFutureDate().format(dateUtils.DATETIME_FORMATTER_YYYYMMDD);
                 break;
             default:

@@ -14,6 +14,10 @@ import cdit_automation.models.PersonName;
 import cdit_automation.models.embeddables.BiTemporalData;
 import cdit_automation.models.embeddables.BusinessTemporalData;
 import cdit_automation.models.embeddables.DbTemporalData;
+import cdit_automation.utilities.StringUtils;
+import io.cucumber.datatable.DataTable;
+import org.springframework.stereotype.Component;
+
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,9 +29,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import io.cucumber.datatable.DataTable;
-import org.springframework.stereotype.Component;
 
 @Component
 public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
@@ -45,6 +46,11 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
   private static final String NUMBER_OF_PARTIAL_DUPLICATION = "NumberOfPartialDuplication";
   private static final String CEASED_CITIZEN_WITH_SG_COUNTRY_CODE = "CeasedCitizenWithSGCountryCode";
   private static final String CEASED_CITIZEN_WHO_IS_NON_SG = "CeasedCitizenWhoIsNonSG";
+
+  private static final String FIELD_NRIC = "nric";
+  private static final String FIELD_NAME = "name";
+  private static final String FIELD_NATIONALITY = "nationality";
+  private static final String FIELD_RENUNCIATION_DATE = "renunciation date";
   
   private Random random = new Random();
   private BiTemporalData biTemporalData = new BiTemporalData();
