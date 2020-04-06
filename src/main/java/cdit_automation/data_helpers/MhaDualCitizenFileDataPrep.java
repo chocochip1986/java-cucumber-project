@@ -50,11 +50,13 @@ public class MhaDualCitizenFileDataPrep extends BatchFileDataPrep {
 
     public List<String> createDuplicatedValidNricEntries(int numOfDuplicatedEntries) {
         List<String> duplicatedList = new ArrayList<>();
+        PersonId personId = personFactory.createNewSCPersonId();
+
         for ( int i = 0 ; i < numOfDuplicatedEntries ; i++ ) {
-            PersonId personId = personFactory.createNewSCPersonId();
             duplicatedList.addAll(new ArrayList<>(Arrays.asList(personId.getNaturalId(), personId.getNaturalId())));
             batchFileDataWriter.chunkOrWrite(personId.getNaturalId());
         }
+
         return duplicatedList;
     }
 

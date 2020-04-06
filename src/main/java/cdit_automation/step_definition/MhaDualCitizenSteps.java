@@ -3,7 +3,6 @@ package cdit_automation.step_definition;
 import cdit_automation.constants.Constants;
 import cdit_automation.constants.TestConstants;
 import cdit_automation.data_helpers.batch_entities.MhaDualCitizenFileEntry;
-import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.enums.NationalityEnum;
 import cdit_automation.exceptions.TestDataSetupErrorException;
@@ -27,7 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.jni.Local;
 import org.junit.Ignore;
 
 @Slf4j
@@ -170,20 +168,16 @@ public class MhaDualCitizenSteps extends AbstractSteps {
                 "No invalid nric error message found!");
     }
 
-    @Given("the mha dual citizen file have duplicate nric record")
-    public void theMhaDualCitizenFileHaveDuplicateNricRecord() throws IOException {
+    @Given("the mha dual citizen file has duplicate nric record")
+    public void theMhaDualCitizenFileHasDuplicateNricRecord(DataTable table) throws IOException {
         log.info("Creating an duplicate nric entry in MHA dual citizen file");
-
-        List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();
-        List<String> body = mhaDualCitizenFileDataPrep.createDuplicatedValidNricEntries();
-
-        listOfIdentifiersToWriteToFile.add(0, mhaDualCitizenFileDataPrep.generateDoubleHeader());
-        listOfIdentifiersToWriteToFile.addAll(body);
-        listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
-
-        batchFileCreator.writeToFile(FileTypeEnum.MHA_DUAL_CITIZEN.getValue().toLowerCase(), listOfIdentifiersToWriteToFile);
-
-        testContext.set("duplicateNric", body.get(0));
+        LocalDate runDate =  TestConstants.DEFAULT_EXTRACTION_DATE;
+        batchFileDataWriter.begin(runDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD), FileTypeEnum.MHA_DUAL_CITIZEN, null);
+        List<Map<String, String>> list = table.asMaps(String.class, String.class);
+        List<String> body = mhaDualCitizenFileDataPrep.bodyCreator(list, testContext);
+        testContext.set("listOfIdentifiersToWriteToFile", body);
+        testContext.set("runDate", runDate);
+        batchFileDataWriter.end();
     }
 
     @Given("the mha dual citizen file is empty")
