@@ -4,6 +4,7 @@ import cdit_automation.constants.Constants;
 import cdit_automation.constants.TestConstants;
 import cdit_automation.data_helpers.batch_entities.MhaDualCitizenFileEntry;
 import cdit_automation.enums.FileTypeEnum;
+import cdit_automation.enums.InvalidDateOfRunEnum;
 import cdit_automation.enums.NationalityEnum;
 import cdit_automation.exceptions.TestDataSetupErrorException;
 import cdit_automation.models.Batch;
@@ -326,5 +327,23 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         PersonId personId = personFactory.createSCTurnDualCitizen(personName, birthDate, runDate);
 
         testContext.set(personName, personId);
+    }
+
+    @Given("^the mha dual citizen file contains invalid date of run and date of run is (EMPTY|SPACE|INVALID_FORMAT|FUTURE_DATE)$")
+    public void theMhaDualCitizenFileContainsInvalidDateOfRunAndDateOfRunIs(InvalidDateOfRunEnum errorType) throws IOException{
+        log.info("Date of Run is {}", errorType);
+
+        List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();
+        List<String> body = new ArrayList<>();
+
+        String validNric = mhaDualCitizenFileDataPrep.createValidNric();
+        body.add(validNric);
+
+        listOfIdentifiersToWriteToFile.add(0, mhaDualCitizenFileDataPrep.generateInvalidSingleHeader(errorType));
+        listOfIdentifiersToWriteToFile.addAll(body);
+        listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
+
+        batchFileCreator.writeToFile(FileTypeEnum.MHA_DUAL_CITIZEN.getValue().toLowerCase(), listOfIdentifiersToWriteToFile);
+        testContext.set("validNric", validNric);
     }
 }

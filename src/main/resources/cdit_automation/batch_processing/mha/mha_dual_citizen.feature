@@ -102,3 +102,27 @@ Feature: Data processing for MHA dual citizenship
     Then the Mha Dual Citizen batch job completes running with status CLEANUP
     And there are no error messages
     Then jane is a singaporean from 5 days ago
+
+  @set_1
+  Scenario: MHA sends file with empty Date of Run
+    Given the mha dual citizen file contains invalid date of run and date of run is EMPTY
+    When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
+    And the Mha Dual Citizen batch job completes running with status FILE_ERROR
+
+  @set_2
+  Scenario: MHA sends file with empty spaces of Date of Run
+    Given the mha dual citizen file contains invalid date of run and date of run is SPACE
+    When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
+    And the Mha Dual Citizen batch job completes running with status RAW_DATA_ERROR
+
+  @set_3
+  Scenario: MHA sends file with invalid format for Date of Run
+    Given the mha dual citizen file contains invalid date of run and date of run is INVALID_FORMAT
+    When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
+    And the Mha Dual Citizen batch job completes running with status RAW_DATA_ERROR
+
+  @set_4
+  Scenario: MHA sends file with future date for Date of Run
+    Given the mha dual citizen file contains invalid date of run and date of run is FUTURE_DATE
+    When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
+    And the Mha Dual Citizen batch job completes running with status BULK_CHECK_VALIDATION_ERROR
