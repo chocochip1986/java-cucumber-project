@@ -1,8 +1,11 @@
 package cdit_automation.data_setup;
 
-import cdit_automation.enums.AddressIndicatorEnum;
 import cdit_automation.enums.GenderEnum;
 import com.github.javafaker.Faker;
+import com.google.common.base.Strings;
+import lombok.extern.slf4j.Slf4j;
+
+import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
@@ -14,15 +17,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Pattern;
-import javax.validation.constraints.Positive;
-
-import com.google.common.base.Strings;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class Phaker {
+
+    public static final String SG = "SG";
+    
     private static final String[] NRIC_FIRST_CHAR = {"S", "T"};
     private static final Map<String, String> NRIC_MAP = createNricMap();
     private static Set<String> usedValidNrics = new HashSet<>();
@@ -161,7 +162,7 @@ public class Phaker {
         String countryCode;
         do {
             countryCode = randomCountryCode();
-            if ( !countryCode.equals("SG")) {
+            if ( !countryCode.equals(SG)) {
                 break;
             }
         } while (true);

@@ -39,6 +39,14 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
       mhaCeasedCitizenFileDataPrep.createBodyOfTestScenarios(dataTable.asMaps(String.class, String.class), testContext);
       batchFileDataWriter.end();
   }
+  
+  @Given("^the mha ceased citizen file contains the following details with Header date of run (.*)$")
+  public void theMhaCeasedCitizenFileContainsFollowingDetails(String dateOption, DataTable dataTable) {
+
+      batchFileDataWriter.begin(getCeasedCitizenHeaderString(dateOption), FileTypeEnum.MHA_CEASED_CITIZEN, null);
+      mhaCeasedCitizenFileDataPrep.createBodyOfTestScenarios(dataTable.asMaps(String.class, String.class));
+      batchFileDataWriter.end();
+  }
 
   @And("^I verify the the people listed in the file have nationality of (.*)$")
   public void nationalityOfAllPersonShouldChangeToNON_SINGAPORE_CITIZEN(
@@ -64,9 +72,11 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
     ceasedCitizens.forEach(
         c -> {
           Date recordValidityDate =
-              dateUtils.localDateToDate(c.getCitizenRenunciationDate().minusDays(1));
+              dateUtils.localDateToDate(
+                      dateUtils.parse(c.getCitizenRenunciationDate()).minusDays(1));
           Timestamp expectedValidTill =
-              dateUtils.endOfDayToTimestamp(c.getCitizenRenunciationDate().minusDays(1));
+              dateUtils.endOfDayToTimestamp(
+                      dateUtils.parse(c.getCitizenRenunciationDate()).minusDays(1));
           PersonId p = personIdRepo.findByNaturalId(c.getNric());
           Nationality n =
               nationalityRepo.findNationalityByPerson(p.getPerson(), recordValidityDate);
@@ -89,7 +99,8 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
     ceasedCitizens.forEach(
         c -> {
           Timestamp expectedValidFrom =
-              dateUtils.beginningOfDayToTimestamp(c.getCitizenRenunciationDate());
+              dateUtils.beginningOfDayToTimestamp(
+                      dateUtils.parse(c.getCitizenRenunciationDate()));
           PersonId p = personIdRepo.findByNaturalId(c.getNric());
           Nationality n = nationalityRepo.findNationalityByPerson(p.getPerson());
           Timestamp actualValidFrom =
@@ -120,7 +131,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
                 .nric(personId.getNaturalId())
                 .name(personName1.getName())
                 .nationality(NationalityEnum.US.getValue())
-                .citizenRenunciationDate(dateUtils.daysBeforeToday(daysAgo))
+                .citizenRenunciationDate(dateUtils.daysBeforeToday(daysAgo).format(dateUtils.DATETIME_FORMATTER_YYYYMMDD))
                 .build();
         batchFileDataWriter.chunkOrWrite(mhaCeasedCitizenFileEntry.toString());
         batchFileDataWriter.end();
@@ -151,7 +162,8 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
       LocalDate ceassationDate = dateUtils.daysBeforeToday(ceasedSCdaysAgo);
 
       batchFileDataWriter.begin(mhaCeasedCitizenFileDataPrep.generateSingleHeader(), FileTypeEnum.MHA_CEASED_CITIZEN, null);
-      MhaCeasedCitizenFileEntry mhaCeasedCitizenFileEntry = new MhaCeasedCitizenFileEntry(personId.getNaturalId(), personName, NationalityEnum.US.getValue(), ceassationDate);
+      MhaCeasedCitizenFileEntry mhaCeasedCitizenFileEntry = 
+              new MhaCeasedCitizenFileEntry(personId.getNaturalId(), personName, NationalityEnum.US.getValue(), ceassationDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD));
       batchFileDataWriter.chunkOrWrite(mhaCeasedCitizenFileEntry.toString());
       batchFileDataWriter.end();
     }
@@ -173,7 +185,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
 
         switch (dateOption.toUpperCase()) {
             case TestConstants.OPTION_VALID:
-                headerString = mhaBulkFileDataPrep.generateSingleHeader();
+                headerString = mhaBulkFileDataPrep.generateSingleHeader(LocalDate.now());
                 break;
             case TestConstants.OPTION_SPACES:
                 headerString = StringUtils.rightPad(StringUtils.SPACE, 8);
