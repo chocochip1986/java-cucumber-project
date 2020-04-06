@@ -1,6 +1,7 @@
 package cdit_automation.data_helpers;
 
 import cdit_automation.configuration.StepDefLevelTestContext;
+import cdit_automation.constants.TestConstants;
 import cdit_automation.data_helpers.batch_entities.MhaCeasedCitizenFileEntry;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.FileTypeEnum;
@@ -14,6 +15,7 @@ import cdit_automation.models.PersonName;
 import cdit_automation.models.embeddables.BiTemporalData;
 import cdit_automation.models.embeddables.BusinessTemporalData;
 import cdit_automation.models.embeddables.DbTemporalData;
+import cdit_automation.utilities.CommonUtils;
 import cdit_automation.utilities.StringUtils;
 import io.cucumber.datatable.DataTable;
 import org.springframework.stereotype.Component;
@@ -47,10 +49,10 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
   private static final String CEASED_CITIZEN_WITH_SG_COUNTRY_CODE = "CeasedCitizenWithSGCountryCode";
   private static final String CEASED_CITIZEN_WHO_IS_NON_SG = "CeasedCitizenWhoIsNonSG";
 
-  private static final String FIELD_NRIC = "nric";
-  private static final String FIELD_NAME = "name";
-  private static final String FIELD_NATIONALITY = "nationality";
-  private static final String FIELD_RENUNCIATION_DATE = "renunciation date";
+  private static final String FIELD_NRIC = "Nric";
+  private static final String FIELD_NAME = "Name";
+  private static final String FIELD_NATIONALITY = "Nationality";
+  private static final String FIELD_CESSATION_DATE = "Cessation Date";
   
   private Random random = new Random();
   private BiTemporalData biTemporalData = new BiTemporalData();
@@ -131,6 +133,23 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
     return ceasedCitizens.stream()
         .map(MhaCeasedCitizenFileEntry::toString)
         .collect(Collectors.toList());
+  }
+
+  public void createBodyOfTestScenarios(List<Map<String, String>> listOfScenarios) {
+
+    for (Map<String, String> scenario: listOfScenarios) {
+      
+      MhaCeasedCitizenFileEntry mhaCeasedCitizenFileEntry = 
+              MhaCeasedCitizenFileEntry
+                      .builder()
+                      .nric(CommonUtils.nricFieldOptions(scenario.get(FIELD_NRIC)))
+                      .name(CommonUtils.nameFieldOptions(scenario.get(FIELD_NAME)))
+                      .nationality(nationalityFieldOptions(scenario.get(FIELD_NATIONALITY)))
+                      .citizenRenunciationDate(renunciationDateFieldOptions(scenario.get(FIELD_CESSATION_DATE)))
+                      .build();
+      
+      batchFileDataWriter.chunkOrWrite(mhaCeasedCitizenFileEntry.toString());
+    }
   }
 
   public List<PersonId> populateSCs(int numOfRecords) {
@@ -283,7 +302,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
               .nric(nric.isEmpty() ? Phaker.validNric() : nric)
               .name(Phaker.validName())
               .nationality(Phaker.randomNonSGCountryCode())
-              .citizenRenunciationDate(dateUtils.daysBeforeToday(15))
+              .citizenRenunciationDate(dateUtils.daysBeforeToday(15).format(dateUtils.DATETIME_FORMATTER_YYYYMMDD))
               .build();
       batchFileDataWriter.chunkOrWrite(mhaCeasedCitizenFileEntry.toString());
       resultList.add(mhaCeasedCitizenFileEntry);
@@ -302,7 +321,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
               .nric(ceasedCitizens.get(i).getNric())
               .name(ceasedCitizens.get(i).getName())
               .nationality(Phaker.randomNonSGCountryCode())
-              .citizenRenunciationDate(dateUtils.daysBeforeToday(15))
+              .citizenRenunciationDate(dateUtils.daysBeforeToday(15).format(dateUtils.DATETIME_FORMATTER_YYYYMMDD))
               .build();
       batchFileDataWriter.chunkOrWrite(mhaCeasedCitizenFileEntry.toString());
       resultList.add(mhaCeasedCitizenFileEntry);
@@ -324,7 +343,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
               .nric(personId.getNaturalId())
               .name(personName.getName())
               .nationality(Phaker.randomNonSGCountryCode())
-              .citizenRenunciationDate(dateUtils.daysBeforeToday(6))
+              .citizenRenunciationDate(dateUtils.daysBeforeToday(6).format(dateUtils.DATETIME_FORMATTER_YYYYMMDD))
               .build();
       batchFileDataWriter.chunkOrWrite(mhaCeasedCitizenFileEntry.toString());
       resultList.add(mhaCeasedCitizenFileEntry);
@@ -342,7 +361,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
               .nric(personId.getNaturalId())
               .name(personName.getName())
               .nationality("SG")
-              .citizenRenunciationDate(dateUtils.daysBeforeToday(6))
+              .citizenRenunciationDate(dateUtils.daysBeforeToday(6).format(dateUtils.DATETIME_FORMATTER_YYYYMMDD))
               .build();
       batchFileDataWriter.chunkOrWrite(mhaCeasedCitizenFileEntry.toString());
       resultList.add(mhaCeasedCitizenFileEntry);
@@ -358,7 +377,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
               .nric(Phaker.validNric())
               .name("")
               .nationality(Phaker.randomNonSGCountryCode())
-              .citizenRenunciationDate(dateUtils.daysBeforeToday(6))
+              .citizenRenunciationDate(dateUtils.daysBeforeToday(6).format(dateUtils.DATETIME_FORMATTER_YYYYMMDD))
               .build();
       batchFileDataWriter.chunkOrWrite(mhaCeasedCitizenFileEntry.toString());
       resultList.add(mhaCeasedCitizenFileEntry);
@@ -374,7 +393,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
               .nric(Phaker.validNric())
               .name(Phaker.validName())
               .nationality(Phaker.randomNonSGCountryCode())
-              .citizenRenunciationDate(dateUtils.daysBeforeToday(4))
+              .citizenRenunciationDate(dateUtils.daysBeforeToday(4).format(dateUtils.DATETIME_FORMATTER_YYYYMMDD))
               .build();
       batchFileDataWriter.chunkOrWrite(mhaCeasedCitizenFileEntry.toString());
       resultList.add(mhaCeasedCitizenFileEntry);
@@ -399,7 +418,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
               .nric(nric.isEmpty() ? Phaker.validNric() : nric)
               .name(Phaker.validName())
               .nationality("SG")
-              .citizenRenunciationDate(dateUtils.daysBeforeToday(6))
+              .citizenRenunciationDate(dateUtils.daysBeforeToday(6).format(dateUtils.DATETIME_FORMATTER_YYYYMMDD))
               .build();
       batchFileDataWriter.chunkOrWrite(mhaCeasedCitizenFileEntry.toString());
       resultList.add(mhaCeasedCitizenFileEntry);
@@ -439,7 +458,9 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
                   // randomize name & renunciation date
                   dup.setName(Phaker.validName());
                   dup.setCitizenRenunciationDate(
-                          dateUtils.yearsBeforeDate(dup.getCitizenRenunciationDate(), random.nextInt(10)));
+                          dateUtils.yearsBeforeDate(
+                                  dateUtils.parse(dup.getCitizenRenunciationDate()), random.nextInt(10))
+                                  .format(dateUtils.DATETIME_FORMATTER_YYYYMMDD));
                   
                   batchFileDataWriter.chunkOrWrite(dup.toString());
                 }
@@ -461,5 +482,47 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
     batchFileDataWriter.begin(generateSingleHeader(localDate), FileTypeEnum.MHA_CEASED_CITIZEN, 10);
     entries.forEach(entry -> batchFileDataWriter.chunkOrWrite(entry));
     batchFileDataWriter.end();
+  }
+
+  private String nationalityFieldOptions(String option) {
+
+    String nationality;
+
+    switch (option.toUpperCase()) {
+      case TestConstants.OPTION_VALID:
+        nationality = Phaker.randomNonSGCountryCode();
+        break;
+      case TestConstants.OPTION_INVALID:
+        nationality = Phaker.SG;
+        break;
+      default:
+        nationality = option;
+    }
+
+    return nationality;
+  }
+
+  private String renunciationDateFieldOptions(String dateOption) {
+
+    String renunciationDate;
+
+    switch (dateOption.toUpperCase()) {
+      case TestConstants.OPTION_VALID:
+        renunciationDate = dateUtils.now().format(dateUtils.DATETIME_FORMATTER_YYYYMMDD);
+        break;
+      case TestConstants.OPTION_SPACES:
+        renunciationDate = StringUtils.rightPad(StringUtils.SPACE, 8);
+        break;
+      case TestConstants.OPTION_BLANK:
+        renunciationDate = StringUtils.EMPTY_STRING;
+        break;
+      case TestConstants.OPTION_FUTURE_DATE:
+        renunciationDate = Phaker.validFutureDate().format(dateUtils.DATETIME_FORMATTER_YYYYMMDD);
+        break;
+      default:
+        renunciationDate = dateOption;
+    }
+
+    return renunciationDate;
   }
 }

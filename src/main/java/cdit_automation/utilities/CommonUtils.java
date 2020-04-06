@@ -2,7 +2,6 @@ package cdit_automation.utilities;
 
 import cdit_automation.constants.TestConstants;
 import cdit_automation.data_setup.Phaker;
-import cdit_automation.exceptions.TestFailException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -17,11 +16,11 @@ public class CommonUtils {
         return detailString;
     }
 
-    public static String nricFieldOptions(String nricOption) {
+    public static String nricFieldOptions(String option) {
 
-        String nricValue = "";
+        String nricValue;
 
-        switch(nricOption.toUpperCase()) {
+        switch(option.toUpperCase()) {
             case TestConstants.OPTION_VALID:
                 nricValue = Phaker.validNric();
                 break;
@@ -35,12 +34,28 @@ public class CommonUtils {
                 nricValue = StringUtils.EMPTY_STRING;
                 break;
             default:
-                if (nricOption.matches("^[STFG]\\d{7}[A-Z]$")) {
-                    nricValue = nricOption;
-                } else {
-                    throw new TestFailException("Unsupported option when building a file entry nric with following option: " + nricOption);
-                }
+                nricValue = option;
         }
         return nricValue;
+    }
+
+    public static String nameFieldOptions(String option) {
+
+        String name;
+
+        switch (option.toUpperCase()) {
+            case TestConstants.OPTION_VALID:
+                name = Phaker.validName();
+                break;
+            case TestConstants.OPTION_SPACES:
+                name = StringUtils.rightPad(StringUtils.SPACE, 66);
+                break;
+            case TestConstants.OPTION_BLANK:
+                name = StringUtils.EMPTY_STRING;
+                break;
+            default:
+                name = option;
+        }
+        return name;
     }
 }
