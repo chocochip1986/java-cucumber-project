@@ -11,6 +11,4 @@ public class TestConstants {
     public static final String OPTION_BLANK = "BLANK";
     public static final String OPTION_SPACES = "SPACES";
     public static final String OPTION_FUTURE_DATE = "FUTUREDATE";
-    
-    // Ceased Citizen specific constants
 }

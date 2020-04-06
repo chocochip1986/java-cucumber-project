@@ -78,7 +78,7 @@ Feature: Data processing for Mha ceased citizenship
     Then the Mha Ceased Citizen batch job completes running with status VALIDATED_TO_PREPARED_ERROR
     And I verify that the following error message appeared:
       | Message                                       | Count |
-      | Renunciation Date is after File Date of run. | 2     |
+      | Renunciation Date is after File Date of run.  | 2     |
 
   @set_7
   Scenario: Mha send a ceased citizenship file for processing
@@ -177,7 +177,7 @@ Feature: Data processing for Mha ceased citizenship
       | dateOfRun   | message                                            | count | status                      |
       | blank       | Wrong header length                                | 1     | FILE_ERROR                  |
       | spaces      | Must be in yyyyMMdd date format.                   | 1     | RAW_DATA_ERROR              |
-      | 12312020    | Must be in yyyyMMdd date format.                   | 1     | RAW_DATA_ERROR              |
+      | invalid     | Must be in yyyyMMdd date format.                   | 1     | RAW_DATA_ERROR              |
       | futureDate  | Extraction date cannot be after File Received date | 1     | BULK_CHECK_VALIDATION_ERROR |
       | 20010229    | Must be in yyyyMMdd date format.                   | 1     | RAW_DATA_ERROR              |
       | 199901 1    | Must be in yyyyMMdd date format.                   | 1     | RAW_DATA_ERROR              |
@@ -202,7 +202,45 @@ Feature: Data processing for Mha ceased citizenship
       | S150163Z    | size must be between 9 and 9                   | 1     | RAW_DATA_ERROR |
       | S5550000B   | Must be valid NRIC in format [S/T]1234567[A-Z] | 1     | RAW_DATA_ERROR |
       | S8880001Z   | Must be valid NRIC in format [S/T]1234567[A-Z] | 1     | RAW_DATA_ERROR |
-      
+
+  @set_6 @defect
+  Scenario Outline: Mha send a ceased citizenship file with various types of nationality
+    Given the mha ceased citizen file contains the following details with Header date of run valid
+      | Nric        | Name        | Nationality   | Cessation Date   |
+      | valid       | valid       | <nationality> | valid            |
+    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
+    Then the Mha Ceased Citizen batch job completes running with status <status>
+    And I verify that the following error message appeared:
+      | Message     | Count   |
+      | <message>   | <count> |
+    Examples:
+      | nationality | message                                        | count | status         |
+      | spaces      | must not be blank                              | 1     | RAW_DATA_ERROR |
+      | S           | size must be between 2 and 2                   | 1     | RAW_DATA_ERROR |
+      | invalid     | Nationality must not be SG country code        | 1     | RAW_DATA_ERROR |
+      | 12          | Invalid Nationality                            | 1     | RAW_DATA_ERROR |
+      | !@          | Invalid Nationality                            | 1     | RAW_DATA_ERROR |
+    
+  @set_7
+  Scenario Outline: Mha send a ceased citizenship file with various types of cessation date
+    Given the mha ceased citizen file contains the following details with Header date of run valid
+      | Nric        | Name        | Nationality   | Cessation Date   |
+      | valid       | valid       | valid         | <cessation date> |
+    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
+    Then the Mha Ceased Citizen batch job completes running with status <status>
+    And I verify that the following error message appeared:
+      | Message     | Count   |
+      | <message>   | <count> |
+    Examples:
+      | cessation date | message                                        | count | status                      |
+      | invalid        | Invalid Citizen Renunciation Date.             | 1     | RAW_DATA_ERROR              |
+      | futureDate     | Renunciation Date is after File Date of run.   | 1     | VALIDATED_TO_PREPARED_ERROR |
+      | spaces         | Invalid Citizen Renunciation Date.             | 1     | RAW_DATA_ERROR              |
+      | 00000000       | Invalid Citizen Renunciation Date.             | 1     | RAW_DATA_ERROR              |
+      | 20020000       | Invalid Citizen Renunciation Date.             | 1     | RAW_DATA_ERROR              |
+      | 20010229       | Invalid Citizen Renunciation Date.             | 1     | RAW_DATA_ERROR              |
+      | 17990101       | Year value cannot be less than 1800            | 1     | RAW_DATA_ERROR              |
+
   @set_4 @wip
   Scenario: John ceased citizenship before he started becoming a dual citizen
     Given john who is 13 years old converted to a dual citizen 10 days ago

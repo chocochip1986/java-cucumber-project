@@ -393,7 +393,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
               .nric(Phaker.validNric())
               .name(Phaker.validName())
               .nationality(Phaker.randomNonSGCountryCode())
-              .citizenRenunciationDate(dateUtils.daysBeforeToday(4).format(dateUtils.DATETIME_FORMATTER_YYYYMMDD))
+              .citizenRenunciationDate(dateUtils.daysAfterToday(1).format(dateUtils.DATETIME_FORMATTER_YYYYMMDD))
               .build();
       batchFileDataWriter.chunkOrWrite(mhaCeasedCitizenFileEntry.toString());
       resultList.add(mhaCeasedCitizenFileEntry);
@@ -495,6 +495,9 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
       case TestConstants.OPTION_INVALID:
         nationality = Phaker.SG;
         break;
+      case TestConstants.OPTION_SPACES:
+        nationality = StringUtils.rightPad(StringUtils.SPACE, 2);
+        break;
       default:
         nationality = option;
     }
@@ -509,6 +512,9 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
     switch (dateOption.toUpperCase()) {
       case TestConstants.OPTION_VALID:
         renunciationDate = dateUtils.now().format(dateUtils.DATETIME_FORMATTER_YYYYMMDD);
+        break;
+      case TestConstants.OPTION_INVALID:
+        renunciationDate = dateUtils.now().format(dateUtils.DATETIME_FORMATTER_DDMMYYYY);
         break;
       case TestConstants.OPTION_SPACES:
         renunciationDate = StringUtils.rightPad(StringUtils.SPACE, 8);

@@ -185,7 +185,10 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
 
         switch (dateOption.toUpperCase()) {
             case TestConstants.OPTION_VALID:
-                headerString = mhaBulkFileDataPrep.generateSingleHeader(LocalDate.now());
+                headerString = mhaBulkFileDataPrep.generateSingleHeader(dateUtils.now());
+                break;
+            case TestConstants.OPTION_INVALID:
+                headerString = dateUtils.now().format(dateUtils.DATETIME_FORMATTER_DDMMYYYY);
                 break;
             case TestConstants.OPTION_SPACES:
                 headerString = StringUtils.rightPad(StringUtils.SPACE, 8);
