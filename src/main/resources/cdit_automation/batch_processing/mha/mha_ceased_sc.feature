@@ -181,4 +181,13 @@ Feature: Data processing for Mha ceased citizenship
       | 20011332    | Must be in yyyyMMdd date format.                   | RAW_DATA_ERROR              |
       | 2001aBcD    | Must be in yyyyMMdd date format.                   | RAW_DATA_ERROR              |
       | 202010      | Wrong header length                                | FILE_ERROR                  |
-      
+
+
+  @set_4 @wip
+  Scenario: John ceased citizenship before he started becoming a dual citizen
+    Given john who is 13 years old converted to a dual citizen 10 days ago
+    And MHA sends a ceased citizenship file stating that john renounced his citizenship 10 days ago
+    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
+    Then the Mha Ceased Citizen batch job completes running with status CLEANUP
+    And there are no error messages
+    And john is a non singaporean since 10 days ago
