@@ -28,7 +28,7 @@ Feature: Data processing for MHA dual citizenship
     | DuplicatedNrics |
     | 2               |
     When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
-    And the Mha Dual Citizen batch job completes running with status RAW_DATA_ERROR
+    And the Mha Dual Citizen batch job completes running with status CLEANUP
 
   @set_4
   Scenario: Test scenario
