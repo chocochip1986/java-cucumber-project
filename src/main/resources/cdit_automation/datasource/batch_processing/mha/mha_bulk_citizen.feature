@@ -75,6 +75,7 @@ Feature: Data processing for MHA bulk citizen file
     And the Mha Bulk batch job completes running with status CLEANUP
     Then the error message contains Completely Duplicate Record found
 
+  @set_7
   Scenario Outline: Datasource should not process file(s) with either invalid DateOfRun or CutOffDate
     Given the mha bulk file is created with DateOfRun <DateOfRun> and CutOffDate <CutOffDate> with one record
     When MHA sends the MHA_BULK_CITIZEN file to Datasource sftp for processing
@@ -93,23 +94,25 @@ Feature: Data processing for MHA bulk citizen file
       | CurrentDate + 1 | CurrentDate + 1 | BULK_CHECK_VALIDATION_ERROR | Extraction date cannot be after File Received date, Cut-off date cannot be after File Received date |
 #      | CurrentDate     | 20191231        | CLEANUP                     |                                                                                                     |
 
-  Scenario: Datasource should not process files(s) with invalid NRIC records
+  @set_8
+  Scenario Outline: Datasource should not process files(s) with invalid NRIC records
     Given MHA send MHA_BULK_CITIZEN file with the following data:
-      | NRIC      | FIN | NAME   | DOB      | DOD      | GENDER | ADDR_IND | ADDR_TYPE | ADDR   | INVALID_ADDR_TAG | CTZ_ATT_DATE |
-      | EMPTY     | -   | <AUTO> | 19881003 | 00000000 | M      | C        | C         | <AUTO> | -                | 19881003     |
-      | SPACE     | -   | <AUTO> | 19881003 | 00000000 | M      | C        | C         | <AUTO> | -                | 19881003     |
-      | S1234567A | -   | <AUTO> | 19881003 | 00000000 | M      | C        | C         | <AUTO> | -                | 19881003     |
-      | T494552B  | -   | <AUTO> | 19881003 | 00000000 | M      | C        | C         | <AUTO> | -                | 19881003     |
-      | t4945521B | -   | <AUTO> | 19881003 | 00000000 | M      | C        | C         | <AUTO> | -                | 19881003     |
-      | S4945521B | -   | <AUTO> | 19881003 | 00000000 | M      | C        | C         | <AUTO> | -                | 19881003     |
-      | S5550000B | -   | <AUTO> | 19881003 | 00000000 | M      | C        | C         | <AUTO> | -                | 19881003     |
-      | S8880001Z | -   | <AUTO> | 19881003 | 00000000 | M      | C        | C         | <AUTO> | -                | 19881003     |
+      | NRIC   | FIN   | NAME   | DOB   | DOD   | GENDER   | ADDR_IND   | ADDR_TYPE   | ADDR   | INVALID_ADDR_TAG   | CTZ_ATT_DATE   |
+      | <NRIC> | <FIN> | <NAME> | <DOB> | <DOD> | <GENDER> | <ADDR_IND> | <ADDR_TYPE> | <ADDR> | <INVALID_ADDR_TAG> | <CTZ_ATT_DATE> |
+
     When MHA sends the MHA_BULK_CITIZEN file to Datasource sftp for processing
-    Then the Mha Bulk Citizen batch job completes running with status ERROR_RATE_ERROR
-    And I verify that the following error message appeared:
-      | Message                                             | Count |
-      | Extraction date cannot be after File Received date. | 1     |
-      | Cut-off date cannot be after File Received date.    | 1     |
+    Then the Mha Bulk Citizen batch job completes running with status <BATCHSTATUS>
+    And the error message contains <ERROR_MESSAGE>
+
+    Examples:
+      | NRIC      | FIN | NAME   | DOB      | DOD | GENDER | ADDR_IND | ADDR_TYPE | ADDR   | INVALID_ADDR_TAG | CTZ_ATT_DATE | BATCHSTATUS                 | ERROR_MESSAGE                                           |
+      | -         | -   | <AUTO> | 19881003 | -   | M      | C        | C         | <AUTO> | -                | 19881003     | RAW_DATA_ERROR              | NRIC cannot be null/blank, size must be between 9 and 9 |
+      | S1234567A | -   | <AUTO> | 19881003 | -   | M      | C        | C         | <AUTO> | -                | 19881003     | BULK_CHECK_VALIDATION_ERROR | Invalid NRIC                                            |
+      | T494552B  | -   | <AUTO> | 19881003 | -   | M      | C        | C         | <AUTO> | -                | 19881003     | RAW_DATA_ERROR              | size must be between 9 and 9                            |
+      | t4945521B | -   | <AUTO> | 19881003 | -   | M      | C        | C         | <AUTO> | -                | 19881003     | BULK_CHECK_VALIDATION_ERROR | Invalid NRIC                                            |
+      | s4945521B | -   | <AUTO> | 19881003 | -   | M      | C        | C         | <AUTO> | -                | 19881003     | BULK_CHECK_VALIDATION_ERROR | Invalid NRIC                                            |
+      | S5550000B | -   | <AUTO> | 19881003 | -   | M      | C        | C         | <AUTO> | -                | 19881003     | BULK_CHECK_VALIDATION_ERROR | Invalid NRIC                                            |
+      | S8880001Z | -   | <AUTO> | 19881003 | -   | M      | C        | C         | <AUTO> | -                | 19881003     | BULK_CHECK_VALIDATION_ERROR | Invalid NRIC                                            |
 
   Scenario: Datasource should not process record(s) with same FIN
 
