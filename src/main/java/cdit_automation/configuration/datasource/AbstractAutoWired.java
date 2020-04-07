@@ -1,6 +1,6 @@
 package cdit_automation.configuration.datasource;
 
-import cdit_automation.api_helpers.ApiHelper;
+import cdit_automation.api_helpers.datasource.ApiHelper;
 import cdit_automation.asserts.Assert;
 import cdit_automation.aws.modules.S3;
 import cdit_automation.aws.modules.Slack;

@@ -1,6 +1,6 @@
 package cdit_automation.data_helpers.datasource;
 
-import cdit_automation.api_helpers.ApiHelper;
+import cdit_automation.api_helpers.datasource.ApiHelper;
 import cdit_automation.configuration.TestManager;
 import cdit_automation.repositories.datasource.FileDetailRepo;
 import cdit_automation.repositories.datasource.FileReceivedRepo;

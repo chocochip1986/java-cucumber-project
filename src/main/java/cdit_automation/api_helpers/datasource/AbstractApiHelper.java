@@ -1,4 +1,4 @@
-package cdit_automation.api_helpers;
+package cdit_automation.api_helpers.datasource;
 
 import cdit_automation.configuration.datasource.TestEnv;
 import cdit_automation.configuration.TestManager;
