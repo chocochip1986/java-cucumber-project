@@ -6,10 +6,12 @@ import cdit_automation.data_helpers.batch_entities.MhaChangePersonDetailsFileEnt
 import cdit_automation.data_helpers.batch_entities.MhaChangePersonDetailsFileEntryCatGender;
 import cdit_automation.data_helpers.batch_entities.MhaChangePersonDetailsFileEntryCatName;
 import cdit_automation.data_helpers.batch_entities.MhaChangePersonDetailsFileEntryCatUnsupported;
+import cdit_automation.data_helpers.factories.AddressFactory;
 import cdit_automation.data_helpers.factories.PersonFactory;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.GenderEnum;
 import cdit_automation.enums.PersonDetailDataItemChangedEnum;
+import cdit_automation.enums.automation.ResidencyEnum;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.PersonId;
 import java.time.LocalDate;
@@ -28,7 +30,73 @@ import org.springframework.stereotype.Component;
 public class MhaChangePersonDetailsDataPrep extends BatchFileDataPrep {
     private @Autowired AutowireCapableBeanFactory beanFactory;
 
+    private @Autowired AddressFactory addressFactory;
+
     HashMap<String, Character> nricCategoryMap;
+
+    public List<String> createDataFileForTestScenarios(List<Map<String, String>> listOfScenarios) {
+        List<String> body = new ArrayList<>();
+
+        for (Map<String, String> scenario : listOfScenarios) {
+            MhaChangePersonDetailsFileEntry mhaChangePersonDetailsFileEntry;
+            LocalDate dataItemChangeDate = createItemChangeDate(scenario.get("data_item_change_date"));
+            String nric = nricFieldOptions(scenario.get("nric"));
+
+            switch(scenario.get("data_item_change_category")) {
+                case "S": {
+                    mhaChangePersonDetailsFileEntry = new MhaChangePersonDetailsFileEntryCatGender(
+                            nric,
+                            scenario.get("data_item_change_value"),
+                            dataItemChangeDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD),
+                            scenario.get("data_item_change_category").charAt(0),
+                            null );
+                    break;
+                }
+                case "B": {
+                    mhaChangePersonDetailsFileEntry = new MhaChangePersonDetailsFileEntryCatBirthDate(
+                            nric,
+                            scenario.get("data_item_change_value"),
+                            dataItemChangeDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD),
+                            scenario.get("data_item_change_category").charAt(0),
+                            null);
+                    break;
+                }
+                case "N": {
+                    mhaChangePersonDetailsFileEntry = new MhaChangePersonDetailsFileEntryCatName(
+                            nric,
+                            scenario.get("data_item_change_value"),
+                            dataItemChangeDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD),
+                            scenario.get("data_item_change_category").charAt(0),
+                            null);
+                    break;
+                }
+                case "D":
+                    //NOT GOING TO SUPPORT DEATH DATE CHANGES
+                    // throw new TestFailException("Death Category will not supported!");
+                    // throw new TestFailException("Death Category will not supported!");
+                default:
+                    mhaChangePersonDetailsFileEntry = new MhaChangePersonDetailsFileEntryCatUnsupported(nric,
+                            scenario.get("data_item_change_value"),
+                            dataItemChangeDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD),
+                            scenario.get("data_item_change_category").charAt(0), null);
+                    log.info("Unsupported item change category: " + scenario.get("data_item_change_category"));
+            }
+
+//            beanFactory.autowireBean(mhaChangePersonDetailsFileEntry);
+//            if ( !mhaChangePersonDetailsFileEntry.isValid() ) {
+//                String errorMsg = "Error with Mha Change Person Details Data Entry: "+mhaChangePersonDetailsFileEntry.getNric();
+//                errorMsg += System.lineSeparator()+String.join(System.lineSeparator(), mhaChangePersonDetailsFileEntry.getErrorMessages());
+//                log.warn(errorMsg);
+//            }
+
+            batchFileDataWriter.chunkOrWrite(mhaChangePersonDetailsFileEntry.toString());
+
+            body.add(mhaChangePersonDetailsFileEntry.toString());
+        }
+
+        return body;
+    }
+
     public List<String> createBodyOfTestScenarios(List<Map<String, String>> listOfScenarios) {
         List<String> body = new ArrayList<>();
 
@@ -73,6 +141,9 @@ public class MhaChangePersonDetailsDataPrep extends BatchFileDataPrep {
                 case 'B':
                     LocalDate origBirthDate = dateUtils.parse(scenario.get("data_item_orig_value"));
                     personId = personFactory.createNewSCPersonId(origBirthDate, null, null, null, nric);
+
+                    addressFactory.createPropertyFor(personId.getPerson(), ResidencyEnum.RESIDENCE);
+
                     mhaChangePersonDetailsFileEntry = new MhaChangePersonDetailsFileEntryCatBirthDate(
                             nric,
                             scenario.get("data_item_change_value"),
@@ -115,6 +186,9 @@ public class MhaChangePersonDetailsDataPrep extends BatchFileDataPrep {
                 case 'B':
                     LocalDate origBirthDate = dateUtils.parse(scenario.get("data_item_orig_value"));
                     personId = personFactory.createPersonDetailIfNotCreated(nric, origBirthDate);
+
+                    addressFactory.createPropertyFor(personId.getPerson(), ResidencyEnum.RESIDENCE);
+
                     mhaChangePersonDetailsFileEntry = new MhaChangePersonDetailsFileEntryCatBirthDate(
                             nric,
                             scenario.get("data_item_change_value"),
