@@ -250,7 +250,7 @@ Feature: MHA Change address
       | nca                    | mha_c                 |
       | nca                    | nca                   |
 
-<<<<<<< HEAD:src/main/resources/cdit_automation/batch_processing/mha/mha_change_address.feature
+
 
     @set_6
     Scenario: john has same old and new address
@@ -270,8 +270,8 @@ Feature: MHA Change address
       And the Mha Change Address batch job completes running with status CLEANUP
       And there are no error messages
 
-=======
-  @set_6
+
+  @set_8
   Scenario: MHA sends two files which claims John moved from bbb to ccc and subsequently aaa to bbb
     Given A 30 year old singaporean person john resides a hdb property aaa
     Given A 30 year old singaporean person brandon resides a hdb property bbb
@@ -286,7 +286,7 @@ Feature: MHA Change address
     And the Mha Change Address batch job completes running with status CLEANUP
     Then john does not reside in aaa since 368 days ago
 
-  @set_6
+  @set_9
   Scenario: MHA sends two files which claims John moved from bbb to ccc and subsequently aaa to bbb
     Given A 30 year old singaporean person john resides a hdb property aaa
     Given A 30 year old singaporean person brandon resides a hdb property bbb
@@ -301,7 +301,7 @@ Feature: MHA Change address
     Then john does not reside in aaa since 368 days ago
 
 
-  @set7
+  @set10
   Scenario: MHA sends two files which claims John moved from aaa to bbb and subsequently bbb to ccc at an earlier date
     Given A 30 year old singaporean person john resides a hdb property aaa
     Given A 30 year old singaporean person brandon resides a hdb property bbb
@@ -313,5 +313,5 @@ Feature: MHA Change address
     And the mha change address file with date of run 20200102 contains information that john changed from (mha_z)bbb to (mha_z)ccc 367 days ago
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
     And the Mha Change Address batch job completes running with status MAPPED_DATA
->>>>>>> f072a0bdd4f04e5956313856354fe6834e7c4bed:src/main/resources/cdit_automation/datasource/batch_processing/mha/mha_change_address.feature
+
 
