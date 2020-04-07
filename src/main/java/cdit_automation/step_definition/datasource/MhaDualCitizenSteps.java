@@ -3,7 +3,7 @@ package cdit_automation.step_definition.datasource;
 import cdit_automation.constants.Constants;
 import cdit_automation.constants.ErrorMessageConstants;
 import cdit_automation.constants.TestConstants;
-import cdit_automation.data_helpers.batch_entities.MhaDualCitizenFileEntry;
+import cdit_automation.data_helpers.datasource.batch_entities.MhaDualCitizenFileEntry;
 import cdit_automation.enums.datasource.FileTypeEnum;
 import cdit_automation.enums.datasource.InvalidDateOfRunEnum;
 import cdit_automation.enums.datasource.InvalidNricEnum;

@@ -1,7 +1,7 @@
 package cdit_automation.step_definition.datasource;
 
 import cdit_automation.constants.TestConstants;
-import cdit_automation.data_helpers.batch_entities.MhaCeasedCitizenFileEntry;
+import cdit_automation.data_helpers.datasource.batch_entities.MhaCeasedCitizenFileEntry;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.datasource.FileTypeEnum;
 import cdit_automation.enums.datasource.NationalityEnum;
