@@ -62,12 +62,12 @@ public class Nationality extends AbstractEntity {
     @Embedded
     private BiTemporalData biTemporalData;
 
-    public static Nationality create(Batch batch, Person person, NationalityEnum nationalityEnum, BiTemporalData biTemporalData, Timestamp birthDate) {
-        return create(batch, person, nationalityEnum, biTemporalData, birthDate, null);
-    }
-
     public static Nationality create(Batch batch, Person person, NationalityEnum nationalityEnum, BiTemporalData biTemporalData) {
         return create(batch, person, nationalityEnum, biTemporalData, null, null);
+    }
+
+    public static Nationality create(Batch batch, Person person, NationalityEnum nationalityEnum, BiTemporalData biTemporalData, Timestamp citizenshipAttainmentDate) {
+        return create(batch, person, nationalityEnum, biTemporalData, citizenshipAttainmentDate, null);
     }
 
     public static Nationality create(Batch batch, Person person, NationalityEnum nationalityEnum, BiTemporalData biTemporalData, Timestamp citizenshipAttainmentDate, Timestamp citizenshipRenunciationDate) {

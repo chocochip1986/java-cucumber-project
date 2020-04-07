@@ -2,6 +2,7 @@ package cds_automation.step_definition.datasource;
 
 import cds_automation.enums.datasource.FileTypeEnum;
 import cds_automation.enums.datasource.MhaChangePersonDetailsEnum;
+import cds_automation.enums.datasource.PersonPropertyTypeEnum;
 import cds_automation.models.datasource.Gender;
 import cds_automation.models.datasource.PersonDetail;
 import cds_automation.models.datasource.PersonName;
@@ -46,6 +47,20 @@ public class MhaChangePersonDetailsSteps extends AbstractSteps {
     batchFileDataWriter.end();
   }
 
+  @Given("^the mha person details file is of the following contents:$")
+  public void theMhaPersonDetailsFileContainsTheFollowingContents(DataTable dataTable)
+    throws IOException{
+    batchFileDataWriter.begin(
+            mhaChangePersonDetailsDataPrep.generateSingleHeader(LocalDate.now().minusDays(2)),
+            FileTypeEnum.MHA_PERSON_DETAIL_CHANGE,
+            null);
+
+    List<Map<String, String>> list = dataTable.asMaps(String.class, String.class);
+    mhaChangePersonDetailsDataPrep.createDataFileForTestScenarios(list);
+
+    batchFileDataWriter.end();
+  }
+
   @Given("^the mha person details file is being created$")
   public void theMhaPersonDetailsFileIsBeingCreated() {
     batchFileDataWriter.begin(
@@ -86,6 +101,35 @@ public class MhaChangePersonDetailsSteps extends AbstractSteps {
     }
   }
 
+  @And("^the corresponding (Person_Detail|Person_Name|Person_Gender) record for person with nric ([ST]\\d{7}[A-Z]) now reflects new valid_from value ([\\d]{8})$")
+  public void theCorrespondingData_item_changed_catRecordForPersonWithNricNowReflectsTheNew_ValidFrom_Value(
+          MhaChangePersonDetailsEnum changedType, String nric, String newValue) {
+
+    Timestamp newValidFrom =
+            Timestamp.valueOf(
+                    LocalDate.parse(newValue, dateUtils.DATETIME_FORMATTER_YYYYMMDD).atStartOfDay());
+
+    if (changedType.equals(MhaChangePersonDetailsEnum.Person_Detail)) {
+      PersonDetail personDetail = personDetailRepo.findByNaturalId(nric);
+      testAssert.assertEquals(
+              newValidFrom,
+              personDetail.getBiTemporalData().getBusinessTemporalData().getValidFrom(),
+              "Person Detail valid_from has not been updated for nric: " + nric);
+    } else if (changedType.equals(MhaChangePersonDetailsEnum.Person_Name)) {
+      PersonName personName = personNameRepo.findByNaturalId(nric);
+      testAssert.assertEquals(
+              newValidFrom,
+              personName.getBiTemporalData().getBusinessTemporalData().getValidFrom(),
+              "Person Name valid_from has not been updated for nric: " + nric);
+    } else if (changedType.equals(MhaChangePersonDetailsEnum.Person_Gender)) {
+      Gender personGender = genderRepo.findByNaturalId(nric);
+      testAssert.assertEquals(
+              newValidFrom,
+              personGender.getBiTemporalData().getBusinessTemporalData().getValidFrom(),
+              "Gender valid_from has not been updated for nric: " + nric);
+    }
+  }
+
   @When("^the corresponding records for person with nric ([ST]\\d{7}[A-Z]) are now valid from the new value (.*)$")
   public void theCorrespondingRecordsForPersonAreNowValidFromTheNewValue(String nric, String newValue) {
     Timestamp newDob =
@@ -122,16 +166,26 @@ public class MhaChangePersonDetailsSteps extends AbstractSteps {
             .getBusinessTemporalData()
             .getValidFrom();
 
+    //PersonProperty ValidFrom
+    PersonDetail personDetail = personDetailRepo.findByNaturalId(nric);
+    Timestamp personPropertyValidFrom =
+            personPropertyRepo.findByPersonAndType(
+                    personDetail.getPerson(),
+                    PersonPropertyTypeEnum.RESIDENCE.toString())
+            .getIdentifier()
+            .getValidFrom();
+
     List<Timestamp> validFroms =
         Arrays.asList(
             personDetailValidFrom,
             personNameValidFrom,
             genderValidFrom,
             nationaltyValidFrom,
-            personIdValidFrom);
+            personIdValidFrom,
+            personPropertyValidFrom);
     for (Timestamp validFrom : validFroms) {
       testAssert.assertEquals(
-          validFrom, newDob, "'Valid from' in other tables has not been updated correctly");
+          newDob, validFrom, "'Valid from' in other tables has not been updated correctly");
     }
   }
 }

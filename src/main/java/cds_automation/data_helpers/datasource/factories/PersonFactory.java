@@ -321,7 +321,7 @@ public class PersonFactory extends AbstractFactory {
         PersonDetail personDetail = PersonDetail.create(batch, person, personOptions.getBirthDate(), personOptions.getDeathDate(), biTemporalData);
         Gender gender = Gender.create(personOptions.gender, person, batch, biTemporalData);
         PersonName personName = PersonName.create(batch, person, personOptions.getName(), biTemporalData);
-        Nationality nationality = Nationality.create(batch, person, personOptions.getNationality(), biTemporalData, dateUtils.beginningOfDayToTimestamp(personOptions.getBirthDate()));
+        Nationality nationality = Nationality.create(batch, person, personOptions.getNationality(), biTemporalData);
 
         batchRepo.save(batch);
         personRepo.save(person);

@@ -9,6 +9,7 @@ import cds_automation.enums.datasource.SpecialMappingEnum;
 import cds_automation.enums.automation.PropertyTypeEnum;
 import cds_automation.enums.automation.ResidencyEnum;
 import cds_automation.models.datasource.Batch;
+import cds_automation.models.datasource.Nationality;
 import cds_automation.models.datasource.Person;
 import cds_automation.models.datasource.PersonDetail;
 import cds_automation.models.datasource.PersonProperty;
@@ -54,6 +55,10 @@ public class AddressFactory extends AbstractFactory {
         }
     }
 
+    public PropertyDetail createPropertyFor(Person person, ResidencyEnum ownershipEnum) {
+        return createPropertyFor(person, ownershipEnum, PropertyTypeEnum.pick());
+    }
+
     public PropertyDetail createPropertyFor(Person person, ResidencyEnum ownershipEnum, PropertyTypeEnum propertyTypeEnum) {
         AddressOptions addressOptions = new AddressOptions(propertyTypeEnum, ownershipEnum);
         return createProperty(person, addressOptions);
@@ -62,8 +67,6 @@ public class AddressFactory extends AbstractFactory {
     public void createPersonPropertyWhenAddressExist(Person person, Property property, ResidencyEnum residencyEnum){
         Batch batch = Batch.builder().build();
         batchRepo.save(batch);
-        BiTemporalData biTemporalData = new BiTemporalData()
-                .generateNewBiTemporalData(dateUtils.beginningOfDayToTimestamp(retrieveBirthDate(person)));
 
         PersonPropertyId personPropertyId = PersonPropertyId.builder()
                 .personEntity(person)
@@ -89,7 +92,6 @@ public class AddressFactory extends AbstractFactory {
                 personPropertyRepo.save(PersonProperty.create(batch, personPropertyId, Timestamp.valueOf("9999-12-31 23:59:59")));
             }
         }
-
     }
 
     private PropertyDetail createProperty(Person person, AddressOptions addressOptions) {
@@ -99,10 +101,14 @@ public class AddressFactory extends AbstractFactory {
         Property property = Property.builder().build();
         PropertyDetail propertyDetail = createPropertyData(addressOptions, batch, property, biTemporalData);
 
+        Nationality nationality = nationalityRepo.findNationalityByPerson(person);
+
         PersonPropertyId personPropertyId = PersonPropertyId.builder()
                 .personEntity(person)
                 .propertyEntity(propertyDetail.getProperty())
-                .validFrom(dateUtils.beginningOfDayToTimestamp(retrieveBirthDate(person)))
+                .validFrom(nationality.getCitizenshipAttainmentDate() == null ?
+                        dateUtils.beginningOfDayToTimestamp(retrieveBirthDate(person)) :
+                        nationality.getCitizenshipAttainmentDate())
                 .type(PersonPropertyTypeEnum.OWNERSHIP)
                 .build();
 
