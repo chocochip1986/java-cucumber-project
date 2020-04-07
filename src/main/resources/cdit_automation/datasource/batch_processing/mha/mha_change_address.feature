@@ -315,8 +315,8 @@ Feature: MHA Change address
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
     And the Mha Change Address batch job completes running with status MAPPED_DATA
 
-  @set_1 @defect
-  Scenario: Given address indicator is MHA but Address format is NCA, and vice versa, the result expected to be pass instead of error?
+  @set_1
+  Scenario: Given address indicator is MHA but Address format is NCA, and vice versa
     Given A singaporean person john resides in a landed property abc
     Given A singaporean person jane resides in a landed property def
     And the mha change address file contains the following details:
