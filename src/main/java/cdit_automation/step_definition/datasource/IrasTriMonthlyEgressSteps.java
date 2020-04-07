@@ -1,12 +1,12 @@
 package cdit_automation.step_definition.datasource;
 
 import cdit_automation.exceptions.TestFailException;
-import cdit_automation.models.Income;
-import cdit_automation.models.Nationality;
-import cdit_automation.models.Person;
-import cdit_automation.models.PersonDetail;
-import cdit_automation.models.PersonId;
-import cdit_automation.models.PersonName;
+import cdit_automation.models.datasource.Income;
+import cdit_automation.models.datasource.Nationality;
+import cdit_automation.models.datasource.Person;
+import cdit_automation.models.datasource.PersonDetail;
+import cdit_automation.models.datasource.PersonId;
+import cdit_automation.models.datasource.PersonName;
 import cdit_automation.utilities.StringUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;

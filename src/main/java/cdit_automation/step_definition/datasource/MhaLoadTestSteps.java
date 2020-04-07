@@ -3,7 +3,7 @@ package cdit_automation.step_definition.datasource;
 import cdit_automation.data_helpers.datasource_file.mha.DataFields.FooterOfBodyCountField;
 import cdit_automation.data_helpers.datasource_file.mha.MhaBulkFile;
 import cdit_automation.data_helpers.datasource_file.mha.TestDataStruct.LoadTestData;
-import cdit_automation.enums.FileTypeEnum;
+import cdit_automation.enums.datasource.FileTypeEnum;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;

@@ -1,7 +1,7 @@
 package cdit_automation.step_definition.datasource;
 
 import cdit_automation.configuration.AbstractAutoWired;
-import cdit_automation.enums.FileTypeEnum;
+import cdit_automation.enums.datasource.FileTypeEnum;
 import io.cucumber.java.ParameterType;
 
 public class AbstractSteps extends AbstractAutoWired {

@@ -1,6 +1,6 @@
 package cdit_automation.data_helpers.factories;
 
-import cdit_automation.models.OldNcaAddress;
+import cdit_automation.models.datasource.OldNcaAddress;
 import org.springframework.stereotype.Component;
 
 @Component

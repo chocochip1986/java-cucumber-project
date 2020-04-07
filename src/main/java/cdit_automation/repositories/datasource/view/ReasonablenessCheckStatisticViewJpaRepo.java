@@ -1,6 +1,6 @@
 package cdit_automation.repositories.datasource.view;
 
-import cdit_automation.models.view.ReasonablenessCheckStatisticView;
+import cdit_automation.models.datasource.view.ReasonablenessCheckStatisticView;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

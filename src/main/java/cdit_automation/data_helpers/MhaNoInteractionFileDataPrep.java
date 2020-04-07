@@ -1,11 +1,11 @@
 package cdit_automation.data_helpers;
 
 import cdit_automation.data_helpers.batch_entities.MhaNoInteractionFileEntry;
-import cdit_automation.enums.PersonIdTypeEnum;
-import cdit_automation.models.Batch;
-import cdit_automation.models.Person;
-import cdit_automation.models.PersonId;
-import cdit_automation.models.embeddables.BiTemporalData;
+import cdit_automation.enums.datasource.PersonIdTypeEnum;
+import cdit_automation.models.datasource.Batch;
+import cdit_automation.models.datasource.Person;
+import cdit_automation.models.datasource.PersonId;
+import cdit_automation.models.datasource.embeddables.BiTemporalData;
 import cdit_automation.utilities.CommonUtils;
 import org.springframework.stereotype.Component;
 

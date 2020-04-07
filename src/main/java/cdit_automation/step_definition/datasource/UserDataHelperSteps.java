@@ -2,7 +2,7 @@ package cdit_automation.step_definition.datasource;
 
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.exceptions.TestFailException;
-import cdit_automation.models.PersonId;
+import cdit_automation.models.datasource.PersonId;
 import io.cucumber.java.en.Given;
 import java.time.LocalDate;
 import java.util.ArrayList;

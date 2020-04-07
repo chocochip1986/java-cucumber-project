@@ -1,10 +1,10 @@
 package cdit_automation.step_definition.datasource;
 
-import cdit_automation.enums.FileStatusEnum;
-import cdit_automation.enums.FileTypeEnum;
+import cdit_automation.enums.datasource.FileStatusEnum;
+import cdit_automation.enums.datasource.FileTypeEnum;
 import cdit_automation.exceptions.TestFailException;
-import cdit_automation.models.FileDetail;
-import cdit_automation.models.FileReceived;
+import cdit_automation.models.datasource.FileDetail;
+import cdit_automation.models.datasource.FileReceived;
 import io.cucumber.java.ParameterType;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;

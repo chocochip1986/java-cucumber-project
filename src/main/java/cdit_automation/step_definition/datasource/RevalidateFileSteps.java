@@ -1,10 +1,10 @@
 package cdit_automation.step_definition.datasource;
 
 import cdit_automation.configuration.AbstractAutoWired;
-import cdit_automation.enums.BatchStatusEnum;
-import cdit_automation.enums.FileTypeEnum;
-import cdit_automation.models.Batch;
-import cdit_automation.models.FileDetail;
+import cdit_automation.enums.datasource.BatchStatusEnum;
+import cdit_automation.enums.datasource.FileTypeEnum;
+import cdit_automation.models.datasource.Batch;
+import cdit_automation.models.datasource.FileDetail;
 import io.cucumber.java.en.Given;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;

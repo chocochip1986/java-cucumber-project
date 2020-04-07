@@ -1,7 +1,7 @@
 package cdit_automation.repositories.datasource;
 
-import cdit_automation.models.Property;
-import cdit_automation.models.PropertyDetail;
+import cdit_automation.models.datasource.Property;
+import cdit_automation.models.datasource.PropertyDetail;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

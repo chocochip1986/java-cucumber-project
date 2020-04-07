@@ -1,8 +1,8 @@
 package cdit_automation.repositories.datasource;
 
-import cdit_automation.models.Person;
-import cdit_automation.models.PersonProperty;
-import cdit_automation.models.Property;
+import cdit_automation.models.datasource.Person;
+import cdit_automation.models.datasource.PersonProperty;
+import cdit_automation.models.datasource.Property;
 import java.util.Date;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;

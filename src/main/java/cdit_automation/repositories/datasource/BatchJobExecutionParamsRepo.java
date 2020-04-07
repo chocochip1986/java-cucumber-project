@@ -1,7 +1,7 @@
 package cdit_automation.repositories.datasource;
 
 
-import cdit_automation.models.JobExecutionParams;
+import cdit_automation.models.datasource.JobExecutionParams;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

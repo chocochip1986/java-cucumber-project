@@ -1,13 +1,13 @@
 package cdit_automation.step_definition.datasource;
 
-import cdit_automation.enums.FileTypeEnum;
-import cdit_automation.enums.PersonStatusTypeEnum;
+import cdit_automation.enums.datasource.FileTypeEnum;
+import cdit_automation.enums.datasource.PersonStatusTypeEnum;
 import cdit_automation.exceptions.TestFailException;
-import cdit_automation.models.Batch;
-import cdit_automation.models.FileReceived;
-import cdit_automation.models.Person;
-import cdit_automation.models.PersonId;
-import cdit_automation.models.PersonStatus;
+import cdit_automation.models.datasource.Batch;
+import cdit_automation.models.datasource.FileReceived;
+import cdit_automation.models.datasource.Person;
+import cdit_automation.models.datasource.PersonId;
+import cdit_automation.models.datasource.PersonStatus;
 import cdit_automation.utilities.CommonUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;

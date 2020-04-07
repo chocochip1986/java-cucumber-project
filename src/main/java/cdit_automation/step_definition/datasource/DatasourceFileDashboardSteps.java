@@ -1,7 +1,7 @@
 package cdit_automation.step_definition.datasource;
 
 import cdit_automation.exceptions.TestFailException;
-import cdit_automation.models.FileReceived;
+import cdit_automation.models.datasource.FileReceived;
 import cdit_automation.pages.FilesDashBoardPage;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;

@@ -1,6 +1,6 @@
 package cdit_automation.repositories.datasource;
 
-import cdit_automation.models.BulkNcaAddressValidated;
+import cdit_automation.models.datasource.BulkNcaAddressValidated;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

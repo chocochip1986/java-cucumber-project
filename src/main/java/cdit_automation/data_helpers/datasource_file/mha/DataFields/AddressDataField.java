@@ -3,7 +3,7 @@ package cdit_automation.data_helpers.datasource_file.mha.DataFields;
 import cdit_automation.data_helpers.datasource_file.DataField;
 import cdit_automation.data_helpers.datasource_file.mha.DataFields.MhaAddress.MhaAddressField;
 import cdit_automation.data_helpers.datasource_file.mha.DataFields.NcaAddress.NcaAddressField;
-import cdit_automation.enums.AddressIndicatorEnum;
+import cdit_automation.enums.datasource.AddressIndicatorEnum;
 import lombok.experimental.SuperBuilder;
 
 @SuperBuilder

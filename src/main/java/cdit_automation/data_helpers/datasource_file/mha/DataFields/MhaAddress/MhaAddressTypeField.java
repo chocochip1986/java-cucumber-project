@@ -1,7 +1,7 @@
 package cdit_automation.data_helpers.datasource_file.mha.DataFields.MhaAddress;
 
 import cdit_automation.data_helpers.datasource_file.DataField;
-import cdit_automation.enums.MhaAddressTypeEnum;
+import cdit_automation.enums.datasource.MhaAddressTypeEnum;
 import com.google.common.base.Strings;
 import lombok.experimental.SuperBuilder;
 

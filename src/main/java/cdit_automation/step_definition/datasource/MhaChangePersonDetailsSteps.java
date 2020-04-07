@@ -1,10 +1,10 @@
 package cdit_automation.step_definition.datasource;
 
-import cdit_automation.enums.FileTypeEnum;
-import cdit_automation.enums.MhaChangePersonDetailsEnum;
-import cdit_automation.models.Gender;
-import cdit_automation.models.PersonDetail;
-import cdit_automation.models.PersonName;
+import cdit_automation.enums.datasource.FileTypeEnum;
+import cdit_automation.enums.datasource.MhaChangePersonDetailsEnum;
+import cdit_automation.models.datasource.Gender;
+import cdit_automation.models.datasource.PersonDetail;
+import cdit_automation.models.datasource.PersonName;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;

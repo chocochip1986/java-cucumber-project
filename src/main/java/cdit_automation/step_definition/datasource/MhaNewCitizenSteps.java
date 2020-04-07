@@ -2,12 +2,12 @@ package cdit_automation.step_definition.datasource;
 
 import cdit_automation.constants.Constants;
 import cdit_automation.data_setup.Phaker;
-import cdit_automation.enums.FileTypeEnum;
-import cdit_automation.enums.NationalityEnum;
-import cdit_automation.models.Batch;
-import cdit_automation.models.Nationality;
-import cdit_automation.models.PersonId;
-import cdit_automation.models.embeddables.BiTemporalData;
+import cdit_automation.enums.datasource.FileTypeEnum;
+import cdit_automation.enums.datasource.NationalityEnum;
+import cdit_automation.models.datasource.Batch;
+import cdit_automation.models.datasource.Nationality;
+import cdit_automation.models.datasource.PersonId;
+import cdit_automation.models.datasource.embeddables.BiTemporalData;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;

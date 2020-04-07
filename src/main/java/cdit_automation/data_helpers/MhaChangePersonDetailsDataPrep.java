@@ -6,12 +6,11 @@ import cdit_automation.data_helpers.batch_entities.MhaChangePersonDetailsFileEnt
 import cdit_automation.data_helpers.batch_entities.MhaChangePersonDetailsFileEntryCatGender;
 import cdit_automation.data_helpers.batch_entities.MhaChangePersonDetailsFileEntryCatName;
 import cdit_automation.data_helpers.batch_entities.MhaChangePersonDetailsFileEntryCatUnsupported;
-import cdit_automation.data_helpers.factories.PersonFactory;
 import cdit_automation.data_setup.Phaker;
-import cdit_automation.enums.GenderEnum;
-import cdit_automation.enums.PersonDetailDataItemChangedEnum;
+import cdit_automation.enums.datasource.GenderEnum;
+import cdit_automation.enums.datasource.PersonDetailDataItemChangedEnum;
 import cdit_automation.exceptions.TestFailException;
-import cdit_automation.models.PersonId;
+import cdit_automation.models.datasource.PersonId;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;

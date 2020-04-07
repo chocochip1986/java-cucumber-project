@@ -1,8 +1,8 @@
 package cdit_automation.step_definition.datasource;
 
-import cdit_automation.enums.FileTypeEnum;
+import cdit_automation.enums.datasource.FileTypeEnum;
 import cdit_automation.exceptions.TestFailException;
-import cdit_automation.models.Batch;
+import cdit_automation.models.datasource.Batch;
 import cdit_automation.pages.datasource.TrendingRecordsPage;
 import io.cucumber.java.en.Then;
 import java.util.List;

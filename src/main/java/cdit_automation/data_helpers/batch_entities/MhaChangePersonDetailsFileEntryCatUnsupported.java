@@ -1,6 +1,6 @@
 package cdit_automation.data_helpers.batch_entities;
 
-import cdit_automation.models.PersonId;
+import cdit_automation.models.datasource.PersonId;
 import cdit_automation.utilities.StringUtils;
 import java.util.ArrayList;
 import lombok.Getter;

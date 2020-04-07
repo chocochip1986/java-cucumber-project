@@ -1,7 +1,7 @@
 package cdit_automation.data_helpers;
 
 import cdit_automation.data_helpers.batch_entities.MhaNewCitizenFileEntry;
-import cdit_automation.enums.FileTypeEnum;
+import cdit_automation.enums.datasource.FileTypeEnum;
 import io.cucumber.datatable.DataTable;
 
 import java.time.LocalDate;

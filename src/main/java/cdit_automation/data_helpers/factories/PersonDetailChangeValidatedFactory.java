@@ -1,10 +1,10 @@
 package cdit_automation.data_helpers.factories;
 
 import cdit_automation.data_setup.Phaker;
-import cdit_automation.enums.PersonDetailDataItemChangedEnum;
+import cdit_automation.enums.datasource.PersonDetailDataItemChangedEnum;
 import cdit_automation.exceptions.TestFailException;
-import cdit_automation.models.Batch;
-import cdit_automation.models.PersonDetailChangeValidated;
+import cdit_automation.models.datasource.Batch;
+import cdit_automation.models.datasource.PersonDetailChangeValidated;
 import org.springframework.stereotype.Component;
 
 @Component

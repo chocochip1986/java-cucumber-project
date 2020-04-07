@@ -1,6 +1,6 @@
 package cdit_automation.aws.modules;
 
-import cdit_automation.enums.FileTypeEnum;
+import cdit_automation.enums.datasource.FileTypeEnum;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClientBuilder;

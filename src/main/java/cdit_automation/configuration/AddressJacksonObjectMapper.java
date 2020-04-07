@@ -1,6 +1,6 @@
 package cdit_automation.configuration;
 
-import cdit_automation.models.Address;
+import cdit_automation.models.datasource.Address;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;

@@ -1,9 +1,9 @@
 package cdit_automation.data_helpers;
 
 import cdit_automation.configuration.TestManager;
-import cdit_automation.enums.FileTypeEnum;
+import cdit_automation.enums.datasource.FileTypeEnum;
 import cdit_automation.exceptions.TestFailException;
-import cdit_automation.models.FileDetail;
+import cdit_automation.models.datasource.FileDetail;
 import cdit_automation.repositories.datasource.FileDetailRepo;
 import cdit_automation.utilities.FileUtils;
 import cdit_automation.utilities.StringUtils;

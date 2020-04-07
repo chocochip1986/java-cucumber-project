@@ -1,9 +1,9 @@
 package cdit_automation.data_helpers;
 
 import cdit_automation.data_setup.Phaker;
-import cdit_automation.enums.FileStatusEnum;
+import cdit_automation.enums.datasource.FileStatusEnum;
 import cdit_automation.exceptions.TestFailException;
-import cdit_automation.models.FileDetail;
+import cdit_automation.models.datasource.FileDetail;
 import java.io.File;
 import java.sql.Timestamp;
 import java.time.LocalDate;

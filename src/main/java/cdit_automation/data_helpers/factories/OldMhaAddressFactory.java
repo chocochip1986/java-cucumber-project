@@ -1,6 +1,6 @@
 package cdit_automation.data_helpers.factories;
 
-import cdit_automation.models.OldMhaAddress;
+import cdit_automation.models.datasource.OldMhaAddress;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,9 +1,9 @@
 package cdit_automation.pages.datasource;
 
-import cdit_automation.enums.FileTypeEnum;
-import cdit_automation.enums.ReasonablenessCheckDataItemEnum;
-import cdit_automation.models.Batch;
-import cdit_automation.models.ReasonablenessCheckStatistic;
+import cdit_automation.enums.datasource.FileTypeEnum;
+import cdit_automation.enums.datasource.ReasonablenessCheckDataItemEnum;
+import cdit_automation.models.datasource.Batch;
+import cdit_automation.models.datasource.ReasonablenessCheckStatistic;
 import cdit_automation.pages.AbstractPage;
 import java.util.List;
 import java.util.function.Supplier;

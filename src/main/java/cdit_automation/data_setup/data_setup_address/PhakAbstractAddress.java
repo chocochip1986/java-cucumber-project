@@ -1,8 +1,8 @@
 package cdit_automation.data_setup.data_setup_address;
 
 
-import cdit_automation.enums.HomeTypeEnum;
-import cdit_automation.enums.SpecialMappingEnum;
+import cdit_automation.enums.datasource.HomeTypeEnum;
+import cdit_automation.enums.datasource.SpecialMappingEnum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

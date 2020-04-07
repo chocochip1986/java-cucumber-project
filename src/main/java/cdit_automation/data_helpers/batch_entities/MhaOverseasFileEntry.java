@@ -1,6 +1,6 @@
 package cdit_automation.data_helpers.batch_entities;
 
-import cdit_automation.enums.MhaAddressTypeEnum;
+import cdit_automation.enums.datasource.MhaAddressTypeEnum;
 import cdit_automation.utilities.StringUtils;
 
 public class MhaOverseasFileEntry extends AddressFileEntry {

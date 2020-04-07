@@ -1,8 +1,8 @@
 package cdit_automation.data_helpers;
 
 import cdit_automation.exceptions.TestFailException;
-import cdit_automation.models.FileDetail;
-import cdit_automation.models.FileReceived;
+import cdit_automation.models.datasource.FileDetail;
+import cdit_automation.models.datasource.FileReceived;
 import cdit_automation.utilities.FileUtils;
 import java.io.BufferedWriter;
 import java.io.File;

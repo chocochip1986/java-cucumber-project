@@ -1,7 +1,7 @@
 package cdit_automation.pages;
 
-import cdit_automation.enums.BatchStatusEnum;
-import cdit_automation.models.Batch;
+import cdit_automation.enums.datasource.BatchStatusEnum;
+import cdit_automation.models.datasource.Batch;
 import java.util.Optional;
 import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;

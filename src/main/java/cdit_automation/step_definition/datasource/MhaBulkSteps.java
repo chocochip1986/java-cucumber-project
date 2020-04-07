@@ -1,7 +1,7 @@
 package cdit_automation.step_definition.datasource;
 
 import cdit_automation.data_helpers.batch_entities.MhaBulkCitizenFileEntry;
-import cdit_automation.enums.FileTypeEnum;
+import cdit_automation.enums.datasource.FileTypeEnum;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;

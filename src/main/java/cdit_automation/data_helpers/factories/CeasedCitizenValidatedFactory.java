@@ -1,7 +1,7 @@
 package cdit_automation.data_helpers.factories;
 
-import cdit_automation.models.Batch;
-import cdit_automation.models.CeasedCitizenValidated;
+import cdit_automation.models.datasource.Batch;
+import cdit_automation.models.datasource.CeasedCitizenValidated;
 import org.springframework.stereotype.Component;
 
 @Component

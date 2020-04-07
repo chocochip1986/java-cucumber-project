@@ -1,6 +1,6 @@
 package cdit_automation.step_definition.datasource;
 
-import cdit_automation.models.Address;
+import cdit_automation.models.datasource.Address;
 import cdit_automation.pages.GooglePage;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;

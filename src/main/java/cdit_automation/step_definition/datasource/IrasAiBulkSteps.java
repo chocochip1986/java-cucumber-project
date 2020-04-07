@@ -1,7 +1,7 @@
 package cdit_automation.step_definition.datasource;
 
 import cdit_automation.exceptions.TestFailException;
-import cdit_automation.models.PersonId;
+import cdit_automation.models.datasource.PersonId;
 import io.cucumber.java.en.Then;
 import java.io.File;
 import java.nio.file.Path;

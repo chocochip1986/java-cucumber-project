@@ -2,7 +2,7 @@ package cdit_automation.step_definition.datasource;
 
 import cdit_automation.data_helpers.datasource_file.mha.TestDataStruct.G1224TestData;
 import cdit_automation.data_helpers.datasource_file.mha.TestDataStruct.LoadTestData;
-import cdit_automation.enums.FileTypeEnum;
+import cdit_automation.enums.datasource.FileTypeEnum;
 import io.cucumber.core.api.TypeRegistry;
 import io.cucumber.core.api.TypeRegistryConfigurer;
 import io.cucumber.datatable.DataTableType;

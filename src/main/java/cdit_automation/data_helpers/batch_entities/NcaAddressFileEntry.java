@@ -1,6 +1,6 @@
 package cdit_automation.data_helpers.batch_entities;
 
-import cdit_automation.enums.NcaAddressTypeEnum;
+import cdit_automation.enums.datasource.NcaAddressTypeEnum;
 import cdit_automation.utilities.StringUtils;
 
 public class NcaAddressFileEntry extends AddressFileEntry {

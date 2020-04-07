@@ -1,6 +1,6 @@
 package cdit_automation.data_helpers.batch_entities;
 
-import cdit_automation.enums.AddressIndicatorEnum;
+import cdit_automation.enums.datasource.AddressIndicatorEnum;
 import cdit_automation.utilities.StringUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

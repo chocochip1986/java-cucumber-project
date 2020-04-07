@@ -1,8 +1,8 @@
 package cdit_automation.repositories.datasource;
 
-import cdit_automation.models.Batch;
-import cdit_automation.models.Income;
-import cdit_automation.models.interfaces.ICustomIncomeRecord;
+import cdit_automation.models.datasource.Batch;
+import cdit_automation.models.datasource.Income;
+import cdit_automation.models.datasource.interfaces.ICustomIncomeRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

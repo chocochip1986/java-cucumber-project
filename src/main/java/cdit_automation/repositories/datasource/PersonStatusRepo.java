@@ -1,8 +1,8 @@
 package cdit_automation.repositories.datasource;
 
-import cdit_automation.enums.PersonStatusTypeEnum;
-import cdit_automation.models.Person;
-import cdit_automation.models.PersonStatus;
+import cdit_automation.enums.datasource.PersonStatusTypeEnum;
+import cdit_automation.models.datasource.Person;
+import cdit_automation.models.datasource.PersonStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

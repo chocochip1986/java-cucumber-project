@@ -1,7 +1,7 @@
 package cdit_automation.step_definition.datasource;
 
-import cdit_automation.enums.FileTypeEnum;
-import cdit_automation.models.Batch;
+import cdit_automation.enums.datasource.FileTypeEnum;
+import cdit_automation.models.datasource.Batch;
 import cdit_automation.pages.FileTrailPage;
 import cdit_automation.pages.datasource.TrendingRecordsPage;
 import io.cucumber.java.en.And;

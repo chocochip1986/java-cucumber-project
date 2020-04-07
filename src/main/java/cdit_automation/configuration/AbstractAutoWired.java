@@ -32,7 +32,7 @@ import cdit_automation.data_helpers.factories.OldMhaAddressFactory;
 import cdit_automation.data_helpers.factories.OldNcaAddressFactory;
 import cdit_automation.data_helpers.factories.PersonDetailChangeValidatedFactory;
 import cdit_automation.data_helpers.factories.PersonFactory;
-import cdit_automation.models.Batch;
+import cdit_automation.models.datasource.Batch;
 import cdit_automation.page_navigation.PageUtils;
 import cdit_automation.repositories.datasource.AnnualValueRepo;
 import cdit_automation.repositories.datasource.AssessableIncomeValidatedRepo;

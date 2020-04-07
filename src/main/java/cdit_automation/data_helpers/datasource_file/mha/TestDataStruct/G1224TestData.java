@@ -1,6 +1,6 @@
 package cdit_automation.data_helpers.datasource_file.mha.TestDataStruct;
 
-import cdit_automation.enums.FileTypeEnum;
+import cdit_automation.enums.datasource.FileTypeEnum;
 import com.google.common.base.Joiner;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

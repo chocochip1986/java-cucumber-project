@@ -1,8 +1,8 @@
 package cdit_automation.data_helpers.factories;
 
-import cdit_automation.enums.FileTypeEnum;
+import cdit_automation.enums.datasource.FileTypeEnum;
 import cdit_automation.exceptions.TestFailException;
-import cdit_automation.models.Batch;
+import cdit_automation.models.datasource.Batch;
 import lombok.NonNull;
 import org.springframework.stereotype.Component;
 

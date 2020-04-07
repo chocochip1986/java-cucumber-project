@@ -1,7 +1,7 @@
 package cdit_automation.data_helpers.batch_entities;
 
-import cdit_automation.models.PersonDetail;
-import cdit_automation.models.PersonId;
+import cdit_automation.models.datasource.PersonDetail;
+import cdit_automation.models.datasource.PersonId;
 import cdit_automation.utilities.StringUtils;
 import java.sql.Timestamp;
 import java.time.LocalDate;
