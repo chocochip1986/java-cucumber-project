@@ -314,6 +314,14 @@ Feature: MHA Change address
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
     And the Mha Change Address batch job completes running with status MAPPED_DATA
 
-  @set_1
-  Scenario: Given address indicator is NCA but Address format is MHA, vice versa
-    Given A 30 year old singaporean person john resides a hdb property a
+  @set_1 @defect
+  Scenario: Given address indicator is MHA but Address format is NCA, and vice versa, the result expected to be pass instead of error?
+    Given A singaporean person john resides in a landed property abc
+    Given A singaporean person jane resides in a landed property def
+    And the mha change address file contains the following details:
+      | person | previous_address        | current_address                                                                                            | address_change_dte |
+      | john   | Existing:abc,AddrType:C | IndType:Z,AddrType:S,Block:13C,Street:22 Hilton Street,Unit:22,Floor:32,Building:The Sail,Postal:232903    | 20190909           |
+      | jane   | Existing:def,AddrType:C | IndType: ,AddrType:C,Block:13C,Street:22 Hilton Street,Unit:22,Floor:32,Building:The Sail,Postal:232903    | 20190909           |
+    When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
+    And the Mha Change Address batch job completes running with status RAW_DATA_ERROR
+
