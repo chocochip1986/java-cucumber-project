@@ -113,16 +113,13 @@ public class ChangeAddressSteps extends AbstractSteps {
                 addressIndicatorEnumFrom(curIndicatorType),
                 testContext.get(curPropertyName), dateUtils.daysBeforeToday(daysAgo));
         batchFileDataWriter.end();
-<<<<<<< HEAD
         testContext.set("expectedNewAddress", testContext.get(curPropertyName));
-=======
 
         if(!testContext.contains("expectedNewAddress")){
             testContext.set("expectedNewAddress", testContext.get(curPropertyName));
         }else{
             testContext.replace("expectedNewAddress", testContext.get(curPropertyName));
         }
->>>>>>> f072a0bdd4f04e5956313856354fe6834e7c4bed
     }
 
     @And("^the mha change address file contains information that ([A-Za-z]+) changed from \\((mha_z|mha_c|nca)\\)([a-z0-9]+) to a new \\((mha_z|mha_c|nca)\\)([a-z_]+) property " +

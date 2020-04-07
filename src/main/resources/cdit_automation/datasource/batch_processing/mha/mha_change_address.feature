@@ -314,3 +314,6 @@ Feature: MHA Change address
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
     And the Mha Change Address batch job completes running with status MAPPED_DATA
 
+  @set_1
+  Scenario: Given address indicator is NCA but Address format is MHA, vice versa
+    Given A 30 year old singaporean person john resides a hdb property a
