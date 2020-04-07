@@ -1,6 +1,6 @@
 package cdit_automation.api_helpers;
 
-import cdit_automation.configuration.TestEnv;
+import cdit_automation.configuration.datasource.TestEnv;
 import cdit_automation.configuration.TestManager;
 import cdit_automation.exceptions.TestFailException;
 import java.util.Map;

@@ -1,6 +1,6 @@
 package cdit_automation.step_definition.datasource;
 
-import cdit_automation.constants.ErrorMessageConstants;
+import cdit_automation.constants.datasource.ErrorMessageConstants;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.datasource.FileTypeEnum;
 import cdit_automation.models.datasource.Batch;

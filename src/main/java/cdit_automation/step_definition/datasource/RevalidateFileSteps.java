@@ -1,6 +1,6 @@
 package cdit_automation.step_definition.datasource;
 
-import cdit_automation.configuration.AbstractAutoWired;
+import cdit_automation.configuration.datasource.AbstractAutoWired;
 import cdit_automation.enums.datasource.BatchStatusEnum;
 import cdit_automation.enums.datasource.FileTypeEnum;
 import cdit_automation.models.datasource.Batch;

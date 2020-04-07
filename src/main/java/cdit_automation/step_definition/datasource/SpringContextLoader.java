@@ -1,7 +1,7 @@
 package cdit_automation.step_definition.datasource;
 
 import cdit_automation.TestApplication;
-import cdit_automation.configuration.TestEnv;
+import cdit_automation.configuration.datasource.TestEnv;
 import io.cucumber.java.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootContextLoader;

@@ -1,6 +1,6 @@
 package cdit_automation.data_helpers.datasource;
 
-import cdit_automation.configuration.StepDefLevelTestContext;
+import cdit_automation.configuration.datasource.StepDefLevelTestContext;
 import cdit_automation.constants.TestConstants;
 import cdit_automation.data_helpers.datasource.batch_entities.MhaCeasedCitizenFileEntry;
 import cdit_automation.data_setup.Phaker;

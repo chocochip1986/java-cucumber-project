@@ -1,6 +1,6 @@
 package cdit_automation.api_helpers;
 
-import cdit_automation.configuration.TestEnv;
+import cdit_automation.configuration.datasource.TestEnv;
 import cdit_automation.data_helpers.datasource.FileReceivedDataDto;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.models.datasource.FileReceived;

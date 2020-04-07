@@ -1,7 +1,7 @@
 package cdit_automation.step_definition.datasource;
 
-import cdit_automation.constants.Constants;
-import cdit_automation.constants.ErrorMessageConstants;
+import cdit_automation.constants.datasource.Constants;
+import cdit_automation.constants.datasource.ErrorMessageConstants;
 import cdit_automation.constants.TestConstants;
 import cdit_automation.data_helpers.datasource.batch_entities.MhaDualCitizenFileEntry;
 import cdit_automation.enums.datasource.FileTypeEnum;

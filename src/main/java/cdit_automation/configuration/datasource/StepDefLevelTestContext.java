@@ -1,4 +1,4 @@
-package cdit_automation.configuration;
+package cdit_automation.configuration.datasource;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,6 +1,6 @@
 package cdit_automation.models.datasource;
 
-import cdit_automation.constants.ErrorMessageConstants;
+import cdit_automation.constants.datasource.ErrorMessageConstants;
 import cdit_automation.enums.datasource.ResultIndicatorEnum;
 import cdit_automation.validator.IsUpperCase;
 import cdit_automation.validator.ValidEnumType;

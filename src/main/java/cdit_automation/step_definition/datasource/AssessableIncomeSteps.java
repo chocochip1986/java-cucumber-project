@@ -1,6 +1,6 @@
 package cdit_automation.step_definition.datasource;
 
-import cdit_automation.configuration.TestEnv;
+import cdit_automation.configuration.datasource.TestEnv;
 import cdit_automation.enums.datasource.FileTypeEnum;
 import cdit_automation.enums.datasource.PersonIdTypeEnum;
 import cdit_automation.exceptions.TestFailException;

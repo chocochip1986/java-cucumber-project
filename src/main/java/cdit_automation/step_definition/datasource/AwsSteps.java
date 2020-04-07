@@ -1,7 +1,7 @@
 package cdit_automation.step_definition.datasource;
 
 import cdit_automation.aws.modules.Slack;
-import cdit_automation.configuration.TestEnv;
+import cdit_automation.configuration.datasource.TestEnv;
 import io.cucumber.java.en.Then;
 import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;

@@ -1,9 +1,8 @@
 package cdit_automation.page_navigation;
 
-import cdit_automation.configuration.TestEnv;
 import cdit_automation.configuration.TestManager;
 import cdit_automation.driver_management.DriverManager;
-import java.io.File;
+
 import java.time.Duration;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -11,8 +10,6 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
