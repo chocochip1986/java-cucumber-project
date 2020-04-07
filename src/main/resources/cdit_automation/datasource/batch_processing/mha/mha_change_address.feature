@@ -326,3 +326,11 @@ Feature: MHA Change address
     When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
     And the Mha Change Address batch job completes running with status RAW_DATA_ERROR
 
+  @set_2
+  Scenario: Given address changed date is after the run date
+    Given A singaporean person john resides in a landed property abc
+    And the mha change address file contains the following details:
+      | person | previous_address        | current_address                                                                                            | address_change_dte |
+      | john   | Existing:abc,AddrType:C | IndType:Z,AddrType:C,Block:13C,Street:22 Hilton Street,Unit:22,Floor:32,Building:The Sail,Postal:232903    | 20210909           |
+    When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
+    And the Mha Change Address batch job completes running with status VALIDATED_TO_PREPARED_ERROR
