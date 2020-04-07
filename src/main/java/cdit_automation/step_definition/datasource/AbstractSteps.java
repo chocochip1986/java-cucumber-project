@@ -1,6 +1,6 @@
 package cdit_automation.step_definition.datasource;
 
-import cdit_automation.configuration.AbstractAutoWired;
+import cdit_automation.configuration.datasource.AbstractAutoWired;
 import cdit_automation.enums.datasource.FileTypeEnum;
 import io.cucumber.java.ParameterType;
 

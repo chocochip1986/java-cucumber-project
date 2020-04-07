@@ -1,9 +1,10 @@
-package cdit_automation.configuration;
+package cdit_automation.configuration.datasource;
 
 import cdit_automation.api_helpers.ApiHelper;
 import cdit_automation.asserts.Assert;
 import cdit_automation.aws.modules.S3;
 import cdit_automation.aws.modules.Slack;
+import cdit_automation.configuration.TestManager;
 import cdit_automation.data_helpers.datasource.BatchFileCreator;
 import cdit_automation.data_helpers.datasource.BatchFileDataWriter;
 import cdit_automation.data_helpers.datasource.IrasAssessableIncomeFileDataPrep;

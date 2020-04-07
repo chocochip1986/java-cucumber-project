@@ -1,4 +1,4 @@
-package cdit_automation.configuration;
+package cdit_automation.configuration.datasource;
 
 import cdit_automation.models.datasource.Address;
 import com.fasterxml.jackson.databind.DeserializationFeature;

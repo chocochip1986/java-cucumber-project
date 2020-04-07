@@ -1,6 +1,6 @@
 package cdit_automation.utilities;
 
-import cdit_automation.configuration.AbstractAutoWired;
+import cdit_automation.configuration.datasource.AbstractAutoWired;
 import cdit_automation.enums.datasource.PersonPropertyTypeEnum;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.datasource.Person;
