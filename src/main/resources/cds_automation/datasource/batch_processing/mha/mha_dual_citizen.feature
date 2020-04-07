@@ -109,8 +109,15 @@ Feature: Data processing for MHA dual citizenship
     And MHA dual citizen file contains john nric
     When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
     And the Mha Dual Citizen batch job completes running with status CLEANUP
-    Then I verify that john nationality is not update in datasource db
+    Then I verify that john nationality was not updated in datasource db
 
+  @set_5
+  Scenario: Person nric is a dual citizen and turns sg citizen
+    Given john who is 30 years old converted to a dual citizen 100 days ago
+    And MHA dual citizen file does not contains person nric
+    When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
+    And the Mha Dual Citizen batch job completes running with status CLEANUP
+    Then I verify that john nationality was updated in datasource db
 
 
 

@@ -414,16 +414,36 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         batchFileDataWriter.end();
     }
 
-    @Then("^I verify that ([a-z_]+) nationality is not update in datasource db$")
+    @Then("^I verify that ([a-z_]+) nationality was not updated in datasource db$")
     public void iVerifyThatNationalityIsNotUpdateInDatasourceDb(String personName) {
         log.info("Verifying that the person nationality was not updated");
         FileReceived fileReceived = testContext.get("fileReceived");
         Batch batch = batchRepo.findFirstByFileReceivedOrderByCreatedAtDesc(fileReceived);
-        log.info("Batch Id: {]", batch.getId());
+        PersonId personId = testContext.get(personName);
+        Nationality nationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
+        testAssert.assertNotEquals(nationality.getBatch().getId(), batch.getId(),
+            "Person nationality was updated by this batch");
+    }
+
+    @And("MHA dual citizen file does not contains person nric")
+    public void mhaDualCitizenFileDoesNotContainsNric() {
+        batchFileDataWriter.begin(mhaDualCitizenFileDataPrep.generateSingleHeader(LocalDate.now()), FileTypeEnum.MHA_DUAL_CITIZEN, null);
+        mhaDualCitizenFileDataPrep.createListOfNewDualCitizens(1);
+        batchFileDataWriter.end();
+    }
+
+    @Then("^I verify that ([a-z_]+) nationality was updated in datasource db$")
+    public void iVerifyThatJohnNationalityWasUpdatedInDatasourceDb(String personName) {
+        log.info("Verifying that the person nationality was updated");
+        FileReceived fileReceived = testContext.get("fileReceived");
+        Batch batch = batchRepo.findFirstByFileReceivedOrderByCreatedAtDesc(fileReceived);
+        log.info("Batch Id: {}", batch.getId());
         PersonId personId = testContext.get(personName);
         Nationality nationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
         log.info("Nationality Id: {}", nationality.getId());
-        testAssert.assertNotEquals(nationality.getBatch().getId(), batch.getId(),
+        testAssert.assertEquals(nationality.getBatch().getId(), batch.getId(),
             "Person nationality was updated by this batch");
+        testAssert.assertEquals(nationality.getNationality(), NationalityEnum.SINGAPORE_CITIZEN,
+            "Person was not updated to a Singapore Citizen by this batch");
     }
 }
