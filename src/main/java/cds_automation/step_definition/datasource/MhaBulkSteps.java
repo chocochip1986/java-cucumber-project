@@ -56,4 +56,10 @@ public class MhaBulkSteps extends AbstractSteps {
         batchFileDataWriter.chunkOrWrite(entry.toRawString());
         batchFileDataWriter.end();
     }
+
+    @Given("MHA send MHA_BULK_CITIZEN file with the following data:")
+    public void mhaSendMHA_BULK_CITIZENFileWithTheFollowingData(DataTable dataTable) {
+        List<String> formattedEntries = mhaBulkFileDataPrep.formatEntries(dataTable);
+        mhaBulkFileDataPrep.writeToFileUsingCurrentDateAsHeader(formattedEntries);
+    }
 }

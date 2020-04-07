@@ -526,6 +526,10 @@ public class MhaBulkFileDataPrep extends BatchFileDataPrep {
         return entries.stream().map(MhaBulkCitizenFileEntry::toRawString).collect(Collectors.toList());
     }
 
+    public void writeToFileUsingCurrentDateAsHeader(List<String> entries) {
+        writeToFile(LocalDate.now().format(dateUtils.DATETIME_FORMATTER_YYYYMMDD), entries);
+    }
+
     public void writeToFile(String dateStr, List<String> entries) {
         writeToFile(dateStr, dateStr, entries);
     }
