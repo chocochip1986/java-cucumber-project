@@ -1,7 +1,7 @@
 package cdit_automation.driver_management;
 
 
-import cdit_automation.enums.BrowserTypeEnums;
+import cdit_automation.enums.datasource.BrowserTypeEnums;
 import cdit_automation.exceptions.UnsupportedWebDriverException;
 import java.util.ArrayList;
 import java.util.List;

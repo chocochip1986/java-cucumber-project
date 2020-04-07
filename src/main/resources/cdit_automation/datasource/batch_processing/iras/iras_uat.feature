@@ -1,3 +1,4 @@
+@datasource
 @ResetFailFast
 @FailFast
 Feature: IRAS UAT Test Scenarios

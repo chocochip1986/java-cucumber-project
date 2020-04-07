@@ -1,9 +1,9 @@
 package cdit_automation.pages;
 
-import cdit_automation.enums.BatchStatusEnum;
-import cdit_automation.enums.views.FileStatusSubTextEnum;
+import cdit_automation.enums.datasource.BatchStatusEnum;
+import cdit_automation.enums.datasource.views.FileStatusSubTextEnum;
 import cdit_automation.exceptions.TestFailException;
-import cdit_automation.models.FileReceived;
+import cdit_automation.models.datasource.FileReceived;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;

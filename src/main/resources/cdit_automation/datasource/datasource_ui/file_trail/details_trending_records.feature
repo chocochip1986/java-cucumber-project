@@ -1,3 +1,4 @@
+@datasource
 @development
 @datasourceui
 @trending_records
