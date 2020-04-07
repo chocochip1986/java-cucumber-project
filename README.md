@@ -46,28 +46,28 @@ git clone https://gitlab.cpfb.gds-gov.tech/cdit/cdit-automation.git
 ## File Structure
 ### Notable File structure
 #####Cucumber Feature Files
-* All BDD code are stored under src/main/java/resources/cdit_automation/*.feature  
+* All BDD code are stored under src/main/java/resources/cds_automation/*.feature  
   Cucumber can only run test which are in the *.feature file
 #####Cucumber Step Definitions
 * All of cucumber scenarios are made up of steps. All steps have their corresponding step definitions.  
-  All step definition files must be stored under /src/main/java/cdit_automation/step_definition/* directory  
+  All step definition files must be stored under /src/main/java/cds_automation/step_definition/* directory  
 
   It would be highly encouraged to name your step file ending with 'Steps'. The only Step file that does  
   not follow this naming convention is the Hooks file. This naming convention is purely to increase readability.  
   If you create a new Step file, you need to extend the AbstractStep class because much of the test suites' functions are autowired in there.
 #####Database Querying Functionalities
-* All JpaRepositories are housed under src/main/java/cdit_automation/respositories directory
+* All JpaRepositories are housed under src/main/java/cds_automation/respositories directory
 #####Models
-* All models or entities are housed under src/main/java/cdit_automation/models directory
+* All models or entities are housed under src/main/java/cds_automation/models directory
 #####Fake Data Generation
 * All general fake data are currently housed within the Phaker class. i.e. creating a random phone number, NRIC, random valid date.
     * Note that Phaker only creates field level fake data. It's not meant to create multiple database records i.e. creating a person in database.
 #####Data generation
-* All model data generation is housed under src/main/java/cdit_automation/data_helpers directory
+* All model data generation is housed under src/main/java/cds_automation/data_helpers directory
 #####Firing API calls
-* All APIs are housed in the ApiHelper class under src/main/java/cdit_automation/api_helpers directory
+* All APIs are housed in the ApiHelper class under src/main/java/cds_automation/api_helpers directory
 #####Asserts
-* All test assertations are housed in the Assert class under src/main/java/cdit_automation/asserts directory  
+* All test assertations are housed in the Assert class under src/main/java/cds_automation/asserts directory  
 ---
 ###Notable classes and their purposes
 * TestManager
@@ -100,29 +100,29 @@ git clone https://gitlab.cpfb.gds-gov.tech/cdit/cdit-automation.git
 2. In your terminal, go to the cdit-automation project root directory.
 3. Type the following
 ```
-mvn test -Dcucumber.options="src/main/resources/cdit_automation/test.feature:20"
+mvn test -Dcucumber.options="src/main/resources/cds_automation/test.feature:20"
 ```
 ---
 ###Running via Command line with tags
 Run with just 1 tag
 ```
-mvn test -Dcucumber.options="src/main/resources/cdit_automation/test.feature:20 --tags @tagname"
+mvn test -Dcucumber.options="src/main/resources/cds_automation/test.feature:20 --tags @tagname"
 ```
 Run with multiple tags with AND condition
 ```
-mvn test -Dcucumber.options="src/main/resources/cdit_automation/test.feature:20 --tags @tagname1 --tags @tagname2"
+mvn test -Dcucumber.options="src/main/resources/cds_automation/test.feature:20 --tags @tagname1 --tags @tagname2"
 ```
 Run with multiple tags with OR condition (Take note: No spacing between tag names)
 ```
-mvn test -Dcucumber.options="src/main/resources/cdit_automation/test.feature:20 --tags @tagname1,@tagname2"
+mvn test -Dcucumber.options="src/main/resources/cds_automation/test.feature:20 --tags @tagname1,@tagname2"
 ```
 Run with exclude tags
 ```
-mvn test -Dcucumber.options="src/main/resources/cdit_automation/test.feature:20 --tags @tagname1 --tags ~@tagname2"
+mvn test -Dcucumber.options="src/main/resources/cds_automation/test.feature:20 --tags @tagname1 --tags ~@tagname2"
 ```
 Running against an external environment via Command line
 ```
-mvn test -Dcucumber.options="src/main/resources/cdit_automation/test.feature:20 --tags @tagname1" -Dspring.profiles.active=qa
+mvn test -Dcucumber.options="src/main/resources/cds_automation/test.feature:20 --tags @tagname1" -Dspring.profiles.active=qa
 ```
 
 ---
@@ -135,24 +135,24 @@ mvn clean package -DskipTests=true
 ```
 Assuming your current working directory is the cdit-automation project root
 ```
-java -cp "${$(pwd)}/deployment/uber-cdit-automation.jar:${$(pwd)}/deployment/lib/*" cdit_automation.RunCucumberTest
+java -cp "${$(pwd)}/deployment/uber-cdit-automation.jar:${$(pwd)}/deployment/lib/*" cds_automation.RunCucumberTest
 ```
 ###Running via an executable jar with tags
 Run with just 1 tag
 ```
-java -cp "${$(pwd)}/deployment/uber-cdit-automation.jar:${$(pwd)}/deployment/lib/*" cdit_automation.RunCucumberTest --tags @tagname
+java -cp "${$(pwd)}/deployment/uber-cdit-automation.jar:${$(pwd)}/deployment/lib/*" cds_automation.RunCucumberTest --tags @tagname
 ```
 Run with multiple tags with AND condition
 ```
-java -cp "${$(pwd)}/deployment/uber-cdit-automation.jar:${$(pwd)}/deployment/lib/*" cdit_automation.RunCucumberTest --tags @tagname1 --tags ~@tagname2
+java -cp "${$(pwd)}/deployment/uber-cdit-automation.jar:${$(pwd)}/deployment/lib/*" cds_automation.RunCucumberTest --tags @tagname1 --tags ~@tagname2
 ```
 Run with multiple tags with OR condition
 ```
-java -cp "${$(pwd)}/deployment/uber-cdit-automation.jar:${$(pwd)}/deployment/lib/*" cdit_automation.RunCucumberTest --tags @tagname1,@tagname2
+java -cp "${$(pwd)}/deployment/uber-cdit-automation.jar:${$(pwd)}/deployment/lib/*" cds_automation.RunCucumberTest --tags @tagname1,@tagname2
 ```
 Run with exclude tags
 ```
-java -cp "${$(pwd)}/deployment/uber-cdit-automation.jar:${$(pwd)}/deployment/lib/*" cdit_automation.RunCucumberTest --tags ~@tagname
+java -cp "${$(pwd)}/deployment/uber-cdit-automation.jar:${$(pwd)}/deployment/lib/*" cds_automation.RunCucumberTest --tags ~@tagname
 ```
 ---
 ###Running via bash script
