@@ -16,17 +16,82 @@ Feature: Data processing for MHA dual citizenship
     Then I verify that the dual citizens who are not in the file will be Singaporeans
 
   @set_2
-  Scenario: Dual Citizen batch job fails when there is an invalid nric
-    Given the mha dual citizen file has an invalid nric
+  Scenario: MHA sends file with empty Date of Run
+    Given the mha dual citizen file contains invalid date of run and date of run is EMPTY
+    When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
+    And the Mha Dual Citizen batch job completes running with status FILE_ERROR
+
+  @set_3
+  Scenario: MHA sends file with empty spaces of Date of Run
+    Given the mha dual citizen file contains invalid date of run and date of run is SPACE
+    When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
+    And the Mha Dual Citizen batch job completes running with status RAW_DATA_ERROR
+
+  @set_4
+  Scenario: MHA sends file with invalid format for Date of Run
+    Given the mha dual citizen file contains invalid date of run and date of run is INVALID_FORMAT
+    When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
+    And the Mha Dual Citizen batch job completes running with status RAW_DATA_ERROR
+
+  @set_5
+  Scenario: MHA sends file with future date for Date of Run
+    Given the mha dual citizen file contains invalid date of run and date of run is FUTURE_DATE
+    When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
+    And the Mha Dual Citizen batch job completes running with status BULK_CHECK_VALIDATION_ERROR
+
+  @set_6
+  Scenario: MHA sends file with empty nric
+    Given the mha dual citizen file has EMPTY nric
+    When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
+    And the Mha Dual Citizen batch job completes running with status FILE_ERROR
+    Then I verify that the is an error message for wrong body length
+
+  @set_7
+  Scenario: MHA sends file with empty whitespace nric
+    Given the mha dual citizen file has EMPTY_SPACE nric
+    When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
+    And the Mha Dual Citizen batch job completes running with status RAW_DATA_ERROR
+    Then I verify that the is an error message for null or blank nric
+
+  @set_8
+  Scenario: MHA sends file with invalid nric
+    Given the mha dual citizen file has INVALID nric
     When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
     And the Mha Dual Citizen batch job completes running with status RAW_DATA_ERROR
     Then I verify that there is an error message for invalid nric
 
-  @set_3 @defect
-  Scenario: Duplicate nric in dual citizen file
-    Given the mha dual citizen file have duplicate nric record
+  @set_9
+  Scenario: MHA sends file with shorter nric
+    Given the mha dual citizen file has SHORT nric
+    When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
+    And the Mha Dual Citizen batch job completes running with status FILE_ERROR
+    Then I verify that the is an error message for wrong body length
+
+  @set_10
+  Scenario: MHA sends file with S555 nric
+    Given the mha dual citizen file has S555 nric
     When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
     And the Mha Dual Citizen batch job completes running with status RAW_DATA_ERROR
+    Then I verify that there is an error message for invalid nric
+
+  @set_1
+  Scenario: MHA sends file with S888 nric
+    Given the mha dual citizen file has S888 nric
+    When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
+    And the Mha Dual Citizen batch job completes running with status RAW_DATA_ERROR
+    Then I verify that there is an error message for invalid nric
+
+
+
+
+
+  @set_3 @defect
+  Scenario: Duplicate nric in dual citizen file
+    Given the mha dual citizen file has duplicate nric record
+    | DuplicatedNrics |
+    | 2               |
+    When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
+    And the Mha Dual Citizen batch job completes running with status CLEANUP
 
   @set_4
   Scenario: Test scenario
@@ -100,3 +165,4 @@ Feature: Data processing for MHA dual citizenship
     Then the Mha Dual Citizen batch job completes running with status CLEANUP
     And there are no error messages
     Then jane is a singaporean from 5 days ago
+

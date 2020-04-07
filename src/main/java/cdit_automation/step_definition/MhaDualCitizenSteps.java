@@ -3,8 +3,8 @@ package cdit_automation.step_definition;
 import cdit_automation.constants.Constants;
 import cdit_automation.constants.TestConstants;
 import cdit_automation.data_helpers.batch_entities.MhaDualCitizenFileEntry;
-import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.FileTypeEnum;
+import cdit_automation.enums.InvalidDateOfRunEnum;
 import cdit_automation.enums.NationalityEnum;
 import cdit_automation.exceptions.TestDataSetupErrorException;
 import cdit_automation.models.Batch;
@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.jni.Local;
 import org.junit.Ignore;
 
 @Slf4j
@@ -137,53 +136,16 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         }
     }
 
-    @Given("the mha dual citizen file has an invalid nric")
-    public void theMhaDualCitizenFileHasAnInvalidNric() throws IOException{
-        log.info("Creating an invalid nric entry in MHA dual citizen file");
-        String invalidNric = mhaDualCitizenFileDataPrep.createInvalidNric();
-
-        List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();
-        List<String> body = new ArrayList<>();
-        body.add(invalidNric);
-
-        listOfIdentifiersToWriteToFile.add(0, mhaDualCitizenFileDataPrep.generateSingleHeader());
-        listOfIdentifiersToWriteToFile.addAll(body);
-        listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
-
-        batchFileCreator.writeToFile(FileTypeEnum.MHA_DUAL_CITIZEN.getValue().toLowerCase(), listOfIdentifiersToWriteToFile);
-
-        testContext.set("invalidNric", invalidNric);
-    }
-
-    @Then("I verify that there is an error message for invalid nric")
-    public void iVerifyThatThereIsAnErrorMessageForInvalidNric() {
-        log.info("Verifying that there is an error message for invalid nric");
-
-        FileReceived fileReceived = testContext.get("fileReceived");
-
-        Batch batch = batchRepo.findFirstByFileReceivedOrderByCreatedAtDesc(fileReceived);
-
-        List<ErrorMessage> errorMessages = errorMessageRepo.findByBatch(batch);
-
-        testAssert.assertEquals(true,
-                errorMessages.stream().anyMatch(errorMessage -> errorMessage.getMessage().matches(".*Must be valid NRIC in format.*")),
-                "No invalid nric error message found!");
-    }
-
-    @Given("the mha dual citizen file have duplicate nric record")
-    public void theMhaDualCitizenFileHaveDuplicateNricRecord() throws IOException {
+    @Given("the mha dual citizen file has duplicate nric record")
+    public void theMhaDualCitizenFileHasDuplicateNricRecord(DataTable table) throws IOException {
         log.info("Creating an duplicate nric entry in MHA dual citizen file");
-
-        List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();
-        List<String> body = mhaDualCitizenFileDataPrep.createDuplicatedValidNricEntries();
-
-        listOfIdentifiersToWriteToFile.add(0, mhaDualCitizenFileDataPrep.generateDoubleHeader());
-        listOfIdentifiersToWriteToFile.addAll(body);
-        listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
-
-        batchFileCreator.writeToFile(FileTypeEnum.MHA_DUAL_CITIZEN.getValue().toLowerCase(), listOfIdentifiersToWriteToFile);
-
-        testContext.set("duplicateNric", body.get(0));
+        LocalDate runDate =  TestConstants.DEFAULT_EXTRACTION_DATE;
+        batchFileDataWriter.begin(runDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD), FileTypeEnum.MHA_DUAL_CITIZEN, null);
+        List<Map<String, String>> list = table.asMaps(String.class, String.class);
+        List<String> body = mhaDualCitizenFileDataPrep.bodyCreator(list, testContext);
+        testContext.set("listOfIdentifiersToWriteToFile", body);
+        testContext.set("runDate", runDate);
+        batchFileDataWriter.end();
     }
 
     @Given("the mha dual citizen file is empty")
@@ -332,5 +294,92 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         PersonId personId = personFactory.createSCTurnDualCitizen(personName, birthDate, runDate);
 
         testContext.set(personName, personId);
+    }
+
+    @Given("^the mha dual citizen file contains invalid date of run and date of run is (EMPTY|SPACE|INVALID_FORMAT|FUTURE_DATE)$")
+    public void theMhaDualCitizenFileContainsInvalidDateOfRunAndDateOfRunIs(InvalidDateOfRunEnum errorType) throws IOException{
+        log.info("Creating an invalid Date of Run ({}) header in MHA Dual Citizen file", errorType);
+
+        List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();
+        List<String> body = new ArrayList<>();
+
+        String validNric = mhaDualCitizenFileDataPrep.createValidNric();
+        body.add(validNric);
+
+        listOfIdentifiersToWriteToFile.add(0, mhaDualCitizenFileDataPrep.generateInvalidSingleHeader(errorType));
+        listOfIdentifiersToWriteToFile.addAll(body);
+        listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
+
+        batchFileCreator.writeToFile(FileTypeEnum.MHA_DUAL_CITIZEN.getValue().toLowerCase(), listOfIdentifiersToWriteToFile);
+        testContext.set("validNric", validNric);
+    }
+
+    @Given("^the mha dual citizen file has (EMPTY|EMPTY_SPACE|INVALID|SHORT|S555|S888) nric$")
+    public void theMhaDualCitizenFileHasAnNric(String errorType) throws IOException {
+        log.info("Creating an invalid NRIC entry ({}) in MHA Dual Citizen file", errorType);
+        List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();
+        List<String> body = new ArrayList<>();
+        String invalidNric = "";
+
+        if(errorType.equals("EMPTY")) {
+            invalidNric = "";
+        }
+        else if(errorType.equals("EMPTY_SPACE")) {
+            invalidNric = "         ";
+        }
+        else if(errorType.equals("INVALID")) {
+            invalidNric = mhaDualCitizenFileDataPrep.createInvalidNric();
+        }
+        else if(errorType.equals("SHORT")) {
+            invalidNric = mhaDualCitizenFileDataPrep.createValidNric().substring(0, 8);
+        }
+        else if(errorType.equals("S555")) {
+            invalidNric = "S5550000B";
+        }
+        else if(errorType.equals("S888")) {
+            invalidNric = "S8880001Z";
+        }
+
+        body.add(invalidNric);
+
+        listOfIdentifiersToWriteToFile.add(0, mhaDualCitizenFileDataPrep.generateSingleHeader());
+        listOfIdentifiersToWriteToFile.addAll(body);
+        listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
+
+        batchFileCreator.writeToFile(FileTypeEnum.MHA_DUAL_CITIZEN.getValue().toLowerCase(), listOfIdentifiersToWriteToFile);
+        testContext.set("invalidNric", invalidNric);
+    }
+
+    @Then("I verify that the is an error message for wrong body length")
+    public void iVerifyThatTheIsAnErrorMessageForWrongBodyLength() {
+        log.info("Verifying that there is an error message for wrong body length");
+        FileReceived fileReceived = testContext.get("fileReceived");
+        Batch batch = batchRepo.findFirstByFileReceivedOrderByCreatedAtDesc(fileReceived);
+        List<ErrorMessage> errorMessages = errorMessageRepo.findByBatch(batch);
+        testAssert.assertEquals(true, errorMessages.stream().anyMatch(
+            errorMessage -> errorMessage.getMessage()
+                .matches(".*Wrong body length.*")), "No invalid NRIC error message found.");
+    }
+
+    @Then("I verify that the is an error message for null or blank nric")
+    public void iVerifyThatTheIsAnErrorMessageForNullOrBlankNric() {
+        log.info("Verifying that there is an error message for null or blank nric");
+        FileReceived fileReceived = testContext.get("fileReceived");
+        Batch batch = batchRepo.findFirstByFileReceivedOrderByCreatedAtDesc(fileReceived);
+        List<ErrorMessage> errorMessages = errorMessageRepo.findByBatch(batch);
+        testAssert.assertEquals(true, errorMessages.stream().anyMatch(
+            errorMessage -> errorMessage.getMessage()
+                .matches(".*NRIC cannot be null/blank.*")), "No invalid NRIC error message found.");
+    }
+
+    @Then("I verify that there is an error message for invalid nric")
+    public void iVerifyThatThereIsAnErrorMessageForInvalidNric() {
+        log.info("Verifying that there is an error message for invalid nric");
+        FileReceived fileReceived = testContext.get("fileReceived");
+        Batch batch = batchRepo.findFirstByFileReceivedOrderByCreatedAtDesc(fileReceived);
+        List<ErrorMessage> errorMessages = errorMessageRepo.findByBatch(batch);
+        testAssert.assertEquals(true, errorMessages.stream().anyMatch(
+            errorMessage -> errorMessage.getMessage()
+                .matches(".*Must be valid NRIC in format.*")),"No invalid NRIC error message found!");
     }
 }

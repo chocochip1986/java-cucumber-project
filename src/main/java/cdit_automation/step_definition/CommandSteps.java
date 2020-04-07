@@ -86,7 +86,11 @@ public class CommandSteps extends AbstractSteps {
         if ( testManager.isDevEnvironment() ) {
             FileDetail fileDetail = fileDetailRepo.findByFileEnum(fileTypeEnum);
             FileReceived fileReceived = batchFileCreator.createFileReceived(fileDetail, fileDetail.getFileName(), testContext.get("receivedTimestamp"));
-            testContext.set("fileReceived", fileReceived);
+            if(!testContext.contains("fileReceived")){
+                testContext.set("fileReceived", fileReceived);
+            }else{
+                testContext.replace("fileReceived", fileReceived);
+            }
 
             log.info("Triggering "+fileTypeEnum.getHumanized_value()+" job is run");
             trigger();

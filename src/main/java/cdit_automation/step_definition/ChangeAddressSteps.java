@@ -113,7 +113,16 @@ public class ChangeAddressSteps extends AbstractSteps {
                 addressIndicatorEnumFrom(curIndicatorType),
                 testContext.get(curPropertyName), dateUtils.daysBeforeToday(daysAgo));
         batchFileDataWriter.end();
+<<<<<<< HEAD
         testContext.set("expectedNewAddress", testContext.get(curPropertyName));
+=======
+
+        if(!testContext.contains("expectedNewAddress")){
+            testContext.set("expectedNewAddress", testContext.get(curPropertyName));
+        }else{
+            testContext.replace("expectedNewAddress", testContext.get(curPropertyName));
+        }
+>>>>>>> f072a0bdd4f04e5956313856354fe6834e7c4bed
     }
 
     @And("^the mha change address file contains information that ([A-Za-z]+) changed from \\((mha_z|mha_c|nca)\\)([a-z0-9]+) to a new \\((mha_z|mha_c|nca)\\)([a-z_]+) property " +
@@ -167,6 +176,31 @@ public class ChangeAddressSteps extends AbstractSteps {
                 curPropertyTypeEnum,
                 dateUtils.daysBeforeToday(daysAgo));
         batchFileDataWriter.end();
+    }
+
+    @And("^the mha change address file with date of run ([0-9]{8}) contains information that ([A-Za-z]+) changed from \\((mha_z|mha_c|nca)\\)([a-z0-9]+) to \\((mha_z|mha_c|nca)\\)([a-z0-9]+) " +
+            "(\\d+) days ago$")
+    public void
+    theMhaChangeAddressFileContainsInfoThat(String headerDate, String personName, String prevIndicatorType, String prevPropertyName, String curIndicatorType, String curPropertyName, long daysAgo) {
+        checkIfPersonExistsInTestContext(personName);
+        checkIfPropertyExistsInTestContext(prevPropertyName);
+        checkIfPropertyExistsInTestContext(curPropertyName);
+
+        LocalDate date = dateUtils.parse(headerDate);
+
+        batchFileDataWriter.begin(mhaChangeAddressDataPrep.generateSingleDateNoOfRecordsHeader(date, 1), FileTypeEnum.MHA_CHANGE_ADDRESS, null);
+        mhaChangeAddressFileDataPrep.createLineInBody(testContext.get(personName),
+                addressIndicatorEnumFrom(prevIndicatorType),
+                testContext.get(prevPropertyName),
+                addressIndicatorEnumFrom(curIndicatorType),
+                testContext.get(curPropertyName), dateUtils.daysBeforeToday(daysAgo));
+        batchFileDataWriter.end();
+
+        if(!testContext.contains("expectedNewAddress")){
+            testContext.set("expectedNewAddress", testContext.get(curPropertyName));
+        }else{
+            testContext.replace("expectedNewAddress", testContext.get(curPropertyName));
+        }
     }
 
     private AddressIndicatorEnum addressIndicatorEnumFrom(String indType){

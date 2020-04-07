@@ -3,6 +3,7 @@ package cdit_automation.data_helpers;
 import cdit_automation.constants.TestConstants;
 import cdit_automation.data_helpers.factories.PersonFactory;
 import cdit_automation.data_setup.Phaker;
+import cdit_automation.enums.InvalidDateOfRunEnum;
 import cdit_automation.models.Batch;
 import cdit_automation.repositories.BatchRepo;
 import cdit_automation.repositories.CeasedCitizenRepo;
@@ -38,6 +39,10 @@ public class BatchFileDataPrep {
             //Fail silently
         }
         return 0;
+    }
+
+    public String createValidNric() {
+        return Phaker.validNric();
     }
 
     public String createInvalidNric() {
@@ -77,5 +82,27 @@ public class BatchFileDataPrep {
         batchRepo.save(batch);
         
         return batch;
+    }
+
+    public String generateInvalidSingleHeader(InvalidDateOfRunEnum type) {
+        if(type.equals(InvalidDateOfRunEnum.EMPTY)) {
+            return "";
+        }
+
+        if(type.equals(InvalidDateOfRunEnum.SPACE)) {
+            return "        ";
+        }
+
+        if(type.equals(InvalidDateOfRunEnum.INVALID_FORMAT)) {
+            LocalDate runDate =  TestConstants.DEFAULT_EXTRACTION_DATE;
+            return runDate.format(dateUtils.DATETIME_FORMATTER_DDMMYYYY);
+        }
+
+        if(type.equals(InvalidDateOfRunEnum.FUTURE_DATE)) {
+            LocalDate runDate =  LocalDate.now().plusDays(1);
+            return runDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD);
+        }
+
+        return "";
     }
 }
