@@ -100,7 +100,6 @@ Feature: Data processing for MHA bulk citizen file
     Given MHA send MHA_BULK_CITIZEN file with the following data:
       | NRIC   | FIN   | NAME   | DOB   | DOD   | GENDER   | ADDR_IND   | ADDR_TYPE   | ADDR   | INVALID_ADDR_TAG   | CTZ_ATT_DATE   |
       | <NRIC> | <FIN> | <NAME> | <DOB> | <DOD> | <GENDER> | <ADDR_IND> | <ADDR_TYPE> | <ADDR> | <INVALID_ADDR_TAG> | <CTZ_ATT_DATE> |
-
     When MHA sends the MHA_BULK_CITIZEN file to Datasource sftp for processing
     Then the Mha Bulk Citizen batch job completes running with status <BATCHSTATUS>
     And the error message contains <ERROR_MESSAGE>
@@ -115,7 +114,15 @@ Feature: Data processing for MHA bulk citizen file
       | S5550000B | -   | <AUTO> | 19881003 | -   | M      | C        | C         | <AUTO> | -                | 19881003     | BULK_CHECK_VALIDATION_ERROR | Invalid NRIC                                            |
       | S8880001Z | -   | <AUTO> | 19881003 | -   | M      | C        | C         | <AUTO> | -                | 19881003     | BULK_CHECK_VALIDATION_ERROR | Invalid NRIC                                            |
 
+  @set_9
   Scenario: Datasource should not process record(s) with same FIN
+    Given MHA send MHA_BULK_CITIZEN file with the following data:
+      | NRIC      | FIN       | NAME  | DOB      | DOD | GENDER | ADDR_IND | ADDR_TYPE | ADDR           | INVALID_ADDR_TAG | CTZ_ATT_DATE |
+      | T7754288J | G2020975K | Marry | 20010719 | -   | F      | C        | C         | Wonderland 456 | -                | 20010719     |
+      | T8741641G | G2020975K | Marry | 20010719 | -   | F      | C        | C         | Wonderland 456 | -                | 20010719     |
+    When MHA sends the MHA_BULK_CITIZEN file to Datasource sftp for processing
+    Then the Mha Bulk Citizen batch job completes running with status BULK_CHECK_VALIDATION_ERROR
+    And the error message contains Partially Duplicate Record found
 
   Scenario: Datasource should not process record(s) with invalid FIN
 
