@@ -1,4 +1,4 @@
-package cdit_automation.constants;
+package cdit_automation.constants.datasource;
 
 import java.time.LocalDateTime;
 

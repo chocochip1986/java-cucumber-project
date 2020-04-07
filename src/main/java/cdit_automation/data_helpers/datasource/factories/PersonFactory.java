@@ -1,6 +1,6 @@
 package cdit_automation.data_helpers.datasource.factories;
 
-import cdit_automation.constants.Constants;
+import cdit_automation.constants.datasource.Constants;
 import cdit_automation.constants.TestConstants;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.datasource.GenderEnum;

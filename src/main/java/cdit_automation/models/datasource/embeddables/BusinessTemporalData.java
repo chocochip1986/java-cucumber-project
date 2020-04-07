@@ -1,6 +1,6 @@
 package cdit_automation.models.datasource.embeddables;
 
-import cdit_automation.constants.Constants;
+import cdit_automation.constants.datasource.Constants;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import javax.persistence.Column;
