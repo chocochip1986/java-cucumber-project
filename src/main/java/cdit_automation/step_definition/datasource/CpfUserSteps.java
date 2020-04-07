@@ -1,4 +1,4 @@
-package cdit_automation.step_definition;
+package cdit_automation.step_definition.datasource;
 
 import io.cucumber.java.en.Given;
 import lombok.extern.slf4j.Slf4j;

@@ -1,15 +1,13 @@
-package cdit_automation.step_definition;
+package cdit_automation.step_definition.datasource;
 
 import cdit_automation.data_helpers.batch_entities.MhaBulkCitizenFileEntry;
 import cdit_automation.enums.FileTypeEnum;
-import cdit_automation.utilities.StringUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Slf4j

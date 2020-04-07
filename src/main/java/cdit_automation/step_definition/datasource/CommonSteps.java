@@ -1,4 +1,4 @@
-package cdit_automation.step_definition;
+package cdit_automation.step_definition.datasource;
 
 import cdit_automation.aws.modules.Slack;
 import cdit_automation.configuration.TestEnv;
@@ -17,12 +17,10 @@ import cdit_automation.models.PropertyDetail;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.junit.Ignore;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

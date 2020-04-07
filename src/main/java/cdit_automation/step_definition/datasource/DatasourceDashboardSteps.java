@@ -1,4 +1,4 @@
-package cdit_automation.step_definition;
+package cdit_automation.step_definition.datasource;
 
 import cdit_automation.pages.CdsPage;
 import io.cucumber.java.en.And;

@@ -1,4 +1,4 @@
-package cdit_automation.step_definition;
+package cdit_automation.step_definition.datasource;
 
 import cdit_automation.TestApplication;
 import cdit_automation.configuration.TestEnv;

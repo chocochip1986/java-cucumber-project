@@ -1,4 +1,4 @@
-package cdit_automation.step_definition;
+package cdit_automation.step_definition.datasource;
 
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.PersonId;

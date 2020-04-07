@@ -1,4 +1,4 @@
-package cdit_automation.step_definition;
+package cdit_automation.step_definition.datasource;
 
 import cdit_automation.constants.TestConstants;
 import cdit_automation.data_helpers.batch_entities.MhaCeasedCitizenFileEntry;

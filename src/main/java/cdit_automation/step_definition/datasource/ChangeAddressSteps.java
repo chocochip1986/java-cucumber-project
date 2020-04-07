@@ -1,10 +1,9 @@
-package cdit_automation.step_definition;
+package cdit_automation.step_definition.datasource;
 
 import cdit_automation.constants.Constants;
 import cdit_automation.data_setup.PhakAddress;
 import cdit_automation.data_setup.data_setup_address.PhakAbstractAddress;
 import cdit_automation.enums.AddressIndicatorEnum;
-import cdit_automation.enums.FileStatusEnum;
 import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.enums.PersonPropertyTypeEnum;
 import cdit_automation.enums.SpecialMappingEnum;
@@ -12,8 +11,6 @@ import cdit_automation.enums.automation.PropertyTypeEnum;
 import cdit_automation.enums.automation.ResidencyEnum;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.Batch;
-import cdit_automation.models.FileDetail;
-import cdit_automation.models.FileReceived;
 import cdit_automation.models.PersonId;
 import cdit_automation.models.PersonProperty;
 import cdit_automation.models.PropertyDetail;
@@ -29,9 +26,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
-import io.cucumber.java.en.When;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.groups.Tuple;
 import org.junit.Ignore;

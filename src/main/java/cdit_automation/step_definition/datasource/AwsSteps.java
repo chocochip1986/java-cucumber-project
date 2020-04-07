@@ -1,4 +1,4 @@
-package cdit_automation.step_definition;
+package cdit_automation.step_definition.datasource;
 
 import cdit_automation.aws.modules.Slack;
 import cdit_automation.configuration.TestEnv;

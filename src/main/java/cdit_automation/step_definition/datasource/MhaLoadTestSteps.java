@@ -1,4 +1,4 @@
-package cdit_automation.step_definition;
+package cdit_automation.step_definition.datasource;
 
 import cdit_automation.data_helpers.datasource_file.mha.DataFields.FooterOfBodyCountField;
 import cdit_automation.data_helpers.datasource_file.mha.MhaBulkFile;

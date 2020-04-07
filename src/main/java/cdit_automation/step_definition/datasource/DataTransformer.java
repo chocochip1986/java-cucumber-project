@@ -1,4 +1,4 @@
-package cdit_automation.step_definition;
+package cdit_automation.step_definition.datasource;
 
 import cdit_automation.data_helpers.datasource_file.mha.TestDataStruct.G1224TestData;
 import cdit_automation.data_helpers.datasource_file.mha.TestDataStruct.LoadTestData;

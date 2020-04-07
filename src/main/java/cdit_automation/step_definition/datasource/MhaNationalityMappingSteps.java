@@ -1,4 +1,4 @@
-package cdit_automation.step_definition;
+package cdit_automation.step_definition.datasource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

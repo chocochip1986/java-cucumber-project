@@ -1,6 +1,5 @@
-package cdit_automation.step_definition;
+package cdit_automation.step_definition.datasource;
 
-import cdit_automation.configuration.TestEnv;
 import cdit_automation.enums.FileStatusEnum;
 import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.exceptions.TestFailException;
