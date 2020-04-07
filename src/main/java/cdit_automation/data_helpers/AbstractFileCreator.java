@@ -2,8 +2,8 @@ package cdit_automation.data_helpers;
 
 import cdit_automation.api_helpers.ApiHelper;
 import cdit_automation.configuration.TestManager;
-import cdit_automation.repositories.FileDetailRepo;
-import cdit_automation.repositories.FileReceivedRepo;
+import cdit_automation.repositories.datasource.FileDetailRepo;
+import cdit_automation.repositories.datasource.FileReceivedRepo;
 import java.util.function.Supplier;
 import org.springframework.beans.factory.annotation.Autowired;
 

@@ -12,7 +12,7 @@ import cdit_automation.models.PersonDetail;
 import cdit_automation.models.PersonId;
 import cdit_automation.models.PersonName;
 import cdit_automation.models.embeddables.BiTemporalData;
-import cdit_automation.repositories.BatchRepo;
+import cdit_automation.repositories.datasource.BatchRepo;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;

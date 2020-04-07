@@ -4,7 +4,7 @@ import cdit_automation.configuration.TestManager;
 import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.exceptions.TestFailException;
 import cdit_automation.models.FileDetail;
-import cdit_automation.repositories.FileDetailRepo;
+import cdit_automation.repositories.datasource.FileDetailRepo;
 import cdit_automation.utilities.FileUtils;
 import cdit_automation.utilities.StringUtils;
 import java.io.File;

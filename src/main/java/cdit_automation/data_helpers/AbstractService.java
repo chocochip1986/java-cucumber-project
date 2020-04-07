@@ -1,16 +1,16 @@
 package cdit_automation.data_helpers;
 
-import cdit_automation.repositories.BatchRepo;
-import cdit_automation.repositories.ErrorMessageRepo;
-import cdit_automation.repositories.FileDetailRepo;
-import cdit_automation.repositories.FileReceivedRepo;
-import cdit_automation.repositories.GenderRepo;
-import cdit_automation.repositories.IncomingRecordRepo;
-import cdit_automation.repositories.NationalityRepo;
-import cdit_automation.repositories.PersonDetailRepo;
-import cdit_automation.repositories.PersonIdRepo;
-import cdit_automation.repositories.PersonNameRepo;
-import cdit_automation.repositories.PersonRepo;
+import cdit_automation.repositories.datasource.BatchRepo;
+import cdit_automation.repositories.datasource.ErrorMessageRepo;
+import cdit_automation.repositories.datasource.FileDetailRepo;
+import cdit_automation.repositories.datasource.FileReceivedRepo;
+import cdit_automation.repositories.datasource.GenderRepo;
+import cdit_automation.repositories.datasource.IncomingRecordRepo;
+import cdit_automation.repositories.datasource.NationalityRepo;
+import cdit_automation.repositories.datasource.PersonDetailRepo;
+import cdit_automation.repositories.datasource.PersonIdRepo;
+import cdit_automation.repositories.datasource.PersonNameRepo;
+import cdit_automation.repositories.datasource.PersonRepo;
 import cdit_automation.utilities.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
