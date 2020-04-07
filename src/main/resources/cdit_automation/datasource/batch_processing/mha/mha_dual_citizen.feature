@@ -1,3 +1,4 @@
+@datasource
 @development
 @dual_citizen
 @mha
@@ -84,12 +85,6 @@ Feature: Data processing for MHA dual citizenship
     When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
     And the Mha Dual Citizen batch job completes running with status RAW_DATA_ERROR
     Then I verify that there is an error message for invalid nric
-
-
-
-
-
-
 
   @set_3 @defect
   Scenario: Duplicate nric in dual citizen file
