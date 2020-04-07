@@ -4,6 +4,7 @@ import cdit_automation.constants.TestConstants;
 import cdit_automation.data_helpers.factories.PersonFactory;
 import cdit_automation.data_setup.Phaker;
 import cdit_automation.enums.InvalidDateOfRunEnum;
+import cdit_automation.enums.InvalidNricEnum;
 import cdit_automation.models.Batch;
 import cdit_automation.repositories.BatchRepo;
 import cdit_automation.repositories.CeasedCitizenRepo;
@@ -85,24 +86,36 @@ public class BatchFileDataPrep {
     }
 
     public String generateInvalidSingleHeader(InvalidDateOfRunEnum type) {
-        if(type.equals(InvalidDateOfRunEnum.EMPTY)) {
-            return "";
+        switch(type) {
+            case EMPTY:
+                return "";
+            case EMPTY_SPACE:
+                return "        ";
+            case INVALID_FORMAT:
+                return TestConstants.DEFAULT_EXTRACTION_DATE.format(dateUtils.DATETIME_FORMATTER_DDMMYYYY);
+            case FUTURE_DATE:
+                return LocalDate.now().plusDays(5L).format(dateUtils.DATETIME_FORMATTER_YYYYMMDD);
+            default :
+                return null;
         }
+    }
 
-        if(type.equals(InvalidDateOfRunEnum.SPACE)) {
-            return "        ";
+    public String generateInvalidNric(InvalidNricEnum type) {
+        switch (type) {
+            case EMPTY:
+                return "";
+            case EMPTY_SPACE:
+                return  "         ";
+            case INVALID:
+                return createInvalidNric();
+            case SHORT:
+                return createValidNric().substring(0, 8);
+            case S555:
+                return "S5550000B";
+            case S888:
+                return "S8880001Z";
+            default :
+                return null;
         }
-
-        if(type.equals(InvalidDateOfRunEnum.INVALID_FORMAT)) {
-            LocalDate runDate =  TestConstants.DEFAULT_EXTRACTION_DATE;
-            return runDate.format(dateUtils.DATETIME_FORMATTER_DDMMYYYY);
-        }
-
-        if(type.equals(InvalidDateOfRunEnum.FUTURE_DATE)) {
-            LocalDate runDate =  LocalDate.now().plusDays(1);
-            return runDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD);
-        }
-
-        return "";
     }
 }

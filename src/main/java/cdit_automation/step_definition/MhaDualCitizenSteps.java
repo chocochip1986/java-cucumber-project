@@ -1,10 +1,12 @@
 package cdit_automation.step_definition;
 
 import cdit_automation.constants.Constants;
+import cdit_automation.constants.ErrorMessageConstants;
 import cdit_automation.constants.TestConstants;
 import cdit_automation.data_helpers.batch_entities.MhaDualCitizenFileEntry;
 import cdit_automation.enums.FileTypeEnum;
 import cdit_automation.enums.InvalidDateOfRunEnum;
+import cdit_automation.enums.InvalidNricEnum;
 import cdit_automation.enums.NationalityEnum;
 import cdit_automation.exceptions.TestDataSetupErrorException;
 import cdit_automation.models.Batch;
@@ -21,6 +23,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -39,7 +42,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         Map<String, PersonId> hashOfDCs = new HashMap<>();
         for ( int i = 0 ; i < numOfDualCitizens ; i++ ) {
             PersonId personId = personFactory.createDualCitizen();
-            hashOfDCs.put("personId"+String.valueOf(i), personId);
+            hashOfDCs.put("personId" + i, personId);
         }
 
         testContext.set("hashOfDCs", hashOfDCs);
@@ -54,7 +57,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
 
         Map<String, PersonId> hashOfDCs = testContext.get("hashOfDCs");
         for ( int i = 0 ; i < hashOfDCs.keySet().size() ; i++ ) {
-            PersonId expectedPersonId = hashOfDCs.get("personId"+String.valueOf(i));
+            PersonId expectedPersonId = hashOfDCs.get("personId"+ i);
             PersonId actualPersonId = personIdRepo.findByNaturalId(expectedPersonId.getNaturalId());
 
             testAssert.assertNotNull(actualPersonId, "No such person id db:" +expectedPersonId.getNaturalId());
@@ -63,7 +66,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
     }
 
     @Given("the mha dual citizen file has the following details:")
-    public void thatTheMhaDualCitizenFileHasTheFollowingDetails(DataTable table) throws IOException {
+    public void thatTheMhaDualCitizenFileHasTheFollowingDetails(DataTable table) {
         LocalDate runDate =  TestConstants.DEFAULT_EXTRACTION_DATE;
         batchFileDataWriter.begin(runDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD), FileTypeEnum.MHA_DUAL_CITIZEN, null);
         List<Map<String, String>> list = table.asMaps(String.class, String.class);
@@ -78,7 +81,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
     public void iVerifyThatThereAreNewDualCitizensInDatasourceDb() {
         List<String> listOfNewDCs = testContext.get("listOfNewDCs");
 
-        log.info("Verifying that all new dual citizens are in datasource"+listOfNewDCs.toArray().toString());
+        log.info("Verifying that all new dual citizens are in datasource"+ Arrays.toString(listOfNewDCs.toArray()));
 
         List<PersonId> personIds = Collections.emptyList();
         LocalDate runDate = testContext.get("runDate");
@@ -90,8 +93,8 @@ public class MhaDualCitizenSteps extends AbstractSteps {
             Nationality nationality = nationalityRepo.findNationalityByPerson(personIds.get(0).getPerson());
             testAssert.assertNotNull(nationality, "No nationality record exists for nric "+identifier);
             testAssert.assertEquals(dateUtils.beginningOfDayToTimestamp(runDate), nationality.getBiTemporalData().getBusinessTemporalData().getValidFrom(), "Person with "+identifier+" did not begin his/her DC nationality from "+runDate.toString());
-            Nationality prevNationality = nationalityRepo.findNationalityByPerson(personIds.get(0).getPerson(), dateUtils.localDateToDate(runDate.minusDays(1l)));
-            testAssert.assertEquals(dateUtils.endOfDayToTimestamp(runDate.minusDays(1l)), prevNationality.getBiTemporalData().getBusinessTemporalData().getValidTill(), "Person with "+identifier+" did not end his/her previous nationality on "+runDate.minusDays(1l).toString());
+            Nationality prevNationality = nationalityRepo.findNationalityByPerson(personIds.get(0).getPerson(), dateUtils.localDateToDate(runDate.minusDays(1L)));
+            testAssert.assertEquals(dateUtils.endOfDayToTimestamp(runDate.minusDays(1L)), prevNationality.getBiTemporalData().getBusinessTemporalData().getValidTill(), "Person with "+identifier+" did not end his/her previous nationality on "+runDate.minusDays(1L).toString());
         }
 
     }
@@ -103,7 +106,6 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         log.info("Verifying that no changes were made to all existing dual citizens who appear in the MHA dual citizen file.");
 
         List<PersonId> personIds;
-        Date now = dateUtils.localDateToDate(dateUtils.now());
         for(String identifier : listOfExistingDCs) {
             personIds = personIdRepo.findDualCitizen(identifier);
 
@@ -131,13 +133,13 @@ public class MhaDualCitizenSteps extends AbstractSteps {
             testAssert.assertEquals(NationalityEnum.SINGAPORE_CITIZEN, currentNationality.getNationality(), "Person with nric "+identifier+" is not converted to Singaporean!");
             testAssert.assertEquals(dateUtils.beginningOfDayToTimestamp(runDate), currentNationality.getBiTemporalData().getBusinessTemporalData().getValidFrom(), "Person with nric "+identifier+" did not start his SG citizenship from "+runDate.toString());
 
-            Nationality prevNationality = nationalityRepo.findNationalityByPerson(personId.getPerson(), dateUtils.localDateToDate(runDate.minusDays(1l)));
-            testAssert.assertEquals(dateUtils.endOfDayToTimestamp(runDate.minusDays(1l)), prevNationality.getBiTemporalData().getBusinessTemporalData().getValidTill(), "Person with nric "+identifier+" did not end his DC nationality on "+runDate.minusDays(1l).toString());
+            Nationality prevNationality = nationalityRepo.findNationalityByPerson(personId.getPerson(), dateUtils.localDateToDate(runDate.minusDays(1L)));
+            testAssert.assertEquals(dateUtils.endOfDayToTimestamp(runDate.minusDays(1L)), prevNationality.getBiTemporalData().getBusinessTemporalData().getValidTill(), "Person with nric "+identifier+" did not end his DC nationality on "+runDate.minusDays(1L).toString());
         }
     }
 
     @Given("the mha dual citizen file has duplicate nric record")
-    public void theMhaDualCitizenFileHasDuplicateNricRecord(DataTable table) throws IOException {
+    public void theMhaDualCitizenFileHasDuplicateNricRecord(DataTable table) {
         log.info("Creating an duplicate nric entry in MHA dual citizen file");
         LocalDate runDate =  TestConstants.DEFAULT_EXTRACTION_DATE;
         batchFileDataWriter.begin(runDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD), FileTypeEnum.MHA_DUAL_CITIZEN, null);
@@ -149,13 +151,13 @@ public class MhaDualCitizenSteps extends AbstractSteps {
     }
 
     @Given("the mha dual citizen file is empty")
-    public void theMhaDualCitizenFileIsEmpty() throws IOException {
+    public void theMhaDualCitizenFileIsEmpty() {
         batchFileDataWriter.begin(mhaDualCitizenFileDataPrep.generateSingleHeader(), FileTypeEnum.MHA_DUAL_CITIZEN, null);
         batchFileDataWriter.end();
     }
 
     @Given("the mha dual citizen file has a run date in the future")
-    public void theMhaDualCitizenFileHasACutOffDateInTheFuture(DataTable dataTable) throws IOException {
+    public void theMhaDualCitizenFileHasACutOffDateInTheFuture(DataTable dataTable) {
         List<Map<String, String>> body = dataTable.asMaps(String.class, String.class);
 
         batchFileDataWriter.begin(mhaDualCitizenFileDataPrep.generateSingleHeader(dateUtils.daysAfterToday(1)), FileTypeEnum.MHA_DUAL_CITIZEN, null);
@@ -253,7 +255,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         PersonId personId = testContext.get(personName);
 
         Nationality prevNationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
-        Date validTill = new Date(dateUtils.endOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo).minusDays(1l)).getTime());
+        Date validTill = new Date(dateUtils.endOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo).minusDays(1L)).getTime());
         nationalityRepo.updateValidTill(validTill, prevNationality.getId());
 
         Batch batch = Batch.createCompleted();
@@ -282,9 +284,9 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         testAssert.assertEquals(NationalityEnum.SINGAPORE_CITIZEN, curNationality.getNationality(), "Person with "+personId.getNaturalId()+" is not a Singaporean!");
         testAssert.assertEquals(validFrom, curNationality.getBiTemporalData().getBusinessTemporalData().getValidFrom(), "Person with "+personId.getNaturalId()+" did not become a Singaporean on "+validFrom.toString());
 
-        Date validTill = new Date(dateUtils.beginningOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo).minusDays(1l)).getTime());
+        Date validTill = new Date(dateUtils.beginningOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo).minusDays(1L)).getTime());
         Nationality prevNationality = nationalityRepo.findNationalityByPerson(personId.getPerson(), validTill);
-        testAssert.assertEquals(dateUtils.endOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo).minusDays(1l)), prevNationality.getBiTemporalData().getBusinessTemporalData().getValidTill(), "Person with "+personId.getNaturalId()+" did not end his/her previous nationality on "+validTill.toString());
+        testAssert.assertEquals(dateUtils.endOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo).minusDays(1L)), prevNationality.getBiTemporalData().getBusinessTemporalData().getValidTill(), "Person with "+personId.getNaturalId()+" did not end his/her previous nationality on "+validTill.toString());
     }
 
     @Given("^([a-z_]+) who is (\\d+) years old converted to a dual citizen (\\d+) days ago$")
@@ -296,9 +298,9 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         testContext.set(personName, personId);
     }
 
-    @Given("^the mha dual citizen file contains invalid date of run and date of run is (EMPTY|SPACE|INVALID_FORMAT|FUTURE_DATE)$")
-    public void theMhaDualCitizenFileContainsInvalidDateOfRunAndDateOfRunIs(InvalidDateOfRunEnum errorType) throws IOException{
-        log.info("Creating an invalid Date of Run ({}) header in MHA Dual Citizen file", errorType);
+    @Given("^the mha dual citizen file contains invalid date of run and date of run is (EMPTY|EMPTY_SPACE|INVALID_FORMAT|FUTURE_DATE)$")
+    public void theMhaDualCitizenFileContainsInvalidDateOfRunAndDateOfRunIs(InvalidDateOfRunEnum type) throws IOException{
+        log.info("Creating an invalid Date of Run ({}) header in MHA Dual Citizen file", type);
 
         List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();
         List<String> body = new ArrayList<>();
@@ -306,7 +308,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         String validNric = mhaDualCitizenFileDataPrep.createValidNric();
         body.add(validNric);
 
-        listOfIdentifiersToWriteToFile.add(0, mhaDualCitizenFileDataPrep.generateInvalidSingleHeader(errorType));
+        listOfIdentifiersToWriteToFile.add(0, mhaDualCitizenFileDataPrep.generateInvalidSingleHeader(type));
         listOfIdentifiersToWriteToFile.addAll(body);
         listOfIdentifiersToWriteToFile.add(String.valueOf(body.size()));
 
@@ -314,32 +316,49 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         testContext.set("validNric", validNric);
     }
 
+    @Then("I verify that there is an error message for wrong header length")
+    public void iVerifyThatThereIsAnErrorMessageForWrongHeaderLength() {
+        log.info("Verifying that there is an error message for wrong header length");
+        FileReceived fileReceived = testContext.get("fileReceived");
+        Batch batch = batchRepo.findFirstByFileReceivedOrderByCreatedAtDesc(fileReceived);
+        List<ErrorMessage> errorMessages = errorMessageRepo.findByBatch(batch);
+        testAssert.assertEquals(true, errorMessages.stream().anyMatch(
+            errorMessage -> errorMessage.getMessage()
+                .contains(ErrorMessageConstants.HEADER_LENGTH_ERROR)),
+                "No invalid Date of Run error message found.");
+    }
+
+    @Then("I verify that there is an error message for wrong date format")
+    public void iVerifyThatThereIsAnErrorMessageForWrongDateFormat() {
+        log.info("Verifying that there is an error message for wrong date format");
+        FileReceived fileReceived = testContext.get("fileReceived");
+        Batch batch = batchRepo.findFirstByFileReceivedOrderByCreatedAtDesc(fileReceived);
+        List<ErrorMessage> errorMessages = errorMessageRepo.findByBatch(batch);
+        testAssert.assertEquals(true, errorMessages.stream().anyMatch(
+            errorMessage -> errorMessage.getMessage()
+                .contains("Must be in yyyyMMdd date format.")),
+                "No invalid Date of Run error message found.");
+    }
+
+    @Then("I verify that there is an error message for future date")
+    public void iVerifyThatThereIsAnErrorMessageForFutureDate() {
+        log.info("Verifying that there is an error message for future date");
+        FileReceived fileReceived = testContext.get("fileReceived");
+        Batch batch = batchRepo.findFirstByFileReceivedOrderByCreatedAtDesc(fileReceived);
+        List<ErrorMessage> errorMessages = errorMessageRepo.findByBatch(batch);
+        testAssert.assertEquals(true, errorMessages.stream().anyMatch(
+            errorMessage -> errorMessage.getMessage()
+                .contains(ErrorMessageConstants.EXTRACTION_DATE_AFTER_FILE_RECEIVED_DATE)),
+                "No invalid Date of Run error message found.");
+    }
+
     @Given("^the mha dual citizen file has (EMPTY|EMPTY_SPACE|INVALID|SHORT|S555|S888) nric$")
-    public void theMhaDualCitizenFileHasAnNric(String errorType) throws IOException {
-        log.info("Creating an invalid NRIC entry ({}) in MHA Dual Citizen file", errorType);
+    public void theMhaDualCitizenFileHasAnNric(InvalidNricEnum type) throws IOException {
+        log.info("Creating an invalid NRIC entry ({}) in MHA Dual Citizen file", type);
         List<String> listOfIdentifiersToWriteToFile = new ArrayList<>();
         List<String> body = new ArrayList<>();
-        String invalidNric = "";
 
-        if(errorType.equals("EMPTY")) {
-            invalidNric = "";
-        }
-        else if(errorType.equals("EMPTY_SPACE")) {
-            invalidNric = "         ";
-        }
-        else if(errorType.equals("INVALID")) {
-            invalidNric = mhaDualCitizenFileDataPrep.createInvalidNric();
-        }
-        else if(errorType.equals("SHORT")) {
-            invalidNric = mhaDualCitizenFileDataPrep.createValidNric().substring(0, 8);
-        }
-        else if(errorType.equals("S555")) {
-            invalidNric = "S5550000B";
-        }
-        else if(errorType.equals("S888")) {
-            invalidNric = "S8880001Z";
-        }
-
+        String invalidNric = mhaDualCitizenFileDataPrep.generateInvalidNric(type);
         body.add(invalidNric);
 
         listOfIdentifiersToWriteToFile.add(0, mhaDualCitizenFileDataPrep.generateSingleHeader());
@@ -358,7 +377,8 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         List<ErrorMessage> errorMessages = errorMessageRepo.findByBatch(batch);
         testAssert.assertEquals(true, errorMessages.stream().anyMatch(
             errorMessage -> errorMessage.getMessage()
-                .matches(".*Wrong body length.*")), "No invalid NRIC error message found.");
+                .contains(ErrorMessageConstants.BODY_LENGTH_ERROR)),
+                "No invalid NRIC error message found.");
     }
 
     @Then("I verify that the is an error message for null or blank nric")
@@ -369,7 +389,8 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         List<ErrorMessage> errorMessages = errorMessageRepo.findByBatch(batch);
         testAssert.assertEquals(true, errorMessages.stream().anyMatch(
             errorMessage -> errorMessage.getMessage()
-                .matches(".*NRIC cannot be null/blank.*")), "No invalid NRIC error message found.");
+                .contains(ErrorMessageConstants.NRIC_IS_BLANK)),
+                "No invalid NRIC error message found.");
     }
 
     @Then("I verify that there is an error message for invalid nric")
@@ -380,6 +401,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         List<ErrorMessage> errorMessages = errorMessageRepo.findByBatch(batch);
         testAssert.assertEquals(true, errorMessages.stream().anyMatch(
             errorMessage -> errorMessage.getMessage()
-                .matches(".*Must be valid NRIC in format.*")),"No invalid NRIC error message found!");
+                .contains(ErrorMessageConstants.MUST_BE_VALID_NRIC_IN_VALID_FORMAT)),
+                "No invalid NRIC error message found!");
     }
 }

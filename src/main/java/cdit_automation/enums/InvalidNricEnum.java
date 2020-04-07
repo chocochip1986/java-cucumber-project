@@ -1,14 +1,16 @@
 package cdit_automation.enums;
 
-public enum InvalidDateOfRunEnum {
+public enum InvalidNricEnum {
     EMPTY("EMPTY"),
     EMPTY_SPACE("EMPTY_SPACE"),
-    INVALID_FORMAT("INVALID_FORMAT"),
-    FUTURE_DATE("FUTURE_DATE");
+    INVALID("INVALID"),
+    SHORT("SHORT"),
+    S555("S555"),
+    S888("S888");
 
     private String value;
 
-    InvalidDateOfRunEnum(String value) {
+    InvalidNricEnum(String value) {
         this.value = value;
     }
 
@@ -21,8 +23,8 @@ public enum InvalidDateOfRunEnum {
         return this.value;
     }
 
-    public static InvalidDateOfRunEnum fromString(String str) {
-        for (InvalidDateOfRunEnum enumVal : InvalidDateOfRunEnum.values()) {
+    public static InvalidNricEnum fromString(String str) {
+        for (InvalidNricEnum enumVal : InvalidNricEnum.values()) {
             if (enumVal.getValue().equals(str)) {
                 return enumVal;
             }

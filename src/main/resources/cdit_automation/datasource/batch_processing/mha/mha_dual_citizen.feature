@@ -20,24 +20,28 @@ Feature: Data processing for MHA dual citizenship
     Given the mha dual citizen file contains invalid date of run and date of run is EMPTY
     When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
     And the Mha Dual Citizen batch job completes running with status FILE_ERROR
+    Then I verify that there is an error message for wrong header length
 
   @set_3
   Scenario: MHA sends file with empty spaces of Date of Run
-    Given the mha dual citizen file contains invalid date of run and date of run is SPACE
+    Given the mha dual citizen file contains invalid date of run and date of run is EMPTY_SPACE
     When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
     And the Mha Dual Citizen batch job completes running with status RAW_DATA_ERROR
+    Then I verify that there is an error message for wrong date format
 
   @set_4
   Scenario: MHA sends file with invalid format for Date of Run
     Given the mha dual citizen file contains invalid date of run and date of run is INVALID_FORMAT
     When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
     And the Mha Dual Citizen batch job completes running with status RAW_DATA_ERROR
+    Then I verify that there is an error message for wrong date format
 
   @set_5
   Scenario: MHA sends file with future date for Date of Run
     Given the mha dual citizen file contains invalid date of run and date of run is FUTURE_DATE
     When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
     And the Mha Dual Citizen batch job completes running with status BULK_CHECK_VALIDATION_ERROR
+    Then I verify that there is an error message for future date
 
   @set_6
   Scenario: MHA sends file with empty nric
@@ -80,6 +84,8 @@ Feature: Data processing for MHA dual citizenship
     When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
     And the Mha Dual Citizen batch job completes running with status RAW_DATA_ERROR
     Then I verify that there is an error message for invalid nric
+
+
 
 
 

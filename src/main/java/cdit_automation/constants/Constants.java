@@ -3,6 +3,11 @@ package cdit_automation.constants;
 import java.time.LocalDateTime;
 
 public class Constants {
+
+    private Constants() {
+        // Not Needed
+    }
+
     public static final String SLAVE_STEPS = "slaveSteps";
     public static final String CREATE_BATCH_STEP = "createBatch";
     public static final String EXTRACT_INCOMING_DATA_STEP = "extractIncomingDataStep";
@@ -14,12 +19,15 @@ public class Constants {
     public static final String ERROR_RATE_STEP = "errorRateStep";
     public static final String MAP_TO_PREPARED_DATA_STEP = "mapToPreparedDataStep";
     public static final String SEND_DATA_STEP = "sendPreparedDataToMq";
-    public static final String FILE_LEVEL_CHECK_AGAINST_PREP_DATA_STEP =
-            "fileLevelCheckAgainstPrepDataStep";
+    public static final String BULK_MAP_TO_PREPARED_STEP = "bulkMapToPreparedStep";
+    public static final String CLEANUP_STEP = "cleanupStep";
     public static final int CHUNK_SIZE = 100;
 
+    public static final String INFINITE_LOCAL_DATE_TIME_STRING = "9999-12-31 23:59:59";
     public static final LocalDateTime INFINITE_LOCAL_DATE_TIME =
             LocalDateTime.of(9999, 12, 31, 23, 59, 59);
+    public static final LocalDateTime DEFAULT_START_LOCAL_DATE_TIME =
+            LocalDateTime.of(1, 1, 1, 0, 0, 0);
 
     public static final String FAILED = "FAILED";
     public static final String SKIP_CHECK_VALIDATED_DATA_PROCESSOR =
@@ -28,6 +36,7 @@ public class Constants {
             "SKIP_MAP_TO_PREPARED_DATA_PROCESSOR";
     public static final String ANY = "*";
     public static final String JOB_CONTEXT_BATCH = "batch";
+    public static final String JOB_CONTEXT_IGNORE_ERROR_RATE = "isIgnoreErrorRate";
 
     public static final String REGEX_DIGITS = "^\\d+$";
     public static final String REGEX_POSITIVE_NEGATIVE_SIGN = "^[+-]$";
@@ -37,6 +46,10 @@ public class Constants {
 
     public static final int RELEVANT_YEAR_YEAR_OF_ASSESSMENT = 1900;
 
+    // For SimpleDateFormat usage.
     public static final String DATE_FORMAT_DDMMYYYY = "ddMMyyyy";
     public static final String DATE_FORMAT_YYYYMMDD = "yyyyMMdd";
+
+    // For DateTimeFormatter usage.
+    public static final String DATE_TIME_FORMATTER_UUUUMMDD = "uuuuMMdd";
 }
