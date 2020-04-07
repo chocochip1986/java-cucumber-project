@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 @CucumberOptions(
         plugin = {"pretty", "html:test_results/cucumber-reports"},
         features = "classpath:cdit_automation",
-        glue={"cdit_automation.step_definition.datasource"},
+        glue={"cdit_automation.step_definition.*"},
         tags = {"not @wip", "not @defect", "not @example_only"})
 public class RunCucumberTest {
     private static String[] defaultOptions = {
