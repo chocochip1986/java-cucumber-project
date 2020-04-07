@@ -250,6 +250,23 @@ Feature: MHA Change address
       | nca                    | mha_c                 |
       | nca                    | nca                   |
 
-    #TODO:New Scenario
-    #Change address A=> B => A
+
+    @set_6
+    Scenario: john has same old and new address
+      Given A singaporean person john owns a landed property abc
+      And john resides in a condo property abe
+      And the mha change address file contains information that john changed from (mha_z)abe to (mha_z)abe 5 days ago
+      When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
+      And the Mha Change Address batch job completes running with status CLEANUP
+      And the error message contains Old and new address are identical
+
+    @set_7
+    Scenario: john move back to his first residence address
+      Given A singaporean person john resides a landed property abc
+      And john had lived in a hdb property abd from 12 Jan 2000 to 12 Jan 2015
+      And the mha change address file contains information that john changed from (mha_z)abc to (mha_z)abd 5 days ago
+      When MHA sends the MHA_CHANGE_ADDRESS file to Datasource sftp for processing
+      And the Mha Change Address batch job completes running with status CLEANUP
+      And there are no error messages
+
 
