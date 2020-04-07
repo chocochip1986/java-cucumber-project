@@ -1,4 +1,3 @@
-@datasource
 @development
 @dual_citizen
 @mha
@@ -86,13 +85,56 @@ Feature: Data processing for MHA dual citizenship
     And the Mha Dual Citizen batch job completes running with status RAW_DATA_ERROR
     Then I verify that there is an error message for invalid nric
 
-  @set_3 @defect
-  Scenario: Duplicate nric in dual citizen file
+  @set_2 @defect
+  Scenario: MHA sends file with duplicate nric
     Given the mha dual citizen file has duplicate nric record
     | DuplicatedNrics |
     | 2               |
     When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
     And the Mha Dual Citizen batch job completes running with status CLEANUP
+
+  @set_3
+  Scenario: Person nric is not found in CDS
+    Given the mha dual citizen file has the following details:
+      | NonExistentNrics | NewDualCitizensInFile |
+      | 1                | 1                     |
+    When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
+    And the Mha Dual Citizen batch job completes running with status CLEANUP
+    And no update is done for these nrics
+    Then I verify that there are new dual citizen in datasource db
+
+  @set_4
+  Scenario: Person nric is a dual citizen and remains as a dual citizen
+    Given john who is 13 years old converted to a dual citizen 7 days ago
+    And MHA dual citizen file contains john nric
+    When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
+    And the Mha Dual Citizen batch job completes running with status CLEANUP
+    Then I verify that john nationality is not update in datasource db
+
+
+
+
+
+
+
+
+
+
+
+
+  @set_5 @defect
+  Scenario: An person who was previously a dual citizen is now a dual citizen again
+    Given john was a dual citizen 100 days ago
+    And john became a dual citizen 99 days ago
+    When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
+    Then the Mha Dual Citizen batch job completes running with status CLEANUP
+    And I verify that john is a dual citizen 99 days ago
+
+
+
+
+
+
 
   @set_4
   Scenario: Test scenario
@@ -118,24 +160,6 @@ Feature: Data processing for MHA dual citizenship
     When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
     And the Mha Dual Citizen batch job completes running with status BULK_CHECK_VALIDATION_ERROR
     And the error message contains Extraction date cannot be after File Received date
-
-  @set_6
-  Scenario: An person who was previously a dual citizen is now a dual citizen again
-    Given john was a dual citizen 100 days ago
-    And john became a dual citizen 99 days ago
-    When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
-    Then the Mha Dual Citizen batch job completes running with status CLEANUP
-    And I verify that john is a dual citizen 99 days ago
-
-  @set_7
-  Scenario: Person nric is not found in CDS
-    Given the mha dual citizen file has the following details:
-    | NonExistentNrics | NewDualCitizensInFile |
-    | 1                | 1                     |
-    When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
-    And the Mha Dual Citizen batch job completes running with status CLEANUP
-    And no update is done for these nrics
-    Then I verify that there are new dual citizen in datasource db
 
   @set_8 @defect
   Scenario: Person has a ceased citizenship date that is after the dual citizen date of run

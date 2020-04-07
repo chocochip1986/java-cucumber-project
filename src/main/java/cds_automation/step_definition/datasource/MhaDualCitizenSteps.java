@@ -289,15 +289,6 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         testAssert.assertEquals(dateUtils.endOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo).minusDays(1L)), prevNationality.getBiTemporalData().getBusinessTemporalData().getValidTill(), "Person with "+personId.getNaturalId()+" did not end his/her previous nationality on "+validTill.toString());
     }
 
-    @Given("^([a-z_]+) who is (\\d+) years old converted to a dual citizen (\\d+) days ago$")
-    public void personConvertedToADualCitizenDaysAgo(String personName, int age, int daysAgo) {
-        LocalDate birthDate = dateUtils.yearsBeforeToday(age);
-        LocalDate runDate = dateUtils.daysBeforeToday(daysAgo);
-        PersonId personId = personFactory.createSCTurnDualCitizen(personName, birthDate, runDate);
-
-        testContext.set(personName, personId);
-    }
-
     @Given("^the mha dual citizen file contains invalid date of run and date of run is (EMPTY|EMPTY_SPACE|INVALID_FORMAT|FUTURE_DATE)$")
     public void theMhaDualCitizenFileContainsInvalidDateOfRunAndDateOfRunIs(InvalidDateOfRunEnum type) throws IOException{
         log.info("Creating an invalid Date of Run ({}) header in MHA Dual Citizen file", type);
@@ -403,5 +394,36 @@ public class MhaDualCitizenSteps extends AbstractSteps {
             errorMessage -> errorMessage.getMessage()
                 .contains(ErrorMessageConstants.MUST_BE_VALID_NRIC_IN_VALID_FORMAT)),
                 "No invalid NRIC error message found!");
+    }
+
+    @Given("^([a-z_]+) who is (\\d+) years old converted to a dual citizen (\\d+) days ago$")
+    public void personConvertedToADualCitizenDaysAgo(String personName, int age, int daysAgo) {
+        LocalDate birthDate = dateUtils.yearsBeforeToday(age);
+        LocalDate runDate = dateUtils.daysBeforeToday(daysAgo);
+        PersonId personId = personFactory.createSCTurnDualCitizen(personName, birthDate, runDate);
+        testContext.set(personName, personId);
+    }
+
+    @And("^MHA dual citizen file contains ([a-z_]+) nric$")
+    public void mhaDualCitizenFileContainsNric(String personName) {
+        batchFileDataWriter.begin(mhaDualCitizenFileDataPrep.generateSingleHeader(LocalDate.now()), FileTypeEnum.MHA_DUAL_CITIZEN, null);
+        PersonId personId = testContext.get(personName);
+        MhaDualCitizenFileEntry mhaDualCitizenFileEntry = MhaDualCitizenFileEntry.builder().identiifer(personId.getNaturalId()).build();
+        testContext.set("nric", personId.getNaturalId());
+        batchFileDataWriter.chunkOrWrite(mhaDualCitizenFileEntry.toString());
+        batchFileDataWriter.end();
+    }
+
+    @Then("^I verify that ([a-z_]+) nationality is not update in datasource db$")
+    public void iVerifyThatNationalityIsNotUpdateInDatasourceDb(String personName) {
+        log.info("Verifying that the person nationality was not updated");
+        FileReceived fileReceived = testContext.get("fileReceived");
+        Batch batch = batchRepo.findFirstByFileReceivedOrderByCreatedAtDesc(fileReceived);
+        log.info("Batch Id: {]", batch.getId());
+        PersonId personId = testContext.get(personName);
+        Nationality nationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
+        log.info("Nationality Id: {}", nationality.getId());
+        testAssert.assertNotEquals(nationality.getBatch().getId(), batch.getId(),
+            "Person nationality was updated by this batch");
     }
 }
