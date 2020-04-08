@@ -93,10 +93,9 @@ Feature: Data processing for MHA bulk citizen file
       | CurrentDate     | CurrentDate + 1 | RAW_DATA_ERROR              | Extraction Date must be equal/after Cut-off Date                                                    |
       | CurrentDate + 1 | CurrentDate     | BULK_CHECK_VALIDATION_ERROR | Extraction date cannot be after File Received date                                                  |
       | CurrentDate + 1 | CurrentDate + 1 | BULK_CHECK_VALIDATION_ERROR | Extraction date cannot be after File Received date, Cut-off date cannot be after File Received date |
-#      | CurrentDate     | 20191231        | CLEANUP                     |                                                                                                     |
 
   @set_8
-  Scenario Outline: Datasource should not process files(s) with invalid NRIC records
+  Scenario Outline: Datasource should not process files with invalid NRIC records
     Given MHA send MHA_BULK_CITIZEN file with the following data:
       | NRIC   | FIN   | NAME   | DOB   | DOD   | GENDER   | ADDR_IND   | ADDR_TYPE   | ADDR   | INVALID_ADDR_TAG   | CTZ_ATT_DATE   |
       | <NRIC> | <FIN> | <NAME> | <DOB> | <DOD> | <GENDER> | <ADDR_IND> | <ADDR_TYPE> | <ADDR> | <INVALID_ADDR_TAG> | <CTZ_ATT_DATE> |
@@ -124,14 +123,99 @@ Feature: Data processing for MHA bulk citizen file
     Then the Mha Bulk Citizen batch job completes running with status BULK_CHECK_VALIDATION_ERROR
     And the error message contains Partially Duplicate Record found
 
-  Scenario: Datasource should not process record(s) with invalid FIN
+  @set_10
+  Scenario Outline: Datasource should not process record(s) with invalid FIN format
+    Given MHA send MHA_BULK_CITIZEN file with the following data:
+      | NRIC   | FIN   | NAME   | DOB   | DOD   | GENDER   | ADDR_IND   | ADDR_TYPE   | ADDR   | INVALID_ADDR_TAG   | CTZ_ATT_DATE   |
+      | <NRIC> | <FIN> | <NAME> | <DOB> | <DOD> | <GENDER> | <ADDR_IND> | <ADDR_TYPE> | <ADDR> | <INVALID_ADDR_TAG> | <CTZ_ATT_DATE> |
+    When MHA sends the MHA_BULK_CITIZEN file to Datasource sftp for processing
+    Then the Mha Bulk Citizen batch job completes running with status <BATCH_STATUS>
+    And the error message contains <ERROR_MESSAGE>
+    Examples:
+      | NRIC      | FIN       | NAME   | DOB      | DOD | GENDER | ADDR_IND | ADDR_TYPE | ADDR           | INVALID_ADDR_TAG | CTZ_ATT_DATE | BATCH_STATUS                | ERROR_MESSAGE |
+      | T7754288J | F4132581X | Janice | 20010719 | -   | F      | C        | C         | Wonderland 456 | -                | 20010719     | BULK_CHECK_VALIDATION_ERROR | Invalid FIN   |
+      | T7754288J | F413258W  | Janice | 20010719 | -   | F      | C        | C         | Wonderland 456 | -                | 20010719     | BULK_CHECK_VALIDATION_ERROR | Invalid FIN   |
+      | T7754288J | E4132581W | Janice | 20010719 | -   | F      | C        | C         | Wonderland 456 | -                | 20010719     | BULK_CHECK_VALIDATION_ERROR | Invalid FIN   |
+      | T7754288J | H4132581W | Janice | 20010719 | -   | F      | C        | C         | Wonderland 456 | -                | 20010719     | BULK_CHECK_VALIDATION_ERROR | Invalid FIN   |
 
-  Scenario: Datsource should not process record(s) with invalid DateOfBirth
+  @set_1
+  Scenario: Datasource should not process record(s) with empty name
+    Given MHA send MHA_BULK_CITIZEN file with the following data:
+      | NRIC      | FIN       | NAME | DOB      | DOD | GENDER | ADDR_IND | ADDR_TYPE | ADDR           | INVALID_ADDR_TAG | CTZ_ATT_DATE |
+      | S4764841F | G4503131X | -    | 19990219 | -   | M      | C        | C         | Wonderland 456 | -                | -            |
+    When MHA sends the MHA_BULK_CITIZEN file to Datasource sftp for processing
+    Then the Mha Bulk Citizen batch job completes running with status RAW_DATA_ERROR
+    And the error message contains Name field cannot be empty
 
-  Scenario: Datasource should not process record(s) with invalid DateOfDeath
+  @set_2 @wip
+  Scenario Outline: Datasource should not process record(s) with invalid DateOfBirth
+    Given MHA send MHA_BULK_CITIZEN file with the following data:
+      | NRIC   | FIN   | NAME   | DOB   | DOD   | GENDER   | ADDR_IND   | ADDR_TYPE   | ADDR   | INVALID_ADDR_TAG   | CTZ_ATT_DATE   |
+      | <NRIC> | <FIN> | <NAME> | <DOB> | <DOD> | <GENDER> | <ADDR_IND> | <ADDR_TYPE> | <ADDR> | <INVALID_ADDR_TAG> | <CTZ_ATT_DATE> |
+    When MHA sends the MHA_BULK_CITIZEN file to Datasource sftp for processing
+    Then the Mha Bulk Citizen batch job completes running with status <BATCH_STATUS>
+    And the error message contains <ERROR_MESSAGE>
+    Examples:
+      | NRIC      | FIN       | NAME | DOB      | DOD | GENDER | ADDR_IND | ADDR_TYPE | ADDR           | INVALID_ADDR_TAG | CTZ_ATT_DATE | BATCH_STATUS   | ERROR_MESSAGE                         |
+      | S4764841F | G4503131X | John | 00000000 | -   | F      | C        | C         | Wonderland 456 | -                | -            | RAW_DATA_ERROR | Invalid Date of Birth                 |
+      | S4764841F | G4503131X | John | -        | -   | F      | C        | C         | Wonderland 456 | -                | -            | RAW_DATA_ERROR | Date of Birth must be in valid format |
+      | S4764841F | G4503131X | John | 19991301 | -   | F      | C        | C         | Wonderland 456 | -                | -            | RAW_DATA_ERROR | Date of Birth must be in valid format |
+      | S4764841F | G4503131X | John | 19991232 | -   | F      | C        | C         | Wonderland 456 | -                | -            | RAW_DATA_ERROR | Date of Birth must be in valid format |
+      | S4764841F | G4503131X | John | 20010229 | -   | F      | C        | C         | Wonderland 456 | -                | -            | RAW_DATA_ERROR | Date of Birth must be in valid format |
+      | S4764841F | G4503131X | John | 20080101 | -   | F      | C        | C         | Wonderland 456 | -                | -            | RAW_DATA_ERROR | Age must be 12 or older               |
+      | S4764841F | G4503131X | John | 00001001 | -   | F      | C        | C         | Wonderland 456 | -                | -            | RAW_DATA_ERROR | Date of Birth must be in valid format |
+      | S4764841F | G4503131X | John | 17990101 | -   | F      | C        | C         | Wonderland 456 | -                | -            | RAW_DATA_ERROR | Date of Birth must be in valid format |
 
+  @set_3 @defect @GRYFFINDOR-1290
+  Scenario Outline: Datasource should not process record(s) with invalid DateOfDeath
+    Given MHA send MHA_BULK_CITIZEN file with the following data:
+      | NRIC   | FIN   | NAME   | DOB   | DOD   | GENDER   | ADDR_IND   | ADDR_TYPE   | ADDR   | INVALID_ADDR_TAG   | CTZ_ATT_DATE   |
+      | <NRIC> | <FIN> | <NAME> | <DOB> | <DOD> | <GENDER> | <ADDR_IND> | <ADDR_TYPE> | <ADDR> | <INVALID_ADDR_TAG> | <CTZ_ATT_DATE> |
+    When MHA sends the MHA_BULK_CITIZEN file to Datasource sftp for processing
+    Then the Mha Bulk Citizen batch job completes running with status <BATCH_STATUS>
+    And the error message contains <ERROR_MESSAGE>
+    Examples:
+      | NRIC      | FIN       | NAME | DOB      | DOD      | GENDER | ADDR_IND | ADDR_TYPE | ADDR           | INVALID_ADDR_TAG | CTZ_ATT_DATE | BATCH_STATUS   | ERROR_MESSAGE                   |
+      | S4764841F | G4503131X | John | 19990516 | 00001010 | M      | C        | C         | Wonderland 456 | -                | -            | RAW_DATA_ERROR | Date of death format is invalid |
+      | S4764841F | G4503131X | John | 19990516 | 10102008 | M      | C        | C         | Wonderland 456 | -                | -            | RAW_DATA_ERROR | Date of death format is invalid |
+      | S4764841F | G4503131X | John | 19990516 | 00000000 | M      | C        | C         | Wonderland 456 | -                | -            | RAW_DATA_ERROR | Date of death format is invalid |
+      | S4764841F | G4503131X | John | 19990516 | 19990516 | M      | C        | C         | Wonderland 456 | -                | -            | RAW_DATA_ERROR | Date of death format is invalid |
+      | S4764841F | G4503131X | John | 19990516 | 19901231 | M      | C        | C         | Wonderland 456 | -                | -            | RAW_DATA_ERROR | Date of death format is invalid |
+
+  @set_4
+  Scenario Outline: Datasource should not process record(s) with invalid gender
+    Given MHA send MHA_BULK_CITIZEN file with the following data:
+      | NRIC   | FIN   | NAME   | DOB   | DOD   | GENDER   | ADDR_IND   | ADDR_TYPE   | ADDR   | INVALID_ADDR_TAG   | CTZ_ATT_DATE   |
+      | <NRIC> | <FIN> | <NAME> | <DOB> | <DOD> | <GENDER> | <ADDR_IND> | <ADDR_TYPE> | <ADDR> | <INVALID_ADDR_TAG> | <CTZ_ATT_DATE> |
+    When MHA sends the MHA_BULK_CITIZEN file to Datasource sftp for processing
+    Then the Mha Bulk Citizen batch job completes running with status <BATCH_STATUS>
+    And the error message contains <ERROR_MESSAGE>
+    Examples:
+      | NRIC      | FIN       | NAME | DOB      | DOD | GENDER | ADDR_IND | ADDR_TYPE | ADDR           | INVALID_ADDR_TAG | CTZ_ATT_DATE | BATCH_STATUS   | ERROR_MESSAGE                |
+      | S4764841F | G4503131X | John | 19990516 | -   | A      | C        | C         | Wonderland 456 | -                | -            | RAW_DATA_ERROR | Gender can only be M, F or U |
+      | S4764841F | G4503131X | John | 19990516 | -   | -      | C        | C         | Wonderland 456 | -                | -            | RAW_DATA_ERROR | Gender field cannot be empty |
+
+  @wip
   Scenario: Datasource should not process record(s) with invalid oversea address
 
+  @wip
   Scenario: Datasource should not process record(s) with invalid address tag
 
-  Scenario: Datasource should not process record(s) with invalid citizen attainment date
+  @set_5 @wip @defect @GRYFFINDOR-1292 @GRYFFINDOR-1293
+  Scenario Outline: Datasource should not process record(s) with invalid citizen attainment date
+    Given MHA send MHA_BULK_CITIZEN file with the following data:
+      | NRIC   | FIN   | NAME   | DOB   | DOD   | GENDER   | ADDR_IND   | ADDR_TYPE   | ADDR   | INVALID_ADDR_TAG   | CTZ_ATT_DATE   |
+      | <NRIC> | <FIN> | <NAME> | <DOB> | <DOD> | <GENDER> | <ADDR_IND> | <ADDR_TYPE> | <ADDR> | <INVALID_ADDR_TAG> | <CTZ_ATT_DATE> |
+    When MHA sends the MHA_BULK_CITIZEN file to Datasource sftp for processing
+    Then the Mha Bulk Citizen batch job completes running with status <BATCH_STATUS>
+    And the error message contains <ERROR_MESSAGE>
+    Examples:
+      | NRIC      | FIN       | NAME | DOB      | DOD      | GENDER | ADDR_IND | ADDR_TYPE | ADDR           | INVALID_ADDR_TAG | CTZ_ATT_DATE | BATCH_STATUS                | ERROR_MESSAGE                                                                                        |
+      | S4764841F | G4503131X | John | 19990516 | -        | U      | C        | C         | Wonderland 456 | -                | 00000000     | RAW_DATA_ERROR              | Must be in yyyyMMdd date format                                                                      |
+      | S4764841F | G4503131X | John | 19990516 | -        | U      | C        | C         | Wonderland 456 | -                | 00001015     | RAW_DATA_ERROR              | Must be in yyyyMMdd date format                                                                      |
+      | S4764841F | G4503131X | John | 19990516 | -        | U      | C        | C         | Wonderland 456 | -                | 99991015     | BULK_CHECK_VALIDATION_ERROR | Citizenship attainment date must be equal/before Cut-off date OR Year value cannot be less than 1800 |
+      | S4764841F | G4503131X | John | 19990516 | -        | U      | C        | C         | Wonderland 456 | -                | 19901015     | RAW_DATA_ERROR              | Citizenship attainment date must be after date of birth                                              |
+      | S4764841F | G4503131X | John | 19990516 | -        | U      | C        | C         | Wonderland 456 | -                | 17991015     | BULK_CHECK_VALIDATION_ERROR | Citizenship attainment date must be equal/before Cut-off date OR Year value cannot be less than 1800 |
+      | S4764841F | G4503131X | John | 19990516 | 20050406 | U      | C        | C         | Wonderland 456 | -                | 20050406     | RAW_DATA_ERROR              | Must be in yyyyMMdd date format                                                                      |
+      | S4764841F | G4503131X | John | 19990516 | 20050406 | U      | C        | C         | Wonderland 456 | -                | 20050425     | RAW_DATA_ERROR              | Must be in yyyyMMdd date format                                                                      |
+      | S4764841F | G4503131X | John | 19990516 | 20050406 | U      | C        | C         | Wonderland 456 | -                | -            | RAW_DATA_ERROR              | Must be in yyyyMMdd date format                                                                      |
