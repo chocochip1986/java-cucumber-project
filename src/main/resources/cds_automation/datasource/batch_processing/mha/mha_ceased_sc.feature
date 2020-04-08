@@ -43,6 +43,7 @@ Feature: Data processing for Mha ceased citizenship
     And I verify that the following error message appeared:
       | Message                            | Count |
       | Completely Duplicate Record found. | 3     |
+    And I verify that the correct persons have ceased being singaporean
 
   @set_4 @GRYFFINDOR-908 @defect
   Scenario: Mha send a ceased citizenship file with a record existing in the system and also duplicated in the file

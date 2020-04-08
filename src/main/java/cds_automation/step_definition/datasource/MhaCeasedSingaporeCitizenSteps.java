@@ -5,9 +5,11 @@ import cds_automation.data_helpers.datasource.batch_entities.MhaCeasedCitizenFil
 import cds_automation.data_setup.Phaker;
 import cds_automation.enums.datasource.FileTypeEnum;
 import cds_automation.enums.datasource.NationalityEnum;
+import cds_automation.exceptions.TestFailException;
 import cds_automation.models.datasource.Nationality;
 import cds_automation.models.datasource.PersonId;
 import cds_automation.models.datasource.PersonName;
+import cds_automation.utilities.DateUtils;
 import cds_automation.utilities.StringUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
@@ -17,6 +19,7 @@ import org.junit.Ignore;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -207,5 +210,26 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
         testContext.set(CEASED_CITIZEN_DATE_OF_RUN, headerString);
 
         return headerString;
+    }
+
+    @And("^I verify that the correct persons have ceased being singaporean$")
+    public void iVerifyThatTheCorrectPersonsHaveCeasedBeingSingaporean() {
+      List<MhaCeasedCitizenFileEntry> ceasedCases = testContext.get("citizens");
+
+      for ( MhaCeasedCitizenFileEntry ceasedCase : ceasedCases ) {
+          LocalDate ceassationDate = LocalDate.parse(ceasedCase.getCitizenRenunciationDate(), DateUtils.DATETIME_FORMATTER_YYYYMMDD);
+          String nric = ceasedCase.getNric();
+          PersonId personId = personIdRepo.findByNaturalId(nric);
+          Nationality curNationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
+
+          testAssert.assertEquals(NationalityEnum.NON_SINGAPORE_CITIZEN, curNationality.getNationality(), "Person with "+nric+" is not a non-SC!");
+          testAssert.assertEquals(dateUtils.beginningOfDayToTimestamp(ceassationDate), curNationality.getBiTemporalData().getBusinessTemporalData().getValidFrom(), "Person with "+nric+" has wrong validFrom date!");
+          testAssert.assertEquals(dateUtils.beginningOfDayToTimestamp(ceassationDate), curNationality.getCitizenshipRenunciationDate(), "Person with "+nric+" has incorrect citizenship renunciation date!");
+
+          Date validTill = new Date(dateUtils.beginningOfDayToTimestamp(ceassationDate.minusDays(1l)).getTime());
+          Nationality prevNationality = nationalityRepo.findNationalityByPerson(personId.getPerson(), validTill);
+          testAssert.assertEquals(NationalityEnum.SINGAPORE_CITIZEN, prevNationality.getNationality(), "Person with "+nric+" does not have the correct previous nationality!");
+          testAssert.assertEquals(dateUtils.endOfDayToTimestamp(ceassationDate.minusDays(1l)), prevNationality.getBiTemporalData().getBusinessTemporalData().getValidTill(), "Person with "+nric+" did not cease being a singaporean correctly!");
+      }
     }
 }

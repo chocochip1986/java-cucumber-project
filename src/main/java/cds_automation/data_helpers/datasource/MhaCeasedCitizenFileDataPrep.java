@@ -130,6 +130,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
             .flatMap(Collection::stream)
             .collect(Collectors.toList());
     testContext.set("ceasedCitizens", ceasedCitizens);
+    testContext.set("citizens", citizens);
 
     return ceasedCitizens.stream()
         .map(MhaCeasedCitizenFileEntry::toString)
