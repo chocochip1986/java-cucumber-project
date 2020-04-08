@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class DateUtils {
 
-    public final DateTimeFormatter DATETIME_FORMATTER_YYYYMMDD = DateTimeFormatter.ofPattern("yyyyMMdd");
-    public final DateTimeFormatter DATETIME_FORMATTER_DDMMYYYY = DateTimeFormatter.ofPattern("ddMMyyyy");
+    public static final DateTimeFormatter DATETIME_FORMATTER_YYYYMMDD = DateTimeFormatter.ofPattern("yyyyMMdd");
+    public static final DateTimeFormatter DATETIME_FORMATTER_DDMMYYYY = DateTimeFormatter.ofPattern("ddMMyyyy");
 
     public Timestamp beginningOfDayToTimestamp(LocalDate inputDate) {
         if (inputDate == null) {

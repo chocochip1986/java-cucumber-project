@@ -200,6 +200,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
               .nric(nric)
               .isMappable(true)
               .build();
+      ceasedCitizen.generateRecordDetailsValidated();
       ceasedCitizenRepo.save(ceasedCitizen);
       PersonId currentPersonId = personIdRepo.findPersonByNaturalId(nric);
       if (currentPersonId != null) {

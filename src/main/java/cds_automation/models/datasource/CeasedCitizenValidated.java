@@ -1,6 +1,7 @@
 package cds_automation.models.datasource;
 
 import cds_automation.data_setup.Phaker;
+import cds_automation.utilities.DateUtils;
 import cds_automation.utilities.StringUtils;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -80,5 +81,15 @@ public class CeasedCitizenValidated extends AbstractValidated {
             .citizenRenunciationDate(citizenRenunciationDate)
             .isMappable(true)
             .build();
+  }
+
+  public void generateRecordDetailsValidated() {
+    this.setRecordDetailsValidated(
+            this.getBatch().getId() 
+                    + this.getNric()
+                    + this.getName()
+                    + this.getNationality()
+                    + this.getCitizenRenunciationDate()
+                          .format(DateUtils.DATETIME_FORMATTER_YYYYMMDD));
   }
 }

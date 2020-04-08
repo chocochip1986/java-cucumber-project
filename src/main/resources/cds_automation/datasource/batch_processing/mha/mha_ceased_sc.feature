@@ -16,8 +16,8 @@ Feature: Data processing for Mha ceased citizenship
       | Message                   | Count |
       | NRIC not found in System. | 1     |
 
-  @set_2 @GRYFFINDOR-908 @defect
-  Scenario: Mha send a ceased citizenship file with a record that is already exist in system
+  @set_2
+  Scenario: Mha send a ceased citizenship file with a record that was sent previously 
     Given the database populated with the following data:
       | SingaporeCitizen | DualCitizen | CeasedCitizen |
       | 1                | 0           | 1             |
