@@ -176,9 +176,8 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
 
       Nationality curNationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
       testAssert.assertEquals(NationalityEnum.NON_SINGAPORE_CITIZEN, curNationality.getNationality(), "Person with "+personId.getNaturalId()+" is not a non-singaporean");
-      Date expectedValidFrom = new Date(dateUtils.beginningOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo)).getTime());
+      Timestamp expectedValidFrom = dateUtils.beginningOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo));
       testAssert.assertEquals(expectedValidFrom, curNationality.getBiTemporalData().getBusinessTemporalData().getValidFrom(), "Person with "+personId.getNaturalId()+" is not a non-singaporean from "+expectedValidFrom.toString());
-
     }
 
     private String getCeasedCitizenHeaderString(String dateOption) {

@@ -243,7 +243,7 @@ Feature: Data processing for Mha ceased citizenship
       | 17990101       | Year value cannot be less than 1800            | 1     | RAW_DATA_ERROR              |
       | onDateOfRun    | <Error message>                                | 1     | RAW_DATA_ERROR              |
 
-  @set_4 @wip
+  @set_4
   Scenario: John ceased citizenship before he started becoming a dual citizen
     Given john who is 13 years old converted to a dual citizen 10 days ago
     And MHA sends a ceased citizenship file stating that john renounced his citizenship 10 days ago

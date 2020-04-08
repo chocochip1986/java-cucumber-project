@@ -188,7 +188,7 @@ Feature: Data processing for MHA dual citizenship
     And jane is a dual citizen with a citizenship attainment date dating 10 days ago
 
   @set_10
-  Scenario: Person loses dual citizenship and becomes a non singaporean
+  Scenario: Person loses dual citizenship and becomes a singaporean
     Given jane who is 12 years old had her citizenship renounced 365 days ago
     And jane became a singapore citizen 10 days ago
     And mha states that jane is a dual citizen since 8 days ago
