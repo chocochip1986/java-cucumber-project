@@ -1,6 +1,5 @@
 package cds_automation.repositories.datasource;
 
-
 import cds_automation.models.datasource.Batch;
 import cds_automation.models.datasource.IncomingRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,4 +19,6 @@ public interface IncomingRecordRepo extends JpaRepository<IncomingRecord, Long> 
 
     @Query(value = "SELECT ir FROM IncomingRecord ir WHERE ir.batch = ?1 AND ir.fileContentCode = 'BODY'")
     List<IncomingRecord> findAllBodyByBatch(Batch batch);
+    
+    long countAllByBatch(Batch batch);
 }

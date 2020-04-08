@@ -333,3 +333,14 @@ Feature: Data processing for Mha ceased citizenship
       | Message                             | Count |
       | Partially Duplicate Record found.   | 2     |
       | NRIC not found in System.           | 1     |
+
+  @set_6
+  Scenario: Mha send a ceased citizenship file with no content (i.e totally empty file).
+    Given the MHA_CEASED_CITIZEN file is empty
+    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
+    Then the Mha Ceased Citizen batch job completes running with status FILE_ERROR
+    And I verify number of records in Incoming Record table is 0
+    And I verify that the following error message appeared:
+      | Message                                 | Count |
+      | Must have at least 1 valid body record. | 1     |
+      | Must have 1 Footer record.              | 1     |

@@ -104,7 +104,7 @@ public class MhaNoInteractionSteps extends AbstractSteps {
           testAssert.assertEquals(noOfRecords, count, "The expected number of record(s) does not match!!!");
           
       } else {
-          throw new TestFailException("No batch job previously created!");
+          throw new TestFailException("No File Received previously created!");
       }
   }
   

@@ -3,6 +3,7 @@ package cds_automation.step_definition.datasource;
 import cds_automation.aws.modules.Slack;
 import cds_automation.configuration.datasource.TestEnv;
 import cds_automation.enums.datasource.BatchStatusEnum;
+import cds_automation.enums.datasource.FileTypeEnum;
 import cds_automation.exceptions.TestFailException;
 import cds_automation.models.datasource.Batch;
 import cds_automation.models.datasource.ErrorMessage;
@@ -16,6 +17,7 @@ import cds_automation.models.datasource.Property;
 import cds_automation.models.datasource.PropertyDetail;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
 
@@ -223,6 +225,32 @@ public class CommonSteps extends AbstractSteps {
                     dirFile.delete();
                 }
             }
+        }
+    }
+
+    @Given("^the (MHA_BULK_CITIZEN|MHA_NEW_CITIZEN|MHA_NO_INTERACTION|MHA_CHANGE_ADDRESS|MHA_DUAL_CITIZEN|MHA_PERSON_DETAIL_CHANGE|MHA_DEATH_DATE|MHA_CEASED_CITIZEN|IRAS_BULK_AI|IRAS_THRICE_MONTHLY_AI) file is empty$")
+    public void theFileIsEmpty(FileTypeEnum fileTypeEnum) {
+        try {
+            batchFileCreator.writeToFile(fileTypeEnum.getValue().toLowerCase(), Collections.emptyList());
+        } catch(IOException ioe) {
+            throw new TestFailException("Unable to create empty file for " + fileTypeEnum.getValue());
+        }
+    }
+
+    @And("^I verify number of records in Incoming Record table is (\\d)")
+    public void verifyNumberOfRecordsInIncomingRecordTable(long noOfRecords) {
+
+        log.info("Verifying number of records in Incoming Record table: " + noOfRecords);
+        if (testContext.contains("fileReceived")) {
+
+            FileReceived fileReceived = testContext.get("fileReceived");
+            Batch batch = batchRepo.findFirstByFileReceivedOrderByCreatedAtDesc(fileReceived);
+            
+            long count = incomingRecordRepo.countAllByBatch(batch);
+            testAssert.assertEquals(noOfRecords, count, "The expected number of record(s) does not match!" );
+
+        } else {
+            throw new TestFailException("No File Received previously created!");
         }
     }
 }

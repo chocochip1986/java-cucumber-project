@@ -103,6 +103,13 @@ public class Assert {
         }
     }
 
+    public void assertEquals(long expected, long actual, String errorMsg) {
+        if (expected != actual) {
+            String finalMsg = String.format("%s\nExpected: %d\nActual: %d", errorMsg, expected, actual);
+            raiseError(finalMsg);
+        }
+    }
+
     private void raiseError(String errorMessage) {
         errorMessage(errorMessage);
         throw new TestFailException(errorMessage);
