@@ -25,6 +25,8 @@ import java.util.Map;
 @Ignore
 public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
 
+  public static final String CEASED_CITIZEN_DATE_OF_RUN = "ceasedCitizenDateOfRun";
+    
   @Given("the database populated with the following data:")
   public void theDatabasePopulatedWithTheFollowingData(DataTable dataTable) {
     List<Map<String, String>> map = dataTable.asMaps(String.class, String.class);
@@ -44,7 +46,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
   public void theMhaCeasedCitizenFileContainsFollowingDetails(String dateOption, DataTable dataTable) {
 
       batchFileDataWriter.begin(getCeasedCitizenHeaderString(dateOption), FileTypeEnum.MHA_CEASED_CITIZEN, null);
-      mhaCeasedCitizenFileDataPrep.createBodyOfTestScenarios(dataTable.asMaps(String.class, String.class));
+      mhaCeasedCitizenFileDataPrep.createBodyOfSpecificTestScenarios(dataTable.asMaps(String.class, String.class), testContext);
       batchFileDataWriter.end();
   }
 
@@ -202,6 +204,8 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
             default:
                 headerString = dateOption;
         }
+        
+        testContext.set(CEASED_CITIZEN_DATE_OF_RUN, headerString);
 
         return headerString;
     }

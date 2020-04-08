@@ -15,6 +15,7 @@ import cds_automation.models.datasource.PersonName;
 import cds_automation.models.datasource.embeddables.BiTemporalData;
 import cds_automation.models.datasource.embeddables.BusinessTemporalData;
 import cds_automation.models.datasource.embeddables.DbTemporalData;
+import cds_automation.step_definition.datasource.MhaCeasedSingaporeCitizenSteps;
 import cds_automation.utilities.CommonUtils;
 import cds_automation.utilities.StringUtils;
 import io.cucumber.datatable.DataTable;
@@ -135,7 +136,8 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
         .collect(Collectors.toList());
   }
 
-  public void createBodyOfTestScenarios(List<Map<String, String>> listOfScenarios) {
+  public void createBodyOfSpecificTestScenarios(
+          List<Map<String, String>> listOfScenarios, StepDefLevelTestContext testContext) {
 
     for (Map<String, String> scenario: listOfScenarios) {
       
@@ -145,7 +147,8 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
                       .nric(CommonUtils.nricFieldOptions(scenario.get(FIELD_NRIC)))
                       .name(CommonUtils.nameFieldOptions(scenario.get(FIELD_NAME)))
                       .nationality(nationalityFieldOptions(scenario.get(FIELD_NATIONALITY)))
-                      .citizenRenunciationDate(renunciationDateFieldOptions(scenario.get(FIELD_CESSATION_DATE)))
+                      .citizenRenunciationDate(renunciationDateFieldOptions(
+                              scenario.get(FIELD_CESSATION_DATE), testContext))
                       .build();
       
       batchFileDataWriter.chunkOrWrite(mhaCeasedCitizenFileEntry.toString());
@@ -505,13 +508,15 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
     return nationality;
   }
 
-  private String renunciationDateFieldOptions(String dateOption) {
+  private String renunciationDateFieldOptions(String dateOption, StepDefLevelTestContext testContext) {
 
     String renunciationDate;
+    String headerDateOfRun = testContext.get(MhaCeasedSingaporeCitizenSteps.CEASED_CITIZEN_DATE_OF_RUN);
 
     switch (dateOption.toUpperCase()) {
       case TestConstants.OPTION_VALID:
-        renunciationDate = dateUtils.now().format(dateUtils.DATETIME_FORMATTER_YYYYMMDD);
+        LocalDate dateOfRun = dateUtils.parse(headerDateOfRun);
+        renunciationDate = dateOfRun.minusDays(1).format(dateUtils.DATETIME_FORMATTER_YYYYMMDD);
         break;
       case TestConstants.OPTION_INVALID:
         renunciationDate = dateUtils.now().format(dateUtils.DATETIME_FORMATTER_DDMMYYYY);
@@ -524,6 +529,9 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
         break;
       case TestConstants.OPTION_FUTURE_DATE:
         renunciationDate = Phaker.validFutureDate().format(dateUtils.DATETIME_FORMATTER_YYYYMMDD);
+        break;
+      case TestConstants.OPTION_ON_DATE_OF_RUN:
+        renunciationDate = headerDateOfRun;
         break;
       default:
         renunciationDate = dateOption;

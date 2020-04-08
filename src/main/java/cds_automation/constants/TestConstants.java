@@ -11,4 +11,7 @@ public class TestConstants {
     public static final String OPTION_BLANK = "BLANK";
     public static final String OPTION_SPACES = "SPACES";
     public static final String OPTION_FUTURE_DATE = "FUTUREDATE";
+    
+    // Ceased Citizen specific options
+    public static final String OPTION_ON_DATE_OF_RUN = "ONDATEOFRUN";
 }
