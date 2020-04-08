@@ -298,6 +298,18 @@ Feature: Data processing for Mha ceased citizenship
     And I verify that the following error message appeared:
       | Message                                                      | Count |
       | Renunciation Date is not after Citizenship Attainment Date.  | 1     |
+
+  @set_3 @defect @GRYFFINDOR-1276 @GRYFFINDOR-1289
+  Scenario: Mha send a ceased citizenship file with completely duplicate records but nric not found in system
+    Given the file has the following details with Header date of run valid
+      | CeasedCitizen | NumberOfDuplication | 
+      | 1             | 2                   | 
+    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
+    Then the Mha Ceased Citizen batch job completes running with status VALIDATED_TO_PREPARED_ERROR
+    And I verify that the following error message appeared:
+      | Message                             | Count |
+      | Completely Duplicate Record found.  | 2     |
+      | NRIC not found in System.           | 2     |
     
   @set_4
   Scenario: John ceased citizenship before he started becoming a dual citizen
@@ -307,3 +319,17 @@ Feature: Data processing for Mha ceased citizenship
     Then the Mha Ceased Citizen batch job completes running with status CLEANUP
     And there are no error messages
     And john is a non singaporean since 10 days ago
+
+  @set_5 @defect @GRYFFINDOR-1289
+  Scenario: Mha send a ceased citizenship file with a combination of partially duplicate and valid records but all nrics not found in system
+    Given the mha ceased citizen file contains the following details with Header date of run valid
+      | Nric        | Name          | Nationality   | Cessation Date   |
+      | S1501508Z   | valid         | CN            | valid            |
+      | S1501508Z   | valid         | MY            | valid            |
+      | valid       | valid         | valid         | valid            |
+    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
+    Then the Mha Ceased Citizen batch job completes running with status VALIDATED_TO_PREPARED_ERROR
+    And I verify that the following error message appeared:
+      | Message                             | Count |
+      | Partially Duplicate Record found.   | 2     |
+      | NRIC not found in System.           | 1     |
