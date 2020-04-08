@@ -9,13 +9,13 @@ import java.util.stream.Stream;
 @RunWith(Cucumber.class)
 @CucumberOptions(
         plugin = {"pretty", "html:test_results/cucumber-reports"},
-        features = "classpath:cdit_automation",
-        glue={"cdit_automation.step_definition.*"},
+        features = "classpath:cds_automation",
+        glue={"cds_automation.step_definition.datasource"},
         tags = {"not @wip", "not @defect", "not @example_only"})
 public class RunCucumberTest {
     private static String[] defaultOptions = {
-            "--glue", "cdit_automation.step_definition",
-            "--plugin", "pretty", "classpath:cdit_automation",
+            "--glue", "cds_automation.step_definition.datasource",
+            "--plugin", "pretty", "classpath:cds_automation",
             "--tags", "not @wip",
             "--tags", "not @defect",
             "--tags", "not @example_only"

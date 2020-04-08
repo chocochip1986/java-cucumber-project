@@ -35,6 +35,7 @@ public class PersonFactory extends AbstractFactory {
         private GenderEnum gender;
         private NationalityEnum nationality;
         private String identifier;
+        private LocalDate citizenshipAttainmentDate;
 
         private PersonOptions() {
             this.birthDate = Phaker.validDateFromRange(dateUtils.yearsBeforeToday(13), TestConstants.DEFAULT_CUTOFF_DATE);
@@ -43,6 +44,7 @@ public class PersonFactory extends AbstractFactory {
             this.gender = Phaker.validGender();
             this.nationality = NationalityEnum.SINGAPORE_CITIZEN;
             this.identifier = null;
+            this.citizenshipAttainmentDate = null;
         }
 
         public String getIdentifier(){
@@ -175,7 +177,7 @@ public class PersonFactory extends AbstractFactory {
     }
 
     public PersonId createNewPPPersonId(LocalDate birthDate, LocalDate deathDate, String name, GenderEnum gender, String identifier) {
-        return createPersonData(birthDate, deathDate, name, gender, NationalityEnum.PERMANENT_RESIDENT, identifier);
+        return createPersonData(birthDate, deathDate, name, gender, NationalityEnum.PERMANENT_RESIDENT, identifier, null);
     }
 
     public PersonId createNewFRPersonId() {
@@ -187,15 +189,15 @@ public class PersonFactory extends AbstractFactory {
     }
 
     public PersonId createNewFRPersonId(LocalDate birthDate, LocalDate deathDate, String name, GenderEnum gender, String identifier) {
-        return createPersonData(birthDate, deathDate, name, gender, NationalityEnum.NON_SINGAPORE_CITIZEN, identifier);
+        return createPersonData(birthDate, deathDate, name, gender, NationalityEnum.NON_SINGAPORE_CITIZEN, identifier, null);
     }
 
     public PersonId createNewFRPersonId(LocalDate birthDate) {
-        return createPersonData(birthDate, null, null,  null, NationalityEnum.NON_SINGAPORE_CITIZEN, null);
+        return createPersonData(birthDate, null, null,  null, NationalityEnum.NON_SINGAPORE_CITIZEN, null, null);
     }
 
     public PersonId createNewFRPersonId(LocalDate birthDate, String name) {
-        return createPersonData(birthDate, null, name,  null, NationalityEnum.NON_SINGAPORE_CITIZEN, null);
+        return createPersonData(birthDate, null, name,  null, NationalityEnum.NON_SINGAPORE_CITIZEN, null, null);
     }
 
     public PersonId createNewSCPersonId() {
@@ -207,19 +209,23 @@ public class PersonFactory extends AbstractFactory {
     }
 
     public PersonId createNewSCPersonId(LocalDate birthDate) {
-        return createPersonData(birthDate, null, null, null, NationalityEnum.SINGAPORE_CITIZEN, null);
+        return createPersonData(birthDate, null, null, null, NationalityEnum.SINGAPORE_CITIZEN, null, null);
     }
 
     public PersonId createNewSCPersonId(LocalDate birthDate, String name) {
-        return createPersonData(birthDate, null, name, null, NationalityEnum.SINGAPORE_CITIZEN, null);
+        return createPersonData(birthDate, null, name, null, NationalityEnum.SINGAPORE_CITIZEN, null, null);
     }
 
     public PersonId createNewSCPersonId(LocalDate birthDate, String name, String nric) {
-        return createPersonData(birthDate, null, name, null, NationalityEnum.SINGAPORE_CITIZEN, nric);
+        return createPersonData(birthDate, null, name, null, NationalityEnum.SINGAPORE_CITIZEN, nric, null);
     }
 
     public PersonId createNewSCPersonId(LocalDate birthDate, LocalDate deathDate, String name, GenderEnum gender, String identifier) {
-        return createPersonData(birthDate, deathDate, name, gender, NationalityEnum.SINGAPORE_CITIZEN, identifier);
+        return createPersonData(birthDate, deathDate, name, gender, NationalityEnum.SINGAPORE_CITIZEN, identifier, null);
+    }
+    
+    public PersonId createNewSCPersonId(LocalDate birthDate, String name, String nric, LocalDate citizenshipAttainmentDate) {
+        return createPersonData(birthDate, null, name, null, NationalityEnum.SINGAPORE_CITIZEN, nric, citizenshipAttainmentDate);
     }
 
     public PersonId createDualCitizen() {
@@ -231,7 +237,7 @@ public class PersonFactory extends AbstractFactory {
     }
 
     public PersonId createDualCitizen(LocalDate birthDate, LocalDate deathDate, String name, GenderEnum gender, String identifier) {
-        return createPersonData(birthDate, deathDate, name, gender, NationalityEnum.DUAL_CITIZENSHIP, identifier);
+        return createPersonData(birthDate, deathDate, name, gender, NationalityEnum.DUAL_CITIZENSHIP, identifier, null);
     }
 
     public void updateBirthdate(Person person, LocalDate birthDate, LocalDate oldValidFrom) {
@@ -241,7 +247,15 @@ public class PersonFactory extends AbstractFactory {
         nationalityRepo.updateValidFrom(dateUtils.localDateToDate(birthDate), person, dateUtils.localDateToDate(oldValidFrom));
     }
 
-    public PersonId createPersonData(LocalDate birthDate, LocalDate deathDate, String name, GenderEnum gender, NationalityEnum nationalityEnum, String identifier) {
+    public PersonId createPersonData(
+            LocalDate birthDate, 
+            LocalDate deathDate, 
+            String name, 
+            GenderEnum gender, 
+            NationalityEnum nationalityEnum, 
+            String identifier, 
+            LocalDate citizenshipAttainmentDate) {
+        
         PersonOptions personOptions = new PersonOptions();
         if ( birthDate != null ) {
             personOptions.setBirthDate(birthDate);
@@ -254,6 +268,9 @@ public class PersonFactory extends AbstractFactory {
         }
         if ( name != null ) {
             personOptions.setName(name);
+        }
+        if ( citizenshipAttainmentDate != null) {
+            personOptions.setCitizenshipAttainmentDate(citizenshipAttainmentDate);
         }
         personOptions.setNationalityAndIdentifier(nationalityEnum, identifier);
 
@@ -321,7 +338,14 @@ public class PersonFactory extends AbstractFactory {
         PersonDetail personDetail = PersonDetail.create(batch, person, personOptions.getBirthDate(), personOptions.getDeathDate(), biTemporalData);
         Gender gender = Gender.create(personOptions.gender, person, batch, biTemporalData);
         PersonName personName = PersonName.create(batch, person, personOptions.getName(), biTemporalData);
-        Nationality nationality = Nationality.create(batch, person, personOptions.getNationality(), biTemporalData);
+        Nationality nationality = 
+                Nationality.create(
+                        batch, 
+                        person, 
+                        personOptions.getNationality(), 
+                        biTemporalData, 
+                        dateUtils.beginningOfDayToTimestamp(
+                                personOptions.getCitizenshipAttainmentDate()));
 
         batchRepo.save(batch);
         personRepo.save(person);

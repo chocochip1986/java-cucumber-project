@@ -182,7 +182,7 @@
                 </executions>
             </plugin>
         </plugins>
-        <testSourceDirectory>src/main/java/cdit_automation</testSourceDirectory>
+        <testSourceDirectory>src/main/java/cds_automation</testSourceDirectory>
     </build>
     <name>cdit-automation</name>
     <packaging>jar</packaging>

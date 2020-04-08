@@ -304,13 +304,16 @@ Feature: Data processing for MHA no interaction list (NIL)
     And I verify that the person status is updated correctly
     And I remove the test data from the prepared database
     
-  @set_8 @defect @GRYFFINDOR-1097
+  @set_8
   Scenario: Datasource service processes a MHA no interaction list file with no content (i.e totally empty file).
-    And the MHA no interaction file is created
+    Given the MHA_NO_INTERACTION file is empty
     When MHA sends the MHA_NO_INTERACTION file to Datasource sftp for processing
     And the Mha no interaction batch job completes running with status FILE_ERROR
-    And I verify number of records in MHA no interaction validated table is 0
-    And the error message contains Must have at least 1 valid body record
+    And I verify number of records in Incoming Record table is 0
+    And I verify that the following error message appeared:
+      | Message                                 | Count |
+      | Must have at least 1 valid body record. | 1     |
+      | Must have 1 Footer record.              | 1     |
 
   @set_9 @defect
   Scenario: Datasource service processes a MHA no interaction list file with duplicate nric in same file.

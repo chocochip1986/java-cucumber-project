@@ -28,7 +28,7 @@ Feature: Data processing for MHA new citizen file
     And the error message contains Partially Duplicate Record found.
 
   @set_3
-  Scenario: Datasource service processes a MHA new citizen file with hybrid (both completed & partial) duplicate records
+  Scenario: Datasource service processes a MHA new citizen file with hybrid (both completely & partially) duplicate records
     Given a MHA_NEW_CITIZEN file with the following details
       | NRIC      | FIN       | NAME     | DOB      | GENDER | OLD_ADDR_IND | OLD_ADDR_TYPE | OLD_ADDR             | NEW_ADDR_IND | NEW_ADDR_TYPE | NEW_ADDR               | NEW_INVALID_ADDR_TAG | DATE_OF_ADDR_CHANGE | CTZ_ATT_DATE |
       | S1501626D | G1801520Q | Person A | 19001231 | M      | Z            | A             | 117       Vista Rise | Z            | A             | 888       Diamond Rise | D                    | 20200301            | 19001231     |

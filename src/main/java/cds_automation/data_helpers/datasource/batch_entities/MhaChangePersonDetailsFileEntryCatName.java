@@ -42,8 +42,8 @@ public class MhaChangePersonDetailsFileEntryCatName extends MhaChangePersonDetai
     public String toString() {
         return StringUtils.leftPad(nric, 9)
                 +StringUtils.leftPad(String.valueOf(dataItemCat), 1)
-                +StringUtils.leftPad(dataItemChangeVal, 66)
-                +StringUtils.leftPad(dataItemChangeDate, 8);
+                +StringUtils.leftPad(dataItemChangeVal == null? " " : dataItemChangeVal, 66)
+                +StringUtils.leftPad(dataItemChangeDate == null? " " : dataItemChangeDate, 8);
     }
 
     public void checkValid() {

@@ -1,6 +1,7 @@
 package cds_automation.step_definition.datasource;
 
 import cds_automation.constants.TestConstants;
+import cds_automation.data_helpers.datasource.MhaCeasedCitizenFileDataPrep;
 import cds_automation.data_helpers.datasource.batch_entities.MhaCeasedCitizenFileEntry;
 import cds_automation.data_setup.Phaker;
 import cds_automation.enums.datasource.FileTypeEnum;
@@ -8,6 +9,7 @@ import cds_automation.enums.datasource.NationalityEnum;
 import cds_automation.models.datasource.Nationality;
 import cds_automation.models.datasource.PersonId;
 import cds_automation.models.datasource.PersonName;
+import cds_automation.utilities.DateUtils;
 import cds_automation.utilities.StringUtils;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
@@ -24,8 +26,6 @@ import java.util.Map;
 @Slf4j
 @Ignore
 public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
-
-  public static final String CEASED_CITIZEN_DATE_OF_RUN = "ceasedCitizenDateOfRun";
     
   @Given("the database populated with the following data:")
   public void theDatabasePopulatedWithTheFollowingData(DataTable dataTable) {
@@ -133,7 +133,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
                 .nric(personId.getNaturalId())
                 .name(personName1.getName())
                 .nationality(NationalityEnum.US.getValue())
-                .citizenRenunciationDate(dateUtils.daysBeforeToday(daysAgo).format(dateUtils.DATETIME_FORMATTER_YYYYMMDD))
+                .citizenRenunciationDate(dateUtils.daysBeforeToday(daysAgo).format(DateUtils.DATETIME_FORMATTER_YYYYMMDD))
                 .build();
         batchFileDataWriter.chunkOrWrite(mhaCeasedCitizenFileEntry.toString());
         batchFileDataWriter.end();
@@ -165,7 +165,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
 
       batchFileDataWriter.begin(mhaCeasedCitizenFileDataPrep.generateSingleHeader(), FileTypeEnum.MHA_CEASED_CITIZEN, null);
       MhaCeasedCitizenFileEntry mhaCeasedCitizenFileEntry = 
-              new MhaCeasedCitizenFileEntry(personId.getNaturalId(), personName, NationalityEnum.US.getValue(), ceassationDate.format(dateUtils.DATETIME_FORMATTER_YYYYMMDD));
+              new MhaCeasedCitizenFileEntry(personId.getNaturalId(), personName, NationalityEnum.US.getValue(), ceassationDate.format(DateUtils.DATETIME_FORMATTER_YYYYMMDD));
       batchFileDataWriter.chunkOrWrite(mhaCeasedCitizenFileEntry.toString());
       batchFileDataWriter.end();
     }
@@ -176,9 +176,39 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
 
       Nationality curNationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
       testAssert.assertEquals(NationalityEnum.NON_SINGAPORE_CITIZEN, curNationality.getNationality(), "Person with "+personId.getNaturalId()+" is not a non-singaporean");
-      Date expectedValidFrom = new Date(dateUtils.beginningOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo)).getTime());
+      Timestamp expectedValidFrom = dateUtils.beginningOfDayToTimestamp(dateUtils.daysBeforeToday(daysAgo));
       testAssert.assertEquals(expectedValidFrom, curNationality.getBiTemporalData().getBusinessTemporalData().getValidFrom(), "Person with "+personId.getNaturalId()+" is not a non-singaporean from "+expectedValidFrom.toString());
+    }
 
+    @Given("^([a-z_]+) who is (\\d+) years old attained his Singapore Citizenship (\\d+) days ago$")
+    public void personAttainedHisSingaporeCitizenshipDaysAgo(String personName, int age, int daysAgo) {
+
+      LocalDate birthDate = dateUtils.yearsBeforeToday(age);
+      LocalDate attainmentDate = dateUtils.daysBeforeToday(daysAgo);
+      PersonId personId = personFactory.createNewSCPersonId(birthDate, personName, Phaker.validNric(), attainmentDate);
+      
+      testContext.set(personName, personId);
+    }
+
+    @And("^I verify that the correct persons have ceased being singaporean$")
+    public void iVerifyThatTheCorrectPersonsHaveCeasedBeingSingaporean() {
+      List<MhaCeasedCitizenFileEntry> ceasedCases = testContext.get("citizens");
+
+      for ( MhaCeasedCitizenFileEntry ceasedCase : ceasedCases ) {
+          LocalDate ceassationDate = LocalDate.parse(ceasedCase.getCitizenRenunciationDate(), DateUtils.DATETIME_FORMATTER_YYYYMMDD);
+          String nric = ceasedCase.getNric();
+          PersonId personId = personIdRepo.findByNaturalId(nric);
+          Nationality curNationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
+
+          testAssert.assertEquals(NationalityEnum.NON_SINGAPORE_CITIZEN, curNationality.getNationality(), "Person with "+nric+" is not a non-SC!");
+          testAssert.assertEquals(dateUtils.beginningOfDayToTimestamp(ceassationDate), curNationality.getBiTemporalData().getBusinessTemporalData().getValidFrom(), "Person with "+nric+" has wrong validFrom date!");
+          testAssert.assertEquals(dateUtils.beginningOfDayToTimestamp(ceassationDate), curNationality.getCitizenshipRenunciationDate(), "Person with "+nric+" has incorrect citizenship renunciation date!");
+
+          Date validTill = new Date(dateUtils.beginningOfDayToTimestamp(ceassationDate.minusDays(1l)).getTime());
+          Nationality prevNationality = nationalityRepo.findNationalityByPerson(personId.getPerson(), validTill);
+          testAssert.assertEquals(NationalityEnum.SINGAPORE_CITIZEN, prevNationality.getNationality(), "Person with "+nric+" does not have the correct previous nationality!");
+          testAssert.assertEquals(dateUtils.endOfDayToTimestamp(ceassationDate.minusDays(1l)), prevNationality.getBiTemporalData().getBusinessTemporalData().getValidTill(), "Person with "+nric+" did not cease being a singaporean correctly!");
+      }
     }
 
     private String getCeasedCitizenHeaderString(String dateOption) {
@@ -190,7 +220,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
                 headerString = mhaBulkFileDataPrep.generateSingleHeader(dateUtils.now());
                 break;
             case TestConstants.OPTION_INVALID:
-                headerString = dateUtils.now().format(dateUtils.DATETIME_FORMATTER_DDMMYYYY);
+                headerString = dateUtils.now().format(DateUtils.DATETIME_FORMATTER_DDMMYYYY);
                 break;
             case TestConstants.OPTION_SPACES:
                 headerString = StringUtils.rightPad(StringUtils.SPACE, 8);
@@ -199,13 +229,14 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
                 headerString = StringUtils.EMPTY_STRING;
                 break;
             case TestConstants.OPTION_FUTURE_DATE:
-                headerString = Phaker.validFutureDate().format(dateUtils.DATETIME_FORMATTER_YYYYMMDD);
+                headerString = Phaker.validFutureDate().format(DateUtils.DATETIME_FORMATTER_YYYYMMDD);
                 break;
             default:
                 headerString = dateOption;
         }
-        
-        testContext.set(CEASED_CITIZEN_DATE_OF_RUN, headerString);
+
+        testContext.set(
+                MhaCeasedCitizenFileDataPrep.CEASED_CITIZEN_DATE_OF_RUN, headerString);
 
         return headerString;
     }
