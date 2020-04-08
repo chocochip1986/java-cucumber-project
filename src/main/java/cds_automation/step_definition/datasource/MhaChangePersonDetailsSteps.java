@@ -47,11 +47,11 @@ public class MhaChangePersonDetailsSteps extends AbstractSteps {
     batchFileDataWriter.end();
   }
 
-  @Given("^the mha person details file is of the following contents:$")
-  public void theMhaPersonDetailsFileContainsTheFollowingContents(DataTable dataTable)
+  @Given("^the mha person details file is of the following contents and with header date of ([\\d]*) days ago:$")
+  public void theMhaPersonDetailsFileContainsTheFollowingContents(int daysAgo, DataTable dataTable)
     throws IOException{
     batchFileDataWriter.begin(
-            mhaChangePersonDetailsDataPrep.generateSingleHeader(LocalDate.now().minusDays(2)),
+            mhaChangePersonDetailsDataPrep.generateSingleHeader(LocalDate.now().minusDays(daysAgo)),
             FileTypeEnum.MHA_PERSON_DETAIL_CHANGE,
             null);
 

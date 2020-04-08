@@ -120,7 +120,10 @@ public class CommonSteps extends AbstractSteps {
 
         Arrays.asList(errorMsg.split(",")).forEach(m -> {
             testAssert.assertTrue(
-                    errorMessage.stream().anyMatch(errMsg -> errMsg.getMessage().matches(".*" + m.trim() + ".*")),
+                    errorMessage.stream().anyMatch(
+                            errMsg -> errMsg.getMessage().equalsIgnoreCase(m.trim()) ||
+                                    errMsg.getMessage().matches(".*" + m.trim() + ".*") ||
+                                    errMsg.getMessage().contains(m.trim())),
                     "No such error message [" + m.trim() + "] is found for batch: " + batch.getId());
         });
     }
