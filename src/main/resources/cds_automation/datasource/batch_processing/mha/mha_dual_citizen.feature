@@ -119,29 +119,13 @@ Feature: Data processing for MHA dual citizenship
     And the Mha Dual Citizen batch job completes running with status CLEANUP
     Then I verify that john nationality was updated in datasource db
 
-
-
-
-
-
-
-
-
-
-
-  @set_5 @defect
+@set_5 @defect
   Scenario: An person who was previously a dual citizen is now a dual citizen again
     Given john was a dual citizen 100 days ago
     And john became a dual citizen 99 days ago
     When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
     Then the Mha Dual Citizen batch job completes running with status CLEANUP
     And I verify that john is a dual citizen 99 days ago
-
-
-
-
-
-
 
   @set_4
   Scenario: Test scenario
