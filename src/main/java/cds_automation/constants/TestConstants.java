@@ -14,4 +14,5 @@ public class TestConstants {
     
     // Ceased Citizen specific options
     public static final String OPTION_ON_DATE_OF_RUN = "ONDATEOFRUN";
+    public static final String OPTION_EXISTING = "EXISTING";
 }

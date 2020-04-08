@@ -244,6 +244,61 @@ Feature: Data processing for Mha ceased citizenship
       | 17990101       | Year value cannot be less than 1800            | 1     | RAW_DATA_ERROR              |
       | onDateOfRun    | <Error message>                                | 1     | RAW_DATA_ERROR              |
 
+  @set_8
+  Scenario: Mha send a ceased citizenship file with hybrid (both completely & partially) duplicate records
+    Given the file has the following details with Header date of run valid
+      | CeasedCitizen | NumberOfDuplication | NumberOfPartialDuplication |
+      | 1             | 2                   | 2                          |
+    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
+    Then the Mha Ceased Citizen batch job completes running with status BULK_CHECK_VALIDATION_ERROR
+    And I verify that the following error message appeared:
+      | Message                            | Count |
+      | Partially Duplicate Record found.  | 3     |
+
+  @set_9
+  Scenario Outline: Mha send a ceased citizenship file with various types of name
+    Given the database populated with the following data:
+      | SingaporeCitizen |
+      | 1                |
+    Given the mha ceased citizen file contains the following details with Header date of run valid
+      | Nric        | Name          | Nationality   | Cessation Date   |
+      | existing    | <name>        | valid         | valid            |
+    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
+    Then the Mha Ceased Citizen batch job completes running with status CLEANUP
+    And there are no error messages
+    Examples:
+      | name          |
+      | valid         |
+      | T3st m@cH!nE  |
+
+  @set_10 @defect
+  Scenario: John ceased citizenship on the same day he becomes Singapore Citizen
+    Given john who is 50 years old attained his Singapore Citizenship 100 days ago
+    And MHA sends a ceased citizenship file stating that john renounced his citizenship 100 days ago
+    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
+    Then the Mha Ceased Citizen batch job completes running with status CLEANUP
+    And there are no error messages
+    And john is a non singaporean since 100 days ago
+
+  @set_1
+  Scenario: John ceased citizenship after he becomes Singapore Citizen
+    Given john who is 50 years old attained his Singapore Citizenship 100 days ago
+    And MHA sends a ceased citizenship file stating that john renounced his citizenship 10 days ago
+    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
+    Then the Mha Ceased Citizen batch job completes running with status CLEANUP
+    And there are no error messages
+    And john is a non singaporean since 10 days ago
+
+  @set_2
+  Scenario: John ceased citizenship before he becomes Singapore Citizen
+    Given john who is 50 years old attained his Singapore Citizenship 100 days ago
+    And MHA sends a ceased citizenship file stating that john renounced his citizenship 101 days ago
+    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
+    Then the Mha Ceased Citizen batch job completes running with status VALIDATED_TO_PREPARED_ERROR
+    And I verify that the following error message appeared:
+      | Message                                                      | Count |
+      | Renunciation Date is not after Citizenship Attainment Date.  | 1     |
+    
   @set_4
   Scenario: John ceased citizenship before he started becoming a dual citizen
     Given john who is 13 years old converted to a dual citizen 10 days ago
