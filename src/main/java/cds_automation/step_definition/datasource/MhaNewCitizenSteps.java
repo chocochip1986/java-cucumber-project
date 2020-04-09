@@ -49,4 +49,13 @@ public class MhaNewCitizenSteps extends AbstractSteps {
     batchRepo.save(batch);
     nationalityRepo.save(curNationality);
   }
+
+  @Given("^([a-z_]+) who is (\\d+) years old became a new citizen (\\d+) days ago$")
+  public void personWhoIsYearsOldBecameANewCitizenDaysAgo(String personName, int age, int daysAgo) {
+    LocalDate birthDate = dateUtils.yearsBeforeToday(age);
+    LocalDate citizenAttainmentDate = dateUtils.daysBeforeToday(daysAgo);
+    PersonId personId = personFactory.createNewCitizenPersonId(personName, birthDate, citizenAttainmentDate);
+
+    testContext.set(personName, personId);
+  }
 }

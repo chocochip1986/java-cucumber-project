@@ -345,7 +345,7 @@ Feature: Data processing for Mha ceased citizenship
       | Must have at least 1 valid body record. | 1     |
       | Must have 1 Footer record.              | 1     |
 
-  @set_5
+  @set_6
   Scenario Outline: John appears in consecutive ceased citizenship files with different cessation dates
     Given john who is 12 years old had his citizenship renounced <previous_cessation_date> days ago
     And MHA sends a ceased citizenship file stating that john renounced his citizenship <current_cessation_date> days ago
@@ -357,3 +357,12 @@ Feature: Data processing for Mha ceased citizenship
     | 5 | 5 |
     | 5 | 6 |
     | 6 | 5 |
+
+  @set_7
+  Scenario: John was a new citizen but has a citizenship cessation date earlier than his attainment date
+    Given john who is 12 years old became a new citizen 10 days ago
+    And MHA sends a ceased citizenship file stating that john renounced his citizenship 11 days ago
+    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
+    Then the Mha Ceased Citizen batch job completes running with status VALIDATED_TO_PREPARED_ERROR
+    And the error message contains Renunciation Date is not after Citizenship Attainment Date
+

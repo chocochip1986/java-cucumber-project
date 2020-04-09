@@ -165,7 +165,7 @@ public class MhaCeasedSingaporeCitizenSteps extends AbstractSteps {
 
       batchFileDataWriter.begin(mhaCeasedCitizenFileDataPrep.generateSingleHeader(), FileTypeEnum.MHA_CEASED_CITIZEN, null);
       MhaCeasedCitizenFileEntry mhaCeasedCitizenFileEntry = 
-              new MhaCeasedCitizenFileEntry(personId.getNaturalId(), personName, NationalityEnum.US.getValue(), ceassationDate.format(DateUtils.DATETIME_FORMATTER_YYYYMMDD));
+              new MhaCeasedCitizenFileEntry(personId.getNaturalId(), personName, NationalityEnum.randomNonSGCountryCode().getValue(), ceassationDate.format(DateUtils.DATETIME_FORMATTER_YYYYMMDD));
       batchFileDataWriter.chunkOrWrite(mhaCeasedCitizenFileEntry.toString());
       batchFileDataWriter.end();
     }
