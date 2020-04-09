@@ -178,10 +178,9 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
   }
 
   private List<CeasedCitizenValidated> populateCeasedCitizens(int quantity, List<String> nrics) {
-    Random random = new Random();
     List<String> clonedNrics = new ArrayList<>(nrics);
     List<CeasedCitizenValidated> resultList = new ArrayList<>();
-    int iterations = clonedNrics.size() == 0 ? quantity : Math.min(quantity, clonedNrics.size());
+    int iterations = clonedNrics.isEmpty() ? quantity : Math.min(quantity, clonedNrics.size());
 
     Batch b = new Batch();
     b.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
@@ -189,7 +188,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
 
     for (int i = 0; i < iterations; i++) {
       String nric = "";
-      if (clonedNrics.size() > 0) {
+      if (!clonedNrics.isEmpty()) {
         int randomIndex = random.nextInt(clonedNrics.size());
         nric = clonedNrics.get(randomIndex);
         clonedNrics.remove(randomIndex);
@@ -208,8 +207,8 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
       ceasedCitizenRepo.save(ceasedCitizen);
       PersonId currentPersonId = personIdRepo.findPersonByNaturalId(nric);
       if (currentPersonId != null) {
-        updatePersonDetailRecord(b, ceasedCitizen, currentPersonId);
-        updateNationality(b, ceasedCitizen, currentPersonId);
+        updatePersonDetailRecord(ceasedCitizen, currentPersonId);
+        updateNationality(ceasedCitizen, currentPersonId);
         generateNewPersonRecord(b, ceasedCitizen, currentPersonId);
         generateNewNationalityRecord(b, ceasedCitizen, currentPersonId);
       }
@@ -219,7 +218,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
   }
 
   private void updatePersonDetailRecord(
-      Batch batch, CeasedCitizenValidated ceasedCitizen, PersonId personId) {
+          CeasedCitizenValidated ceasedCitizen, PersonId personId) {
     PersonDetail currentPersonDetail = personDetailRepo.findByPerson(personId.getPerson());
     BiTemporalData currentPersonBiTemporalData = currentPersonDetail.getBiTemporalData();
     BusinessTemporalData newCurrentPersonBusinessTemporalData =
@@ -255,14 +254,14 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
   }
 
   private void updateNationality(
-      Batch batch, CeasedCitizenValidated ceasedCitizen, PersonId personId) {
+          CeasedCitizenValidated ceasedCitizen, PersonId personId) {
     Nationality currentNationality = nationalityRepo.findNationalityByPerson(personId.getPerson());
     BiTemporalData currentNationalityBiTemporalData = currentNationality.getBiTemporalData();
     BusinessTemporalData newCurrentNationalityBusinessTemporalDate =
         currentNationalityBiTemporalData
             .getBusinessTemporalData()
             .newValidTill(
-                dateUtils.endOfDayToTimestamp(ceasedCitizen.getCitizenRenunciationDate()));
+                dateUtils.endOfDayToTimestamp(ceasedCitizen.getCitizenRenunciationDate().minusDays(1)));
     currentNationalityBiTemporalData.setBusinessTemporalData(
         newCurrentNationalityBusinessTemporalDate);
     currentNationalityBiTemporalData.setDbTemporalData(new DbTemporalData());
@@ -279,7 +278,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
     BiTemporalData newBiTemporalData =
         biTemporalData.generateNewBiTemporalData(
             dateUtils.beginningOfDayToTimestamp(
-                ceasedCitizen.getCitizenRenunciationDate().plusDays(1)));
+                ceasedCitizen.getCitizenRenunciationDate()));
     Nationality newNationality =
         Nationality.builder()
             .batch(batch)
@@ -299,7 +298,7 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
     int iterations = clonedNrics.isEmpty() ? quantity : Math.min(quantity, clonedNrics.size());
     for (int i = 0; i < iterations; i++) {
       String nric = "";
-      if (clonedNrics.size() > 0) {
+      if (!clonedNrics.isEmpty()) {
         int randomIndex = random.nextInt(clonedNrics.size());
         nric = clonedNrics.get(randomIndex);
         clonedNrics.remove(randomIndex);
@@ -413,10 +412,10 @@ public class MhaCeasedCitizenFileDataPrep extends BatchFileDataPrep {
       int numOfRecords, List<String> nrics) {
     List<MhaCeasedCitizenFileEntry> resultList = new ArrayList<>();
     List<String> clonedNrics = new ArrayList<>(nrics);
-    int iterations = nrics.size() == 0 ? numOfRecords : Math.min(numOfRecords, nrics.size());
+    int iterations = nrics.isEmpty() ? numOfRecords : Math.min(numOfRecords, nrics.size());
     for (int i = 0; i < iterations; i++) {
       String nric = "";
-      if (clonedNrics.size() > 0) {
+      if (!clonedNrics.isEmpty()) {
         int randomIndex = random.nextInt(clonedNrics.size());
         nric = clonedNrics.get(randomIndex);
         clonedNrics.remove(randomIndex);

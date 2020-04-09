@@ -45,7 +45,7 @@ Feature: Data processing for Mha ceased citizenship
       | Completely Duplicate Record found. | 3     |
     And I verify that the correct persons have ceased being singaporean
 
-  @set_4 @GRYFFINDOR-908 @defect
+  @set_4 @defect @GRYFFINDOR-1276 @GRYFFINDOR-1289
   Scenario: Mha send a ceased citizenship file with a record existing in the system and also duplicated in the file
     Given the database populated with the following data:
       | SingaporeCitizen | CeasedCitizen |
@@ -56,9 +56,9 @@ Feature: Data processing for Mha ceased citizenship
     When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
     Then the Mha Ceased Citizen batch job completes running with status VALIDATED_TO_PREPARED_ERROR
     And I verify that the following error message appeared:
-      | Message                           | Count |
-      | Not SC or Dual Citizen currently. | 2     |
-      | Duplicate NRIC found in file.     | 2     |
+      | Message                            | Count |
+      | Not SC or Dual Citizen currently.  | 2     |
+      | Completely Duplicate Record found. | 2     |
 
   @set_5
   Scenario: Mha send a ceased citizenship file with a name length of zero
@@ -204,6 +204,9 @@ Feature: Data processing for Mha ceased citizenship
       | S150163Z    | size must be between 9 and 9                   | 1     | RAW_DATA_ERROR |
       | S5550000B   | Must be valid NRIC in format [S/T]1234567[A-Z] | 1     | RAW_DATA_ERROR |
       | S8880001Z   | Must be valid NRIC in format [S/T]1234567[A-Z] | 1     | RAW_DATA_ERROR |
+      | S1501508z   | Must be valid NRIC in format [S/T]1234567[A-Z] | 1     | RAW_DATA_ERROR |
+      | s1501508Z   | Must be valid NRIC in format [S/T]1234567[A-Z] | 1     | RAW_DATA_ERROR |
+      | s1501508z   | Must be valid NRIC in format [S/T]1234567[A-Z] | 1     | RAW_DATA_ERROR |
 
   @set_6 @defect @example-4-5
   Scenario Outline: Mha send a ceased citizenship file with various types of nationality
@@ -335,17 +338,6 @@ Feature: Data processing for Mha ceased citizenship
       | NRIC not found in System.           | 1     |
 
   @set_6
-  Scenario: Mha send a ceased citizenship file with no content (i.e totally empty file).
-    Given the MHA_CEASED_CITIZEN file is empty
-    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
-    Then the Mha Ceased Citizen batch job completes running with status FILE_ERROR
-    And I verify number of records in Incoming Record table is 0
-    And I verify that the following error message appeared:
-      | Message                                 | Count |
-      | Must have at least 1 valid body record. | 1     |
-      | Must have 1 Footer record.              | 1     |
-
-  @set_6
   Scenario Outline: John appears in consecutive ceased citizenship files with different cessation dates
     Given john who is 12 years old had his citizenship renounced <previous_cessation_date> days ago
     And MHA sends a ceased citizenship file stating that john renounced his citizenship <current_cessation_date> days ago
@@ -357,3 +349,14 @@ Feature: Data processing for Mha ceased citizenship
     | 5 | 5 |
     | 5 | 6 |
     | 6 | 5 |
+
+  @set_7
+  Scenario: Mha send a ceased citizenship file with no content (i.e totally empty file).
+    Given the MHA_CEASED_CITIZEN file is empty
+    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
+    Then the Mha Ceased Citizen batch job completes running with status FILE_ERROR
+    And I verify number of records in Incoming Record table is 0
+    And I verify that the following error message appeared:
+      | Message                                 | Count |
+      | Must have at least 1 valid body record. | 1     |
+      | Must have 1 Footer record.              | 1     |
