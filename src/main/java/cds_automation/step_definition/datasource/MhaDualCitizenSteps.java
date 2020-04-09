@@ -210,7 +210,7 @@ public class MhaDualCitizenSteps extends AbstractSteps {
         }
     }
 
-    @Given("^([a-z_]+) who is (\\d+) years old had (?:his|her) citizenship renounced (\\d+) days ago$")
+    @Given("^([a-z_]+) who is (\\d+) years old had (?:his|her) citizenship renounced ([0-9]+) days ago$")
     public void personHadHisHerCitizenshipRenouncedDaysAgo(String personName, int age, int daysAgo) {
         LocalDate renunciationDate = dateUtils.daysBeforeToday(daysAgo);
         LocalDate birthDate = dateUtils.yearsBeforeToday(age);

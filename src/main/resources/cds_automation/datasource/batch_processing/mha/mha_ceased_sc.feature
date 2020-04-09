@@ -302,15 +302,15 @@ Feature: Data processing for Mha ceased citizenship
   @set_3 @defect @GRYFFINDOR-1276 @GRYFFINDOR-1289
   Scenario: Mha send a ceased citizenship file with completely duplicate records but nric not found in system
     Given the file has the following details with Header date of run valid
-      | CeasedCitizen | NumberOfDuplication | 
-      | 1             | 2                   | 
+      | CeasedCitizen | NumberOfDuplication |
+      | 1             | 2                   |
     When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
     Then the Mha Ceased Citizen batch job completes running with status VALIDATED_TO_PREPARED_ERROR
     And I verify that the following error message appeared:
       | Message                             | Count |
       | Completely Duplicate Record found.  | 2     |
       | NRIC not found in System.           | 2     |
-    
+
   @set_4
   Scenario: John ceased citizenship before he started becoming a dual citizen
     Given john who is 13 years old converted to a dual citizen 10 days ago
@@ -344,3 +344,16 @@ Feature: Data processing for Mha ceased citizenship
       | Message                                 | Count |
       | Must have at least 1 valid body record. | 1     |
       | Must have 1 Footer record.              | 1     |
+
+  @set_5
+  Scenario Outline: John appears in consecutive ceased citizenship files with different cessation dates
+    Given john who is 12 years old had his citizenship renounced <previous_cessation_date> days ago
+    And MHA sends a ceased citizenship file stating that john renounced his citizenship <current_cessation_date> days ago
+    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
+    Then the Mha Ceased Citizen batch job completes running with status VALIDATED_TO_PREPARED_ERROR
+    And the error message contains Not SC or Dual Citizen currently
+  Examples:
+    | previous_cessation_date | current_cessation_date |
+    | 5 | 5 |
+    | 5 | 6 |
+    | 6 | 5 |
