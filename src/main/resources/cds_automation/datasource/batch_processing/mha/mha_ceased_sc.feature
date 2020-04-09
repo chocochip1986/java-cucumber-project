@@ -357,12 +357,3 @@ Feature: Data processing for Mha ceased citizenship
     | 5 | 5 |
     | 5 | 6 |
     | 6 | 5 |
-
-  @set_7
-  Scenario: John was a new citizen but has a citizenship cessation date earlier than his attainment date
-    Given john who is 12 years old became a new citizen 10 days ago
-    And MHA sends a ceased citizenship file stating that john renounced his citizenship 11 days ago
-    When MHA sends the MHA_CEASED_CITIZEN file to Datasource sftp for processing
-    Then the Mha Ceased Citizen batch job completes running with status VALIDATED_TO_PREPARED_ERROR
-    And the error message contains Renunciation Date is not after Citizenship Attainment Date
-
