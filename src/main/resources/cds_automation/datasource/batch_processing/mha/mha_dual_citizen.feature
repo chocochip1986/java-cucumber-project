@@ -85,13 +85,14 @@ Feature: Data processing for MHA dual citizenship
     And the Mha Dual Citizen batch job completes running with status RAW_DATA_ERROR
     Then I verify that there is an error message for invalid nric
 
-  @set_2 @defect
+  @set_2
   Scenario: MHA sends file with duplicate nric
     Given the mha dual citizen file has duplicate nric record
     | DuplicatedNrics |
     | 2               |
     When MHA sends the MHA_DUAL_CITIZEN file to Datasource sftp for processing
     And the Mha Dual Citizen batch job completes running with status CLEANUP
+    Then I verify that there is a warning message for duplicate nric
 
   @set_3
   Scenario: Person nric is not found in CDS

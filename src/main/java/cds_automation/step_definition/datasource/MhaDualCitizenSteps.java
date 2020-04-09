@@ -396,6 +396,18 @@ public class MhaDualCitizenSteps extends AbstractSteps {
                 "No invalid NRIC error message found!");
     }
 
+    @Then("I verify that there is a warning message for duplicate nric")
+    public void iVerifyThatThereIsAWarningMessageForDuplicateNric() {
+        log.info("Verifying that there is a warning message for duplicate nric");
+        FileReceived fileReceived = testContext.get("fileReceived");
+        Batch batch = batchRepo.findFirstByFileReceivedOrderByCreatedAtDesc(fileReceived);
+        List<ErrorMessage> errorMessages = errorMessageRepo.findByBatch(batch);
+        testAssert.assertEquals(true, errorMessages.stream().anyMatch(
+            errorMessage -> errorMessage.getMessage()
+                .contains(ErrorMessageConstants.COMPLETELY_DUPLICATE_RECORD_FOUND_ERROR_MESSAGE)),
+                "No duplicate NRIC warning message found!");
+    }
+
     @Given("^([a-z_]+) who is (\\d+) years old converted to a dual citizen (\\d+) days ago$")
     public void personConvertedToADualCitizenDaysAgo(String personName, int age, int daysAgo) {
         LocalDate birthDate = dateUtils.yearsBeforeToday(age);
